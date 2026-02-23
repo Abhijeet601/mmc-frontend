@@ -1,0 +1,459 @@
+{
+  "nav": {
+    "home": "Home",
+    "notifications": "Notifications",
+    "tenders": "Tenders",
+    "language": "Language",
+    "theme": "Theme",
+    "blue": "Blue",
+    "maroon": "Maroon",
+    "about": "About",
+    "academics": "Academics",
+    "admissions": "Admissions",
+    "nep2020": "NEP 2020",
+    "nirf": "NIRF",
+    "campusLife": "Campus Life",
+    "contact": "Contact",
+    "administration": "Administration",
+    "aboutDropdown": "ABOUT",
+    "aboutSub": {
+      "welcome": "Welcome to Magadh Mahila College",
+      "principalProfile": "From the Principal's Desk",
+      "previousPrincipals": "Previous Principals",
+      "collegeEmblem": "College Emblem",
+      "collegeEmblemPage": {
+        "title": "College Emblem",
+        "contentPlaceholder": "College emblem image will be added here."
+      },
+      "studentsRollOfHonor": "Students Roll Of Honor",
+      "studentsRollOfHonorPage": {
+        "title": "Students Roll Of Honor",
+        "contentPlaceholder": "Content will be updated soon."
+      },
+      "codeOfEthics": "Code of Ethics",
+      "codeOfConduct": "Code of Conduct",
+      "instituteDistinctiveness": {
+        "title": "Institute Distinctiveness",
+        "description": "What makes us unique",
+        "content": "Institute Distinctiveness\n\nThe thrust area of building transformative multi-faceted learning ecosystem at Magadh Mahila College is primarily embedded in its vision of creating a \"Distinctive environment of educational excellence with human values and social responsibility\" through a plethora of 'beyond the curriculum' activities for promoting knowledge that is blended with right skills, attitude and values for life long success and wholesome living.Hence, our distinctiveness is reflected in giving the students the cutting edge 360-degree dimensional 'learning experiences 'beyond the classroom.The campus is ever vibrant with opportunities galore to nurture talent, build competencies and confidence among students to face challenges in the context of rapidly changing global dynamics.The institution is a shining example of an ideal academic institution that has successfully fulfilled its role in the society. The college has taken several progressive communitarian actions that have made it stand out among its peers. One of the college's most notable achievements is its ability to inculcate the best value system among its students, ensuring that they develop into responsible and ethical citizens who will contribute positively to society. Additionally, the college has successfully spread knowledge among all, regardless of caste, creed, or economic background. This approach has ensured that the college has a diverse student body, creating an inclusive environment for all. The college prides itself for being the mentoring centre for many such students who went on to make good careers and happy breadwinners for their families. It happily functions as a centre for community upliftment. The excellent works done by NSS, Gender Cell, ICC, IQAC have created a very inclusive environment not only for the students but also for the members of the locality and beyond.Academic excellence of college is reflected by the number college students bagging Gold medal and rank holders in Patna University examinations. Nineteen students were awarded gold medal in Patna University examination 2022. The college also provides cash rewards as Merit Scholarship to university Gold Medalists and Rank Holders students through cheque.\n\nMahima Chhatravas, the G+7 Floor New Girls' Hostel of Magadh Mahila College, Patna University, Patna completed in 30th September, 2021 is located within the College campus and is an integral part of the College. The foundation stone was laid by the Hon'ble Chief Minister, Shri Nitish Kumar on 18th September, 2019. Mahima Chhatravas is a distinctive accomplishment of the College that aims to provide convenient and comfortable stay for the outstation students. The New Hostel has one hundred sixty-eight (168) furnished rooms. It has twenty- four rooms with seventy-two (72) occupancy, One Common Room, 16 Toilets with separate 12 Bathrooms and One BHK Assistant Superintendent accommodation on each floor. The hostel provides accommodation to Five Hundred Four (504) students across the conventional and semester courses. Mahima Chhatravas is adequately furnished. It has lavish dining Hall on ground floor for dinner, indoor sport game facility, gym, beauty salon, coffee shop. Wi-Fi facility is also available in the hostel. Laundry services are separately provided within the campus for residents. In addition, the hostel also provides washing machine for self-washing by residents. It also has 24/7 dedicated housekeeping staff to cater the needs of boarders."
+      },
+      "institutionsPride": "Institutions’ Pride",
+      "modelElectoralLiteracyClub": "Model Electoral Literacy Club",
+      "visionMissionCoreValues": "Vision, Mission & Core Values",
+      "bestPractices": "Best Practices",
+      "feedback": "Feedback",
+      "environmentalPolicy": "Environmental Policy",
+      "mou": "MOU",
+      "futurePlans": "Future Plans",
+      "milestones": "Milestones",
+      "visitorsNote": "Visitor's Note",
+      "managementAdministration": "Management & Administration",
+      "infrastructureMaintenance": "Infrastructure Maintenance",
+      "mis": "MIS"
+    },
+    "iqac": "IQAC",
+    "iqacSub": {
+      "workshop": "Workshop",
+      "naac": "NAAC",
+      "feedback": "Feedback",
+      "research": "Research",
+      "extensionActivities": "Extension Activities (NSS, NCC)",
+      "collaboration": "Collaboration",
+      "studentProgressionForm": "Student Progression Form",
+      "studentSatisfactionSurvey": "Student Satisfaction Survey",
+      "projectInternshipFieldWork": "Project Internship & Field Work",
+      "bestPractices2023": "Best practices 2023-24",
+      "bestPracticesPhotoGallery": "Best Practices – Photo Gallery"
+    },
+    "admissionsSub": {
+      "courses": "Courses",
+      "generalInformation": "General Information",
+      "intakeCapacity": "Intake Capacity",
+      "eligibility": "Eligibility",
+      "feeStructure": "Fee Structure",
+      "ugAdmission": "U.G. Admission",
+      "pgAdmission": "P.G. Admission",
+      "computerApplicationCourse": "Computer Application Course",
+      "vocationalAdmission": "Vocational Admission",
+      "commerceAdmission": "Commerce Admission",
+      "bbaAdmission": "BBA Admission",
+      "admittedStudentsYearWise": "Admitted Students (Year wise)"
+    },
+    "nep2020Sub": {
+      "academicInfrastructure": "Academic Infrastructure",
+      "courseMaterial": "Course Material",
+      "fineArts": "Fine Arts",
+      "humanities": "Humanities",
+      "library": "Library",
+      "programOutcome": {
+        "title": "Program Outcome & Course Outcome",
+        "metaTitle": "Program Outcome & Course Outcome - NEP 2020 - Magadh Mahila College",
+        "metaDescription": "Program Outcome and Course Outcome under National Education Policy 2020 at Magadh Mahila College.",
+        "intro": "Program Outcomes (POs) and Course Outcomes (COs) are essential components of the National Education Policy 2020 implementation at Magadh Mahila College.",
+        "programOutcomesTitle": "Program Outcomes",
+        "programOutcomesDesc": "Program Outcomes define what students are expected to know and be able to do by the time of graduation. These outcomes are aligned with the NEP 2020 guidelines and focus on holistic development.",
+        "courseOutcomesTitle": "Course Outcomes",
+        "courseOutcomesDesc": "Course Outcomes specify the knowledge, skills, and competencies that students should acquire upon completion of each course. These are mapped to the Program Outcomes.",
+        "note": "Detailed Program and Course Outcomes for each program will be available here soon. For specific information, please contact the respective department heads."
+      },
+      "publications": "Publications",
+      "science": "Science",
+      "socialScience": "Social Science",
+      "syllabus": "CBCS Syllabus",
+      "syllabusNEP": "Syllabus NEP",
+      "timeTable": "Time Table",
+      "vocationalCommerce": "Vocational Commerce",
+      "vocationalComputerApplication": "Vocational Computer Application"
+    },
+    "administrationSub": {
+      "antiRagging": "Anti-Ragging Committee",
+      "sexualHarassment": "Anti Sexual Harassment Committee",
+      "grievanceCell": "Grievance Cell",
+      "cells": {
+        "title": "Cells",
+        "contentPlaceholder": "Placeholder content for Cells page."
+      },
+      "committees": "Committees",
+      "incubationCentre": "Incubation Centre",
+      "organogramOfInstitution": "Organogram of Institution",
+      "societies": "Societies",
+      "staffCouncil": "Teachers and Employee List",
+      "centresList202021": "Centres List 2020-21",
+      "staffProfile": "Staff Profile",
+      "teachingStaffSanctionedPost": "Teaching Staff Sanctioned Post"
+    }
+  },
+  "pages": {
+    "principalProfile": "From the Principal's Desk",
+    "about": {
+      "title": "About Us - Magadh Mahila College",
+      "metaDescription": "Learn about Magadh Mahila College, its history, vision, mission, and various aspects of our institution.",
+      "mainTitle": "About Magadh Mahila College",
+      "subtitle": "Discover the rich heritage, values, and achievements that make Magadh Mahila College a premier institution for women's education in Bihar.",
+      "exploreSectionsTitle": "Explore About Sections",
+      "sections": {
+        "briefProfile": {
+          "title": "Brief Profile",
+          "description": "Learn about the history and overview of Magadh Mahila College"
+        },
+        "principalProfile": {
+          "title": "Principal Profile",
+          "description": "Meet our esteemed Principal and leadership team"
+        },
+        "previousPrincipals": {
+          "title": "Previous Principals",
+          "description": "Honorable former principals of the college",
+          "content": "SL No.\n\nNAME\n\nDURATION\n\n1.\n\nSmt. Ramola Nandi, M.A. (Patna) M.Sc (London)\n\nJuly 1946 to Dec. 1972\n\n2.\n\nSmt. Asha Lata Bose, M.A.\n\n1-1-1973 to 31-12-1977\n\n3.\n\nDr. Quraisha Hussain, M.A., Ph.D.\n\n1-1-1978 to Dec 31-12-1984\n\n4.\n\nDr. Mala Ghosh, M.A., Ph.D.\n\n1-1-1985 to 10-10-1995\n\n5.\n\nDr. Sarojini Srivastava, M.Sc., Ph.D.\n\n1-2-1991 to 14-08-1995\n\n6.\n\nSanchalan Samiti , P.U\n\n5-08-1995 to 10 Oct 10-10-1995\n\n7.\n\nDr. Archana Sinha, M.A., Ph.D., D. Lit\n\n11-10-1995 to 20-07-1998\n\n8.\n\nDr. Phullara Sinha, M.A., Ph.D.\n\n21-07-1998 to 30-08-1999\n\n9.\n\nDr. Niroj Sinha, M.A., Ph.D.\n\n01-09-1999 to 30-11-2000\n\n10.\n\nDr. Savitri Sharma, M.A., Ph.D\n\n01-12-2000 to 25-04-2001\n\n11.\n\nDr. Manju Rani Sinha, M.A., Ph.D.\n\n26.04.2001 to 30.05.2003\n\n12.\n\nDr. Savitri Sharma, M.A., Ph.D.\n\n01.06.2003 to 29.03.2004\n\n13.\n\nDr. Chitralekha Verma, M.Sc., Ph.D.\n\n01.03.2004 to 30.06.2004\n\n14.\n\nDr. Pushpa Sinha, M.A., Ph.D\n\n01.07.2004 to 31.08.2004\n\n15.\n\nDr. Kiran Aryani Mitra, M.Sc., Ph.D\n\n01.09.2004 to 30.06.05\n\n16.\n\nProf. Dr. Sukhada Kumari, M.A, Ph.D\n\n01.07.2005 to 02.06.09\n\n17.\n\nProf. Dr. Dolly Sinha, M.Sc, Ph.D (IIT, Delhi)\n\n03.06.2009 to 07.05.15\n\n18.\n\nProf. Umesh Mishra\n\n07.05.2015 to 11.05.15\n\n19.\n\nProf. Dr. Asha Singh\n\n12-05-2015 to 31-10-2016\n\n20.\n\nDr. Jaishree Mishra\n\n1-11-2016 to 31-12-2016\n\n21.\n\nProf. Dharamshila Prasad\n\n01-01-2017 to 31-10-2017\n\n22.\n\nDr. Padmalata Thakur\n\n01-11-2017 to 30-11-2017\n\n23.\n\nProf. (Dr.) Shashi Sharma\n\n01-12-2017 to 30-11-2021\n\n24.\n\nProf. (Dr.) Namita Kumari\n\n01-12-2021 to 9-Jul-2025\n\n23.\n\nProf.(Dr.) Nagendra Prasad Verma\n\n10-Jul-2025 till date"
+        },
+        "collegeEmblem": {
+          "title": "College Emblem",
+          "description": "The symbolic representation of our institution"
+        },
+        "studentsRollOfHonor": {
+          "title": "Students' Roll of Honor",
+          "description": "Celebrating our outstanding students"
+        },
+        "codeOfEthics": {
+          "title": "Code of Ethics",
+          "description": "Our commitment to ethical standards",
+          "content": "Code of Ethics\n\nCode of Ethics to Check Malpractices and Plagiarism in Research The institution is committed to producing and promoting research andscholarship of the highest order, unadulterated with plagiarism and other unethical practices, all this, while endeavouring to maintain academic freedom and innovation. The college invites its teachers and students to abide by the highest standards of integrity in their conduct of academic research and/or support to academic research activities, which include the following:\n\nNo form of plagiarism allowed. Plagiarism takes many forms viz. \"passing off\" another’s paper as one’s own, copying or paraphrasing substantial parts ofanother’s work without due acknowledgement, and claiming credit for another’s research;\n\nUse of appropriate plagiarism checks- both manual and technical – such as, use of software to catch instances of plagiarism during review;\n\nIn the event of the teachers/students attending/participating in any conference, permission must be sought from the Principal, highlighting the purpose of thevisit;\n\nMany of our faculty members serve as reviewers on editorial boards of many prestigious journals, and adhere to the strictest standards to ensure good quality publications.\n\nOur college also organizes conferences and seminars on pressing issues calling for academic inquiry, and while selecting papers for the same, places strong emphasis on the standard of research, original thought and expression, and multiple layers of review.\n\nWe also keep our teachers and students informed of appropriate guidelines for publication in various journals, including those recognized by the UGC;\n\nOur library is stocked with renowned journals from the world over, acting as a mirror for quality research and writing, for our teachers and students – a veritabletool that they can employ by emulating the standards of these publications."
+        },
+        "codeOfConduct": {
+          "title": "Code of Conduct",
+          "description": "Guidelines for student behavior and conduct",
+          "content": "Academic Rules, Regulations & General Code Of Conduct\n\nThe Magadh Mahila College administration takes step for the better career building of students for which full cooperation from the students and their guardians is expected. The students admitted to this College are directed to abide by the following Rules /Regulations / General Code of Conduct:\n\nProper discipline has to be maintained within the College Premises.\n\nIt is mandatory to all students to put on the Identity Card inside the Campus\n\nIt is mandatory for the students to be in college uniform.\n\nStudents should strictly maintain silence in the Main Building Corridor\n\nAll fees must be paid as per the schedule, otherwise fine will be charged.\n\nStudents should be regular and punctual in attending Theory and Practical classes.\n\n75% attendance in both Theory and Practical Classes is compulsory.\n\nNo student shall be allowed to appear in the University Examinations unless all her dues is cleared and she has declared 'SENT-UP' by the departmental committee.\n\nAny student found misbehaving or caught adopting unfair practices during examination is liable for immediate expulsion from the examination hall and proper action will be taken against such students as per the rules of Patna University.\n\nUse of Mobile Phone is strictly prohibited inside the campus. A fine of Rs. 1000/- will be levied if any student is found using it.\n\nIt is necessary to switch off all the fans and lights after the class is over.\n\nUse of polythene inside the College Premises is prohibited.\n\nKeep the College Campus clean\n\nSave water, Save life, Save Planet\n\nDon’t waste drinking water. It is necessary to close water tap after use\n\nCollege furniture-like Chairs, Desks, Benches or Podium should not be removed from its proper place and not be made dirty.\n\nIt is mandatory for all students to take part in Extra-curricular and Co-curricular activities.\n\nBi-cycle, Scooter etc. shall be parked and locked only in the area provided for this purpose.\n\nStudents are directed not to take part in any type of 'Dharna' 'Pradarshan' and 'Hartal', which affect the educational environment of the College and the University.\n\nRagging in any form is strictly prohibited. It is a punishable offence. Students involved in ragging may face expulsion from the college and university. Legal action may also be taken against them. Effected students may contact any member of the 'Students Grievance Redressal Cell' & \"Anti-Ragging Cell\" regarding any complain of ragging. They must also submit a written complaint regarding the same at the earliest in the Principal’s Office\n\nThe Management reserves the right to change any Rules / Regulations and provision given in the Display Board at short notice"
+        },
+        "melc": {
+          "title": "MELC",
+          "description": "Modern Education and Learning Center",
+          "content": "Model Electoral Literacy Club\n\nMagadh Mahila College has been selected as Model Electoral Literacy Club (MELC) by the Election Commission of India and Bihar for creating awareness in the forthcoming 17th Lok Sabha Election. The inaugural function of MELC was held on 07-Dec-2018 and the Chief Guest of programme was Sri Kumar Ravi DM Patna.He addressed the students on inaugural session and extended help in understanding the function of EVM and VVPAT. This Club shall spread the awareness towards voting and encourage the students to exercise their franchise."
+        },
+        "institutionsPride": {
+          "title": "Institutions’ Pride",
+          "description": "Our achievements and recognitions"
+        },
+        "visionMission": {
+          "title": "Vision & Mission",
+          "description": "Our goals and objectives",
+          "content": "Our Vision\n\nTo be a leader in the field of higher education by providing innovative learning environment through academic pursuit of excellence, community involvement and empowerment with traditional values to bring qualitative change in the society\n\nTo give direction to the students to accomplish self-learning with Indian values, openness and creativity to sustain themselves in the changing societal and economic environment\n\nEmpowering students with value-based knowledge and skill that enable them to cope up and compete with the demands of modern age.\n\nTo develop leaders with new ideas and capacity to make difference in themselves and society by upholding values of respect and humanism\n\nTo be the centre of excellence in education, skill development and lifelong learning\n\nOn the banks of Holy Ganga, the college provides perennial flowing environment of self-learning, to become flexible to meet the women centric challenges by inculcating innovative educational methods\n\nOur Mission\n\nOur mission is to ensure wholesome, holistic education so that the pursuit of knowledge efficiently helps to combat the challenges a student faces in her life. The college is committed to the holistic development of students so as to make an effective contribution to creation of healthy society. To this end we strive:\n\nTo become a Centre of Excellence in higher education for women in healthy environment\n\nA stimulating learning environment through new and innovative academic programmes\n\nTo create women leaders and to make them agents of social change\n\nCulturally rich environment linking education to the outside world\n\nTo provide dedicated and responsive scholars as faculty\n\nOur Core values\n\n\n\nDiscipline\n\nHumanity\n\nSincerity\n\nDedication\n\nHonesty\n\nTeam-works\n\nExcellence\n\nMorality\n\nSocial Responsibility\n\nInclusiveness\n\nEthics and Dignity\n\nIndian Values\n\nEmpowering students with academic, cultural, administrative knowledge and skill to cope up with the challenges of emerging global knowledge and parameters with holistic approach towards progress and overall development is the main goal of institution which reflects in the vision and mission of the college. The proactive, pre-emptive, sincere and dedicated approach of the entire stakeholders including Principal, faculty members, non-teaching staff, students and parents/ guardians substantially contribute in developing and implementing the quality policy and plans in order to uphold the vision, mission and core values of the college."
+        },
+        "bestPractices": {
+          "title": "Best Practices",
+          "description": "Excellence in education and administration",
+          "content": "Integrating ICT into Teaching-learning Practices\n\nInformation and Communication Technology known as ICT, is a well recognized tool of satisfying the ever-lasting quest for knowledge and learning. In the current educational scenario it has become imperative to look beyond the traditional education systems in order to address the world’s growing and changing needs. Our institution has continuously responded to this emergent need to cater to the demand of appropriate technology fostering and elevated thinking, effective communication, problem solving and global competence among students. A combination of traditional and modern learning methods in the classroom incorporates both face-to-face and online learning opportunities for our students. This, together with the use of open educational resources and other technologies can increase educational productivity of the teachers by accelerating the rate of learning, reducing costs associated with instructional materials or programme delivery and better time management. MMC has state-of-the-art infrastructure and learning resources. Smart classrooms are getting popular now- a-days and the college has this so that students are benefitted. 12 class rooms are ICT enabled. While the number of new infrastructural development has increased, the number of existing classrooms and seminar halls has been upgraded with new technology supported with ICT, LCDs, K-Yans, Smart Boards, CCTV Cameras, and Wi-Fi facilities. Equipment such as laptops, web cameras, printers, projectors etc is accessible for students and is given to them according to their needs. Training for the use of ICT devices and Digital library is also provided by the college to students. This gives an edge over others when it comes to placement and higher studies. The institution has adopted the strategy of creation and enhancement of its ICT infrastructure which is continuously upgraded with the latest computing facilities. Important institutional information is disseminated through the college website and through a dedicated online platform. The staff and students have access to technology and information retrieval on current and relevant issues through the e-learning facilities. Faculty is provided with the requisite facilities for preparation of computer aided teaching – learning material. Thus they can consciously build understanding about how to use technology appropriately and meaningfully.\n\nEnvironmental Consciousness and Sustainability\n\nMagadh Mahila College is committed toward maintaining a greener and eco-friendly campus. Students and staff of the institute are educated on proper waste management practices through lectures, advertisements on notice boards, and slogan boards on the campus. Solid wastes are segregated into coloured dustbins kept for biodegradable and non-biodegradable waste throughout the campus. Bio-manure is prepared from organic solid wastes such as leaves of plants and residues from mess of campus hostels. The college promotes paperless functioning and minimal paper waste. The institute takes efforts to minimize e-waste by repairing the computer and electronic components. E-wastes are collected and stored in the storeroom.\n\nCollege believes in fundamentals of energy conservation. A 100 KWp solar power plant has been installed on the roof of main building of MMC, which is providing a renewable source of energy. The solar power plant saves electricity bill of the college by about 40% every month. To conserve energy regular bulbs and tube lights have been replaced by CFL and LED lamp. They consume around 80-90% less energy and also last around 10-20 times longer. Staff and students are advised to turn off lights and fans when they are not being used."
+        },
+        "feedbackForms": {
+          "title": "Feedback Forms",
+          "description": "Share your thoughts and suggestions"
+        },
+        "environmentalPolicy": {
+          "title": "Environmental Policy",
+          "description": "Our commitment to sustainability"
+        },
+        "mou": {
+          "title": "MOU",
+          "description": "Memorandums of Understanding"
+        },
+        "futurePlans": {
+          "title": "Future Plans",
+          "description": "Our roadmap for the future",
+          "content": "AGENDA OF IQAC MEETING\n\nProposed Plan for Academic/Infrastructural Excellence in the Academic Year 2020-21\n\nOpening of new Courses (MCA/MBA/M. Com) in self-financing mode\n\nSix Months Certificate Course in Performing Arts under the Department of Music\n\nThree Months Certificate Course in Disaster Management and Yoga Science under the Department of Philosophy\n\nOne Year Vocational Course in Women’s Studies under the Department of Home Science\n\nThree Months Certificate Course in Basic Hindi Language Proficiency Programme under the Department of Hindi\n\nSix Months Certificate Course in using Corel Draw designing under the Department of BCA\n\nSix Months Certificate Course in Android App Development under the Department of BCA\n\nThree Months Certificate Course in Tax and Accounting under of Department of BBA\n\nThree Months Certificate Course in e-Commerce under the Department of BBA\n\nTo organize Faculty Development Programme\n\nTo submit the analysis Report of Part III Result of all Departments\n\nCelebration of opening and closing ceremony of Platinum Jubilee Year in the session-2020-21\n\nStarting Online Classes of Part I students, Session2020-2023\n\nStating Offline Classes of Part III as directed by the Govt/University\n\nCPE Research Projects, Power-Point Presentation and Activities\n\nTo organize Workshop for development of Mukti Rangmunch\n\nMOU for strengthen Mukti Rangmunch\n\nTo start Three Months Certificate Course in Pharmacy and Medicinal Plants under the Dept. of Chemistry\n\nPublication of Research Papers.\n\nTo organize Seminar/Symposia/Workshop/Minor-major Research Projects\n\nTo organize Cultural, Cocurricular and Extra Curricular activities in the current academic year\n\nTo organize Incubation Centre activities\n\nProposed Plan for Infrastructural Development in the Academic Year 2020-21 \n\nEstablishment of Multimedia Lab\n\nConstruction of New Day Care Centre\n\nConstruction of New College Internal Main Gate on the occasion of Platinum Jubilee Year\n\nConstruction of 2nd floor of PG Building\n\nConstruction of New Science laboratory with advanced equipments for Research Work\n\nInstallation of New Server for College Library\n\nRenovation work according the needs of the Institution\n\nChange of Electric wires of Main Building\n\nMaintenance of Computer Lab/Science Laboratories and Laboratories of Social Science\n\nPlan for Social Responsibility of the Institution.\n\nOrganize Health Awareness Programmes\n\nOrganize Blood Donation Camp\n\nOrganize Community Services Program through NSS/NCC\n\nOrganize Sanitation Drive"
+        },
+        "milestones": {
+          "title": "Milestones",
+          "description": "Key achievements and landmarks",
+          "content": "1946\n\nMagadh Mahila College set up as Government College and affiliated to Patna University Intermediate and BA (Pass) Arts Course introduced\n\n1948\n\nStatus of a Degree College was obtained Intermediate Science Course introduced\n\n1950\n\nCollege Magazine Kalpana was published\n\n1952\n\nStatus of Constituent College of Patna University was obtained with permanent affiliation under section 2 (f) &12B of UGC Act\n\n1959\n\n1st Campus Hostel Gargi was set up\n\n1966\n\nB.Sc. (Pass) Course introduced\n\n2nd New Hostel Maitreyee was set up\n\n1967\n\nBA (Pass) Sociology Course introduced\n\n1975\n\nB.A. Honours in all Courses introduced\n\n1976\n\nB.Sc. Honours in all Courses introduced\n\n1984\n\nPost Graduate teaching of all Courses introduced\n\n1990\n\nExcept M.Sc. in Chemistry, MA in Economics, Psychology and Home Science all Post Graduate Courses have been closed\n\nWelfare Hostel Kalyan was set up by the Govt of Bihar\n\n1995\n\nGolden Jubilee (50 Years) of the College celebrated\n\n2000\n\nThree Years Bachelor Degree (Hons) Course in BA/B.Sc. Computer Applications (BCA) under self-financing scheme introduced\n\nCollege Magazine Shaambhawi was published\n\n2002\n\nThree Years Bachelor Degree (Hons)Course in Commerce (B.Com.) under self-financing scheme introduced\n\nOne Year PG Diploma Course in Women & Child Welfare under self-financing introduced\n\nOne Year PG Diploma Course in Population Education under self-financing introduced\n\n4th New Hostel Avantika was set up\n\n2003\n\nCollege Magazine Aparajita was published\n\n2004\n\nCollege Alumnae Association 'MAformed\n\nOne Year Post Graduate Diploma Course in Computer Applications (PGDCA) under self-financing scheme introduced\n\nCollege Magazine Kshitij was published\n\n2005\n\nThe NAAC awarded B++ Grading to the College\n\n2006\n\nThree Years Bachelor Degree (Hons)Course in Business Administration (BBA) under self-financing scheme introduced\n\n2007\n\nThree Years Bachelor Degree (Hons)Course in Social Work (BSW) under self-financing scheme introduced\n\nCollege website - www.magadhmahilacollege.org was launched\n\n2008\n\nM.Sc. Course in Herbal Chemistry under UGC Innovative Programme introduced\n\n2009\n\nIQAC was set-up\n\nCareer Management and Counselling Cell (CMCC) under the UGC XIth Plan introduced\n\n2010\n\nRemedial Coaching Cell (RCC) for Scheduled Castes, Scheduled Tribes, OBC and Minority Communities Students with UGC assistance introduced\n\nCoaching Scheme for Entry into Services (CES) for Scheduled Castes Scheduled Tribes, OBC and Minorities Communities Students introduced\n\nOld College Building given heritage status by the Government of Bihar\n\nTwo Years Post Graduate Course in Music under self-financing scheme introduced\n\nCollege magazine Srijan was published\n\n2011\n\nCollege obtained College with Potential for Excellence (CPE) Status by UGC, New Delhi from 2011 to 2016\n\n2012\n\nMaiden issue of College Research Journal JIGYASA was published\n\nCollege classrooms and office upgraded and equipped with modern technological tools\n\n2013\n\nThe NAAC awarded A Grading to the College with CGPA 3.02\n\n2014\n\nCollege has been honoured with 'Best College Award' on 'Shiskha Diwas' 2014 by Sri Nitish Kumar, the Chief Minister of Bihar\n\nThree Years Statistics Bachelor Honours Degree Course in Regular Mode introduced\n\n2015\n\nNew Indoor Sports Complex constructed\n\nNew Language Lab set up (Source Govt. of Bihar)\n\nNew BBA & B.Com. library set up (Source College Fund)\n\n2016\n\nCollege has been awarded 'Excellent Institution of Higher Education for Girls in Bihar' by His Excellency Sri Ram Nath Kovind, the then Governor-cum Chancellor of Universities of Bihar, on the occasion of 'National Education Bihar Summit and Award 2016'\n\nRetained CPE Status till 2021 by UGC, New Delhi\n\nThree Months Certificate Course in English Language Proficiency introduced\n\nThree Months Certificate Course in German Language Proficiency introduced\n\n2017\n\nDepartment of Home Science fully renovated\n\nOpen Auditorium renovated\n\n2018\n\nCBCS Programme in MA/ M.Sc. Courses introduced\n\nCollege main building, classrooms, tutorial rooms laboratories upgraded and equipped with modern technological tools and Wi-Fi\n\nCentral library automated\n\n2 Years (Four Semester) Choice Based Credit System (CBCS) has been started in Post Graduate Courses\n\nList of Certificate Courses introduced in the Year 2018\n\nThree Months Certificate Course in Block Print introduced\n\nThree Months Certificate Course in Jute Art Craft & Design introduced\n\nThree Months Certificate Course in Madhubani Painting introduced\n\nThree Months Certificate Course in SPSS & Origin Pro introduced\n\nThree Months Certificate Course in Tikuli Art introduced\n\nSix-Months Add-On Course on Graphics & Web-Designing introduced\n\nSix Months Certificate Course in Office Management introduced\n\nIncubation Centre was set up\n\nParent-Teacher Association formed\n\nHouse System Sahodara was introduced\n\nCollege New Cafeteria Madalsa' constructed\n\n100 KWp Solar Power Plant established\n\nSolid-Liquid Waste Management Unit constructed\n\nRain Water Harvesting Unit constructed\n\n2019\n\nCBCS Programme in BBA/BCA/BSW Under Graduate Vocational Courses (Under Self-financing Scheme) introduced\n\nNew Building for Vocational Courses constructed (Source RUSA)\n\nRenovation of Corridors with Beautified Tiles of ground floor & 1st floor almost 20,000. Sqft (Source RUSA)\n\n3d Cycle NAAC Accreditation with Grade B+ by UGC NAAC\n\n3 Years (Six Semester) Choice Based Credit System (CBCS) in BBA / BCA /BSW Vocational Courses introduced\n\nCollege classrooms, laboratories, library, seminar halls, conference hall office upgraded and equipped with modern technological tools and Wi-Fi enabled campus\n\n2020\n\nCollege obtained ISO9001:2015, ISO 14001: 2015, ISO45001:2018 and ISO 21001:2018 Certificate for maintaining quality management system standard on March 16,2020\n\nCollege has been honoured with 'Recognized Social Entrepreneurship Swachhta and Rural Engagement Cell (SES REC) 'Certificate from Mahatma Gandhi National Council of Rural Education, Department of Higher Education, Ministry of Education, Government of India on October 29,2020. The Institution has successfully framed the SEC REC Action Plan for improving facilities on the Campus and the Community in the areas of Sanitation and Hygiene, Waste Management, Water Management, Energy Conservation and Greenery post COVID -19, along with the observation of three- environment, entrepreneurship and community engagement related days to inculcate in faculty, students and community, the practices of Mentoring, Social Responsibility, Swachhta and Care for Environment and Resources\n\nSix Months Certificate Course in Japanese Language and Culture introduced\n\nCollege Platinum Jubilee Year started on 26th July,2020\n\n2021\n\nSix Months’ Certificate Course in Health and Dietetics introduced\n\nSix Months’ Certificate Course in Health and Beauty Care introduced\n\nCollege website redesigned and new redesigned website launched\n\nNew MMC Software launched\n\nMMC Management Information System (MIS) launched\n\nThe College has received three ISO Certification on 24th February, 2021 in three different categories that is ISO-500001:2018, ISO/IEC 27001:2013 and SA 8000:2014 for Solar System, Lifting System and Research Facilities. While issuing the Certificates, the representatives from UAF, applauded for the College as it is maintaining itself beyond the set international standards which are valid up to 21st to 24th February, 2024."
+        },
+        "visitorsNote": {
+          "title": "Visitor's Note",
+          "description": "Messages from our esteemed visitors"
+        },
+        "managementAdministration": {
+          "title": "Management & Administration",
+          "description": "Governance and administrative structure",
+          "content": "Procedures For Maintenance Of Infrastructure\n\nThe college has a systematic and transparent system for maintenance of various facilities. All maintenance work has been done through tender system as per the standard norms. Institutional mechanisms for maintenance of infrastructure, facilities and equipment of the college are as follows:\n\nBuilding Infrastructure\n\nAs a constituent unit of Patna University, constant effort is made to provide secure space for equipments and tools. The college Building Committee looks after the maintenance, repair and constructional works inside the campus\n\nConstruction, repair and maintenance of the building and physical infrastructure like water supply, power supply and gas supply are looked after by this committee\n\nFor maintenance of civil and electrical works a college staff is assigned by the college authority to verify the work done by the contractors\n\nAll works have been done through tender system as per the standard norms\n\nAll minor faults have been taken care by hired technicians, carpenters, plumbers\n\nMaintenance of toilets and other service areas have been outsourced through outsourcing agencies as the norms prescribed by the university administration\n\nMaintenance Of Furniture\n\nAs per the requirement of departments and office, carpenter has been hired to look after the maintenance and repair work of furniture, fixtures and other physical infrastructure. Work done has been verified by the designated staff.\n\nMaintenance Of Laboratory Equipment\n\nEach lab maintains a stock register of all the laboratory items\n\nDead Stock Register is also maintained to keep an account of the non-functional equipment\n\nEquipments are checked elaborately on yearly basis. A committee of concerned unit is formed by the college administration which inspects and evaluates the current working condition and status of equipments. An inventory is managed at departmental level for maintenance of practical materials and is presented before the committee\n\nConsumable items are also categorized separately and checked by the committee members time to time. The committee members give its recommendations whether repair or upgradation is needed\n\nDepartmental Council give requisitions for purchase of needed items after inviting quotations from different agencies which is then scrutinized by college Purchase Committee. After approval of the committee, required items have been purchased.\n\nMaintenance Of Library\n\nDepartmental Council gives the list of books comprising author and publishers’ names according to the need and demand of students. The list is presented to the college Library Committee for sorting and approval and college fulfil the demand according to the available fund\n\nFor maintenance of books, library incharge teachers and non-teaching staff select damaged books for repairing, covering, hard binding or soft binding. For protection and maintenance of books vacuum cleaning and pest control has been done as a regular maintenance work.\n\nMaintenance Of Indoor Sports Complex\n\nSports committee looks after the requirement and facility related to Indoor and Outdoor sports and gives requisition to the college administration for purchasing and maintenance of sports items and maintenance of Indoor Complex\n\nMaintenance Of Digital Devices\n\nAnnual maintenance and software upgradation have been done through pre-purchased offers when new computers have been installed to save funds\n\nComputers and ICT equipments which are not covered by this scheme are maintained by a separate requisition application as demanded by the departments\n\nNew purchase and upgradation are recommended by departmental council, which are to be recommended and routed by concerned college committees and then items are purchased through open tender\n\nAs per need of hour learning resources are upgraded time to time in the library"
+        },
+      "mis": {
+        "title": "MIS",
+        "description": "Management Information System",
+        "content": "Magadh Mahila College Management Information System (MMC MIS)\n\nTo ensure the quality of education, working transparency, paperless office and students’ safety, Magadh Mahila College becomes the 1st Institution of the state that has implemented the Management Information System (MIS) in the College premises.MMC MIS is going to provide a lot of benefit to Students, Parents, Staff, Teachers as well as administrator. For safety, now we will have data like their Image, Purpose of visit, ID Card information etc. of every visitors/person coming to the College. We have implemented the RFID Attendance System, that allows us to make attendance automated and more secure. This RFID System is available in all classrooms. Now we will have data of students’ entry time, exit time and their classroom attendance record. We have taken this one level up by integrating “Parents Portal”. Now parents will be auto notified when their ward will enter college also, they can check daily/weekly /monthly attendance of their ward.The biggest advantage of MMC MIS is that now we can host our all courses/ classes virtually. All teachers are now capable of running online classes simultaneously. We have made a dedicated “Android APP” for students where they can see their scheduled classes according to their Course/Honours enrolled.Students will receive Assignments, Homework and important Notifications through the APP and they can give online assessment test or examination also. Now students will have an option to raise a complaint through application if they face any issue in the College.Now, in the Administrative Department, our Staff and Teachers have dedicated portal according to their roles. Attendance of teaching faculty and non-teaching staff will be done automatically with RFID devices and saved. The MIS will make things more transparent. From now onwards all the Income, Expense and issued funds will have digital records that can be accessed any time by the administration. The MMC MIS will make office paperless. It will be helpful for both students and administration. The complete cycle of student from application of admission to issuance of transfer certificate including fee payment will be done digitally. We take care of our students and privacy of their personal data. Keeping this in mind, we have implemented our own in-house private data server. This will give us more data privacy and security.\n\nManagement Information System (MMC MIS)\n\nDetailed Features List\n\nDetailed Features List\n\nAccess Profile / Student Dashboard\n\nEdit / Modify certain information in profile\n\nAccess Class Routine\n\nAccess College Holiday List\n\nAccess Study Materials Uploaded by Faculty Members\n\nAccess Attendance\n\nImportant Links of Notice boards\n\nFeedback Forms\n\nRequest for Various services (CLC, Migration)\n\nLink to Library\n\nRequest in master data updating\n\nLeave Application\n\nPayment of fees for various\n\n\n\nAlumni Module\n\nAlumni Registration\n\nAlumni Profile Management / dashboard\n\nAlumni Fee Collection.\n\n\n\nE-Learning Module\n\nAccess uploaded study materials by faculty\n\nAccess Assignments Shared by college / department / faculty\n\nTeaching Staff Module\n\nAccess Profile / Teaching Staff Dashboard\n\nEdit / Modify certain information in profile\n\nStudent Attendance\n\nAccess Routine\n\nLeave Application\n\nAccess College Holiday List\n\n\n\nOffice Staff / Management Module\n\nAccess Profile / Staff Dashboard\n\nAccess / Modify Student master data with all possible filters.\n\nAccess to various request of Migration / Master data updating / CLC\n\nReports for Fee Collection\n\nHostel Module\n\nHostel detailed profile\n\nManage Hostel wise / room wise inventory\n\nAllot Hostel Beds / Room\n\nHostel fee payment collection\n\nLeave Application\n\n\n\nAsset Management Module\n\nKeep track of all asset\n\nComplete details with provision to add photo graphs of items also\n\nAdd / edit records\n\nItem wise / department wise /Funding wise / purchase order wise report\n\nCommunication Module\n\nSend alert SMS to Staff members with filter\n\nSend alert SMS to Students with filter\n\nCreate notification course / year wise\n\n\n\nGrievances Redressal\n\nStudents can complain for anything\n\nEach complain is given a unique ticket number\n\nEach such complain can be presented in thread view showing conversation between student and management\n\nDepartment wise grievances redressal may be given\n\nA Grievances can be transferred from one department to another department.\n\n\n\nParents Login Module\n\nParents can check the attendance\n\nParents can check the profile\n\nSend feedback &complain to college\n\n\n\nLibrary Management\n\nUser/ Student\n\nuser can register in LMS, after registration student account will activated after verified by librarian.\n\nuser can login\n\nuser can update their profile\n\nuser can search book\n\nuser can see their taken book with details like books submission date, book issue dates etc.\n\nuser will get notification if librarian send any message.\n\nuser can give reply of librarian message\n\n\n\nLibrarian/ Admin\n\nlibrarian can login\n\nlibrarian can add new book details\n\nlibrarian can edit book details\n\nlibrarian can delete book details\n\nlibrarian can verify student details\n\nlibrarian can issue books to students\n\nlibrarian can add return books in stocks means student books return functionalities\n\nlibrarian can see all books with stocks.\n\nlibrarian can search books\n\nlibrarian can search students\n\nlibrarian can see that how many students have books right now.\n\nlibrarian can send message to student regarding their books pending so student can see notification.\n\nlibrarian can find books as per publication name or author name"
+      }
+      },
+      "learnMore": "Learn More →",
+      "commitmentTitle": "Our Commitment to Excellence",
+      "commitmentText": "Magadh Mahila College stands as a beacon of women's empowerment and academic excellence. Established in 1946, we have been nurturing young minds and shaping futures for generations. Our institution is committed to providing quality education, fostering holistic development, and creating an environment where every student can thrive and achieve their full potential."
+    }
+  },
+  "common": {
+    "language": "Language",
+    "english": "English",
+    "hindi": "हिंदी",
+    "theme": "Theme",
+    "light": "Light",
+    "dark": "Dark",
+    "note": "Note"
+  },
+  "footer": {
+    "collegeName": "Magadh Mahila College",
+    "description": "Empowering women through quality education since 1946. NAAC B+ accredited and affiliated to Patna University.",
+    "quickLinks": "Quick Links",
+    "importantLinks": "Important Links",
+    "contactInfo": "Contact Information",
+    "externalLinks": "External Links",
+    "followUs": "Follow Us",
+    "copyright": "Copyright © 2026 Magadh Mahila College, Patna. All rights reserved.",
+    "quickLinksItems": {
+      "about": "About",
+      "academics": "Academics",
+      "admissions": "Admissions",
+      "campusLife": "Campus Life",
+      "contact": "Contact"
+    },
+    "importantLinksItems": {
+      "tenders": "Tenders",
+      "notices": "Notices and Announcements",
+      "aqar": "AQAR",
+      "annualReports": "Annual Reports",
+      "mediaGallery": "Media Gallery",
+      "privacyPolicy": "Privacy Policy",
+      "terms": "Terms and Conditions",
+      "disclaimer": "Disclaimer",
+      "rti": "RTI",
+      "rtiManual": "RTI Manual",
+      "feeRefundPolicy": "Fee Refund Policy",
+      "onlinePaymentPolicy": "Online Payment Policy",
+      "transactionFeeClause": "Transaction Fee Clause",
+      "erp": "MMC ERP",
+      "payments": "Make Online Payment (MMC Payment)",
+      "survey": "Student Satisfaction Survey",
+      "staffIcard": "Apply Staff I-Card",
+      "studentIcard": "Apply Student I-Card",
+      "paymentPolicy": "Payment Terms and Refund Policy"
+    },
+    "externalLinksItems": {
+      "handbook": "College Handbook",
+      "university": "Patna University",
+      "ugc": "UGC",
+      "naac": "NAAC"
+    },
+    "contactDetails": {
+      "address": "North Gandhi Maidan, Patna – 800001",
+      "phone": "+91-612-2219454",
+      "mobile": "+91-7261805666",
+      "email": "info@magadhmahilacollege.org"
+    },
+    "managedBy": "Managed by",
+    "companyName": "Alpenrose Digital Solutions"
+  },
+  "home": {
+    "title": "Home - Magadh Mahila College | Women's College in Patna",
+    "metaDescription": "Magadh Mahila College Patna is a women's college NAAC B+ accredited. Dedicated to women's education, academic excellence and empowerment since 1946.",
+    "hero": {
+      "title": "Educating Women. Empowering Futures.",
+      "subtitle": "Education at Magadh Mahila College focuses on building confidence, leadership, independence, and responsibility — helping young women develop academically and personally in a supportive environment."
+    },
+    "features": {
+      "safeCampus": {
+        "title": "Safe and Supportive Campus",
+        "desc": "A women-only environment that emphasizes safety, respect, guidance, and student welfare."
+      },
+      "leadership": {
+        "title": "Leadership and Confidence",
+        "desc": "Opportunities to develop leadership and self-expression through student activities, cultural forums, NSS and NCC."
+      },
+      "careerFocused": {
+        "title": "Career-Focused Learning",
+        "desc": "Academic programs, skill development, and guidance that support women in diverse career paths."
+      }
+    },
+    "welcome": {
+      "title": "Welcome to Magadh Mahila College",
+      "description": "Magadh Mahila College, Patna is a premier institution for women affiliated to Patna University. We welcome you to be part of the success story being written by Magadh Mahila College, a leading institution for higher education for young women in Bihar; established in 1946."
+    },
+    "principal": {
+      "title": "From the Principal's Desk",
+      "name": "Prof. (Dr.) Nagendra Prasad Verma - Principal, Magadh Mahila College",
+      "message": "As Principal of Magadh Mahila College, I am committed to providing quality education and creating an environment where young women can thrive academically and personally."
+    },
+    "updates": {
+      "title": "Latest Updates",
+      "update1": "Repair of roofs of both staircases of MMC's Vocational Building",
+      "update2": "Installation of aluminum windows in BCA Department of MMC",
+      "update3": "Repair of false ceiling in MMC's room numbers 75,80,81,82,85 and veranda on second floor"
+    },
+    "visitors": {
+      "title": "Distinguished Visitors",
+      "subtitle": "Honored guests who have graced our institution"
+    },
+    "announcement": {
+      "title": "Announcement",
+      "placeholder": "Scrolling Notice Section - Latest announcements and updates"
+    },
+    "importantLinks": {
+      "title": "Important Links",
+      "tenders": "Tenders",
+      "notices": "Notices and Announcements",
+      "aqar": "AQAR",
+      "annualReports": "Annual Reports",
+      "mediaGallery": "Media Gallery",
+      "privacyPolicy": "Privacy Policy",
+      "terms": "Terms and Conditions",
+      "survey": "Student Satisfaction Survey",
+      "staffIcard": "Apply Staff I-Card",
+      "studentIcard": "Apply Student I-Card",
+      "paymentPolicy": "Payment Terms and Refund Policy"
+    },
+    "handbook": {
+      "title": "MMC has been honored with B+ Grade by NAAC in the Third Cycle Grading",
+      "subtitle": "College with Potential for Excellence (CPE) status provided by UGC, New Delhi",
+      "download": "Download - Handbook 2025-26 (.pdf file size approx 20MB)"
+    },
+    "closing": {
+      "title": "A College Dedicated to Women's Education and Development",
+      "message": "For decades, Magadh Mahila College has helped women build knowledge, confidence, and purpose — preparing them for meaningful roles in society and profession."
+    }
+  },
+  "hero": {
+    "badge": "Empowering Women Since 1946",
+    "title": "Magadh Mahila College",
+    "subtitle": "Educating and empowering women through quality academic excellence",
+    "accreditations": "NAAC B+ Accredited | Affiliated to Patna University | Recognized by UGC",
+    "applyNow": "Apply Now",
+    "exploreLegacy": "Explore Our Legacy"
+  },
+  "features": {
+    "experienceExcellence": "Experience Excellence",
+    "excellenceDesc": "A glimpse into our world-class facilities and vibrant campus life",
+    "modernCampus": "Modern Campus",
+    "modernCampusDesc": "State-of-the-art facilities for holistic development",
+    "academicExcellence": "Academic Excellence",
+    "academicExcellenceDesc": "Comprehensive programs designed for success"
+  },
+  "quickHighlights": {
+    "whyChooseUs": "Why Choose Us",
+    "whyChooseUsDesc": "Discover what makes Magadh Mahila College a premier choice for women's education",
+    "academicPrograms": "Academic Programs",
+    "academicProgramsDesc": "Wide range of UG, PG and Diploma courses",
+    "modernCampus": "Modern Campus",
+    "modernCampusDesc": "State-of-the-art facilities and infrastructure",
+    "admissionsOpen": "Admissions Open",
+    "admissionsOpenDesc": "Join our vibrant learning community",
+    "achievements": "Achievements",
+    "achievementsDesc": "NAAC B+ Accreditation for excellence"
+  },
+  "notices": {
+    "noticeBoard": "Notice Board",
+    "upcomingEvents": "Upcoming Events",
+    "viewAllNotices": "View All Notices →",
+    "viewAllEvents": "View All Events →",
+    "ugAdmission": "UG Admission Notification 2025",
+    "examSchedule": "Semester Exam Schedule",
+    "independenceDay": "Independence Day Holiday Notice",
+    "hostelGuidelines": "Hostel Admission Guidelines",
+    "scholarshipDeadline": "Scholarship Form Submission Deadline",
+    "womenLeadership": "Women Leadership Seminar",
+    "nssProgram": "NSS Community Awareness Program",
+    "careerWorkshop": "Career Guidance Workshop",
+    "culturalWeek": "Cultural Activities Week"
+  },
+  "slidingNotices": [
+    "🎓 UG Admission Notification 2025 - Apply Now!",
+    "📅 Semester Exam Schedule Released",
+    "🏛️ Independence Day Holiday Notice",
+    "🏠 Hostel Admission Guidelines Available",
+    "💰 Scholarship Form Submission Deadline: 20 August 2025"
+  ],
+  "academics": {
+    "allPrograms": "All Programs",
+    "undergraduate": "Undergraduate",
+    "postgraduate": "Postgraduate",
+    "diploma": "Diploma",
+    "title": "Academics - Magadh Mahila College",
+    "metaDescription": "Explore our comprehensive academic programs including undergraduate, postgraduate, and diploma courses at Magadh Mahila College.",
+    "programsTitle": "Academic Programs",
+    "programsSubtitle": "Comprehensive education for women's empowerment",
+    "programDescription": "Our academic programs are designed to provide holistic education, combining theoretical knowledge with practical skills to prepare students for successful careers and personal growth."
+  },
+  "antiRagging": {
+    "title": "Anti-Ragging Committee - Magadh Mahila College",
+    "metaDescription": "Learn about the Anti-Ragging Committee at Magadh Mahila College and our commitment to a safe campus environment.",
+    "content": "Anti-Ragging Committee ensures a safe and harassment-free environment for all students."
+  },
+  "sexualHarassment": {
+    "title": "Anti-Sexual Harassment Cell - Magadh Mahila College",
+    "metaDescription": "Learn about the Anti-Sexual Harassment Cell at Magadh Mahila College and our commitment to campus safety and dignity.",
+    "content": "The Anti-Sexual Harassment Cell ensures a safe, respectful, and supportive campus environment for all students and staff."
+  },
+  "tenders": {
+    "title": "Tenders - Magadh Mahila College | Current Procurement Opportunities",
+    "metaDescription": "View current tenders and procurement opportunities at Magadh Mahila College. Stay updated with the latest bids, contracts, and procurement notices for various college projects and services.",
+    "pageTitle": "Tenders and Procurement",
+    "pageSubtitle": "Current procurement opportunities and tender notices",
+    "searchPlaceholder": "Search tenders...",
+    "lastDate": "Last Date",
+    "download": "Download",
+    "noTenders": "No tenders available at this time.",
+    "contactProcurement": "For any queries regarding tenders, please contact:",
+    "procurementOfficer": "Procurement Officer",
+    "procurementEmail": "procurement@magadhmahilacollege.org",
+    "procurementPhone": "+91-612-2219454"
+  },
+  "admin": {
+    "title": "Admin Panel - Magadh Mahila College",
+    "metaDescription": "Admin panel for managing notifications and announcements at Magadh Mahila College.",
+    "loginTitle": "Admin Login",
+    "passwordPlaceholder": "Enter admin password",
+    "loginButton": "Login",
+    "logoutButton": "Logout",
+    "dashboardTitle": "Notification Management",
+    "addNotification": "Add New Notification",
+    "editNotification": "Edit Notification",
+    "deleteNotification": "Delete Notification",
+    "confirmDelete": "Are you sure you want to delete this notification?",
+    "noNotifications": "No notifications found.",
+    "notificationSaved": "Notification saved successfully!",
+    "notificationDeleted": "Notification deleted successfully!",
+    "loginRequired": "Please login to access the admin panel.",
+    "invalidPassword": "Invalid password. Please try again."
+  }
+}

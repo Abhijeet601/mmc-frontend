@@ -1,0 +1,816 @@
+import React, { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
+import { motion, AnimatePresence } from 'framer-motion';
+import { BookOpen, Palette, Microscope, Users, Briefcase, X, GraduationCap, Award, Target, Music, Sparkles, Zap, Star } from 'lucide-react';
+import { r2Url } from '@/lib/r2Assets';
+import {
+  AnimatedCard, 
+  AnimatedIcon, 
+  FloatingElement, 
+  GradientText,
+  StaggerContainer,
+  FadeInUp,
+  ScaleIn,
+  HoverGlow,
+  BlurFadeIn,
+  SpotlightEffect
+} from '../components/animations/AnimatedCard';
+
+const Departments = () => {
+  const [selectedDepartment, setSelectedDepartment] = useState(null);
+  const [activeCategory, setActiveCategory] = useState('All');
+
+  const departments = [
+    {
+      name: 'Department of Hindi',
+      category: 'Humanities',
+      icon: BookOpen,
+      description: 'Comprehensive study of Hindi language, literature, and linguistics',
+      color: 'from-primary to-primary',
+      highlights: `मगध महिला महाविद्यालय में हिंदी विभाग की स्थापना सन 1946 में हुई । प्रारंभ में स्नातक एवं इंटरमीडिएट कक्षाओं तक ही हिंदी विषय का पठन-पाठन समिति रहा । सन 1960 से स्नातक सम्मान का अध्यापन कार्य प्रारंभ किया गया।
+
+यह विभाग संपूर्ण महाविद्यालय की छात्राओं की भाषायी रचना कौशल के प्रति सजग भूमिका का निर्वहन करता है। इस कार्य हेतु विभिन्न स्तरीय रचनात्मक प्रतियोगिताएं आयोजित की जाती है तथा छात्राओं का उत्साहवर्धन करने के लिए पुरस्कार एवं प्रमाण पत्र भी प्रदान किए जाते हैं । राष्ट्रीय एवं अंतर्राष्ट्रीय स्तर पर आयोजित होने वाले साहित्यिक एवं प्रतियोगी आयोजनों में सहभागिता हेतु विभाग द्वारा छात्राओं को प्रोत्साहित एवं प्रशिक्षित किया जाता है।`,
+      faculty: [
+        { name: 'Dr. Shipra Prabha', designation: 'HOD, Hindi', image: 'Dr. Shipra Prabha, HOD, Hindi.jpeg' },
+        { name: 'Dr. Asha Kumari', designation: 'Assistant Professor, Hindi', image: 'Dr. Aasha Kumari, Assistant Professor, Hindi.jpeg' },
+        { name: 'Dr. Jyoti Dubey', designation: 'Assistant Professor, Hindi', image: 'Dr. Jyoti Dubey, Assistant Professor, Hindi.jpeg' },
+        { name: 'Dr. Preeti Kumari', designation: 'Assistant Professor, Hindi', image: 'Dr. Preeti Kumari, Assistant Professor, Hindi.jpeg' }
+      ]
+    },
+    {
+      name: 'Department of English',
+      category: 'Humanities',
+      icon: BookOpen,
+      description: 'English language, literature, and communication skills development',
+      color: 'from-primary to-highlight',
+      highlights: `The Department of English came into being with the inception of the college in 1946 headed by Prof. Illa Mullick till 1984. Dr. Khushboo is the present head of the Department.
+
+The mission of the department is to empower women through academic knowledge, spiritual strength, social consciousness and a positive self image. It aspires to nurture deeper analytical sensibilities in learners with equally efficient language and communication skills so that they could effectively cope up with the professional challenges of their lives. The department trains the students not only in academic field, but also provides ample opportunities for them to learn creative arts, social service, environment awareness, leadership quality and value based personality development. English department of Magadh Mahila College is a pioneer in terms of conducting several academic activities like Extempore, Debate, Quiz, Poetry writing competition, Story writing competition, Declamation etc. It also runs literary society in collaboration with other language departments in the college. Apart from B.A(English Hons), the department is successfully running three certificate courses in Language Proficiency, German Language and Japanese Language. Dr. Archana Jaiswal is the coordinator for six months Language Proficiency Program and German Language course. Dr. Khushboo is the coordinator of six months Japanese language course.`,
+      faculty: [
+        { name: 'Dr. Archana Jaiswal', designation: 'Associate Professor, HOD English', image: 'Dr. Archana Jaiswal, Associate Professor, HOD English.jpeg' },
+        { name: 'Dr. Rajiv Kumar Singh', designation: 'Assistant Professor, English', image: 'Dr. Rajiv Kumar Singh, Assistant Professor, English.jpeg' },
+        { name: 'Dr. Anamika', designation: 'Guest Faculty, English' },
+        { name: 'Dr. Anchit Pandey', designation: 'Guest Faculty, English' }
+      ]
+    },
+    {
+      name: 'Department of Persian',
+      category: 'Humanities',
+      icon: BookOpen,
+      description: 'Classical Persian language, literature, and cultural studies',
+      color: 'from-primary to-highlight',
+      highlights: 'Department of Persian was established in 1957 by Late Prof. Bilquis Afaque, who was the founder teacher of this department followed by Prof. Khursheed Jahan. She joined the P.G. department in 1973. Dr. Shaheda Khanam is the present head of the department.',
+      faculty: [
+        { name: 'Dr. Shahida Khanam', designation: 'HOD, Persian' }
+      ]
+    },
+    {
+      name: 'Department of Sanskrit',
+      category: 'Humanities',
+      icon: BookOpen,
+      description: 'Sanskrit language, classical texts, and Indian philosophical tradition',
+      color: 'from-primary to-highlight',
+      highlights: 'Department of Sanskrit started with the inception of the college in 1946. In 1985 Dr. Sudha Rani joined as the H.O.D of the Department. On 1st January 1999 she was elevated to the post of Head of the University Department of Sanskrit and Prof. (Dr.) Pramila Gupta succeeded as the Head in 1996. In 2006 Prof. (Dr.) Kiran Mala is the present Head. She joined the department in 2003.',
+      faculty: [
+        { name: 'Dr. Bharti Kumari', designation: 'Guest Faculty, Sanskrit' }
+      ]
+    },
+    {
+      name: 'Department of Mathematics',
+      category: 'Science',
+      icon: Target,
+      description: 'Pure and applied mathematics with emphasis on problem-solving skills',
+      color: 'from-primary to-highlight',
+      highlights: `Highlights of the Department
+
+The Department of Mathematics in Magadh Mahila College was established in 1948. The first head of the department of Mathematics was Professor Munna Rani. Professor Chandra Kala Rajgaria and Professor Shipra Biswas headed the department successively. Professor Dr. Rashmi Jaishwal took over headship from Professor Shipra Biswas in October 2003. She retired in September 2009. Dr Poonam Kumari is the present Head of the department. Department teaches Mathematics to the students of both Science and Arts faculty. Students of the department excel in university examination and many of them secure top ranks. Their performance is very good in future academic endeavor as well as the job market.`,
+      faculty: [
+        { name: 'Dr. Poonam Kumari', designation: 'Professor, HOD, Mathematics', image: 'Poonam Kumari, Professor, HOD,  Mathematics.jpeg' },
+        { name: 'Dr. Binay Kumar', designation: 'Assistant Professor, Department of Mathematics', image: 'Dr. Binay Kumar, Assistant Professor, Department of Mathematics.jpeg' }
+      ]
+    },
+    {
+      name: 'Department of Statistics',
+      category: 'Science',
+      icon: Target,
+      description: 'Statistical methods, probability, and data analysis',
+      color: 'from-primary to-highlight',
+      highlights: `The Department of Statistics in Magadh Mahila College came into existence in July, 2014. The teaching of Statistics at undergraduate level was started in Magadh Mahila College from academic session 2014-2015 with the proper permission from the Government of Bihar. Statistics is a very important subject for science as well as social science students. Till now there is no regular teacher in the Department. Prof. (Dr.) Abha Sharan a faculty member of Physics Department, was the founder Head of the Statistics Department from July 2014 to 30 Nov. 2017. On 1 December 2017, after the retirement of Prof. (Dr.) Abha Sharan, Ms. Sonu Rani Assistant Professor, Department of Physics became the Head of the Statistics Department. Dr. Priyadarshini, Ms. Bhavana Kumari, Mr. Alok Pritam and Ms. Anjum Khatoon are the visiting faculty members of the Departments. Prof. (Dr.) Anchala Kumari, a Retired Professor of the Department of Statistics, Patna University is also engaging classes and guiding our students. She is an excellent teacher and our students will get benefited a lot from her vast experience. Academic as well as extracurricular performance of our students is consistently good.`,
+      faculty: [
+        { name: 'Dr. Madhu Kumari Gupta', designation: 'Assistant Professor, Statistics', image: 'Dr. Madhu Gupta, Assistant Professor, Chemistry.jpeg' }
+      ]
+    },
+    {
+      name: 'Department of Physics',
+      category: 'Science',
+      icon: Microscope,
+      description: 'Fundamental and applied physics with modern laboratory facilities',
+      color: 'from-primary to-highlight',
+      highlights: `The department of Physics in Magadh Mahila College was established in the year 1948 with the introduction of Intermediate teaching in science. It has the distinction to be the first all women institution in Bihar, where teaching of science was introduced as early as in 1948. This department was awarded with 'STAR DEPARTMENT' by UGC, New Delhi under CPE Programme in November – 2011. The B.Sc. classes were started in 1966 and Honours teaching in the year 1980. Mrs Pratima Sanyal was the founder Head of the department. She was taught by the legendary Physicist Professor S.N. Bose of Bose Statistics fame as a M.Sc. student at Presidency College, Calcutta University. On her retirement in 1979, Professor Padmavathy Srinivasan, became the HOD (1979-2004). From the very beginning the department was well known for its high standard and discipline. Our results have been excellent and our students regularly obtain top ranks in the University. The department strives to inspire the students to develop a keen interest in the subject. Their experimental skills are carefully nurtured and supervised by the teachers. Many of our ex students are actively engaged in research in Pure and Applied Science in national institutes of repute viz IITs and IISc as well as abroad. The students passed out of this department are very well established and holding high positions in their respective organizations. The teachers published research papers in national and international journals of repute. The Department of Physics also worked as the mentor of Computer Applications Centre in the college. Dr Padmavathy Srinivasan along with Dr Dolly Sinha established the first Computer Laboratory in the college and introduced the teaching of Bachelor of Computer Applications (B.C.A.) course in the college in the year 2000 and of Post Graduate Diploma in Computer Applications (PGDCA) in 2004. Professor Srinivasan also served as the Coordinator of B.C.A. course from 2000-04. She also deserves the credit for rejuvenating the Science Society of the college. As President of the society, she used to deliver and conduct a number of popular science lectures and activities for the benefit of all students and teachers of the college. Known for its high efficiency, the department of Physics is an invariably consulted and assigned responsibility such as admission, examination etc. Two teachers of the department became the Principal of the college. Professor Dr Kiran Aryani Mitra holds the office of the Principal from 2004 – 05. Dr Kiran Aryani Mitra later elevated and joined as the Head of the P.G. Department of Physics, Patna University in Nov 2009. Professor Dolly Sinha joined as Principal of the college on 03 June 2009 and is continuing. Professor Abha Sharan, the present head of the department is fully dedicated to teaching. She shares many administrative responsibilities of the college too, including managing the PGDCA course as its Coordinator from July 2008 and managing the Vocational Courses examination (2004- 2011). Another teacher of the department Dr Mamta Deepak manages the BCA and CIC courses as its Coordinator. She is also the Controller of Examination of Vocational Courses examination. The department is actively engaged in extension activities to promote scientific temperament and science related issues. Teachers and staff of the department volunteer in organizing preliminary examination of "International Olympiad in Physics" conducted by IAPT since 2000. Now we have also started conducting preliminary examination of International Olympiads in Chemistry, Biology, Astronomy and Junior Science since 2004. National Standard Examinations are nationwide examinations conducted by IAPT. These examinations are the FIRST and the ONLY SCREENING TESTS towards International Olympiads in the respective subjects. Department also conducts National Graduate Physics Examination for undergraduate students of different colleges of Bihar since 2004. Department conducted Physics Olympiad Exposure Camp in association with Homi Bhaba Centre for Science Education (HBCSE), Mumbai on Sept 26-27, 2011 for undergraduate teachers.`,
+      faculty: [
+        { name: 'Dr. Sonu Rani', designation: 'HOD Physics', image: 'Dr. Sonu Rani, HOD Physics.jpeg' },
+        { name: 'Dr. Manish Kumar Verma', designation: 'Assistant Professor, Physics', image: 'Dr. Manish Kumar Verma, Assistant Professor, Physics Coordinator, BCA.jpeg' },
+        { name: 'Dr. Pankaj Kumar Baitha', designation: 'Assistant Professor, Physics', image: 'Dr. Pankaj Kumar Baitha, Assistant Professor, Physics.jpeg' },
+        { name: 'Dr. Priti Mishra', designation: 'Assistant Professor, Physics', image: 'Dr. Priti Mishra, Assistant Professor, Physics.jpeg' },
+        { name: 'Dr. Kamad Nath Shandilya', designation: 'Guest Faculty, Physics' }
+      ]
+    },
+    {
+      name: 'Department of Chemistry',
+      category: 'Science',
+      icon: Microscope,
+      description: 'Organic, inorganic, and physical chemistry with advanced lab facilities',
+      color: 'from-primary to-highlight',
+      highlights: `Department Started in 1947. Honours teaching started from 1976. P.G Course started from 1984. The Department of Chemistry was started in 1948 with introduction of the Intermediate Education in Science. Dr. (Mrs.) Rani Chakrovarti (Nee Mishra) was the founder Head and contributed to the introduction of B.Sc. course in 1966. Subsequently Professor Dr Sarojini Srivastava (1973–1991), Dr. Gomati Venkatraman (1991-2001) headed the department. Dr Sarojini Srivastava elevated to the post of Principal of the college (1991-95). The B.Sc. honours teaching in chemistry was started in 1976. The M.Sc. course in chemistry started in 1984. The present head is Professor Dr. Rani Azad. The department has the distinction of being the first in the country to introduce a new course M.Sc. in Herbal Chemistry in 2008. The course was granted by U.G.C. under its Innovative Programme. The teachers of the department are actively engaged in research works as is evident from the list of publications in standard journals and production of PhD. Three minor research projects financed by UGC were completed successfully and one Major Research Project is going on under Prof. (Dr.) Rani Azad. Department also conducted a large number of National symposium/seminar and workshop financed by the UGC and DST.`,
+      faculty: [
+        { name: 'Dr. Shyam Deo Yadav', designation: 'HOD, Chemistry', image: 'Prof. Shyam Deo Yadav, HOD, Chemistry.jpeg' },
+        { name: 'Dr. Usha Kumari', designation: 'Associate Professor, Chemistry', image: 'Dr. Usha Kumari, Associate Professor, Chemistry.jpeg' },
+        { name: 'Dr. Deepak Kumar', designation: 'Assistant Professor, Chemistry', image: 'Dr Deepak Kumar, Assistant Professor, Chemistry.jpeg' },
+        { name: 'Dr. Amrita Prasad', designation: 'Assistant Professor, Chemistry', image: 'Dr. Amrita Prasad, Assistant Professor, Chemistry.jpeg' },
+        { name: 'Dr. Madhu Kumari Gupta', designation: 'Assistant Professor, Chemistry', image: 'Dr. Madhu Gupta, Assistant Professor, Chemistry.jpeg' },
+        { name: 'Dr. Reena Kumari', designation: 'Assistant Professor, Chemistry', image: 'Reena Kumari, Assistant Professor, Chemistry.jpeg' },
+        { name: 'Dr. Archana Sinha', designation: 'Assitant Professor, Chemistry', image: '' },
+        { name: 'Dr. Priya', designation: 'Guest Faculty, Chemistry' },
+        { name: 'Dr. Sadhana Kumari', designation: 'Guest Faculty, Chemistry' }
+      ]
+    },
+    {
+      name: 'Department of Botany',
+      category: 'Science',
+      icon: Microscope,
+      description: 'Plant sciences, biodiversity, and environmental studies',
+      color: 'from-primary to-highlight',
+      highlights: `The Department of Botany came into existence in 1947. B.Sc. (Hons) Classes started in 1976. The department of Botany was established along with Zoology as Department of Biology in 1948. The Department of Biology flourished under the headship of Ms. B. Joshua. This department was awarded with 'STAR DEPARTMENT' by UGC, New Delhi under CPE Programme in November – 2011. The teaching of B.Sc. course in Botany was started in 1966. B.Sc. (Hons) classes started only in 1976. Post graduate classes started in 1986 with Plant Pathology & Experimental Taxonomy as special papers. Post graduate course functioned smoothly till 1997. Prof. (Dr.) Sumedha Kathuria is the present Head of the department. The department is selected as the star department under the CPE scheme of the UGC in Sept 2011. The results have been excellent and department has produced many toppers in Honours and P.G. level examinations. Many students of the Department have competed in medical entrance exams and now they are renowned doctors. Majority of the students opt for higher studies in Botany, Bio-technology, and Bio-Chemistry. As part of extension activities department encourages students to work towards environment awareness and protection under the banner of "Green Earth Brigade (GEB)". The GEB organizes special lectures, seminars and workshops regularly to promote awareness about environmental issues. A workshop on "Pollution and Public Health" was organized on November 29 – 30, 2011. Students of the department are also encouraged to participate in science seminars and conferences. Teachers of the department escort the students to various programmes on science and science related issues. Students attended the National Conference on 'Development of Agriculture in Bihar 2011' on the theme "A farmer's journey from field to industry" on 23rd & 24th September 2011.`,
+      faculty: [
+        { name: 'Dr. Pushpanjali Khare', designation: 'Associate Professor, HOD Botany', image: 'Dr. Pushpanjali Khare, Associate Professor, HOD Botany.jpeg' },
+        { name: 'Dr. Surendra Kumar Prasad', designation: 'Associate Professor, Botany', image: 'Surendra Prasad, Associate Prof, Botany Coordinator, B.Com..jpeg' }
+      ]
+    },
+    {
+      name: 'Department of Zoology',
+      category: 'Science',
+      icon: Microscope,
+      description: 'Animal biology, physiology, and biodiversity studies',
+      color: 'from-primary to-highlight',
+      highlights: `Department of Zoology started as part of Biology Department in 1948. The department was bifurcated from the Botany department and in 1966 established as an independent department of Zoology. Department offers teaching of B.Sc. (Hons) in Zoology course and Zoology subsidiary. Intermediate level classes were discontinued in 2008 under the policy decision of Govt. of Bihar. Along with quality teaching the department offers good facility of books through a seminar library and well equipped laboratory. The department organizes educational tours for the students as well. Students result in the final university examination are excellent. A good number of girls go for higher education to different branches like microbiology, biotechnology, biochemistry at national universities. Students actively participate in the extracurricular and cocurricular of the college and university.`,
+      faculty: [
+        { name: 'Dr. Sujata Kumari', designation: 'HOD Zoology', image: 'Dr. Sujata, HOD Zoology.jpeg' },
+        { name: 'Dr. Maya Rani', designation: 'Guest Faculty, Zoology' },
+        { name: 'Dr. Arshi Rana', designation: 'Guest Faculty, Zoology' }
+      ]
+    },
+    {
+      name: 'Department of Psychology',
+      category: 'Social Science',
+      icon: Users,
+      description: 'Human behavior, mental processes, and psychological research',
+      color: 'from-primary to-highlight',
+      highlights: `The department was established with the inception of the college in the year 1946. Dr. Sharda Sinha was the founding head of the department. Currently, Ms. Nidhi Singh a Clinical Psychologist and Assistant Professor is heading the department. Department has two permanent faculties named Nidhi Singh and Dr. Namrata who are working since July 2017. It has five guest faculties. The department aims to enhance the growth of Psychology as a subject and profession. It introduces various Psychological techniques to understand human behavior in different settings and tries to adequately skill students in taking Psychology to the communities and fit market demands and enrich the personality using Psychology in everyday life. It also aims to improve the mental health of the students by training students to apply Psychology for self and other's benefit.
+
+Department also organizes Guidance, Counselling, and Mental Health Services for college students. Invited Lectures & Workshops are also frequently organized. It offers Mental Health Check-ups, Personality assessments, and Interest Tests for college students. It observes important days like World Mental Health Day and World Suicide Prevention Day etc. Department offers UG and PG courses in Psychology.`,
+      faculty: [
+        { name: 'Dr. Namrata', designation: 'Assistant Professor, HOD, Psychology', image: 'Dr.Namrata, Assistant Professor, HOD,  Psychology.jpeg' },
+        { name: 'Ms. Nidhi Singh', designation: 'Assistant Professor, Psychology', image: 'Ms. Nidhi Singh, Assistant Professor, Psychology.jpeg' },
+        { name: 'Dr. Archana Kumari', designation: 'Assistant Professor, Psychology', image: 'Archana Kumari, Assistant Professor, Psychology.jpeg' },
+        { name: 'Dr. Archana Bharti', designation: 'Assistant Professor, Psychology', image: 'Dr. Archana Bharti, Assistant Professor, Psychology.jpeg' },
+        { name: 'Dr. Kavita Chowdhary', designation: 'Assistant Professor, Department of Psychology', image: 'Dr. Kavita Chowdhary, Assistant Professor, Department of Psychology.jpeg' },
+        { name: 'Dr. Priyamvada', designation: 'Assistant Professor, Psychology', image: 'Dr. Priyamvada, Assistant Professor, Psychology.jpeg' },
+        { name: 'Dr. Ranjana Kumari', designation: 'Assistant Professor, Psychology', image: 'Dr. Ranjana Kumari, Assistant Professor, Psychology.jpeg' },
+        { name: 'Dr. Sonali Kumari', designation: 'Assistant Professor, Psychology', image: 'Dr. Sonali Kumari, Assistant Professor, Psychology.jpeg' }
+      ]
+    },
+    {
+      name: 'Department of Sociology',
+      category: 'Social Science',
+      icon: Users,
+      description: 'Social structures, institutions, and cultural studies',
+      color: 'from-primary to-highlight',
+      highlights: `Department of Sociology was established in 1963. Dr. Binay Kumar Bimal is the present Head of the department. It serves maximum number of students in the college. It has a continued tradition of scholarship and research since its inception. Two teachers of the department became the Principal of the college. Three teachers were elevated as the heads of PG Department of Sociology, Patna University during different periods. Prof. Phullara Sinha was the founder Head of the Department. She later elevated to the University Department as the Head. She came back to college as the Principal in 1999. Prof. Archana Sinha, became the second Head of the Dept. in 1965 and subsequently elevated to the post of Principal of the College in 1995. In 1998 she joined the P G department of Patna University as the Head of the PG Dept. of Sociology. Dr Dharmshila Prasad of the department has been selected as the Head of the PG Dept. of Sociology, Patna University and will be joining soon. Department has started two post graduate diploma courses e.g. one year Post Graduate Diploma in Women & Child Welfare (PGDWCW) and Post Graduate Diploma in Population Education (PGDPE) in 2002. The three years Bachelor in Social Work (BSW) was started in 2007. The Postgraduate teaching started in the Department in 1984.`,
+      faculty: [
+        { name: 'Dr. Binay Kumar Bimal', designation: 'HOD,Professor, Department of Sociology,', image: 'Dr. Binay Kumar Bimal, Professor, Department of Sociology Bursar, MMC Coordinator, BSW.jpeg' },
+        { name: 'Dr. Anju Kumari', designation: 'Assistant Professor, Sociology', image: 'Anju Kumari, Assistant Professor, Sociology.jpeg' },
+        { name: 'Dr. Archna Kumari', designation: 'Assistant Professor, Sociology', image: 'Dr. Archna Kumari, Assistant Professor, Sociology.jpeg' },
+        { name: 'Dr. Minu Minj', designation: 'Assistant Professor, Sociology', image: 'Dr. Minu Minz, Assistant Professor, Sociology.jpeg' },
+        { name: 'Dr. Reena Kumari', designation: 'Assistant Professor, Department of Sociology', image: 'Dr Reena kumari, Assistant Professor, Department of Sociology.jpeg' },
+        { name: 'Dr. Rajendra Kumar', designation: 'Assistant Professor, Sociology', image: 'Rajendra Kumar, Assistant Professor, Sociology.jpeg' },
+        { name: 'Dr. Veena Kumari', designation: 'Assistant Professor, Sociology', image: 'Dr. Veena Kumari, Assistant Professor, Sociology.jpeg' },
+        { name: 'Dr. Madhavi', designation: 'Guest Faculty, Sociology', image: '' }
+      ]
+    },
+    {
+      name: 'Department of Economics',
+      category: 'Social Science',
+      icon: Briefcase,
+      description: 'Economic theory, policy analysis, and financial studies',
+      color: 'from-primary to-highlight',
+      highlights: `The Department of Economics was founded in 1946. Mrs. Ramola Nandi was the founder head of the department. She became the Principal of the college (1947 – 31 Dec 1972). Dr. (Mrs.) Asha Lata Bose took over charge as the Head of Department in 1951 and also served the college as the Principal (Jan 1972 – 31 Dec 1977). Subsequently Dr Maya Prasad (Oct 1973), Dr. Usha Devi (Feb 1989) and Mrs Bharati Bagchi (Dec 1994) were designated as heads of the department. Dr Asha Singh took over charge as Head in October, 2000 and is continuing till date. The Postgraduate teaching started in the Department in 1984. Department of Economics is the mentor of two self financing/vocational courses e.g. B. Com. and BBA which started in 2002 and 2004 respectively. The Department of Economics works in tune with the mission and objective of the college by providing quality instruction to students and helps them adopt critical, creative and research aptitudes along with profound social commitment and capability to contribute to socio-economic development of the nation.
+
+This department was awarded with 'STAR DEPARTMENT' by UGC, New Delhi under CPE Programme in November – 2011`,
+      faculty: [
+        { name: 'Dr. Sweta Sharan', designation: 'HOD, Economics', image: 'Sweta Sharan, HOD, Economics.jpeg' },
+        { name: 'Dr. Ashish Kumar', designation: 'Assistant Professor, Economics', image: 'Ashish Kumar, Assistant Professor, Economics.jpeg' },
+        { name: 'Dr. Angur Kumari', designation: 'Assistant Professor, Economics', image: 'Dr Angur Kumari, Assistant Professor, Economics.jpeg' },
+        { name: 'Dr. Chandan Chandra Chunna', designation: 'Assistant Professor, Economics', image: 'Dr. Chandan Chandra Chunna, Assistant Professor, Economics.jpeg' },
+        { name: 'Dr. Mita Malkhandi', designation: 'Assistant Professor, Economics', image: 'Dr. Mita Malkhandi, Assistant Professor, Economics.jpeg' },
+        { name: 'Dr. Priyadarshini', designation: 'Assistant Professor, Economics', image: 'Priyadarshini, Assistant Professor, Economics.jpeg' },
+        { name: 'Dr. Deepali Kumari', designation: 'Guest Faculty, Economics' }
+      ]
+    },
+    {
+      name: 'Department of History',
+      category: 'Social Science',
+      icon: BookOpen,
+      description: 'Ancient, medieval, and modern history with research-based learning',
+      color: 'from-primary to-highlight',
+      highlights: `The Department of History was started in the year 1946 since the inception of this College, but three year Degree Honours course in History started on regular basis in the year 1968. Mrs. Jyotirmayee Basu was the founder Head of the Department. Subsequently, Dr Mala Ghosh and Dr Ruby Roy were designated as heads of the Department. Dr. Mala Ghosh later elevated as the Principal of this College in the year 1985. Present head, Dr (Prof.) Jayashri Mishra took over charge as Head of the Department in 1998. In 1984 Post-Graduate teaching was started, but it could not be continued further after 1986 due to paucity of teachers and apathy of the state government to create new posts. History has been a very popular subject and students opt this in large numbers.`,
+      faculty: [
+        { name: 'Dr. Rajesh Kumar', designation: 'Guest Faculty, History' },
+        { name: 'Dr. Deepika Singh', designation: 'Guest Faculty, History' },
+        { name: 'Dr. Sweta Kumari', designation: 'Guest Faculty, History' }
+      ]
+    },
+    {
+      name: 'Department of Philosophy',
+      category: 'Humanities',
+      icon: BookOpen,
+      description: 'Philosophy, ethics, and critical thinking development',
+      color: 'from-primary to-highlight',
+      highlights: 'Department of Philosophy is one of the oldest departments of the college, which started with the establishment of the college in 1946. Dr. Anima Sengupta was the founder head of the department. The department offers B.A. (Hons) and Subsidiary Courses. There are three faculty members working in the department. Dr. Md. Ziaul Hassan, Asst. Professor working as HoD, Ms. Ranjana Yadav and Dr. Suchita Arpan as Asst. Professor. The department works towards quality teaching. The faculty members try their best to maintain the quality of education and make efforts to change the potentiality of students into their actuality. The aims and objectives of the department are to impart a quality education.',
+      faculty: [
+        { name: 'Dr. Suchita Arpan', designation: 'HOD, Philosophy', image: 'Dr. Suchita Arpan, HOD, Psychology.jpeg' },
+        { name: 'Dr. Sanjay Kumar Priyadarshi', designation: 'Assistant Professor, Philosophy', image: 'Dr. Sanjay Kumar Priyadarshi, Assistant Professor, Philosophy.jpeg' },
+        { name: 'Ms. Ranjana Yadav', designation: 'Assistant Professor, Philosophy', image: 'Ms. Ranjana Yadav, Assistant Professor, Philosophy.jpeg' }
+      ]
+    },
+    {
+      name: 'Department of Urdu',
+      category: 'Humanities',
+      icon: BookOpen,
+      description: 'Urdu language, literature, and cultural studies',
+      color: 'from-primary to-highlight',
+      highlights: 'The department of Urdu started in 1946 with introduction of Intermediate Education in Arts. Mrs. Quraisha Hussain was the founder Head of the Department and she was also elevated as the Principal of the college. Subsequently Dr. Akhatar Jahan and Dr. Syeda Begum took charge as respective heads. Dr. Suraj Deo Singh is the present head of the Department.',
+      faculty: [
+        { name: 'Dr. Md. Sohail Anwer', designation: 'HOD, Urdu', image: 'Dr. Md. Sohail Anwer.jpeg' },
+        { name: 'Dr. Md. Rizwan', designation: 'Assistant Professor, Urdu', image: 'Dr. Md. Rizwan, Assistant Professor, Urdu.jpeg' }
+      ]
+    },
+    {
+      name: 'Department of Home Science',
+      category: 'Social Science',
+      icon: Award,
+      description: 'Home management, nutrition, and family welfare studies',
+      color: 'from-primary to-highlight',
+      highlights: 'The Home Science Department focuses on family welfare, nutrition, child development, and home management for holistic development.',
+      faculty: [
+        { name: 'Dr. Kavita Kumari', designation: 'HOD, Home Science' },
+        { name: 'Dr. Shruti Kumari', designation: 'Assistant Professor, Home Science', image: 'Dr. Shruti Kumari, Assistant Professor, Home Science.jpeg' },
+        { name: 'Dr. Seema Prakash', designation: 'Assistant Professor, Home Science', image: 'Dr. Seema Prakash, Assistant Professor, Home Science.jpeg' }
+      ]
+    },
+    {
+      name: 'Department of Music',
+      category: 'Fine Arts',
+      icon: Music,
+      description: 'Vocal and instrumental music with performance-oriented training',
+      color: 'from-primary to-highlight',
+      highlights: `The Department of Music was established in our college in the year 1949 with Smt Shanti Goverdhan as the founder Head. Subsequently Prof. Deepali Das and took charge as the Head of the Department. Prof Girija Pandey later elected as the Member of Parliament. Dr Neera Choudhury is the present Head. The department imparts Music teaching at BA Honours and Subsidiary as well as at Post Graduate levels. Post graduate teaching in music has started from session 2010-12. This is the only department that imparts teaching of music at UG & PG levels in the entire Patna University.`,
+      faculty: [
+        { name: 'Dr. Arvind Kumar', designation: 'Professor, HOD, Department of Music', image: 'Dr. Arvind Kumar, Professor, HOD, Department of Music.jpeg' },
+        { name: 'Prof. (Dr.) Neera Choudhury', designation: 'Professor, Department of Music', image: 'Dr. Neera Chowdhary, Professor, Department of Music.jpeg' }
+      ]
+    },
+    {
+      name: 'Department of Political Science',
+      category: 'Social Science',
+      icon: Users,
+      description: 'Political theory, governance, and public administration',
+      color: 'from-primary to-highlight',
+      highlights: `The Department of Political Science came into existence in the Year 1946 since the inception of this college. Honours teaching started in the year 1976. Mrs. Bhagwati Singh (1946-56) was the founder Head of the Department. Subsequently Dr Sarojini Sharan (1956-77), Mrs. Annapurna Devi (1977-94), Dr. Niroj Sinha (1994-99), and Dr. Lila Sinha (1999-2005) were designated as heads of the Department. Dr. Niroj Sinha was later elevated as the Principal of the College in the year 1999. Present head, Dr Shashi Sharma took over charge as Head of the Department in August, 2005. The Department started Postgraduate teaching from the Session 1984-1986 and continued till 1992.
+The 'Remedial Coaching at Undergraduate level for SCs/ STs OBC, and Minority Communities' students under UGC scheme, has been started by the Department since December,2010 .The' Students' Counseling Centre' has been established in September 2011, which serves all students of the College. The Department has planed to publish a monthly News Bulletin 'Self Expression-Ek Abhivyakti'. All teachers of the Department are sincerely engaged in scholarly pursuit.
+The Department has been maintaining its reputation of high standard and discipline since its inception. Academic as well as extracurricular performance of our students is consistently good and some of them have secured good ranks in the university examinations. The UGC also appreciated the achievements of the department and allocated substantial grant under XI plan.`,
+      faculty: [
+        { name: 'Dr. Rishu Raj', designation: 'HOD, Political Science' },
+        { name: 'Prof. (Dr.) Pushplata Kumari', designation: 'Professor, Political Science', image: 'Prof. Pushpalata Kumari, Professor, Political Science Coordinator, IQAC, MMC.jpeg' },
+        { name: 'Dr. Varsha Shekhar', designation: 'Guest Faculty, Political Science' }
+      ]
+    },
+    {
+      name: 'Department of BBA',
+      category: 'Vocational',
+      icon: Briefcase,
+      description: 'Business administration, management, and leadership studies',
+      color: 'from-primary to-highlight',
+      highlights: `The Department of Bachelor of Business Administration (B.B.A.) is one of the most active and vibrant department of the college. With the sincere efforts of Prof. (Dr.) Asha Singh and support of the then Principal Prof. (Dr.) SukhadaKumari, this department was started under the parent department of Economics in 2006. This department began its first academic session after the approval of Human Recourse department, Government of Bihar and Syndicate, Patna University, Patna. The total number of seats approved is 60 only. The demand ratio 1:7 shows that the pressure for admission is very high for this course.
+
+ELIGIBILITY FOR ADMISSION :
+Candidates seeking admission to the first of the Degree of Bachelor of Business Administration will be required to have passed with a minimum of 45% marks, the Intermediate Examination in Arts I Science I Commerce of a Board / University established or incorporated by law or any other examination recognised by the University as equivalent thereto.
+
+Admission to the B.B.A. course shall be made on the basis of Merit List prepared after the Entrance test, including written and viva-voce examinations, to be conducted by the College.
+
+The reservation of seats for the course shall be as per rules of the State Government I Patna University for SC, ST and OBC.
+
+All candidates seeking admission to the course shall pay full fees as prescribed in the regulations or modified from time to time under the provision of the regulations.
+
+STRUCTURE OF THE COURSE :
+A candidate for the B.B.A. examination shall be required to offer and be examined in 16 papers according to the following structure :
+
+SUBSIDIARY PAPERS
+YEAR
+HONOURS PAPERS
+SUBSIDIARY PAPERS
+I Year
+1. Principals of Management
+2. Organisational Behaviour
+3. Managerial Economics
+4. Business Mathematics and Statistics
+I. Business Organisation
+II. Financial Accounting
+
+II Year
+5. Communication & Management Information System
+6. Cost and Management Accounting
+7. Legal Aspects of Business
+8. Computer Applications in Business
+I. Business Environment
+II. Entrepreneurship Development Programme
+
+III Year
+9. Financial Management
+10. Marketing Management
+11. Personnel Management
+12. Project Report (On-the-Job-Training)
+
+After the second year annual examination, each student shall undergo a Practical Training of eight weeks duration in an approved business / industrial / service organization and submit at least two copies of the Summer Training Report to the Head of the Department at least 15 days before the date of commencement of the final year examinations. The Summer Training Report shall carry 100 marks and it shall be evaluated for 60 marks by two external examiners to be appointed by the University and 40 marks shall be awarded on the basis of their internal assessment.
+
+The medium of instruction shall be English / Hindi.
+
+COURSE OBJECTIVE :
+Three year degree course in B.B.A. Hons. has been designed mainly to create a sound base for young women professionals with sufficient training in the the art of business management and entrepreneurship. This course aims at producing a competent and confident group of young women executive, under the fast-changing and rapidly expanding global economy, ready to accept challenges and responsibilities.
+
+PRE – REQUISTE FOR ADMISSION :
+10+2 in any discipline.
+
+ENTRANCE TEST :
+The duration of the entrance test will be 60 minutes. The test will, have both subjective and objective types of questions. It will be followed by an interview with the candidates. The test will consist of :
+- General Awareness
+- English language
+- Aptitude Assessment
+
+Provisional admission is granted for a period of 15 days only. Fees once paid will not be refunded . Those who wish to leave the course should do before the completion of one month of admission. Those who leave afterwards will have to pay the fees for the entire course (i.e. of 3 years). Only those who wish to complete the course are encouraged to apply.
+
+DISCIPLINE :
+- Student are expected to attend the lectures and tutorials regularly punctually.
+- No visitors for students are allowed during lecture hours.
+- No books, magazines, newspapers or notices for the notice board will be brought to the college without the approval of the Principal.
+- Students will wear the College identity card around the neck in the college premises.
+- Mobile phones are not allowed in the college premises.
+- 75% attendance is compulsory. (60% attendance for those with medical reasons, a medical certificate to be submitted at the time of illness.)
+
+LIBRARY :
+There is a separate library and Reading Room for the B.B.A. Students. They must abide by the rules and regulations laid down by the college for the use of library :
+- Strict silence will be observed at all time in the Library.
+- Membership is obligatory for all students.
+- Students will apply for books in the prescribed form by 2 P.M.
+- Books from the General Library are loaned for a week.
+- Students are requested to use books with care. They will held responsible for mishandling.
+- Students who fail to return books at the prescribed time will pay a fine of Re. 10/- Per day.
+- Library books are not to be lent by students to anyone in the College or outside the College.
+- Students will use the catalogue to guide them in the choice of books.
+- No magazines or papers of the Library will be lent for home use.
+- All library Rules and Regulations must be strictly followed in the Library.`,
+      faculty: [
+        { name: 'Dr. Suchita Arpan', designation: 'HOD, BBA', image: 'Dr. Suchita Arpan, HOD, Psychology.jpeg' }
+      ]
+    },
+    {
+      name: 'Department of BCA',
+      category: 'Vocational',
+      icon: Target,
+      description: 'Computer applications, programming, and software fundamentals',
+      color: 'from-primary to-highlight',
+      highlights: `Department of Computer Applications runs three programme e.g. B.A. / B.Sc. in Computer Applications (BCA), Post Graduate Diploma in Computer Applications (PGDCA) and CIC. Professor Dr Padmavathy Srinivasan, Head, Department of Physics was the founder coordinator of this programme. The department was started with only five computers donated by Smt Kamala Sinha, Member of Parliament. Presently there are more than 100 computers. The department runs on self financing basis. The department has 30 teachers – six University Professors, one senior scientist and 23 lecturers. Majority of the teachers possess adequate qualification and committed. The department has grown tremendously due to the dedication and continuous effort of the faculty members in a short span of 10 years. The students are doing extremely well in job market as software developer and analyst.
+
+The department is the only centre in Bihar which conducts UGC Refresher course and Orientation programme in IT and e- learning. The department has conducted nine UGC Refresher courses on Computers and e- Learning for university and college teachers for the Academic staff college, Patna University in post accreditation period. We have also conducted large number of Laboratory sessions on Computers for Refresher courses on other subjects, Orientation Programmes and short couses for teachers. A special training programme "Saskham' on Cloud Computing under NMEICT sponsored by MHRD, Govt of India and supported by Microsoft Corporation was also organized by us. Thirty two perticipants from various colleges of Patna and Magadh University took part in the programme. Dr Dolly Sinha worked as the Nodal officer for the NMEICT.
+
+The department also designed a 45-days short course on Basic Computing to train students, teachers and staff members of the college. The study material for this course was also developed by the department. In an unique system of sharing knowledge, the students of the department help the students and teachers of other subjects in learning computers during the laboratory classes.
+
+As part extension activity, the students of the department organizes special training sessions for the children of class IV staff of the college.
+
+Academic Programmes / Courses :
+1. Three Year Degree Honours (Vocational ) Course (B.C.A.)
+Course | Seat
+B.A. in Computer Applications [ B.A. (C.A.) ] | Seats – 40
+B.Sc. in Computer Applications [B. Sc. (C.A.)] | Seats – 40
+Total Seats : 40
+
+2. Past Graduate Diploma in Computer Applications (P.G.D.C.A)
+Course | Seat
+One Year Post Graduation Diploma (Vocational) Course | Seats – 40
+
+3. Certificate in Computer Applications (C.I.C)
+Course | Seat
+A 45 days Short-Term College Level Certificate Course | Seats – 60
+
+Sl No. | Courses
+1. | B.A. / B.Sc. in COMPUTER APPLICATIONS
+2. | Post Graduate Diploma in COMPUTER APPLICATIONS
+3. | Certificate Course in COMPUTER APPLICATIONS`,
+      faculty: [
+        { name: 'Dr. Manish Kumar Verma', designation: 'Coordinator, BCA', image: 'Dr. Manish Kumar Verma, Assistant Professor, Physics Coordinator, BCA.jpeg' }
+      ]
+    },
+    {
+      name: 'Department of BSW',
+      category: 'Vocational',
+      icon: Users,
+      description: 'Social work education, community engagement, and welfare studies',
+      color: 'from-primary to-highlight',
+      highlights: `Bachelor of Social Work (BSW) is one of the most potential career course which have immense professional opportunities to flourish in future. Students after passing this BSW Course may get placement in NGOs, State & Central Government Welfare Departments and in Social Research Projects too. This course is very fruitful & impotent in the development of the society specifically the underprivileged masses.
+
+Recognition of the Course : B.S.W. course was started in the year 2007 with the approval vide, Chanceller's office, Letter No. PU-44/2007-2442/GS(1), Dated : 20-07-2007.
+
+Duration of the Course : The Bachelor of Social Work (Hons.) Course shall cover a period of three academic years and shall be known as B.S.W. (Hons.) Part-I, Part-II and Part-III respectively, during the three consecutive years of the course.`,
+      faculty: [
+        { name: 'Dr. Binay Kumar Bimal', designation: 'Coordinator, BSW', image: 'Dr. Binay Kumar Bimal, Professor, Department of Sociology Bursar, MMC Coordinator, BSW.jpeg' }
+      ]
+    },
+    {
+      name: 'Department of BCom',
+      category: 'Vocational',
+      icon: Briefcase,
+      description: 'Commerce, accounting, taxation, and business operations',
+      color: 'from-primary to-highlight',
+      highlights: `The Department of Bachelor of Commerce (B.Com.) is one of the most active and vibrant department of the college. With the sincere efforts of Prof. (Dr.) Asha Singh and support of the then Principal Prof. (Dr.) Prof. Manju Rani Sinha this department was started under the parent department of Economics in 2002 (Dec.). This department began its first academic session after the approval of Human Recourse department, Government of Bihar and Syndicate, Patna University, Patna. The total number of seats approved was 250 only. The demand ratio 1:7 shows that the pressure for admission is very high for this course.
+
+The Department of Commerce directs its efforts to support the missions of the college by providing quality instruction to students to prepare them for successful careers, help them adopt critical, creative and research aptitudes along with profound social commitment and capability to contribute to socio-economic development, prepare them to be actively engaged with policy issues in local, national, and global communities, engaging them in scholarly activities to maintain academic excellence and to advance knowledge in fields of specialization of departmental faculty.`,
+      faculty: [
+        { name: 'Surendra Prasad', designation: 'Coordinator, B.Com', image: 'Surendra Prasad, Associate Prof, Botany Coordinator, B.Com..jpeg' }
+      ]
+    }
+  ];
+
+  // Get unique categories
+  const categories = ['All', 'Humanities', 'Science', 'Social Science', 'Fine Arts', 'Vocational'];
+
+  // Category descriptions
+  const categoryDescriptions = {
+    'Humanities': 'Explore languages, literature, philosophy, and cultural studies',
+    'Science': 'Discover physics, chemistry, mathematics, and natural sciences',
+    'Social Science': 'Study society, psychology, economics, and human behavior',
+    'Fine Arts': 'Learn about creative arts, design, and applied arts',
+    'Vocational': 'Explore professional and career-oriented programmes like BBA, BCA, BSW, and BCom'
+  };
+
+  const categoryIcons = {
+    'All': GraduationCap,
+    'Humanities': BookOpen,
+    'Science': Microscope,
+    'Social Science': Users,
+    'Fine Arts': Palette,
+    'Vocational': Briefcase
+  };
+
+  const getInitials = (name) => {
+    const cleanName = name.replace(/[^A-Za-z\s]/g, '').trim();
+    const parts = cleanName.split(/\s+/).filter(Boolean);
+    return parts.slice(0, 2).map((part) => part[0]).join('').toUpperCase();
+  };
+
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.2
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 30, scale: 0.9 },
+    visible: { 
+      opacity: 1, 
+      y: 0, 
+      scale: 1,
+      transition: {
+        duration: 0.6,
+        ease: [0.25, 0.1, 0.25, 1]
+      }
+    }
+  };
+
+  const facultyVariants = {
+    hidden: { opacity: 0, scale: 0.8 },
+    visible: (i) => ({
+      opacity: 1,
+      scale: 1,
+      transition: {
+        delay: i * 0.1,
+        duration: 0.5,
+        ease: [0.25, 0.1, 0.25, 1]
+      }
+    })
+  };
+
+  const modalVariants = {
+    hidden: { opacity: 0, scale: 0.8, y: 50 },
+    visible: { 
+      opacity: 1, 
+      scale: 1, 
+      y: 0,
+      transition: {
+        duration: 0.4,
+        ease: [0.25, 0.1, 0.25, 1]
+      }
+    },
+    exit: { 
+      opacity: 0, 
+      scale: 0.8, 
+      y: 50,
+      transition: {
+        duration: 0.3
+      }
+    }
+  };
+
+  return (
+    <>
+      <Helmet>
+        <title>Departments - Magadh Mahila College</title>
+        <meta name="description" content="Explore the various academic departments at Magadh Mahila College under NEP 2020." />
+      </Helmet>
+
+      <div className="pt-0">
+        <section className="py-20 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-7xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="text-center mb-16"
+            >
+              <FloatingElement delay={0}>
+                <h1 className="text-5xl md:text-6xl font-bold mb-6">
+                  <GradientText className="text-5xl md:text-6xl font-bold">
+                    Departments
+                  </GradientText>
+                  <motion.span
+                    className="inline-block ml-2"
+                    animate={{ rotate: [0, 20, -20, 0] }}
+                    transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
+                  >
+                    <Sparkles className="w-8 h-8 text-yellow-500" />
+                  </motion.span>
+                </h1>
+              </FloatingElement>
+              <BlurFadeIn delay={0.2}>
+                <p className="text-foreground max-w-3xl mx-auto text-lg">
+                  Discover our comprehensive academic departments offering quality education and research opportunities
+                </p>
+              </BlurFadeIn>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="mb-10"
+            >
+              <StaggerContainer className="flex flex-wrap justify-center gap-3" staggerDelay={0.05}>
+                {categories.map((category) => {
+                  const Icon = categoryIcons[category];
+                  const isActive = activeCategory === category;
+
+                  return (
+                    <FadeInUp key={category}>
+                      <motion.button
+                        onClick={() => setActiveCategory(category)}
+                        whileHover={{ scale: 1.05, y: -2 }}
+                        whileTap={{ scale: 0.95 }}
+                        className={`inline-flex items-center gap-2 rounded-full border px-5 py-2.5 text-sm font-semibold transition-all ${
+                          isActive
+                            ? 'bg-primary text-white border-primary shadow-lg shadow-primary/30'
+                            : 'bg-white text-foreground border-gray-300 hover:border-primary hover:text-primary'
+                        }`}
+                      >
+                        <motion.div
+                          animate={isActive ? { rotate: 360 } : { rotate: 0 }}
+                          transition={{ duration: 0.5 }}
+                        >
+                          <Icon className="w-4 h-4" />
+                        </motion.div>
+                        {category}
+                      </motion.button>
+                    </FadeInUp>
+                  );
+                })}
+              </StaggerContainer>
+              {activeCategory !== 'All' && (
+                <p className="mt-4 text-center text-muted-foreground">
+                  {categoryDescriptions[activeCategory]}
+                </p>
+              )}
+            </motion.div>
+
+            <motion.div
+              variants={containerVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+              className="mb-20"
+            >
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {(activeCategory === 'All' ? departments : departments.filter((dept) => dept.category === activeCategory)).map((dept, index) => (
+                  <AnimatedCard
+                    key={dept.name}
+                    index={index}
+                    onClick={() => setSelectedDepartment(dept)}
+                    className="h-full"
+                  >
+                    <div className="h-full p-8 rounded-2xl bg-gradient-to-br from-blue-50 to-blue-100 shadow-lg hover:shadow-2xl transition-all duration-300 border-2 border-blue-200 overflow-hidden relative">
+                      <div className="relative z-10">
+                        <AnimatedIcon icon={dept.icon} color={dept.color} />
+                        
+                        <h3 className="text-xl font-bold text-foreground mb-3 group-hover:text-primary transition-colors">
+                          {dept.name}
+                        </h3>
+                        <p className="text-muted-foreground">
+                          {dept.description}
+                        </p>
+
+                        {/* Learn more indicator */}
+                        <motion.div
+                          className="flex items-center gap-2 text-primary font-semibold text-sm mt-4 opacity-0 group-hover:opacity-100 transition-opacity"
+                          initial={{ x: -10, opacity: 0 }}
+                          whileHover={{ x: 5 }}
+                        >
+                          Explore 
+                          <motion.span 
+                            animate={{ x: [0, 5, 0] }} 
+                            transition={{ duration: 1.5, repeat: Infinity }}
+                          >
+                            →
+                          </motion.span>
+                        </motion.div>
+                      </div>
+                    </div>
+                  </AnimatedCard>
+                ))}
+              </div>
+            </motion.div>
+          </div>
+        </section>
+      </div>
+
+      <AnimatePresence>
+        {selectedDepartment && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setSelectedDepartment(null)}
+            className="fixed inset-0 z-50 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 cursor-pointer"
+          >
+            <motion.div
+              variants={modalVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              onClick={(e) => e.stopPropagation()}
+              className="relative max-w-6xl w-full max-h-[90vh] overflow-y-auto bg-white rounded-2xl shadow-2xl cursor-default"
+            >
+              <motion.button
+                onClick={() => setSelectedDepartment(null)}
+                whileHover={{ scale: 1.1, rotate: 90 }}
+                whileTap={{ scale: 0.9 }}
+                transition={{ duration: 0.2 }}
+                className="absolute -top-12 right-0 w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center hover:bg-white/30 transition-colors z-10"
+              >
+                <X className="w-6 h-6 text-white" />
+              </motion.button>
+
+              <div className="p-8">
+                <div className="flex items-center gap-4 mb-6">
+                  <motion.div
+                    initial={{ scale: 0, rotate: -180 }}
+                    animate={{ scale: 1, rotate: 0 }}
+                    transition={{ duration: 0.5, type: "spring", stiffness: 200 }}
+                    whileHover={{ rotate: 360, scale: 1.1 }}
+                    className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${selectedDepartment.color} flex items-center justify-center shadow-lg`}
+                  >
+                    <selectedDepartment.icon className="w-8 h-8 text-white" />
+                  </motion.div>
+                  <div>
+                    <motion.h2 
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.2 }}
+                      className="text-3xl font-bold text-foreground"
+                    >
+                      {selectedDepartment.name}
+                    </motion.h2>
+                    <motion.p 
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.3 }}
+                      className="text-muted-foreground text-lg"
+                    >
+                      {selectedDepartment.description}
+                    </motion.p>
+                  </div>
+                </div>
+
+                {/* Department Highlights */}
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4 }}
+                  className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-lg mb-8 border-l-4 border-primary"
+                >
+                  <h3 className="text-xl font-semibold text-primary mb-4 flex items-center gap-2">
+                    <Star className="w-5 h-5" />
+                    Highlights of the Department
+                  </h3>
+                  <div className="text-foreground whitespace-pre-line">
+                    {selectedDepartment.highlights}
+                  </div>
+                </motion.div>
+
+                {/* Faculty Section */}
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5 }}
+                  className="mb-8"
+                >
+                  <h3 className="text-2xl font-bold text-foreground mb-6 flex items-center gap-2">
+                    <Users className="w-6 h-6 text-primary" />
+                    Faculty Members
+                  </h3>
+                  {selectedDepartment.faculty.length > 0 ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {selectedDepartment.faculty.map((member, index) => (
+                        <motion.div
+                          key={index}
+                          custom={index}
+                          variants={facultyVariants}
+                          initial="hidden"
+                          animate="visible"
+                          whileHover={{ 
+                            scale: 1.05, 
+                            y: -5,
+                            transition: { duration: 0.2 }
+                          }}
+                          className="bg-white p-6 rounded-xl shadow-lg border border-gray-200 hover:shadow-2xl transition-all duration-300 group"
+                        >
+                          <div className="text-center">
+                            <motion.div 
+                              className="w-32 h-32 mx-auto mb-4 bg-gray-200 rounded-lg overflow-hidden relative"
+                              whileHover={{ scale: 1.1 }}
+                              transition={{ duration: 0.3 }}
+                            >
+                              {member.image ? (
+                                <img
+                                  src={r2Url(`images/faculty/${member.image}`)}
+                                  alt={member.name}
+                                  className="w-full h-full object-contain"
+                                />
+                              ) : (
+                                <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-100 to-indigo-100 text-primary font-bold text-2xl">
+                                  {getInitials(member.name)}
+                                </div>
+                              )}
+                              <motion.div
+                                className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity"
+                              />
+                            </motion.div>
+                            <h4 className="text-lg font-semibold text-foreground mb-1">{member.name}</h4>
+                            <p className="text-primary text-sm">{member.designation}</p>
+                          </div>
+                        </motion.div>
+                      ))}
+                    </div>
+                  ) : (
+                    <motion.div 
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 0.6 }}
+                      className="rounded-lg border border-dashed border-gray-300 p-4 text-muted-foreground text-center"
+                    >
+                      Faculty details will be updated soon.
+                    </motion.div>
+                  )}
+                </motion.div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+  );
+};
+
+export default Departments;

@@ -1,0 +1,217 @@
+{
+  "nav": {
+    "home": "Home",
+    "notifications": "Notifications",
+    "tenders": "Tenders",
+    "language": "Language",
+    "theme": "Theme",
+    "blue": "Blue",
+    "maroon": "Maroon",
+    "about": "About",
+    "academics": "Academics",
+    "admissions": "Admissions",
+    "nep2020": "NEP 2020",
+    "nirf": "NIRF",
+    "campusLife": "Campus Life",
+    "contact": "Contact",
+    "administration": "Administration",
+    "aboutDropdown": "ABOUT",
+    "aboutSub": {
+      "welcome": "Welcome to Magadh Mahila College",
+      "principalProfile": "Profile of Principal Magadh Mahila College",
+      "previousPrincipals": "Previous Principals",
+      "collegeEmblem": "College Emblem",
+      "collegeEmblemPage": {
+        "title": "College Emblem",
+        "contentPlaceholder": "College emblem image will be added here."
+      },
+      "studentsRollOfHonor": "Students Roll Of Honor",
+      "studentsRollOfHonorPage": {
+        "title": "Students Roll Of Honor",
+        "contentPlaceholder": "Content will be updated soon."
+      },
+      "codeOfEthics": "Code of Ethics",
+      "codeOfConduct": "Code of Conduct",
+      "instituteDistinctiveness": {
+        "title": "Institute Distinctiveness",
+        "description": "What makes us unique",
+        "content": "Institute Distinctiveness\n\nThe thrust area of building transformative multi-faceted learning ecosystem at Magadh Mahila College is primarily embedded in its vision of creating a \"Distinctive environment of educational excellence with human values and social responsibility\" through a plethora of 'beyond the curriculum' activities for promoting knowledge that is blended with right skills, attitude and values for life long success and wholesome living.Hence, our distinctiveness is reflected in giving the students the cutting edge 360-degree dimensional 'learning experiences 'beyond the classroom.The campus is ever vibrant with opportunities galore to nurture talent, build competencies and confidence among students to face challenges in the context of rapidly changing global dynamics.The institution is a shining example of an ideal academic institution that has successfully fulfilled its role in the society. The college has taken several progressive communitarian actions that have made it stand out among its peers. One of the college's most notable achievements is its ability to inculcate the best value system among its students, ensuring that they develop into responsible and ethical citizens who will contribute positively to society. Additionally, the college has successfully spread knowledge among all, regardless of caste, creed, or economic background. This approach has ensured that the college has a diverse student body, creating an inclusive environment for all. The college prides itself for being the mentoring centre for many such students who went on to make good careers and happy breadwinners for their families. It happily functions as a centre for community upliftment. The excellent works done by NSS, Gender Cell, ICC, IQAC have created a very inclusive environment not only for the students but also for the members of the locality and beyond.Academic excellence of college is reflected by the number college students bagging Gold medal and rank holders in Patna University examinations. Nineteen students were awarded gold medal in Patna University examination 2022. The college also provides cash rewards as Merit Scholarship to university Gold Medalists and Rank Holders students through cheque.\n\nMahima Chhatravas, the G+7 Floor New Girls' Hostel of Magadh Mahila College, Patna University, Patna completed in 30th September, 2021 is located within the College campus and is an integral part of the College. The foundation stone was laid by the Hon'ble Chief Minister, Shri Nitish Kumar on 18th September, 2019. Mahima Chhatravas is a distinctive accomplishment of the College that aims to provide convenient and comfortable stay for the outstation students. The New Hostel has one hundred sixty-eight (168) furnished rooms. It has twenty- four rooms with seventy-two (72) occupancy, One Common Room, 16 Toilets with separate 12 Bathrooms and One BHK Assistant Superintendent accommodation on each floor. The hostel provides accommodation to Five Hundred Four (504) students across the conventional and semester courses. Mahima Chhatravas is adequately furnished. It has lavish dining Hall on ground floor for dinner, indoor sport game facility, gym, beauty salon, coffee shop. Wi-Fi facility is also available in the hostel. Laundry services are separately provided within the campus for residents. In addition, the hostel also provides washing machine for self-washing by residents. It also has 24/7 dedicated housekeeping staff to cater the needs of boarders."
+      },
+      "institutionsPride": "Institutions’ Pride",
+      "modelElectoralLiteracyClub": "Model Electoral Literacy Club",
+      "visionMissionCoreValues": "Vision, Mission & Core Values",
+      "bestPractices": "Best Practices",
+      "feedback": "Feedback",
+      "environmentalPolicy": "Environmental Policy",
+      "mou": "MOU",
+      "futurePlans": "Future Plans"
+    },
+    "iqac": "IQAC",
+    "iqacSub": {
+      "workshop": "Workshop",
+      "naac": "NAAC",
+      "feedback": "Feedback",
+      "research": "Research",
+      "extensionActivities": "Extension Activities (NSS, NCC)",
+      "collaboration": "Collaboration",
+      "studentProgressionForm": "Student Progression Form",
+      "studentSatisfactionSurvey": "Student Satisfaction Survey",
+      "projectInternshipFieldWork": "Project Internship & Field Work",
+      "bestPractices2023": "Best practices 2023-24",
+      "bestPracticesPhotoGallery": "Best Practices – Photo Gallery"
+    },
+    "admissionsSub": {
+      "courses": "Courses",
+      "generalInformation": "General Information",
+      "intakeCapacity": "Intake Capacity",
+      "eligibility": "Eligibility",
+      "feeStructure": "Fee Structure",
+      "ugAdmission": "U.G. Admission",
+      "pgAdmission": "P.G. Admission",
+      "computerApplicationCourse": "Computer Application Course",
+      "vocationalAdmission": "Vocational Admission",
+      "commerceAdmission": "Commerce Admission",
+      "bbaAdmission": "BBA Admission",
+      "admittedStudentsYearWise": "Admitted Students (Year wise)"
+    },
+    "nep2020Sub": {
+      "academicInfrastructure": "Academic Infrastructure",
+      "courseMaterial": "Course Material",
+      "fineArts": "Fine Arts",
+      "humanities": "Humanities",
+      "library": "Library",
+      "programOutcome": {
+        "title": "Program Outcome & Course Outcome",
+        "metaTitle": "Program Outcome & Course Outcome - NEP 2020 - Magadh Mahila College",
+        "metaDescription": "Program Outcome and Course Outcome under National Education Policy 2020 at Magadh Mahila College.",
+        "intro": "Program Outcomes (POs) and Course Outcomes (COs) are essential components of the National Education Policy 2020 implementation at Magadh Mahila College.",
+        "programOutcomesTitle": "Program Outcomes",
+        "programOutcomesDesc": "Program Outcomes define what students are expected to know and be able to do by the time of graduation. These outcomes are aligned with the NEP 2020 guidelines and focus on holistic development.",
+        "courseOutcomesTitle": "Course Outcomes",
+        "courseOutcomesDesc": "Course Outcomes specify the knowledge, skills, and competencies that students should acquire upon completion of each course. These are mapped to the Program Outcomes.",
+        "note": "Detailed Program and Course Outcomes for each program will be available here soon. For specific information, please contact the respective department heads."
+      },
+      "publications": "Publications",
+      "science": "Science",
+      "socialScience": "Social Science",
+      "syllabus": "CBCS Syllabus",
+      "syllabusNEP": "Syllabus NEP",
+      "timeTable": "Time Table",
+      "vocationalCommerce": "Vocational Commerce",
+      "vocationalComputerApplication": "Vocational Computer Application"
+    },
+    "administrationSub": {
+      "antiRagging": "Anti-Ragging Committee",
+      "sexualHarassment": "Anti Sexual Harassment Committee",
+      "grievanceCell": "Grievance Cell",
+      "cells": {
+        "title": "Cells",
+        "contentPlaceholder": "Placeholder content for Cells page."
+      },
+      "committees": "Committees",
+      "incubationCentre": "Incubation Centre",
+      "organogramOfInstitution": "Organogram of Institution",
+      "societies": "Societies",
+      "staffCouncil": "Teachers and Employee List",
+      "centresList202021": "Centres List 2020-21",
+      "staffProfile": "Staff Profile",
+      "teachingStaffSanctionedPost": "Teaching Staff Sanctioned Post"
+    }
+  },
+  "pages": {
+    "principalProfile": "From the Principal's Desk",
+    "about": {
+      "title": "About Us - Magadh Mahila College",
+      "metaDescription": "Learn about Magadh Mahila College, its history, vision, mission, and various aspects of our institution.",
+      "mainTitle": "About Magadh Mahila College",
+      "subtitle": "Discover the rich heritage, values, and achievements that make Magadh Mahila College a premier institution for women's education in Bihar.",
+      "exploreSectionsTitle": "Explore About Sections",
+      "sections": {
+        "briefProfile": {
+          "title": "Brief Profile",
+          "description": "Learn about the history and overview of Magadh Mahila College"
+        },
+        "principalProfile": {
+          "title": "Principal Profile",
+          "description": "Meet our esteemed Principal and leadership team"
+        },
+        "previousPrincipals": {
+          "title": "Previous Principals",
+          "description": "Honorable former principals of the college"
+        },
+        "collegeEmblem": {
+          "title": "College Emblem",
+          "description": "The symbolic representation of our institution"
+        },
+        "studentsRollOfHonor": {
+          "title": "Students' Roll of Honor",
+          "description": "Celebrating our outstanding students"
+        },
+        "codeOfEthics": {
+          "title": "Code of Ethics",
+          "description": "Our commitment to ethical standards"
+        },
+        "codeOfConduct": {
+          "title": "Code of Conduct",
+          "description": "Guidelines for student behavior and conduct"
+        },
+        "melc": {
+          "title": "MELC",
+          "description": "Modern Education and Learning Center"
+        },
+        "visionMission": {
+          "title": "Vision & Mission",
+          "description": "Our goals and objectives"
+        },
+        "bestPractices": {
+          "title": "Best Practices",
+          "description": "Excellence in education and administration"
+        },
+        "feedbackForms": {
+          "title": "Feedback Forms",
+          "description": "Share your thoughts and suggestions"
+        },
+        "environmentalPolicy": {
+          "title": "Environmental Policy",
+          "description": "Our commitment to sustainability"
+        },
+        "mou": {
+          "title": "MOU",
+          "description": "Memorandums of Understanding"
+        },
+        "futurePlans": {
+          "title": "Future Plans",
+          "description": "Our roadmap for the future"
+        },
+        "milestones": {
+          "title": "Milestones",
+          "description": "Key achievements and landmarks"
+        },
+        "visitorsNote": {
+          "title": "Visitor's Note",
+          "description": "Messages from our esteemed visitors"
+        },
+        "managementAdministration": {
+          "title": "Management & Administration",
+          "description": "Governance and administrative structure"
+        },
+        "mis": {
+          "title": "Management Information System (MIS)",
+          "description": "Management Information System"
+        }
+      },
+      "learnMore": "Learn More →",
+      "commitmentTitle": "Our Commitment to Excellence",
+      "commitmentText": "Magadh Mahila College stands as a beacon of women's empowerment and academic excellence. Established in 1946, we have been nurturing young minds and shaping futures for generations. Our institution is committed to providing quality education, fostering holistic development, and creating an environment where every student can thrive and achieve their full potential."
+    }
+  },
+  "common": {
+    "language": "Language",
+    "english": "English",
+    "hindi": "हिंदी",
+    "theme": "Theme",
+    "light": "Light",
+    "dark": "Dark",
+    "note": "Note"
+  }
+}

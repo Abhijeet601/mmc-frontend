@@ -1,0 +1,10 @@
+dist/
+public/
+data files/
+*.pdf
+*.mp4
+*.zip
+*.jpg
+*.jpeg
+*.png
+.env
