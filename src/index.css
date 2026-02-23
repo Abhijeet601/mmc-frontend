@@ -427,6 +427,19 @@ body {
   transform: scaleX(1);
 }
 
+.board-note-date {
+  margin-top: 0.46rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(86, 57, 29, 0.8);
+}
+
+.event-board-tone .board-note-date {
+  color: rgba(33, 62, 92, 0.82);
+}
+
 .board-note-notice {
   border-left: 4px solid rgba(150, 54, 46, 0.42);
 }

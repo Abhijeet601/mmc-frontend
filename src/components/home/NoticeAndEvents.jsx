@@ -15,6 +15,17 @@ const NOTICE_NOTE_TILT_CLASSES = [
 
 const NOTICE_NOTE_ATTACHMENTS = ['pin', 'tape-left', 'tape-right', 'tape-both', 'pin', 'tape-left'];
 
+const formatPublishDate = (value) => {
+  if (!value) return '';
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) return '';
+  return parsed.toLocaleDateString('en-IN', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+  });
+};
+
 /* ================= Scroll List ================= */
 const ScrollList = ({ items, accent, emptyText, variant = 'default' }) => {
   const isBoardVariant = variant === 'notice-board' || variant === 'event-board';
@@ -60,6 +71,7 @@ const ScrollList = ({ items, accent, emptyText, variant = 'default' }) => {
               const hasLeftTape = attachment === 'tape-left' || attachment === 'tape-both';
               const hasRightTape = attachment === 'tape-right' || attachment === 'tape-both';
               const hasPin = attachment === 'pin';
+              const publishedDate = formatPublishDate(item.publishDate);
 
               return (
                 <a
@@ -77,6 +89,7 @@ const ScrollList = ({ items, accent, emptyText, variant = 'default' }) => {
                     <p className={`font-serif font-medium ${accent} board-note-title`}>
                       {item.title || item.text}
                     </p>
+                    {publishedDate ? <p className="board-note-date">Published: {publishedDate}</p> : null}
                   </div>
                 </a>
               );
@@ -138,6 +151,7 @@ const NoticeAndEvents = () => {
           noticeData.map((item) => ({
             title: item.title,
             link: item.link || item.fileUrl || '#',
+            publishDate: item.publishDate || '',
           })),
         );
 
@@ -145,6 +159,7 @@ const NoticeAndEvents = () => {
           eventData.map((item) => ({
             title: item.title,
             link: item.link || item.fileUrl || '#',
+            publishDate: item.publishDate || '',
           })),
         );
       } catch (error) {

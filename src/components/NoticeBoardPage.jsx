@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { Bell, Download, Link as LinkIcon, Pin } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { getPublicNotices } from '@/services/notifications';
+import { getPublicNotices, NOTICE_CATEGORIES } from '@/services/notifications';
 import { toR2AssetUrl } from '@/lib/r2Assets';
 
 const NoticeBoardPage = ({
@@ -39,6 +39,10 @@ const NoticeBoardPage = ({
 
   const boardTitle = pageTitle || `${title} - Magadh Mahila College`;
   const boardDescription = metaDescription || subtitle;
+  const shouldShowPublishDate =
+    category === NOTICE_CATEGORIES.NOTIFICATIONS ||
+    category === NOTICE_CATEGORIES.NOTICES ||
+    category === NOTICE_CATEGORIES.UPCOMING_EVENTS;
 
   const sortedItems = useMemo(() => {
     return [...items].sort((a, b) => {
@@ -49,6 +53,17 @@ const NoticeBoardPage = ({
       return bDate - aDate;
     });
   }, [items]);
+
+  const formatPublishDate = (value) => {
+    if (!value) return '';
+    const parsed = new Date(value);
+    if (Number.isNaN(parsed.getTime())) return '';
+    return parsed.toLocaleDateString('en-IN', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+    });
+  };
 
   const handleDownload = (fileUrl, fileName) => {
     if (!fileUrl) return;
@@ -101,54 +116,63 @@ const NoticeBoardPage = ({
           </motion.div>
         ) : (
           <div className="space-y-4">
-            {sortedItems.map((item, index) => (
-              <motion.article
-                key={item.id}
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.04 }}
-                className="bg-white border border-gray-200 rounded-lg p-5 shadow-sm"
-              >
-                <div className="flex items-start justify-between gap-4">
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <h2 className="text-xl font-semibold text-gray-900">{item.title}</h2>
-                      {item.pinned && (
-                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                          <Pin className="w-3 h-3 mr-1" />
-                          Pinned
-                        </span>
+            {sortedItems.map((item, index) => {
+              const publishedDate = formatPublishDate(item.publishDate);
+
+              return (
+                <motion.article
+                  key={item.id}
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.04 }}
+                  className="bg-white border border-gray-200 rounded-lg p-5 shadow-sm"
+                >
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <h2 className="text-xl font-semibold text-gray-900">{item.title}</h2>
+                        {item.pinned && (
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                            <Pin className="w-3 h-3 mr-1" />
+                            Pinned
+                          </span>
+                        )}
+                      </div>
+                      {shouldShowPublishDate && publishedDate && (
+                        <p className="mt-1 text-xs font-medium tracking-wide uppercase text-gray-500">
+                          Published: {publishedDate}
+                        </p>
+                      )}
+                      {item.description && <p className="mt-2 text-gray-700">{item.description}</p>}
+                    </div>
+
+                    <div className="flex items-center gap-2 shrink-0">
+                      {item.link && (
+                        <a
+                          href={item.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center px-3 py-2 rounded-md border border-blue-200 text-blue-700 hover:bg-blue-50 text-sm"
+                        >
+                          <LinkIcon className="w-4 h-4 mr-1" />
+                          Open Link
+                        </a>
+                      )}
+                      {item.fileUrl && (
+                        <button
+                          type="button"
+                          onClick={() => handleDownload(item.fileUrl, item.fileName)}
+                          className="inline-flex items-center px-3 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 text-sm"
+                        >
+                          <Download className="w-4 h-4 mr-1" />
+                          Download
+                        </button>
                       )}
                     </div>
-                    {item.description && <p className="mt-2 text-gray-700">{item.description}</p>}
                   </div>
-
-                  <div className="flex items-center gap-2 shrink-0">
-                    {item.link && (
-                      <a
-                        href={item.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center px-3 py-2 rounded-md border border-blue-200 text-blue-700 hover:bg-blue-50 text-sm"
-                      >
-                        <LinkIcon className="w-4 h-4 mr-1" />
-                        Open Link
-                      </a>
-                    )}
-                    {item.fileUrl && (
-                      <button
-                        type="button"
-                        onClick={() => handleDownload(item.fileUrl, item.fileName)}
-                        className="inline-flex items-center px-3 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 text-sm"
-                      >
-                        <Download className="w-4 h-4 mr-1" />
-                        Download
-                      </button>
-                    )}
-                  </div>
-                </div>
-              </motion.article>
-            ))}
+                </motion.article>
+              );
+            })}
           </div>
         )}
       </div>
