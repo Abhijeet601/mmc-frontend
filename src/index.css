@@ -250,6 +250,322 @@ body {
 .notice-scroll-container:hover .notice-scroll-track {
   animation-play-state: paused;
 }
+
+.notice-board-shell {
+  position: relative;
+  border-radius: 1rem;
+  padding: 0.78rem;
+  border: 1px solid rgba(103, 74, 43, 0.55);
+  background: linear-gradient(144deg, #8c6844 0%, #795634 48%, #6f4c2f 100%);
+  box-shadow:
+    0 10px 24px rgba(41, 28, 14, 0.24),
+    inset 0 1px 0 rgba(255, 255, 255, 0.24);
+}
+
+.notice-board-shell::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0.13;
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.2) 0 1px,
+      transparent 1px 5px
+    );
+}
+
+.notice-board-shell::after {
+  content: "";
+  position: absolute;
+  inset: 0.42rem;
+  border-radius: 0.9rem;
+  border: 1px solid rgba(255, 247, 235, 0.26);
+  pointer-events: none;
+}
+
+.notice-board-tone.notice-board-shell {
+  border-color: rgba(110, 78, 44, 0.55);
+}
+
+.notice-board-surface {
+  position: relative;
+  border-radius: 0.82rem;
+  background:
+    radial-gradient(circle at 16% 15%, rgba(255, 247, 231, 0.17), transparent 34%),
+    radial-gradient(circle at 78% 20%, rgba(255, 245, 228, 0.1), transparent 40%),
+    radial-gradient(circle at 24% 72%, rgba(121, 82, 43, 0.18), transparent 48%),
+    repeating-linear-gradient(30deg, rgba(159, 113, 66, 0.18) 0 5px, rgba(180, 132, 83, 0.15) 5px 10px),
+    linear-gradient(142deg, #c89a68 0%, #b88350 50%, #a67344 100%);
+  box-shadow:
+    inset 0 4px 11px rgba(69, 43, 19, 0.2),
+    inset 0 -8px 14px rgba(88, 56, 31, 0.22);
+}
+
+.notice-board-surface::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0.3;
+  background-image:
+    radial-gradient(rgba(255, 255, 255, 0.26) 0.7px, transparent 0.8px),
+    radial-gradient(rgba(92, 58, 28, 0.16) 0.8px, transparent 1px);
+  background-position: 0 0, 2px 2px;
+  background-size: 8px 8px, 10px 10px;
+  mix-blend-mode: soft-light;
+}
+
+.notice-board-surface > * {
+  position: relative;
+  z-index: 1;
+}
+
+.notice-board-track {
+  padding: 1.15rem 0.9rem 1.4rem;
+}
+
+.notice-board-note-link {
+  padding-inline: 0.15rem;
+}
+
+.board-note {
+  --note-tilt: 0deg;
+  position: relative;
+  padding: 1rem 1rem 1.08rem;
+  border-radius: 0.42rem;
+  border: 1px solid rgba(167, 146, 119, 0.48);
+  background:
+    repeating-linear-gradient(
+      178deg,
+      rgba(255, 255, 255, 0.58) 0 2px,
+      rgba(243, 236, 222, 0.5) 2px 4px
+    ),
+    linear-gradient(166deg, rgba(255, 255, 255, 0.96), rgba(246, 240, 227, 0.94));
+  box-shadow:
+    0 6px 12px rgba(41, 26, 10, 0.18),
+    0 2px 4px rgba(55, 35, 17, 0.12);
+  transform: rotate(var(--note-tilt));
+  transition: transform 220ms ease, box-shadow 220ms ease;
+}
+
+.board-note::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.66);
+  pointer-events: none;
+}
+
+.board-note::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 20px;
+  height: 20px;
+  border-bottom-right-radius: 0.34rem;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0) 49%, rgba(226, 213, 184, 0.8) 49%);
+  pointer-events: none;
+}
+
+.board-note:hover {
+  transform: translateY(-2px) rotate(var(--note-tilt));
+  box-shadow:
+    0 10px 16px rgba(42, 27, 11, 0.22),
+    0 4px 6px rgba(56, 35, 15, 0.16);
+}
+
+.board-note-title {
+  position: relative;
+  display: inline-block;
+  margin: 0;
+  letter-spacing: 0.006em;
+  line-height: 1.45;
+  font-size: 0.98rem;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+  transition: letter-spacing 220ms ease, text-shadow 220ms ease, filter 220ms ease;
+}
+
+.board-note-title::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.14rem;
+  height: 2px;
+  border-radius: 999px;
+  opacity: 0.42;
+  transform: scaleX(0.35);
+  transform-origin: center;
+  background: linear-gradient(
+    90deg,
+    rgba(185, 28, 28, 0) 0%,
+    rgba(185, 28, 28, 0.56) 32%,
+    rgba(185, 28, 28, 0.56) 68%,
+    rgba(185, 28, 28, 0) 100%
+  );
+  transition: transform 220ms ease, opacity 220ms ease;
+}
+
+.notice-board-note-link:hover .board-note-title {
+  letter-spacing: 0.012em;
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.56),
+    0 2px 6px rgba(126, 22, 22, 0.28);
+  filter: saturate(1.06);
+}
+
+.notice-board-note-link:hover .board-note-title::after {
+  opacity: 0.82;
+  transform: scaleX(1);
+}
+
+.board-note-notice {
+  border-left: 4px solid rgba(150, 54, 46, 0.42);
+}
+
+.board-note-event {
+  border-left: 4px solid rgba(53, 106, 161, 0.5);
+}
+
+.board-note-pin {
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  width: 13px;
+  height: 13px;
+  border-radius: 999px;
+  transform: translateX(-50%);
+  background: radial-gradient(circle at 34% 32%, #ffffff 0 28%, #b95a43 55%, #6f2f20 100%);
+  box-shadow:
+    0 2px 4px rgba(42, 22, 16, 0.34),
+    inset 0 1px 0 rgba(255, 255, 255, 0.68);
+}
+
+.board-note-pin::after {
+  content: "";
+  position: absolute;
+  top: 9px;
+  left: 50%;
+  width: 2px;
+  height: 10px;
+  border-radius: 999px;
+  transform: translateX(-50%);
+  background: linear-gradient(180deg, #d8d8d8, #8d8d8d);
+}
+
+.board-note-pin-notice {
+  background: radial-gradient(circle at 34% 32%, #ffffff 0 28%, #bd5e46 55%, #743325 100%);
+}
+
+.board-note-pin-event {
+  background: radial-gradient(circle at 34% 32%, #ffffff 0 28%, #4d8dc6 55%, #2d577f 100%);
+}
+
+.board-note-tape {
+  position: absolute;
+  top: -10px;
+  width: 44px;
+  height: 14px;
+  border: 1px solid rgba(171, 156, 131, 0.66);
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(255, 253, 245, 0.62) 0 3px,
+      rgba(235, 224, 198, 0.76) 3px 6px
+    );
+  box-shadow: 0 2px 4px rgba(48, 35, 20, 0.14);
+  opacity: 0.86;
+}
+
+.board-note-tape-left {
+  left: 0.64rem;
+  transform: rotate(-13deg);
+}
+
+.board-note-tape-right {
+  right: 0.64rem;
+  transform: rotate(12deg);
+}
+
+.board-note-tape-notice {
+  border-color: rgba(178, 164, 141, 0.68);
+}
+
+.board-note-tape-event {
+  border-color: rgba(158, 176, 198, 0.72);
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(239, 246, 255, 0.58) 0 3px,
+      rgba(208, 224, 242, 0.76) 3px 6px
+    );
+}
+
+.board-note-tilt-a {
+  --note-tilt: -1.3deg;
+}
+
+.board-note-tilt-b {
+  --note-tilt: 0.95deg;
+}
+
+.board-note-tilt-c {
+  --note-tilt: -0.65deg;
+}
+
+.board-note-tilt-d {
+  --note-tilt: 1.2deg;
+}
+
+.board-note-tilt-e {
+  --note-tilt: -0.95deg;
+}
+
+.board-note-tilt-f {
+  --note-tilt: 0.6deg;
+}
+
+.event-board-tone {
+  background: linear-gradient(144deg, #4f7095 0%, #3c5d83 48%, #335175 100%);
+  box-shadow:
+    0 10px 24px rgba(20, 35, 57, 0.26),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22);
+}
+
+.event-board-tone.notice-board-shell {
+  border-color: rgba(61, 89, 122, 0.58);
+}
+
+.event-board-tone::after {
+  border-color: rgba(224, 240, 255, 0.25);
+}
+
+.event-board-tone .notice-board-surface {
+  background:
+    radial-gradient(circle at 16% 15%, rgba(225, 242, 255, 0.18), transparent 34%),
+    radial-gradient(circle at 80% 20%, rgba(225, 240, 255, 0.12), transparent 40%),
+    radial-gradient(circle at 24% 72%, rgba(48, 82, 117, 0.2), transparent 48%),
+    repeating-linear-gradient(30deg, rgba(89, 128, 166, 0.2) 0 5px, rgba(111, 147, 184, 0.16) 5px 10px),
+    linear-gradient(142deg, #7ca2ca 0%, #678eb7 50%, #557ca7 100%);
+  box-shadow:
+    inset 0 4px 11px rgba(31, 56, 84, 0.24),
+    inset 0 -8px 14px rgba(40, 67, 96, 0.24);
+}
+
+.event-board-tone .notice-board-surface::before {
+  background-image:
+    radial-gradient(rgba(255, 255, 255, 0.26) 0.7px, transparent 0.8px),
+    radial-gradient(rgba(28, 50, 76, 0.16) 0.8px, transparent 1px);
+}
+
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }

@@ -4,9 +4,37 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { getPublicNotices, NOTICE_CATEGORIES } from '@/services/notifications';
 
+const NOTICE_NOTE_TILT_CLASSES = [
+  'board-note-tilt-a',
+  'board-note-tilt-b',
+  'board-note-tilt-c',
+  'board-note-tilt-d',
+  'board-note-tilt-e',
+  'board-note-tilt-f',
+];
+
+const NOTICE_NOTE_ATTACHMENTS = ['pin', 'tape-left', 'tape-right', 'tape-both', 'pin', 'tape-left'];
+
 /* ================= Scroll List ================= */
-const ScrollList = ({ items, accent, emptyText }) => {
+const ScrollList = ({ items, accent, emptyText, variant = 'default' }) => {
+  const isBoardVariant = variant === 'notice-board' || variant === 'event-board';
+  const boardToneClass = variant === 'event-board' ? 'event-board-tone' : 'notice-board-tone';
+  const boardTextClass = variant === 'event-board' ? 'text-[#1f466e]' : 'text-[#5a3a1d]';
+  const noteToneClass = variant === 'event-board' ? 'board-note-event' : 'board-note-notice';
+  const pinToneClass = variant === 'event-board' ? 'board-note-pin-event' : 'board-note-pin-notice';
+  const tapeToneClass = variant === 'event-board' ? 'board-note-tape-event' : 'board-note-tape-notice';
+
   if (!items.length) {
+    if (isBoardVariant) {
+      return (
+        <div className={`notice-board-shell ${boardToneClass}`}>
+          <div className={`notice-board-surface h-64 rounded-xl px-6 text-center text-sm ${boardTextClass} flex items-center justify-center`}>
+            {emptyText}
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="relative h-64 overflow-hidden rounded-lg border border-dashed border-gray-300 bg-white/80 flex items-center justify-center text-sm text-gray-500">
         {emptyText}
@@ -17,6 +45,47 @@ const ScrollList = ({ items, accent, emptyText }) => {
   // Slightly slow down as the number of cards grows.
   const duration = Math.max(items.length * 6, 20);
   const duplicatedItems = [...items, ...items];
+
+  if (isBoardVariant) {
+    return (
+      <div className={`notice-board-shell ${boardToneClass}`}>
+        <div className="relative h-72 overflow-hidden notice-scroll-container notice-board-surface">
+          <div
+            className="notice-scroll-track notice-board-track space-y-5"
+            style={{ animationDuration: `${duration}s` }}
+          >
+            {duplicatedItems.map((item, index) => {
+              const tiltClass = NOTICE_NOTE_TILT_CLASSES[index % NOTICE_NOTE_TILT_CLASSES.length];
+              const attachment = NOTICE_NOTE_ATTACHMENTS[index % NOTICE_NOTE_ATTACHMENTS.length];
+              const hasLeftTape = attachment === 'tape-left' || attachment === 'tape-both';
+              const hasRightTape = attachment === 'tape-right' || attachment === 'tape-both';
+              const hasPin = attachment === 'pin';
+
+              return (
+                <a
+                  key={index}
+                  href={item.link || item.fileUrl || '#'}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block notice-board-note-link"
+                >
+                  <div className={`board-note ${tiltClass} ${noteToneClass}`}>
+                    {hasPin ? <span className={`board-note-pin ${pinToneClass}`} aria-hidden="true" /> : null}
+                    {hasLeftTape ? <span className={`board-note-tape board-note-tape-left ${tapeToneClass}`} aria-hidden="true" /> : null}
+                    {hasRightTape ? <span className={`board-note-tape board-note-tape-right ${tapeToneClass}`} aria-hidden="true" /> : null}
+
+                    <p className={`font-serif font-medium ${accent} board-note-title`}>
+                      {item.title || item.text}
+                    </p>
+                  </div>
+                </a>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="relative h-64 overflow-hidden notice-scroll-container">
@@ -111,6 +180,7 @@ const NoticeAndEvents = () => {
               items={notices}
               accent="text-red-700"
               emptyText={t('notices.noNotices', 'No notices available right now.')}
+              variant="notice-board"
             />
 
             <Link to="/notices" className="inline-block mt-6 text-sm font-semibold text-primary hover:underline">
@@ -131,8 +201,9 @@ const NoticeAndEvents = () => {
 
             <ScrollList
               items={events}
-              accent="text-blue-700"
+              accent="text-red-700"
               emptyText={t('notices.noUpcomingEvents', 'No upcoming events right now.')}
+              variant="event-board"
             />
 
             <Link to="/events" className="inline-block mt-6 text-sm font-semibold text-primary hover:underline">
