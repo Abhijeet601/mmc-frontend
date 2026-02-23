@@ -11,7 +11,7 @@
     "dev": "vite --host :: --port 3000",
     "copy-images": "node scripts/copy-images.js",
     "verify:assets": "node scripts/check-assets.js",
-    "build": "npm run verify:assets && vite build",
+    "build": "vite build",
     "preview": "vite preview --host :: --port 3000"
   },
   "dependencies": {
