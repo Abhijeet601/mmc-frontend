@@ -33,6 +33,7 @@ const HeroSection = () => {
       {!videoError && (
         <video
           key={HERO_VIDEO_SRC}
+          src={HERO_VIDEO_SRC}
           data-skip-r2-rewrite="true"
           className={`absolute inset-0 z-0 h-full w-full object-cover object-center transition-opacity duration-700 ${
             videoLoaded ? 'opacity-100' : 'opacity-0'
@@ -48,7 +49,6 @@ const HeroSection = () => {
           onLoadedData={handleVideoReady}
           onError={() => setVideoError(true)}
         >
-          <source src={encodeURI(HERO_VIDEO_SRC)} type="video/mp4" />
           Your browser does not support the video tag.
         </video>
       )}
