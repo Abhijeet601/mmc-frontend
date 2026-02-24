@@ -1,193 +1,175 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useTranslation } from 'react-i18next';
-import { r2Url } from '@/lib/r2Assets';
+
+const HERO_VIDEO_SRC = '/hero-clipchamp-28.mp4';
+const HERO_IMAGE_SRC = '/modern-campus.webp';
 
 const HeroSection = () => {
   const { t } = useTranslation();
   const [videoError, setVideoError] = useState(false);
   const [videoLoaded, setVideoLoaded] = useState(false);
-  const heroVideoSrc = '/hero-clipchamp-28.mp4';
 
-  const handleVideoError = () => setVideoError(true);
+  const accreditationValue = t('hero.accreditations');
+  const accreditationItems =
+    typeof accreditationValue === 'string'
+      ? accreditationValue
+          .split('|')
+          .map((item) => item.trim())
+          .filter(Boolean)
+      : [];
 
-  useEffect(() => {
-    if (videoError || videoLoaded) return undefined;
+  const handleVideoReady = () => {
+    setVideoLoaded(true);
+  };
 
-    const timeoutId = window.setTimeout(() => {
-      handleVideoError();
-    }, 8000);
-
-    return () => window.clearTimeout(timeoutId);
-  }, [videoError, videoLoaded]);
-
-  const normalizedVideoSrc = encodeURI(heroVideoSrc);
+  const showPoster = videoError || !videoLoaded;
 
   return (
-    <section className="relative min-h-[72vh] md:min-h-[84vh] flex items-center justify-center overflow-hidden bg-black">
-      {/* VIDEO BACKGROUND */}
+    <section className="relative isolate flex min-h-[72vh] items-center justify-center overflow-hidden bg-slate-950 sm:min-h-[78vh] md:min-h-[84vh]">
       {!videoError && (
         <video
-          key={heroVideoSrc}
+          key={HERO_VIDEO_SRC}
           data-skip-r2-rewrite="true"
-          className="absolute inset-0 z-10 h-full w-full object-cover object-top"
+          className={`absolute inset-0 z-0 h-full w-full object-cover object-center transition-opacity duration-700 ${
+            videoLoaded ? 'opacity-100' : 'opacity-0'
+          }`}
           autoPlay
           loop
           muted
           defaultMuted
           playsInline
           preload="auto"
-          poster={r2Url('modern-campus.webp')}
-          onError={handleVideoError}
-          onLoadedData={() => setVideoLoaded(true)}
+          poster={HERO_IMAGE_SRC}
+          onCanPlay={handleVideoReady}
+          onLoadedData={handleVideoReady}
+          onError={() => setVideoError(true)}
         >
-          <source src={normalizedVideoSrc} type="video/mp4" />
+          <source src={encodeURI(HERO_VIDEO_SRC)} type="video/mp4" />
           Your browser does not support the video tag.
         </video>
       )}
 
-      {!videoError && !videoLoaded && (
+      {showPoster && (
         <img
-          src={r2Url('modern-campus.webp')}
+          src={HERO_IMAGE_SRC}
+          data-skip-r2-rewrite="true"
           alt=""
-          className="absolute inset-0 z-10 w-full h-full object-cover object-top"
+          className="absolute inset-0 z-0 h-full w-full object-cover object-center"
           aria-hidden="true"
         />
       )}
-      
-      {/* FALLBACK BACKGROUND */}
-      {videoError && (
-        <>
-          <img
-            src={r2Url('modern-campus.webp')}
-            alt=""
-            className="absolute inset-0 z-10 w-full h-full object-cover object-top"
-            aria-hidden="true"
-          />
-          <div className="absolute inset-0 z-10 bg-gradient-to-br from-primary/80 to-primary/40" />
-        </>
-      )}
-      
 
-      {/* CONTENT */}
       <motion.div
-        className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center"
-        initial={{ opacity: 0, y: 40 }}
+        className="relative z-20 mx-auto flex w-full max-w-5xl flex-col items-center px-4 text-center sm:px-6 lg:px-8"
+        initial={{ opacity: 0, y: 28 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1 }}
+        transition={{ duration: 0.8 }}
       >
-
-        {/* BADGE */}
         <motion.div
-          animate={{ y: [0, -6, 0] }}
-          transition={{ duration: 3.2, repeat: Infinity, ease: 'easeInOut' }}
-          className="inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-white shadow-lg mb-8"
+          animate={{ y: [0, -4, 0] }}
+          transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+          className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/35 bg-white/10 px-4 py-2 text-xs font-semibold tracking-wide text-white backdrop-blur-md sm:text-sm"
         >
           <motion.div
-            animate={{ rotate: [0, 12, -12, 0], scale: [1, 1.1, 1] }}
-            transition={{ duration: 4, repeat: Infinity }}
+            animate={{ rotate: [0, 12, -12, 0], scale: [1, 1.08, 1] }}
+            transition={{ duration: 3.8, repeat: Infinity }}
           >
-            <Sparkles className="w-5 h-5 text-primary" />
+            <Sparkles className="h-4 w-4 text-white sm:h-5 sm:w-5" />
           </motion.div>
-          <span className="text-sm font-medium text-primary">
-            {t('hero.badge')}
-          </span>
+          <span>{t('hero.badge')}</span>
         </motion.div>
 
-        {/* HERO TITLE */}
         <motion.h1
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 0.2 }}
-          className="text-5xl md:text-7xl font-bold mb-6 leading-tight"
-        >
-          <motion.span
-            className="text-white inline-block"
-            style={{ textShadow: '0 8px 32px rgba(0,0,0,0.7)' }}
-            animate={{
-              textShadow: [
-                '0 6px 24px rgba(0,0,0,0.7)',
-                '0 10px 40px rgba(0,0,0,0.85)',
-                '0 6px 24px rgba(0,0,0,0.7)',
-              ],
-            }}
-            transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-          >
-            {t('hero.title')}
-          </motion.span>
-        </motion.h1>
-
-        {/* SUBTEXT */}
-        <motion.p
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          className="text-white mb-4 max-w-3xl mx-auto"
+          transition={{ duration: 0.8, delay: 0.15 }}
+          className="mb-5 max-w-4xl text-balance text-4xl font-extrabold leading-tight text-white sm:text-5xl md:text-6xl lg:text-7xl"
+          style={{ textShadow: '0 10px 32px rgba(0, 0, 0, 0.55)' }}
+        >
+          {t('hero.title')}
+        </motion.h1>
+
+        <motion.p
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.3 }}
+          className="mb-6 max-w-3xl text-pretty text-sm leading-relaxed text-white/90 sm:text-base md:text-lg"
         >
           {t('hero.subtitle')}
         </motion.p>
 
-        <motion.p
-          initial={{ opacity: 0, y: 30 }}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.45 }}
+          className="mb-10 flex flex-wrap items-center justify-center gap-2.5 sm:gap-3"
+        >
+          {accreditationItems.map((item) => (
+            <span
+              key={item}
+              className="rounded-full border border-white/30 bg-white/10 px-3.5 py-1.5 text-xs font-medium text-white/95 backdrop-blur-sm sm:text-sm"
+            >
+              {item}
+            </span>
+          ))}
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6 }}
-          className="text-white mb-12 max-w-2xl mx-auto"
+          className="flex w-full max-w-xl flex-col gap-3 sm:flex-row sm:justify-center sm:gap-4"
         >
-          {t('hero.accreditations')}
-        </motion.p>
-
-        {/* CTA BUTTONS */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.8 }}
-          className="flex flex-col sm:flex-row gap-4 justify-center"
-        >
-          <a href="https://formbuilder.ccavenue.com/live/patna-university" target="_blank" rel="noopener noreferrer">
-            <motion.div whileHover={{ scale: 1.07 }} whileTap={{ scale: 0.95 }}>
-              <Button
-                size="lg"
-                className="group bg-primary hover:bg-primary/80 text-white shadow-xl"
+          <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }} className="w-full sm:w-auto">
+            <Button
+              asChild
+              size="lg"
+              className="group h-12 w-full min-w-[220px] bg-primary px-6 text-white shadow-2xl hover:bg-primary/85"
+            >
+              <a
+                href="https://formbuilder.ccavenue.com/live/patna-university"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Open admission fee payment portal in a new tab"
               >
                 Admission Fee Payment
                 <motion.span
-                  animate={{ x: [0, 6, 0] }}
-                  transition={{ duration: 1.6, repeat: Infinity }}
+                  animate={{ x: [0, 5, 0] }}
+                  transition={{ duration: 1.4, repeat: Infinity, repeatDelay: 0.2 }}
                 >
-                  <ArrowRight className="ml-2 w-5 h-5" />
+                  <ArrowRight className="ml-2 h-5 w-5" />
                 </motion.span>
-              </Button>
-            </motion.div>
-          </a>
+              </a>
+            </Button>
+          </motion.div>
 
-          <Link to="/about">
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Button
-                size="lg"
-                variant="outline"
-                className="border-2 border-white text-blue-500 hover:bg-white/10"
-              >
-                {t('hero.exploreLegacy')}
-              </Button>
-            </motion.div>
-          </Link>
+          <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }} className="w-full sm:w-auto">
+            <Button
+              asChild
+              size="lg"
+              variant="outline"
+              className="h-12 w-full min-w-[220px] border-2 border-white/70 bg-white/5 px-6 text-white hover:border-white hover:bg-white/15 hover:text-white"
+            >
+              <Link to="/about">{t('hero.exploreLegacy')}</Link>
+            </Button>
+          </motion.div>
         </motion.div>
       </motion.div>
 
-      {/* SCROLL INDICATOR */}
       <motion.div
-        animate={{ y: [0, 14, 0] }}
-        transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20"
+        animate={{ y: [0, 12, 0] }}
+        transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
+        className="absolute bottom-6 left-1/2 z-20 hidden -translate-x-1/2 md:block"
       >
-        <div className="w-6 h-10 rounded-full border-2 border-white flex items-start justify-center p-2">
+        <div className="flex h-10 w-6 items-start justify-center rounded-full border-2 border-white/75 p-1.5">
           <motion.div
-            animate={{ y: [0, 12, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity }}
-            className="w-1.5 h-1.5 rounded-full bg-white"
+            animate={{ y: [0, 10, 0] }}
+            transition={{ duration: 1.4, repeat: Infinity }}
+            className="h-1.5 w-1.5 rounded-full bg-white"
           />
         </div>
       </motion.div>
