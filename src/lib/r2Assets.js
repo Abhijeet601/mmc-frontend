@@ -51,6 +51,7 @@ const MEDIA_EXTENSIONS = [
 
 const IGNORE_SCHEMES = ['data:', 'blob:', 'mailto:', 'tel:', 'javascript:'];
 const ATTRIBUTES_TO_REWRITE = ['src', 'href', 'poster'];
+const SKIP_REWRITE_ATTR = 'data-skip-r2-rewrite';
 
 const splitUrlSuffix = (value) => {
   const queryIndex = value.indexOf('?');
@@ -183,6 +184,13 @@ export const toR2AssetUrl = (value) => {
 };
 
 const rewriteElementAttribute = (element, attributeName) => {
+  if (
+    element.hasAttribute?.(SKIP_REWRITE_ATTR) ||
+    element.closest?.(`[${SKIP_REWRITE_ATTR}="true"],[${SKIP_REWRITE_ATTR}]`)
+  ) {
+    return;
+  }
+
   const current = element.getAttribute(attributeName);
   if (!current) return;
 

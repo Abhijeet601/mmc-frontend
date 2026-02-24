@@ -154,6 +154,20 @@ const appendIfDefined = (formData, key, value) => {
   }
 };
 
+const appendPublishTargets = (formData, value) => {
+  const targets = Array.isArray(value) ? value : [value];
+
+  targets
+    .map((item) => (typeof item === 'string' ? item.trim() : ''))
+    .filter(Boolean)
+    .forEach((target) => {
+      formData.append('publish_to', target);
+    });
+};
+
+const normalizeNoticeResponse = (data) =>
+  Array.isArray(data) ? data.map(normalizeNotice) : normalizeNotice(data);
+
 const toNoticeFormData = (data = {}, { isUpdate = false } = {}) => {
   const formData = new FormData();
   const hasFileUrlField =
@@ -162,7 +176,7 @@ const toNoticeFormData = (data = {}, { isUpdate = false } = {}) => {
 
   appendIfDefined(formData, 'title', data.title?.trim());
   appendIfDefined(formData, 'description', data.description ?? '');
-  appendIfDefined(formData, 'publish_to', data.publish_to || data.publishTo);
+  appendPublishTargets(formData, data.publish_to ?? data.publishTo);
   appendIfDefined(formData, 'link', data.link ?? '');
   if (!isUpdate || hasFileUrlField) {
     appendIfDefined(formData, 'file_url', data.fileUrl ?? data.file_url ?? '');
@@ -226,7 +240,7 @@ export const addNotification = async (notificationData) => {
     token: getAdminToken(),
     body: toNoticeFormData(notificationData),
   });
-  return normalizeNotice(data);
+  return normalizeNoticeResponse(data);
 };
 
 export const updateNotification = async (id, updates) => {

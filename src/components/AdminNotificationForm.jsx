@@ -1,6 +1,17 @@
 import React, { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Upload, X, Save, FileText, Link as LinkIcon, Pin, Calendar } from 'lucide-react';
+import {
+  Upload,
+  X,
+  Save,
+  FileText,
+  Link as LinkIcon,
+  Pin,
+  Calendar,
+  Type,
+  AlignLeft,
+  Layers3,
+} from 'lucide-react';
 import { NOTICE_CATEGORIES, PUBLISH_TO_OPTIONS } from '@/services/notifications';
 
 const toDatetimeLocalValue = (value) => {
@@ -11,12 +22,34 @@ const toDatetimeLocalValue = (value) => {
   return local.toISOString().slice(0, 16);
 };
 
+const formContainerVariants = {
+  hidden: { opacity: 0, y: 16 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.35,
+      ease: 'easeOut',
+      staggerChildren: 0.06,
+    },
+  },
+};
+
+const formItemVariants = {
+  hidden: { opacity: 0, y: 10 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.25 } },
+};
+
 const AdminNotificationForm = ({ notification, onSave, onCancel }) => {
+  const isEditing = Boolean(notification?.id);
+
   const [formData, setFormData] = useState({
     title: notification?.title || '',
     description: notification?.description || '',
     link: notification?.link || '',
-    publish_to: notification?.publish_to || notification?.publishTo || NOTICE_CATEGORIES.NOTIFICATIONS,
+    publish_to: notification?.publish_to || notification?.publishTo
+      ? [notification?.publish_to || notification?.publishTo]
+      : [NOTICE_CATEGORIES.NOTIFICATIONS],
     pinned: notification?.pinned || false,
     published: notification?.published ?? true,
     publishDate: toDatetimeLocalValue(notification?.publishDate || notification?.publish_date || ''),
@@ -28,17 +61,26 @@ const AdminNotificationForm = ({ notification, onSave, onCancel }) => {
   const fileInputRef = useRef(null);
 
   const currentFileName = selectedFile?.name || notification?.fileName || notification?.file_name || '';
+  const selectedPublishCount = formData.publish_to?.length || 0;
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
-    const normalizedValue =
-      name === 'publish_to' && typeof value === 'string'
-        ? value.split(',')[0].trim()
-        : value;
+
+    if (name === 'publish_to') {
+      const selectedValues = e.target.multiple
+        ? Array.from(e.target.selectedOptions, (option) => option.value)
+        : [value];
+
+      setFormData((prev) => ({
+        ...prev,
+        publish_to: selectedValues.filter(Boolean),
+      }));
+      return;
+    }
 
     setFormData((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : normalizedValue,
+      [name]: type === 'checkbox' ? checked : value,
     }));
   };
 
@@ -82,7 +124,7 @@ const AdminNotificationForm = ({ notification, onSave, onCancel }) => {
       return;
     }
 
-    if (!formData.publish_to) {
+    if (!Array.isArray(formData.publish_to) || formData.publish_to.length === 0) {
       alert('Publish To is required');
       return;
     }
@@ -91,6 +133,7 @@ const AdminNotificationForm = ({ notification, onSave, onCancel }) => {
     try {
       await onSave({
         ...formData,
+        publish_to: isEditing ? formData.publish_to[0] : formData.publish_to,
         file: selectedFile,
         removeFile: removeExistingFile,
       });
@@ -103,83 +146,142 @@ const AdminNotificationForm = ({ notification, onSave, onCancel }) => {
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="bg-white rounded-lg shadow-lg p-6 max-w-2xl mx-auto"
-    >
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-gray-900">
-          {notification ? 'Edit Notice' : 'Add New Notice'}
-        </h2>
-        <button onClick={onCancel} className="text-gray-400 hover:text-gray-600">
-          <X className="w-6 h-6" />
-        </button>
-      </div>
+    <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} className="relative mx-auto max-w-3xl">
+      <motion.div
+        aria-hidden="true"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="pointer-events-none absolute -top-8 left-12 h-32 w-32 rounded-full bg-sky-300/30 blur-3xl"
+      />
+      <motion.div
+        aria-hidden="true"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.1 }}
+        className="pointer-events-none absolute -bottom-8 right-16 h-36 w-36 rounded-full bg-amber-300/30 blur-3xl"
+      />
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Title *</label>
-          <input
-            type="text"
-            name="title"
-            value={formData.title}
-            onChange={handleInputChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            placeholder="Enter title"
-            required
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Publish To *</label>
-          <select
-            name="publish_to"
-            value={formData.publish_to}
-            onChange={handleInputChange}
-            multiple={false}
-            size={1}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            required
-          >
-            {PUBLISH_TO_OPTIONS.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
-          <textarea
-            name="description"
-            value={formData.description}
-            onChange={handleInputChange}
-            rows={3}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            placeholder="Enter description"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Link (optional)</label>
-          <div className="relative">
-            <LinkIcon className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
-            <input
-              type="url"
-              name="link"
-              value={formData.link}
-              onChange={handleInputChange}
-              className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="https://example.com"
-            />
+      <div className="relative overflow-hidden rounded-3xl border border-slate-200/80 bg-white/95 shadow-[0_20px_60px_-25px_rgba(15,23,42,0.35)] backdrop-blur">
+        <div className="border-b border-slate-200 bg-gradient-to-r from-sky-50 via-white to-amber-50 px-6 py-5 md:px-8">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-sky-700">Admin Publisher</p>
+              <h2 className="mt-1 text-2xl font-black tracking-tight text-slate-900">
+                {notification ? 'Edit Notice' : 'Create New Notice'}
+              </h2>
+              <p className="mt-1 text-sm text-slate-600">Craft a polished notice and publish it instantly.</p>
+            </div>
+            <motion.button
+              type="button"
+              whileHover={{ scale: 1.06 }}
+              whileTap={{ scale: 0.94 }}
+              onClick={onCancel}
+              className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-500 shadow-sm transition hover:text-slate-700"
+              aria-label="Close form"
+            >
+              <X className="h-5 w-5" />
+            </motion.button>
           </div>
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Upload File (optional)</label>
-          <div className="space-y-2">
+        <motion.form
+          variants={formContainerVariants}
+          initial="hidden"
+          animate="visible"
+          onSubmit={handleSubmit}
+          className="space-y-6 px-6 py-7 md:px-8"
+        >
+          <motion.div variants={formItemVariants} className="grid gap-5 md:grid-cols-2">
+            <div className="md:col-span-2">
+              <label className="mb-2 inline-flex items-center gap-2 text-sm font-semibold text-slate-700">
+                <Type className="h-4 w-4 text-sky-600" />
+                Title *
+              </label>
+              <input
+                type="text"
+                name="title"
+                value={formData.title}
+                onChange={handleInputChange}
+                className="h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-slate-900 shadow-sm outline-none transition focus:border-sky-500 focus:ring-4 focus:ring-sky-100"
+                placeholder="Enter title"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="mb-2 inline-flex items-center gap-2 text-sm font-semibold text-slate-700">
+                <Layers3 className="h-4 w-4 text-sky-600" />
+                Publish To *
+              </label>
+              <select
+                name="publish_to"
+                value={isEditing ? (formData.publish_to[0] || '') : formData.publish_to}
+                onChange={handleInputChange}
+                multiple={!isEditing}
+                size={!isEditing ? PUBLISH_TO_OPTIONS.length : 1}
+                className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-slate-900 shadow-sm outline-none transition focus:border-sky-500 focus:ring-4 focus:ring-sky-100"
+                required
+              >
+                {PUBLISH_TO_OPTIONS.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+              {!isEditing && (
+                <p className="mt-2 text-xs text-slate-500">
+                  Hold Ctrl (Windows) or Cmd (Mac) to select multiple options. Selected: {selectedPublishCount}
+                </p>
+              )}
+            </div>
+
+            <div>
+              <label className="mb-2 inline-flex items-center gap-2 text-sm font-semibold text-slate-700">
+                <Calendar className="h-4 w-4 text-sky-600" />
+                Publish Date
+              </label>
+              <input
+                type="datetime-local"
+                name="publishDate"
+                value={formData.publishDate}
+                onChange={handleInputChange}
+                className="h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-slate-900 shadow-sm outline-none transition focus:border-sky-500 focus:ring-4 focus:ring-sky-100"
+              />
+            </div>
+
+            <div className="md:col-span-2">
+              <label className="mb-2 inline-flex items-center gap-2 text-sm font-semibold text-slate-700">
+                <AlignLeft className="h-4 w-4 text-sky-600" />
+                Description
+              </label>
+              <textarea
+                name="description"
+                value={formData.description}
+                onChange={handleInputChange}
+                rows={4}
+                className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 shadow-sm outline-none transition focus:border-sky-500 focus:ring-4 focus:ring-sky-100"
+                placeholder="Write a short summary for this notice..."
+              />
+            </div>
+
+            <div className="md:col-span-2">
+              <label className="mb-2 inline-flex items-center gap-2 text-sm font-semibold text-slate-700">
+                <LinkIcon className="h-4 w-4 text-sky-600" />
+                Link (optional)
+              </label>
+              <input
+                type="url"
+                name="link"
+                value={formData.link}
+                onChange={handleInputChange}
+                className="h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-slate-900 shadow-sm outline-none transition focus:border-sky-500 focus:ring-4 focus:ring-sky-100"
+                placeholder="https://example.com"
+              />
+            </div>
+          </motion.div>
+
+          <motion.div variants={formItemVariants} className="rounded-2xl border border-slate-200 bg-slate-50/60 p-4 md:p-5">
+            <label className="mb-3 block text-sm font-semibold text-slate-700">Upload File (optional)</label>
             <input
               ref={fileInputRef}
               type="file"
@@ -187,93 +289,88 @@ const AdminNotificationForm = ({ notification, onSave, onCancel }) => {
               accept=".pdf,image/*"
               className="hidden"
             />
-            <button
+            <motion.button
               type="button"
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.99 }}
               onClick={() => fileInputRef.current?.click()}
-              className="flex items-center px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-sky-300 bg-white px-4 py-4 text-sm font-semibold text-sky-700 transition hover:border-sky-500 hover:bg-sky-50"
             >
-              <Upload className="w-4 h-4 mr-2" />
+              <Upload className="h-4 w-4" />
               Choose File
-            </button>
+            </motion.button>
 
             {currentFileName && !removeExistingFile && (
-              <div className="flex items-center justify-between p-2 bg-gray-50 rounded-md">
-                <div className="flex items-center">
-                  <FileText className="w-4 h-4 mr-2 text-gray-500" />
-                  <span className="text-sm text-gray-700">{currentFileName}</span>
+              <div className="mt-3 flex items-center justify-between rounded-xl border border-slate-200 bg-white px-3 py-2">
+                <div className="flex min-w-0 items-center gap-2">
+                  <FileText className="h-4 w-4 shrink-0 text-slate-500" />
+                  <span className="truncate text-sm text-slate-700">{currentFileName}</span>
                 </div>
-                <button type="button" onClick={removeFile} className="text-red-500 hover:text-red-700">
-                  <X className="w-4 h-4" />
+                <button
+                  type="button"
+                  onClick={removeFile}
+                  className="rounded-lg p-1 text-rose-500 transition hover:bg-rose-50 hover:text-rose-700"
+                  aria-label="Remove file"
+                >
+                  <X className="h-4 w-4" />
                 </button>
               </div>
             )}
-          </div>
-          <p className="text-xs text-gray-500 mt-1">Supported: PDF, JPG, JPEG, PNG, WEBP and other images (Max 10MB)</p>
-        </div>
+            <p className="mt-2 text-xs text-slate-500">Supported: PDF, JPG, JPEG, PNG, WEBP and other images (Max 10MB).</p>
+          </motion.div>
 
-        <div className="space-y-3">
-          <div className="flex items-center">
-            <input
-              type="checkbox"
-              id="pinned"
-              name="pinned"
-              checked={formData.pinned}
-              onChange={handleInputChange}
-              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-            />
-            <label htmlFor="pinned" className="ml-2 flex items-center text-sm text-gray-700">
-              <Pin className="w-4 h-4 mr-1" />
-              Pin this notice
-            </label>
-          </div>
-
-          <div className="flex items-center">
-            <input
-              type="checkbox"
-              id="published"
-              name="published"
-              checked={formData.published}
-              onChange={handleInputChange}
-              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-            />
-            <label htmlFor="published" className="ml-2 text-sm text-gray-700">
-              Publish now
-            </label>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Publish Date (optional)</label>
-            <div className="relative">
-              <Calendar className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
+          <motion.div variants={formItemVariants} className="grid gap-3 md:grid-cols-2">
+            <label className="flex cursor-pointer items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm transition hover:border-sky-300">
               <input
-                type="datetime-local"
-                name="publishDate"
-                value={formData.publishDate}
+                type="checkbox"
+                id="pinned"
+                name="pinned"
+                checked={formData.pinned}
                 onChange={handleInputChange}
-                className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="h-4 w-4 rounded border-slate-300 text-sky-600 focus:ring-sky-500"
               />
-            </div>
-          </div>
-        </div>
+              <span className="inline-flex items-center gap-2 text-sm font-medium text-slate-700">
+                <Pin className="h-4 w-4 text-amber-600" />
+                Pin this notice
+              </span>
+            </label>
 
-        <div className="flex justify-end space-x-3 pt-4">
-          <button
-            type="button"
-            onClick={onCancel}
-            className="px-4 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500"
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            disabled={isUploading}
-            className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
-          >
-            <Save className="w-4 h-4 mr-2" />
-            {isUploading ? 'Saving...' : 'Save Notice'}
-          </button>
-        </div>
-      </form>
+            <label className="flex cursor-pointer items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm transition hover:border-sky-300">
+              <input
+                type="checkbox"
+                id="published"
+                name="published"
+                checked={formData.published}
+                onChange={handleInputChange}
+                className="h-4 w-4 rounded border-slate-300 text-sky-600 focus:ring-sky-500"
+              />
+              <span className="text-sm font-medium text-slate-700">Publish now</span>
+            </label>
+          </motion.div>
+
+          <motion.div variants={formItemVariants} className="flex flex-col-reverse justify-end gap-3 pt-2 sm:flex-row">
+            <motion.button
+              type="button"
+              whileHover={{ y: -1 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={onCancel}
+              className="inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100"
+            >
+              Cancel
+            </motion.button>
+            <motion.button
+              type="submit"
+              whileHover={{ y: -1, scale: 1.01 }}
+              whileTap={{ scale: 0.98 }}
+              disabled={isUploading}
+              className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-sky-600 to-blue-700 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-sky-600/20 transition hover:from-sky-700 hover:to-blue-800 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              <Save className="h-4 w-4" />
+              {isUploading ? 'Saving...' : 'Save Notice'}
+            </motion.button>
+          </motion.div>
+        </motion.form>
+      </div>
     </motion.div>
   );
 };

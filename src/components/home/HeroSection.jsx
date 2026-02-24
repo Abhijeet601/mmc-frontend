@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -9,35 +9,53 @@ import { r2Url } from '@/lib/r2Assets';
 const HeroSection = () => {
   const { t } = useTranslation();
   const [videoError, setVideoError] = useState(false);
-  const [videoSourceIndex, setVideoSourceIndex] = useState(0);
-  const videoSources = [r2Url('hero-section-video.mp4'), r2Url('main gate video.mp4')];
+  const [videoLoaded, setVideoLoaded] = useState(false);
+  const heroVideoSrc = '/hero-clipchamp-28.mp4';
 
-  const handleVideoError = () => {
-    if (videoSourceIndex < videoSources.length - 1) {
-      setVideoSourceIndex((prev) => prev + 1);
-      return;
-    }
-    setVideoError(true);
-  };
+  const handleVideoError = () => setVideoError(true);
+
+  useEffect(() => {
+    if (videoError || videoLoaded) return undefined;
+
+    const timeoutId = window.setTimeout(() => {
+      handleVideoError();
+    }, 8000);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [videoError, videoLoaded]);
+
+  const normalizedVideoSrc = encodeURI(heroVideoSrc);
 
   return (
-    <section className="relative min-h-[80vh] md:min-h-[95vh] flex items-center justify-center overflow-hidden bg-gray-900">
+    <section className="relative min-h-[72vh] md:min-h-[84vh] flex items-center justify-center overflow-hidden bg-black">
       {/* VIDEO BACKGROUND */}
       {!videoError && (
         <video
-          key={videoSources[videoSourceIndex]}
-          className="absolute inset-0 w-full h-full object-cover z-10 transform scale-125 md:scale-135 origin-center"
+          key={heroVideoSrc}
+          data-skip-r2-rewrite="true"
+          className="absolute inset-0 z-10 h-full w-full object-cover object-top"
           autoPlay
           loop
           muted
+          defaultMuted
           playsInline
-          preload="metadata"
+          preload="auto"
           poster={r2Url('modern-campus.webp')}
           onError={handleVideoError}
+          onLoadedData={() => setVideoLoaded(true)}
         >
-          <source src={encodeURI(videoSources[videoSourceIndex])} type="video/mp4" />
+          <source src={normalizedVideoSrc} type="video/mp4" />
           Your browser does not support the video tag.
         </video>
+      )}
+
+      {!videoError && !videoLoaded && (
+        <img
+          src={r2Url('modern-campus.webp')}
+          alt=""
+          className="absolute inset-0 z-10 w-full h-full object-cover object-top"
+          aria-hidden="true"
+        />
       )}
       
       {/* FALLBACK BACKGROUND */}
@@ -46,7 +64,7 @@ const HeroSection = () => {
           <img
             src={r2Url('modern-campus.webp')}
             alt=""
-            className="absolute inset-0 z-10 w-full h-full object-cover"
+            className="absolute inset-0 z-10 w-full h-full object-cover object-top"
             aria-hidden="true"
           />
           <div className="absolute inset-0 z-10 bg-gradient-to-br from-primary/80 to-primary/40" />

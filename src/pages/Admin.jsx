@@ -1,7 +1,20 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
-import { Bell, Edit, Eye, EyeOff, LogOut, Plus, Trash2 } from 'lucide-react';
+import {
+  ArrowRight,
+  Edit,
+  Eye,
+  EyeOff,
+  KeyRound,
+  LayoutDashboard,
+  LogOut,
+  Plus,
+  ShieldCheck,
+  Sparkles,
+  Trash2,
+  User2,
+} from 'lucide-react';
 import AdminNotificationForm from '@/components/AdminNotificationForm';
 import {
   addNotification,
@@ -145,113 +158,199 @@ const Admin = () => {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-sky-50 via-white to-amber-50">
         <Helmet>
           <title>Admin Login - Magadh Mahila College</title>
         </Helmet>
 
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="max-w-md w-full space-y-8"
-        >
-          <div>
-            <div className="mx-auto h-12 w-12 flex items-center justify-center rounded-full bg-blue-100">
-              <Bell className="h-6 w-6 text-blue-600" />
-            </div>
-            <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">Admin Login</h2>
-          </div>
+          aria-hidden="true"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="pointer-events-none absolute -left-24 top-10 h-72 w-72 rounded-full bg-sky-300/30 blur-3xl"
+        />
+        <motion.div
+          aria-hidden="true"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2 }}
+          className="pointer-events-none absolute -right-20 bottom-12 h-72 w-72 rounded-full bg-amber-300/30 blur-3xl"
+        />
 
-          <form className="mt-8 space-y-6" onSubmit={handleLogin}>
-            <div className="space-y-4">
-              <input
-                name="username"
-                type="text"
-                required
-                className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                placeholder="Username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-              />
-              <div className="relative">
-                <input
-                  name="password"
-                  type={showPassword ? 'text' : 'password'}
-                  required
-                  className="appearance-none rounded-md relative block w-full px-3 py-2 pr-10 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                  placeholder="Password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-                <button
-                  type="button"
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? (
-                    <EyeOff className="h-4 w-4 text-gray-400" />
-                  ) : (
-                    <Eye className="h-4 w-4 text-gray-400" />
-                  )}
-                </button>
+        <div className="relative z-10 mx-auto grid min-h-screen w-full max-w-6xl items-center gap-8 px-4 py-12 lg:grid-cols-2 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.45 }}
+            className="hidden rounded-3xl border border-slate-200 bg-white/80 p-8 shadow-[0_22px_60px_-28px_rgba(15,23,42,0.4)] backdrop-blur lg:block"
+          >
+            <div className="inline-flex items-center gap-2 rounded-full border border-sky-200 bg-sky-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-sky-700">
+              <ShieldCheck className="h-3.5 w-3.5" />
+              Secure Admin Area
+            </div>
+            <h1 className="mt-4 text-4xl font-black leading-tight tracking-tight text-slate-900">
+              Notice Control Panel
+            </h1>
+            <p className="mt-3 max-w-md text-slate-600">
+              Manage notices, notifications, tenders, and upcoming events from one dashboard with fast publishing.
+            </p>
+            <div className="mt-8 space-y-3">
+              <div className="rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 shadow-sm">
+                Upload file attachments and publish with schedule support.
+              </div>
+              <div className="rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 shadow-sm">
+                Pin critical notices and control visibility instantly.
+              </div>
+              <div className="rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 shadow-sm">
+                Designed for fast updates during admissions and exam cycles.
               </div>
             </div>
+          </motion.div>
 
-            {authError && <p className="text-sm text-red-600">{authError}</p>}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="mx-auto w-full max-w-md"
+          >
+            <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white/90 shadow-[0_20px_60px_-30px_rgba(15,23,42,0.45)] backdrop-blur">
+              <div className="border-b border-slate-200 bg-gradient-to-r from-sky-50 via-white to-amber-50 px-6 py-5">
+                <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-slate-600">
+                  <Sparkles className="h-3.5 w-3.5 text-sky-600" />
+                  Admin Sign In
+                </div>
+                <h2 className="mt-3 text-3xl font-black tracking-tight text-slate-900">Welcome Back</h2>
+                <p className="mt-1 text-sm text-slate-600">Use your admin credentials to access notice management.</p>
+              </div>
 
-            <div>
-              <button
-                type="submit"
-                disabled={loading}
-                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50"
-              >
-                {loading ? 'Signing in...' : 'Login'}
-              </button>
+              <form className="space-y-5 px-6 py-6" onSubmit={handleLogin}>
+                <div>
+                  <label className="mb-2 block text-sm font-semibold text-slate-700">Username</label>
+                  <div className="relative">
+                    <User2 className="pointer-events-none absolute left-3 top-3.5 h-4 w-4 text-slate-400" />
+                    <input
+                      name="username"
+                      type="text"
+                      required
+                      className="h-11 w-full rounded-xl border border-slate-300 bg-white pl-10 pr-3 text-slate-900 outline-none transition focus:border-sky-500 focus:ring-4 focus:ring-sky-100"
+                      placeholder="Username"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-sm font-semibold text-slate-700">Password</label>
+                  <div className="relative">
+                    <KeyRound className="pointer-events-none absolute left-3 top-3.5 h-4 w-4 text-slate-400" />
+                    <input
+                      name="password"
+                      type={showPassword ? 'text' : 'password'}
+                      required
+                      className="h-11 w-full rounded-xl border border-slate-300 bg-white pl-10 pr-10 text-slate-900 outline-none transition focus:border-sky-500 focus:ring-4 focus:ring-sky-100"
+                      placeholder="Password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
+                    <button
+                      type="button"
+                      className="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 transition hover:text-slate-600"
+                      onClick={() => setShowPassword(!showPassword)}
+                      aria-label={showPassword ? 'Hide password' : 'Show password'}
+                    >
+                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </button>
+                  </div>
+                </div>
+
+                {authError && (
+                  <div className="rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">{authError}</div>
+                )}
+
+                <motion.button
+                  whileHover={{ y: -1, scale: 1.01 }}
+                  whileTap={{ scale: 0.99 }}
+                  type="submit"
+                  disabled={loading}
+                  className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-sky-600 to-blue-700 px-4 text-sm font-semibold text-white shadow-lg shadow-sky-600/20 transition hover:from-sky-700 hover:to-blue-800 disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {loading ? 'Signing in...' : 'Login to Dashboard'}
+                  {!loading && <ArrowRight className="h-4 w-4" />}
+                </motion.button>
+              </form>
             </div>
-          </form>
-        </motion.div>
+          </motion.div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-sky-50/40">
       <Helmet>
         <title>Admin Dashboard - Magadh Mahila College</title>
       </Helmet>
 
-      <div className="bg-white shadow">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
-            <div className="flex items-center">
-              <Bell className="h-8 w-8 text-blue-600 mr-3" />
-              <h1 className="text-2xl font-bold text-gray-900">Notice Dashboard</h1>
-            </div>
-            <div className="flex items-center space-x-4">
-              <button
-                onClick={() => {
-                  setSuccessMessage('');
-                  setShowForm(true);
-                  setEditingNotification(null);
-                }}
-                className="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                Add Notice
-              </button>
-              <button
-                onClick={handleLogout}
-                className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
-              >
-                <LogOut className="h-4 w-4 mr-2" />
-                Logout
-              </button>
+      <div className="border-b border-slate-200 bg-white/80 backdrop-blur">
+        <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+          <div className="relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-r from-slate-900 via-blue-900 to-slate-900 px-6 py-6 text-white shadow-[0_24px_60px_-30px_rgba(15,23,42,0.7)]">
+            <motion.div
+              aria-hidden="true"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="pointer-events-none absolute -right-12 -top-10 h-40 w-40 rounded-full bg-sky-300/20 blur-3xl"
+            />
+            <motion.div
+              aria-hidden="true"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.15 }}
+              className="pointer-events-none absolute -bottom-10 left-16 h-36 w-36 rounded-full bg-amber-300/20 blur-3xl"
+            />
+
+            <div className="relative flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+              <div className="flex items-start gap-3">
+                <div className="mt-0.5 inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-white/20 bg-white/10">
+                  <LayoutDashboard className="h-6 w-6" />
+                </div>
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-sky-100">Admin Workspace</p>
+                  <h1 className="mt-1 text-2xl font-black tracking-tight">Notice Dashboard</h1>
+                  <p className="mt-1 text-sm text-sky-100/90">Create, schedule, and manage official announcements.</p>
+                </div>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-3">
+                <motion.button
+                  whileHover={{ y: -1 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => {
+                    setSuccessMessage('');
+                    setShowForm(true);
+                    setEditingNotification(null);
+                  }}
+                  className="inline-flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-slate-900 shadow transition hover:bg-slate-100"
+                >
+                  <Plus className="h-4 w-4" />
+                  Add Notice
+                </motion.button>
+                <motion.button
+                  whileHover={{ y: -1 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={handleLogout}
+                  className="inline-flex items-center gap-2 rounded-xl border border-white/35 bg-white/10 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-white/20"
+                >
+                  <LogOut className="h-4 w-4" />
+                  Logout
+                </motion.button>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         {showForm ? (
           <AdminNotificationForm
             notification={editingNotification}
@@ -262,70 +361,84 @@ const Admin = () => {
             }}
           />
         ) : (
-          <div className="px-4 py-6 sm:px-0">
-            {successMessage && <p className="mb-4 text-sm text-green-700">{successMessage}</p>}
-            <div className="bg-white shadow overflow-hidden sm:rounded-md">
+          <div className="py-2">
+            {successMessage && (
+              <div className="mb-4 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700">
+                {successMessage}
+              </div>
+            )}
+            <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_20px_50px_-35px_rgba(15,23,42,0.45)]">
               {loading ? (
-                <div className="px-6 py-8 text-center text-gray-500">Loading...</div>
+                <div className="px-6 py-10 text-center text-slate-500">Loading...</div>
               ) : notifications.length === 0 ? (
-                <div className="px-6 py-8 text-center text-gray-500">No notices found.</div>
+                <div className="px-6 py-10 text-center text-slate-500">No notices found.</div>
               ) : (
-                <ul className="divide-y divide-gray-200">
-                  {notifications.map((notification) => (
-                    <li key={notification.id} className="px-6 py-4">
+                <ul className="grid gap-4 p-4 md:p-6">
+                  {notifications.map((notification, index) => (
+                    <motion.li
+                      key={notification.id}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.03 }}
+                      className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                    >
                       <div className="flex items-center justify-between">
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center flex-wrap gap-2">
-                            <p className="text-lg font-medium text-gray-900 truncate">{notification.title}</p>
-                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                            <p className="text-lg font-semibold text-slate-900 truncate">{notification.title}</p>
+                            <span className="inline-flex items-center rounded-full bg-sky-100 px-2.5 py-1 text-xs font-semibold text-sky-800">
                               {publishLabelMap[notification.publish_to] || notification.publish_to}
                             </span>
                             {notification.pinned && (
-                              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                              <span className="inline-flex items-center rounded-full bg-amber-100 px-2.5 py-1 text-xs font-semibold text-amber-800">
                                 Pinned
                               </span>
                             )}
                             {!notification.published && (
-                              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                              <span className="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-700">
                                 Draft
                               </span>
                             )}
                           </div>
 
                           {notification.description && (
-                            <p className="mt-1 text-sm text-gray-600 line-clamp-2">{notification.description}</p>
+                            <p className="mt-2 text-sm text-slate-600 line-clamp-2">{notification.description}</p>
                           )}
 
-                          <div className="mt-2 flex flex-wrap items-center gap-4 text-sm text-gray-500">
+                          <div className="mt-3 flex flex-wrap items-center gap-4 text-xs font-medium uppercase tracking-wide text-slate-500">
                             <span>Created: {formatDate(notification.createdAt)}</span>
                             {notification.publishDate && <span>Publish Date: {formatDate(notification.publishDate)}</span>}
                             {notification.fileName && <span>File: {notification.fileName}</span>}
                           </div>
                         </div>
 
-                        <div className="flex items-center space-x-2 ml-4">
-                          <button
+                        <div className="ml-4 flex items-center gap-2">
+                          <motion.button
+                            whileHover={{ y: -1 }}
+                            whileTap={{ scale: 0.95 }}
                             onClick={() => handleEditNotification(notification)}
-                            className="text-blue-600 hover:text-blue-900 p-1"
+                            className="rounded-lg p-2 text-sky-600 transition hover:bg-sky-50 hover:text-sky-900"
                             title="Edit"
                           >
                             <Edit className="h-4 w-4" />
-                          </button>
-                          <button
+                          </motion.button>
+                          <motion.button
+                            whileHover={{ y: -1 }}
+                            whileTap={{ scale: 0.95 }}
                             onClick={() => handleDeleteNotification(notification.id)}
-                            className="text-red-600 hover:text-red-900 p-1"
+                            className="rounded-lg p-2 text-rose-600 transition hover:bg-rose-50 hover:text-rose-900"
                             title="Delete"
                           >
                             <Trash2 className="h-4 w-4" />
-                          </button>
+                          </motion.button>
                         </div>
                       </div>
-                    </li>
+                    </motion.li>
                   ))}
                 </ul>
               )}
             </div>
-            {authError && <p className="mt-4 text-sm text-red-600">{authError}</p>}
+            {authError && <p className="mt-4 text-sm text-rose-600">{authError}</p>}
           </div>
         )}
       </div>
