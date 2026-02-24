@@ -1,22 +1,15 @@
 import { toR2AssetUrl } from '@/lib/r2Assets';
 
+const API_BASE = import.meta.env.VITE_API_BASE;
 const fallbackApiBaseUrl =
-  typeof window !== 'undefined' && window.location?.origin
-    ? window.location.origin
-    : 'http://localhost:8000';
+  typeof window !== 'undefined' && window.location?.origin ? window.location.origin : '';
 
-const rawApiBaseUrl = (
-  import.meta.env.VITE_API_BASE_URL ||
-  import.meta.env.VITE_API_BASE ||
-  fallbackApiBaseUrl
-)
-  .trim()
-  .replace(/\/+$/, '');
+const rawApiBaseUrl = (API_BASE || fallbackApiBaseUrl).trim().replace(/\/+$/, '');
 
 // Requests use explicit /api/... paths below, so strip a trailing /api from base to avoid /api/api.
 const API_BASE_URL = rawApiBaseUrl.replace(/\/api$/i, '');
 const ADMIN_TOKEN_KEY = 'mmc_admin_token';
-const ADMIN_LOGIN_PATHS = ['/api/admin/login', '/admin/login'];
+const ADMIN_LOGIN_PATH = '/api/admin/login';
 
 export const NOTICE_CATEGORIES = Object.freeze({
   TENDERS: 'tenders',
@@ -110,7 +103,7 @@ const parseNetworkError = (error) => {
   }
 
   if (error instanceof TypeError) {
-    return `Unable to reach API at ${API_BASE_URL}. Check VITE_API_BASE_URL/VITE_API_BASE and backend CORS_ORIGINS.`;
+    return `Unable to reach API at ${API_BASE_URL}. Check VITE_API_BASE and backend CORS_ORIGINS.`;
   }
 
   return error?.message || 'Network request failed.';
@@ -120,6 +113,7 @@ const request = async (path, { method = 'GET', body, token, headers = {} } = {})
   const normalizedPath = path.startsWith('/') ? path : `/${path}`;
   const requestUrl = `${API_BASE_URL}${normalizedPath}`;
   const isFormData = body instanceof FormData;
+  const isUrlEncodedForm = body instanceof URLSearchParams;
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 20000);
   let response;
@@ -128,11 +122,11 @@ const request = async (path, { method = 'GET', body, token, headers = {} } = {})
     response = await fetch(requestUrl, {
       method,
       headers: {
-        ...(isFormData ? {} : { 'Content-Type': 'application/json' }),
+        ...(isFormData || isUrlEncodedForm ? {} : { 'Content-Type': 'application/json' }),
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
         ...headers,
       },
-      body: body ? (isFormData ? body : JSON.stringify(body)) : undefined,
+      body: body ? (isFormData || isUrlEncodedForm ? body : JSON.stringify(body)) : undefined,
       signal: controller.signal,
     });
   } catch (error) {
@@ -191,44 +185,29 @@ export const setAdminToken = (token) => localStorage.setItem(ADMIN_TOKEN_KEY, to
 export const clearAdminToken = () => localStorage.removeItem(ADMIN_TOKEN_KEY);
 export const isAdminAuthenticated = () => Boolean(getAdminToken());
 
-const isNotFoundError = (message = '') => {
-  const text = String(message).toLowerCase();
-  return text.includes('status 404') || text.includes('not found');
-};
-
 const getAccessTokenFromResponse = (data) =>
   data?.access_token || data?.accessToken || data?.token || '';
 
 export const loginAdmin = async ({ username, password }) => {
-  const credentials = { username: username?.trim?.() || '', password };
-  let lastError;
+  const formData = new URLSearchParams();
+  formData.set('username', username?.trim?.() || '');
+  formData.set('password', password || '');
 
-  for (let index = 0; index < ADMIN_LOGIN_PATHS.length; index += 1) {
-    const path = ADMIN_LOGIN_PATHS[index];
-    const isLastPath = index === ADMIN_LOGIN_PATHS.length - 1;
+  const data = await request(ADMIN_LOGIN_PATH, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: formData,
+  });
 
-    try {
-      const data = await request(path, {
-        method: 'POST',
-        body: credentials,
-      });
-
-      const accessToken = getAccessTokenFromResponse(data);
-      if (!accessToken) {
-        throw new Error('Login response did not include an access token.');
-      }
-
-      setAdminToken(accessToken);
-      return data;
-    } catch (error) {
-      lastError = error;
-      if (isLastPath || !isNotFoundError(error?.message)) {
-        throw error;
-      }
-    }
+  const accessToken = getAccessTokenFromResponse(data);
+  if (!accessToken) {
+    throw new Error('Login response did not include an access token.');
   }
 
-  throw lastError || new Error('Login failed');
+  setAdminToken(accessToken);
+  return data;
 };
 
 export const getAdminProfile = async () =>
