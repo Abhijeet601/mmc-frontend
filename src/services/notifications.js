@@ -113,7 +113,6 @@ const request = async (path, { method = 'GET', body, token, headers = {} } = {})
   const normalizedPath = path.startsWith('/') ? path : `/${path}`;
   const requestUrl = `${API_BASE_URL}${normalizedPath}`;
   const isFormData = body instanceof FormData;
-  const isUrlEncodedForm = body instanceof URLSearchParams;
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 20000);
   let response;
@@ -122,11 +121,11 @@ const request = async (path, { method = 'GET', body, token, headers = {} } = {})
     response = await fetch(requestUrl, {
       method,
       headers: {
-        ...(isFormData || isUrlEncodedForm ? {} : { 'Content-Type': 'application/json' }),
+        ...(isFormData ? {} : { 'Content-Type': 'application/json' }),
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
         ...headers,
       },
-      body: body ? (isFormData || isUrlEncodedForm ? body : JSON.stringify(body)) : undefined,
+      body: body ? (isFormData ? body : JSON.stringify(body)) : undefined,
       signal: controller.signal,
     });
   } catch (error) {
@@ -189,16 +188,12 @@ const getAccessTokenFromResponse = (data) =>
   data?.access_token || data?.accessToken || data?.token || '';
 
 export const loginAdmin = async ({ username, password }) => {
-  const formData = new URLSearchParams();
-  formData.set('username', username?.trim?.() || '');
-  formData.set('password', password || '');
-
   const data = await request(ADMIN_LOGIN_PATH, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
+    body: {
+      username: username?.trim?.() || '',
+      password: password || '',
     },
-    body: formData,
   });
 
   const accessToken = getAccessTokenFromResponse(data);
