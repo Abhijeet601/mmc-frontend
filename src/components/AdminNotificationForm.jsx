@@ -31,9 +31,14 @@ const AdminNotificationForm = ({ notification, onSave, onCancel }) => {
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
+    const normalizedValue =
+      name === 'publish_to' && typeof value === 'string'
+        ? value.split(',')[0].trim()
+        : value;
+
     setFormData((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value,
+      [name]: type === 'checkbox' ? checked : normalizedValue,
     }));
   };
 
@@ -41,16 +46,12 @@ const AdminNotificationForm = ({ notification, onSave, onCancel }) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const allowedTypes = [
-      'application/pdf',
-      'application/msword',
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-      'image/jpeg',
-      'image/png',
-    ];
+    const name = file.name.toLowerCase();
+    const isPdf = file.type === 'application/pdf' || name.endsWith('.pdf');
+    const isImage = file.type.startsWith('image/') || /\.(png|jpe?g|gif|webp|bmp|svg)$/i.test(name);
 
-    if (!allowedTypes.includes(file.type)) {
-      alert('Please select a valid file (PDF, DOC, DOCX, JPG, PNG)');
+    if (!isPdf && !isImage) {
+      alert('Please select a valid file (PDF or image)');
       return;
     }
 
@@ -136,6 +137,8 @@ const AdminNotificationForm = ({ notification, onSave, onCancel }) => {
             name="publish_to"
             value={formData.publish_to}
             onChange={handleInputChange}
+            multiple={false}
+            size={1}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             required
           >
@@ -181,7 +184,7 @@ const AdminNotificationForm = ({ notification, onSave, onCancel }) => {
               ref={fileInputRef}
               type="file"
               onChange={handleFileChange}
-              accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+              accept=".pdf,image/*"
               className="hidden"
             />
             <button
@@ -205,7 +208,7 @@ const AdminNotificationForm = ({ notification, onSave, onCancel }) => {
               </div>
             )}
           </div>
-          <p className="text-xs text-gray-500 mt-1">Supported: PDF, DOC, DOCX, JPG, PNG (Max 10MB)</p>
+          <p className="text-xs text-gray-500 mt-1">Supported: PDF, JPG, JPEG, PNG, WEBP and other images (Max 10MB)</p>
         </div>
 
         <div className="space-y-3">

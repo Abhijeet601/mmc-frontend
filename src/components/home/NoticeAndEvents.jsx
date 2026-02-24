@@ -26,6 +26,20 @@ const formatPublishDate = (value) => {
   });
 };
 
+const dedupeBoardItems = (items = []) => {
+  const seen = new Set();
+  const deduped = [];
+
+  items.forEach((item) => {
+    const key = [item?.title || '', item?.link || '', item?.fileUrl || ''].join('|').toLowerCase();
+    if (!key || seen.has(key)) return;
+    seen.add(key);
+    deduped.push(item);
+  });
+
+  return deduped;
+};
+
 /* ================= Scroll List ================= */
 const ScrollList = ({ items, accent, emptyText, variant = 'default' }) => {
   const isBoardVariant = variant === 'notice-board' || variant === 'event-board';
@@ -55,7 +69,8 @@ const ScrollList = ({ items, accent, emptyText, variant = 'default' }) => {
 
   // Slightly slow down as the number of cards grows.
   const duration = Math.max(items.length * 6, 20);
-  const duplicatedItems = [...items, ...items];
+  const shouldDuplicateForScroll = items.length > 1;
+  const scrollItems = shouldDuplicateForScroll ? [...items, ...items] : items;
 
   if (isBoardVariant) {
     return (
@@ -65,7 +80,7 @@ const ScrollList = ({ items, accent, emptyText, variant = 'default' }) => {
             className="notice-scroll-track notice-board-track space-y-5"
             style={{ animationDuration: `${duration}s` }}
           >
-            {duplicatedItems.map((item, index) => {
+            {scrollItems.map((item, index) => {
               const tiltClass = NOTICE_NOTE_TILT_CLASSES[index % NOTICE_NOTE_TILT_CLASSES.length];
               const attachment = NOTICE_NOTE_ATTACHMENTS[index % NOTICE_NOTE_ATTACHMENTS.length];
               const hasLeftTape = attachment === 'tape-left' || attachment === 'tape-both';
@@ -106,7 +121,7 @@ const ScrollList = ({ items, accent, emptyText, variant = 'default' }) => {
         className="notice-scroll-track space-y-4"
         style={{ animationDuration: `${duration}s` }}
       >
-        {duplicatedItems.map((item, index) => (
+        {scrollItems.map((item, index) => (
           <a
             key={index}
             href={item.link || item.fileUrl || "#"}
@@ -148,19 +163,25 @@ const NoticeAndEvents = () => {
         if (!mounted) return;
 
         setNotices(
-          noticeData.map((item) => ({
-            title: item.title,
-            link: item.link || item.fileUrl || '#',
-            publishDate: item.publishDate || '',
-          })),
+          dedupeBoardItems(
+            noticeData.map((item) => ({
+              title: item.title,
+              link: item.link || item.fileUrl || '#',
+              fileUrl: item.fileUrl || '',
+              publishDate: item.publishDate || '',
+            })),
+          ),
         );
 
         setEvents(
-          eventData.map((item) => ({
-            title: item.title,
-            link: item.link || item.fileUrl || '#',
-            publishDate: item.publishDate || '',
-          })),
+          dedupeBoardItems(
+            eventData.map((item) => ({
+              title: item.title,
+              link: item.link || item.fileUrl || '#',
+              fileUrl: item.fileUrl || '',
+              publishDate: item.publishDate || '',
+            })),
+          ),
         );
       } catch (error) {
         console.error('Failed to load notice/event board:', error);

@@ -3,6 +3,20 @@ import { motion } from 'framer-motion';
 import { useTheme } from '../contexts/ThemeContext';
 import { getSlidingNotices } from '../services/notifications';
 
+const dedupeSlidingItems = (items = []) => {
+  const seen = new Set();
+  const deduped = [];
+
+  items.forEach((item) => {
+    const key = [item?.text || '', item?.link || '', item?.fileUrl || ''].join('|').toLowerCase();
+    if (!key || seen.has(key)) return;
+    seen.add(key);
+    deduped.push(item);
+  });
+
+  return deduped;
+};
+
 const SlidingNotice = () => {
   const { theme } = useTheme();
   const [notices, setNotices] = useState([]);
@@ -15,7 +29,7 @@ const SlidingNotice = () => {
       try {
         const data = await getSlidingNotices();
         if (mounted) {
-          setNotices(data || []);
+          setNotices(dedupeSlidingItems(data || []));
         }
       } catch (error) {
         console.error('Failed to load sliding notices:', error);
@@ -36,7 +50,8 @@ const SlidingNotice = () => {
       : 'bg-gradient-to-r from-red-600 to-red-700 dark:from-red-800 dark:to-red-900';
 
   const scrollDuration = Math.max(notices.length * 6, 20);
-  const duplicatedNotices = [...notices, ...notices];
+  const shouldDuplicateForScroll = notices.length > 1;
+  const renderedNotices = shouldDuplicateForScroll ? [...notices, ...notices] : notices;
 
   return (
     <div
@@ -47,7 +62,7 @@ const SlidingNotice = () => {
         className="notice-horizontal-track flex whitespace-nowrap w-max"
         style={{ animationDuration: `${scrollDuration}s` }}
       >
-        {duplicatedNotices.map((notice, index) => (
+        {renderedNotices.map((notice, index) => (
           <div
             key={index}
             className="flex items-center px-4 text-white font-bold mx-2 min-w-max"

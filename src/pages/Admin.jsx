@@ -25,6 +25,7 @@ const Admin = () => {
   const [showForm, setShowForm] = useState(false);
   const [editingNotification, setEditingNotification] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
 
   const publishLabelMap = useMemo(
     () =>
@@ -70,6 +71,7 @@ const Admin = () => {
       await loginAdmin({ username: username.trim(), password });
       setIsAuthenticated(true);
       setPassword('');
+      setSuccessMessage('');
       await loadNotifications();
     } catch (error) {
       setAuthError(error?.message || 'Login failed');
@@ -86,12 +88,15 @@ const Admin = () => {
     setNotifications([]);
     setShowForm(false);
     setEditingNotification(null);
+    setSuccessMessage('');
   };
 
   const handleSaveNotification = async (notificationData) => {
+    const isEdit = Boolean(editingNotification);
     setLoading(true);
+    setSuccessMessage('');
     try {
-      if (editingNotification) {
+      if (isEdit) {
         await updateNotification(editingNotification.id, notificationData);
       } else {
         await addNotification(notificationData);
@@ -99,6 +104,7 @@ const Admin = () => {
       await loadNotifications();
       setShowForm(false);
       setEditingNotification(null);
+      setSuccessMessage(isEdit ? 'Notice updated successfully.' : 'Notice uploaded successfully.');
     } catch (error) {
       console.error('Error saving notice:', error);
       alert(error?.message || 'Error saving notice');
@@ -108,15 +114,18 @@ const Admin = () => {
   };
 
   const handleEditNotification = (notification) => {
+    setSuccessMessage('');
     setEditingNotification(notification);
     setShowForm(true);
   };
 
   const handleDeleteNotification = async (id) => {
     if (!window.confirm('Delete this notice?')) return;
+    setSuccessMessage('');
     try {
       await deleteNotification(id);
       await loadNotifications();
+      setSuccessMessage('Notice deleted successfully.');
     } catch (error) {
       console.error('Error deleting notice:', error);
       alert(error?.message || 'Unable to delete notice');
@@ -221,6 +230,7 @@ const Admin = () => {
             <div className="flex items-center space-x-4">
               <button
                 onClick={() => {
+                  setSuccessMessage('');
                   setShowForm(true);
                   setEditingNotification(null);
                 }}
@@ -253,6 +263,7 @@ const Admin = () => {
           />
         ) : (
           <div className="px-4 py-6 sm:px-0">
+            {successMessage && <p className="mb-4 text-sm text-green-700">{successMessage}</p>}
             <div className="bg-white shadow overflow-hidden sm:rounded-md">
               {loading ? (
                 <div className="px-6 py-8 text-center text-gray-500">Loading...</div>

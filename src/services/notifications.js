@@ -36,37 +36,40 @@ const buildUrl = (path, query = {}) => {
   return url.toString();
 };
 
-const withResolvedFileUrl = (item) => {
-  const resolvedLink = item?.link ? toR2AssetUrl(item.link) : item?.link || '';
-
-  if (!item || !item.file_url) {
-    return {
-      ...item,
-      publishTo: item?.publish_to,
-      link: resolvedLink,
-      fileUrl: item?.file_url || '',
-      fileName: item?.file_name || '',
-      publishDate: item?.publish_date || null,
-      createdAt: item?.created_at,
-      updatedAt: item?.updated_at,
-    };
-  }
-
-  const resolved = toR2AssetUrl(item.file_url);
+const normalizeNotice = (item) => {
+  const resolvedFileUrl = item?.file_url ? toR2AssetUrl(item.file_url) : '';
 
   return {
     ...item,
-    publishTo: item.publish_to,
-    link: resolvedLink,
-    fileUrl: resolved,
-    fileName: item.file_name || '',
-    publishDate: item.publish_date || null,
-    createdAt: item.created_at,
-    updatedAt: item.updated_at,
+    publishTo: item?.publish_to,
+    link: item?.link ? toR2AssetUrl(item.link) : item?.link || '',
+    file_url: resolvedFileUrl || item?.file_url || '',
+    fileUrl: resolvedFileUrl || item?.file_url || '',
+    fileName: item?.file_name || '',
+    publishDate: item?.publish_date || null,
+    createdAt: item?.created_at,
+    updatedAt: item?.updated_at,
   };
 };
 
-const mapList = (items) => (Array.isArray(items) ? items.map(withResolvedFileUrl) : []);
+const mapList = (items) => (Array.isArray(items) ? items.map(normalizeNotice) : []);
+
+const dedupeNotices = (items = []) => {
+  const seen = new Set();
+  const deduped = [];
+
+  items.forEach((item) => {
+    const key = [item?.title || '', item?.link || '', item?.fileUrl || '']
+      .join('|')
+      .toLowerCase();
+
+    if (!key || seen.has(key)) return;
+    seen.add(key);
+    deduped.push(item);
+  });
+
+  return deduped;
+};
 
 const parseError = async (response) => {
   let body = '';
@@ -223,7 +226,7 @@ export const addNotification = async (notificationData) => {
     token: getAdminToken(),
     body: toNoticeFormData(notificationData),
   });
-  return withResolvedFileUrl(data);
+  return normalizeNotice(data);
 };
 
 export const updateNotification = async (id, updates) => {
@@ -232,7 +235,7 @@ export const updateNotification = async (id, updates) => {
     token: getAdminToken(),
     body: toNoticeFormData(updates, { isUpdate: true }),
   });
-  return withResolvedFileUrl(data);
+  return normalizeNotice(data);
 };
 
 export const deleteNotification = async (id) => {
@@ -248,7 +251,18 @@ export const getPublicNotices = async ({ publishTo, limit = 100 } = {}) => {
     publish_to: publishTo,
     limit,
   });
-  const response = await fetch(url);
+  let response;
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 20000);
+
+  try {
+    response = await fetch(url, { signal: controller.signal });
+  } catch (error) {
+    throw new Error(parseNetworkError(error));
+  } finally {
+    clearTimeout(timeout);
+  }
+
   if (!response.ok) {
     throw new Error(await parseError(response));
   }
@@ -265,7 +279,7 @@ export const getSlidingNotices = async () => {
     getPublicNotices({ publishTo: NOTICE_CATEGORIES.NOTIFICATIONS, limit: 10 }),
   ]);
 
-  return [...notices, ...notifications].map((item) => ({
+  return dedupeNotices([...notices, ...notifications]).map((item) => ({
     text: item.title,
     link: item.link || item.fileUrl || '#',
     fileUrl: item.fileUrl || '',

@@ -4,7 +4,6 @@ import { motion } from 'framer-motion';
 import { Bell, Download, Link as LinkIcon, Pin } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { getPublicNotices, NOTICE_CATEGORIES } from '@/services/notifications';
-import { toR2AssetUrl } from '@/lib/r2Assets';
 
 const NoticeBoardPage = ({
   title,
@@ -63,16 +62,6 @@ const NoticeBoardPage = ({
       month: 'short',
       year: 'numeric',
     });
-  };
-
-  const handleDownload = (fileUrl, fileName) => {
-    if (!fileUrl) return;
-    const link = document.createElement('a');
-    link.href = toR2AssetUrl(fileUrl);
-    link.download = fileName || 'download';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
   };
 
   return (
@@ -158,15 +147,16 @@ const NoticeBoardPage = ({
                           Open Link
                         </a>
                       )}
-                      {item.fileUrl && (
-                        <button
-                          type="button"
-                          onClick={() => handleDownload(item.fileUrl, item.fileName)}
+                      {item.file_url && (
+                        <a
+                          href={item.file_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
                           className="inline-flex items-center px-3 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 text-sm"
                         >
                           <Download className="w-4 h-4 mr-1" />
-                          Download
-                        </button>
+                          Open File
+                        </a>
                       )}
                     </div>
                   </div>
