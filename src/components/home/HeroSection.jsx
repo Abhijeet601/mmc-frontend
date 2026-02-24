@@ -5,13 +5,11 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useTranslation } from 'react-i18next';
 
-const HERO_VIDEO_SRC = '/hero-clipchamp-28.mp4';
-const HERO_IMAGE_SRC = '/modern-campus.webp';
+const HERO_VIDEO_SRC = 'https://pub-c7047204b6824b4ea67be147e7ebb0ac.r2.dev/public/hero-section-video.mp4';
 
 const HeroSection = () => {
   const { t } = useTranslation();
   const [videoError, setVideoError] = useState(false);
-  const [videoLoaded, setVideoLoaded] = useState(false);
 
   const accreditationValue = t('hero.accreditations');
   const accreditationItems =
@@ -22,12 +20,6 @@ const HeroSection = () => {
           .filter(Boolean)
       : [];
 
-  const handleVideoReady = () => {
-    setVideoLoaded(true);
-  };
-
-  const showPoster = videoError || !videoLoaded;
-
   return (
     <section className="relative isolate flex min-h-[72vh] items-center justify-center overflow-hidden bg-slate-950 sm:min-h-[78vh] md:min-h-[84vh]">
       {!videoError && (
@@ -35,32 +27,17 @@ const HeroSection = () => {
           key={HERO_VIDEO_SRC}
           src={HERO_VIDEO_SRC}
           data-skip-r2-rewrite="true"
-          className={`absolute inset-0 z-0 h-full w-full object-cover object-center transition-opacity duration-700 ${
-            videoLoaded ? 'opacity-100' : 'opacity-0'
-          }`}
+          className="absolute inset-0 z-0 h-full w-full object-cover object-center"
           autoPlay
           loop
           muted
           defaultMuted
           playsInline
           preload="auto"
-          poster={HERO_IMAGE_SRC}
-          onCanPlay={handleVideoReady}
-          onLoadedData={handleVideoReady}
           onError={() => setVideoError(true)}
         >
           Your browser does not support the video tag.
         </video>
-      )}
-
-      {showPoster && (
-        <img
-          src={HERO_IMAGE_SRC}
-          data-skip-r2-rewrite="true"
-          alt=""
-          className="absolute inset-0 z-0 h-full w-full object-cover object-center"
-          aria-hidden="true"
-        />
       )}
 
       <motion.div
