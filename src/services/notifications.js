@@ -1,7 +1,22 @@
 import { toR2AssetUrl } from '@/lib/r2Assets';
 
-const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000').replace(/\/+$/, '');
+const fallbackApiBaseUrl =
+  typeof window !== 'undefined' && window.location?.origin
+    ? window.location.origin
+    : 'http://localhost:8000';
+
+const rawApiBaseUrl = (
+  import.meta.env.VITE_API_BASE_URL ||
+  import.meta.env.VITE_API_BASE ||
+  fallbackApiBaseUrl
+)
+  .trim()
+  .replace(/\/+$/, '');
+
+// Requests use explicit /api/... paths below, so strip a trailing /api from base to avoid /api/api.
+const API_BASE_URL = rawApiBaseUrl.replace(/\/api$/i, '');
 const ADMIN_TOKEN_KEY = 'mmc_admin_token';
+const ADMIN_LOGIN_PATHS = ['/api/admin/login', '/admin/login'];
 
 export const NOTICE_CATEGORIES = Object.freeze({
   TENDERS: 'tenders',
@@ -18,7 +33,8 @@ export const PUBLISH_TO_OPTIONS = [
 ];
 
 const buildUrl = (path, query = {}) => {
-  const url = new URL(`${API_BASE_URL}${path}`);
+  const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+  const url = new URL(`${API_BASE_URL}${normalizedPath}`);
   Object.entries(query).forEach(([key, value]) => {
     if (value !== undefined && value !== null && value !== '') {
       url.searchParams.set(key, value);
@@ -60,31 +76,70 @@ const withResolvedFileUrl = (item) => {
 const mapList = (items) => (Array.isArray(items) ? items.map(withResolvedFileUrl) : []);
 
 const parseError = async (response) => {
+  let body = '';
+
   try {
-    const data = await response.json();
-    if (typeof data?.detail === 'string') {
-      return data.detail;
-    }
-    if (Array.isArray(data?.detail) && data.detail.length > 0) {
-      return data.detail.map((item) => item?.msg).filter(Boolean).join(', ');
-    }
+    body = await response.text();
   } catch (_) {
     // no-op
   }
+
+  if (body) {
+    try {
+      const data = JSON.parse(body);
+      if (typeof data?.detail === 'string') {
+        return data.detail;
+      }
+      if (Array.isArray(data?.detail) && data.detail.length > 0) {
+        return data.detail.map((item) => item?.msg).filter(Boolean).join(', ');
+      }
+    } catch (_) {
+      const trimmed = body.trim();
+      if (trimmed) {
+        return trimmed;
+      }
+    }
+  }
+
   return `Request failed with status ${response.status}`;
 };
 
+const parseNetworkError = (error) => {
+  if (error?.name === 'AbortError') {
+    return 'Request timed out. Please try again.';
+  }
+
+  if (error instanceof TypeError) {
+    return `Unable to reach API at ${API_BASE_URL}. Check VITE_API_BASE_URL/VITE_API_BASE and backend CORS_ORIGINS.`;
+  }
+
+  return error?.message || 'Network request failed.';
+};
+
 const request = async (path, { method = 'GET', body, token, headers = {} } = {}) => {
+  const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+  const requestUrl = `${API_BASE_URL}${normalizedPath}`;
   const isFormData = body instanceof FormData;
-  const response = await fetch(`${API_BASE_URL}${path}`, {
-    method,
-    headers: {
-      ...(isFormData ? {} : { 'Content-Type': 'application/json' }),
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      ...headers,
-    },
-    body: body ? (isFormData ? body : JSON.stringify(body)) : undefined,
-  });
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 20000);
+  let response;
+
+  try {
+    response = await fetch(requestUrl, {
+      method,
+      headers: {
+        ...(isFormData ? {} : { 'Content-Type': 'application/json' }),
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        ...headers,
+      },
+      body: body ? (isFormData ? body : JSON.stringify(body)) : undefined,
+      signal: controller.signal,
+    });
+  } catch (error) {
+    throw new Error(parseNetworkError(error));
+  } finally {
+    clearTimeout(timeout);
+  }
 
   if (!response.ok) {
     throw new Error(await parseError(response));
@@ -136,13 +191,44 @@ export const setAdminToken = (token) => localStorage.setItem(ADMIN_TOKEN_KEY, to
 export const clearAdminToken = () => localStorage.removeItem(ADMIN_TOKEN_KEY);
 export const isAdminAuthenticated = () => Boolean(getAdminToken());
 
+const isNotFoundError = (message = '') => {
+  const text = String(message).toLowerCase();
+  return text.includes('status 404') || text.includes('not found');
+};
+
+const getAccessTokenFromResponse = (data) =>
+  data?.access_token || data?.accessToken || data?.token || '';
+
 export const loginAdmin = async ({ username, password }) => {
-  const data = await request('/api/admin/login', {
-    method: 'POST',
-    body: { username, password },
-  });
-  setAdminToken(data.access_token);
-  return data;
+  const credentials = { username: username?.trim?.() || '', password };
+  let lastError;
+
+  for (let index = 0; index < ADMIN_LOGIN_PATHS.length; index += 1) {
+    const path = ADMIN_LOGIN_PATHS[index];
+    const isLastPath = index === ADMIN_LOGIN_PATHS.length - 1;
+
+    try {
+      const data = await request(path, {
+        method: 'POST',
+        body: credentials,
+      });
+
+      const accessToken = getAccessTokenFromResponse(data);
+      if (!accessToken) {
+        throw new Error('Login response did not include an access token.');
+      }
+
+      setAdminToken(accessToken);
+      return data;
+    } catch (error) {
+      lastError = error;
+      if (isLastPath || !isNotFoundError(error?.message)) {
+        throw error;
+      }
+    }
+  }
+
+  throw lastError || new Error('Login failed');
 };
 
 export const getAdminProfile = async () =>
