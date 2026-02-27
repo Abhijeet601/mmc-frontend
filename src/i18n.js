@@ -20,7 +20,13 @@ i18n
   .init({
     resources,
     fallbackLng: 'en',
+    supportedLngs: ['en', 'hi'],
+    nonExplicitSupportedLngs: true,
+    load: 'languageOnly',
+    cleanCode: true,
     debug: false,
+    returnNull: false,
+    returnEmptyString: false,
 
     interpolation: {
       escapeValue: false,
@@ -31,22 +37,6 @@ i18n
     detection: {
       order: ['localStorage', 'sessionStorage', 'navigator', 'htmlTag'],
       caches: ['localStorage', 'sessionStorage'],
-    },
-
-    missingKeyHandler: (lngs, ns, key, fallbackValue) => {
-      console.warn(`Missing translation key: "${key}" for language(s): ${lngs.join(', ')}`);
-      // Try to get the English version as fallback
-      if (lngs[0] !== 'en') {
-        try {
-          const enValue = i18n.getFixedT('en')(key);
-          if (enValue && enValue !== key) {
-            return enValue;
-          }
-        } catch (e) {
-          // English fallback also doesn't have this key
-        }
-      }
-      return fallbackValue || key;
     },
 
     ns: ['translation'],

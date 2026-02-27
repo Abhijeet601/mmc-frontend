@@ -1,20 +1,19 @@
+import i18next from "i18next";
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { FileText, Download, ExternalLink, Lightbulb, Target, Award, Calendar, Zap } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-
 const ResearchDevelopmentCell = () => {
-  const { t } = useTranslation();
-
+  const {
+    t
+  } = useTranslation();
   const pdfFiles = [
     // No files found in this folder, so we'll leave it empty for now
   ];
-
-  return (
-    <>
+  return <>
       <Helmet>
-        <title>Research & Development Cell - IQAC | Magadh Mahila College</title>
+        <title>{i18next.t("auto.research_development_cell_iqac_magadh_mahila_college_10kh51l")}</title>
         <meta name="description" content="Innovation hub for research and development activities at Magadh Mahila College. Explore ongoing projects, achievements, and upcoming events." />
       </Helmet>
 
@@ -22,80 +21,87 @@ const ResearchDevelopmentCell = () => {
         <section className="py-20 px-4 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
             {/* Header */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="text-center mb-16"
-            >
+            <motion.div initial={{
+            opacity: 0,
+            y: 20
+          }} animate={{
+            opacity: 1,
+            y: 0
+          }} transition={{
+            duration: 0.6
+          }} className="text-center mb-16">
               <h1 className="text-5xl md:text-6xl font-bold mb-6">
-                <span className="text-primary">Research & Development Cell</span>
+                <span className="text-primary">{i18next.t("auto.research_development_cell_13xy2wf")}</span>
               </h1>
-              <p className="text-foreground max-w-3xl mx-auto text-lg">
-                Driving innovation and excellence in research through collaborative initiatives, cutting-edge projects, and industry partnerships.
-              </p>
+              <p className="text-foreground max-w-3xl mx-auto text-lg">{`
+                ${i18next.t("auto.driving_innovation_and_excellence_in_research_through_p7maut")}
+              `}</p>
             </motion.div>
 
             {/* Cell Composition */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="mb-20"
-            >
+            <motion.div initial={{
+            opacity: 0,
+            y: 20
+          }} whileInView={{
+            opacity: 1,
+            y: 0
+          }} viewport={{
+            once: true
+          }} transition={{
+            duration: 0.6
+          }} className="mb-20">
               <h2 className="text-4xl font-bold text-center mb-12">
-                <span className="text-primary">Cell Composition 2022-23</span>
+                <span className="text-primary">{i18next.t("auto.cell_composition_2022_23_5n5xx")}</span>
               </h2>
               <div className="overflow-x-auto">
                 <table className="w-full bg-white shadow-lg rounded-2xl border border-border">
                   <thead className="bg-primary text-primary-foreground">
                     <tr>
-                      <th className="px-6 py-4 text-left font-bold">Sl. No.</th>
-                      <th className="px-6 py-4 text-left font-bold">Name</th>
-                      <th className="px-6 py-4 text-left font-bold">Designation</th>
+                      <th className="px-6 py-4 text-left font-bold">{i18next.t("auto.sl_no_1e4pi2j")}</th>
+                      <th className="px-6 py-4 text-left font-bold">{i18next.t("auto.name_yjpg1u")}</th>
+                      <th className="px-6 py-4 text-left font-bold">{i18next.t("auto.designation_b5d8ay")}</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border">
                     <tr className="hover:bg-muted/50">
                       <td className="px-6 py-4">1.</td>
-                      <td className="px-6 py-4 font-semibold">Prof.(Dr.) Namita Kumari</td>
-                      <td className="px-6 py-4">Principal</td>
+                      <td className="px-6 py-4 font-semibold">{i18next.t("auto.prof_dr_namita_kumari_1bple8e")}</td>
+                      <td className="px-6 py-4">{i18next.t("auto.principal_11qfhbr")}</td>
                     </tr>
                     <tr className="hover:bg-muted/50">
                       <td className="px-6 py-4">2.</td>
-                      <td className="px-6 py-4 font-semibold">Prof.(Dr.) Anju Srivastava</td>
-                      <td className="px-6 py-4">Convener, Dean, Social Sciences</td>
+                      <td className="px-6 py-4 font-semibold">{i18next.t("auto.prof_dr_anju_srivastava_qbm3s7")}</td>
+                      <td className="px-6 py-4">{i18next.t("auto.convener_dean_social_sciences_gxhq7z")}</td>
                     </tr>
                     <tr className="hover:bg-muted/50">
                       <td className="px-6 py-4">3.</td>
-                      <td className="px-6 py-4 font-semibold">Dr. Mridula Renu Sinha</td>
-                      <td className="px-6 py-4">Coordinator, Science, HoD & Associate Professor, Zoology</td>
+                      <td className="px-6 py-4 font-semibold">{i18next.t("auto.dr_mridula_renu_sinha_1e1i25i")}</td>
+                      <td className="px-6 py-4">{i18next.t("auto.coordinator_science_hod_associate_professor_zoology_1eqclqa")}</td>
                     </tr>
                     <tr className="hover:bg-muted/50">
                       <td className="px-6 py-4">4.</td>
-                      <td className="px-6 py-4 font-semibold">Dr. Deepti Tiwary</td>
-                      <td className="px-6 py-4">Coordinator, Social Science, Assistant Professor, History</td>
+                      <td className="px-6 py-4 font-semibold">{i18next.t("auto.dr_deepti_tiwary_174c9uc")}</td>
+                      <td className="px-6 py-4">{i18next.t("auto.coordinator_social_science_assistant_professor_history_1ay53mh")}</td>
                     </tr>
                     <tr className="hover:bg-muted/50">
                       <td className="px-6 py-4">5.</td>
-                      <td className="px-6 py-4 font-semibold">Dr. Archana Jaiswal</td>
-                      <td className="px-6 py-4">Coordinator, Humanities, Associate Professor, English</td>
+                      <td className="px-6 py-4 font-semibold">{i18next.t("auto.dr_archana_jaiswal_16hzx8g")}</td>
+                      <td className="px-6 py-4">{i18next.t("auto.coordinator_humanities_associate_professor_english_12ixi8r")}</td>
                     </tr>
                     <tr className="hover:bg-muted/50">
                       <td className="px-6 py-4">6.</td>
-                      <td className="px-6 py-4 font-semibold">Dr. Amrita Prasad</td>
-                      <td className="px-6 py-4">Member, Assistant Professor, Chemistry</td>
+                      <td className="px-6 py-4 font-semibold">{i18next.t("auto.dr_amrita_prasad_1m3y5je")}</td>
+                      <td className="px-6 py-4">{i18next.t("auto.member_assistant_professor_chemistry_nsfrro")}</td>
                     </tr>
                     <tr className="hover:bg-muted/50">
                       <td className="px-6 py-4">7.</td>
-                      <td className="px-6 py-4 font-semibold">Dr. Rajani Pandey</td>
-                      <td className="px-6 py-4">Member, Assistant Professor, Home Science</td>
+                      <td className="px-6 py-4 font-semibold">{i18next.t("auto.dr_rajani_pandey_1u3ujdx")}</td>
+                      <td className="px-6 py-4">{i18next.t("auto.member_assistant_professor_home_science_f96pop")}</td>
                     </tr>
                     <tr className="hover:bg-muted/50">
                       <td className="px-6 py-4">8.</td>
-                      <td className="px-6 py-4 font-semibold">Dr. Suchita Arpan</td>
-                      <td className="px-6 py-4">Member, Assistant Professor, Philosophy</td>
+                      <td className="px-6 py-4 font-semibold">{i18next.t("auto.dr_suchita_arpan_1hc1sv4")}</td>
+                      <td className="px-6 py-4">{i18next.t("auto.member_assistant_professor_philosophy_1i0vyl9")}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -103,22 +109,29 @@ const ResearchDevelopmentCell = () => {
             </motion.div>
 
             {/* PDF Files */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="space-y-6"
-            >
-              {pdfFiles.map((pdf, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className="p-8 rounded-2xl bg-white shadow-lg border border-border hover:shadow-xl transition-shadow"
-                >
+            <motion.div initial={{
+            opacity: 0,
+            y: 20
+          }} whileInView={{
+            opacity: 1,
+            y: 0
+          }} viewport={{
+            once: true
+          }} transition={{
+            duration: 0.6
+          }} className="space-y-6">
+              {pdfFiles.map((pdf, index) => <motion.div key={index} initial={{
+              opacity: 0,
+              y: 30
+            }} whileInView={{
+              opacity: 1,
+              y: 0
+            }} viewport={{
+              once: true
+            }} transition={{
+              duration: 0.6,
+              delay: index * 0.1
+            }} className="p-8 rounded-2xl bg-white shadow-lg border border-border hover:shadow-xl transition-shadow">
                   <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between">
                     <div className="flex-1 mb-6 lg:mb-0">
                       <h3 className="text-2xl font-bold text-foreground mb-3">
@@ -128,64 +141,55 @@ const ResearchDevelopmentCell = () => {
                         {pdf.description}
                       </p>
                       <div className="text-sm text-muted-foreground">
-                        <strong>File:</strong> {pdf.filename}
+                        <strong>{i18next.t("auto.file_3f1oah")}</strong> {pdf.filename}
                       </div>
                     </div>
                     <div className="flex flex-col gap-3 lg:ml-6">
-                      <a
-                        href={pdf.path}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
-                      >
-                        <ExternalLink className="w-4 h-4" />
-                        View PDF
-                      </a>
-                      <a
-                        href={pdf.path}
-                        download
-                        className="flex items-center gap-2 px-4 py-2 border border-primary text-primary rounded-lg hover:bg-primary hover:text-primary-foreground transition-colors"
-                      >
-                        <Download className="w-4 h-4" />
-                        Download
-                      </a>
+                      <a href={pdf.path} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors">
+                        <ExternalLink className="w-4 h-4" />{`
+                        ${i18next.t("auto.view_pdf_6av1iy")}
+                      `}</a>
+                      <a href={pdf.path} download className="flex items-center gap-2 px-4 py-2 border border-primary text-primary rounded-lg hover:bg-primary hover:text-primary-foreground transition-colors">
+                        <Download className="w-4 h-4" />{`
+                        ${i18next.t("auto.download_1ypm7w1")}
+                      `}</a>
                     </div>
                   </div>
-                </motion.div>
-              ))}
+                </motion.div>)}
             </motion.div>
 
             {/* Contact */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="mt-20 p-8 md:p-12 rounded-3xl bg-primary text-primary-foreground text-center"
-            >
+            <motion.div initial={{
+            opacity: 0,
+            y: 20
+          }} whileInView={{
+            opacity: 1,
+            y: 0
+          }} viewport={{
+            once: true
+          }} transition={{
+            duration: 0.6
+          }} className="mt-20 p-8 md:p-12 rounded-3xl bg-primary text-primary-foreground text-center">
               <Lightbulb className="w-16 h-16 mx-auto mb-6" />
-              <h2 className="text-3xl font-bold mb-4">Research & Development Support</h2>
-              <p className="text-white/90 mb-8 max-w-2xl mx-auto">
-                For innovation ideas, project collaboration, or research funding opportunities.
-              </p>
+              <h2 className="text-3xl font-bold mb-4">{i18next.t("auto.research_development_support_eh5mee")}</h2>
+              <p className="text-white/90 mb-8 max-w-2xl mx-auto">{`
+                ${i18next.t("auto.for_innovation_ideas_project_collaboration_or_research_1kghn5r")}
+              `}</p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                  <div className="font-bold">Director - R&D Cell</div>
-                  <div className="text-white/80">Dr. Nagendra Prasad Verma</div>
-                  <div className="text-white/80">rnd@magadhmahilacollege.org</div>
+                  <div className="font-bold">{i18next.t("auto.director_r_d_cell_wopoy6")}</div>
+                  <div className="text-white/80">{i18next.t("auto.dr_nagendra_prasad_verma_nwre9")}</div>
+                  <div className="text-white/80">{i18next.t("auto.rnd_magadhmahilacollege_org_1bbf7yc")}</div>
                 </div>
               </div>
             </motion.div>
           </div>
         </section>
       </div>
-    </>
-  );
-
-  return (
-    <>
+    </>;
+  return <>
       <Helmet>
-        <title>Research & Development Cell - IQAC | Magadh Mahila College</title>
+        <title>{i18next.t("auto.research_development_cell_iqac_magadh_mahila_college_10kh51l")}</title>
         <meta name="description" content="Innovation hub for research and development activities at Magadh Mahila College. Explore ongoing projects, achievements, and upcoming events." />
       </Helmet>
 
@@ -193,40 +197,50 @@ const ResearchDevelopmentCell = () => {
         <section className="py-20 px-4 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
             {/* Header */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="text-center mb-16"
-            >
+            <motion.div initial={{
+            opacity: 0,
+            y: 20
+          }} animate={{
+            opacity: 1,
+            y: 0
+          }} transition={{
+            duration: 0.6
+          }} className="text-center mb-16">
               <h1 className="text-5xl md:text-6xl font-bold mb-6">
-                <span className="text-primary">Research & Development Cell</span>
+                <span className="text-primary">{i18next.t("auto.research_development_cell_13xy2wf")}</span>
               </h1>
-              <p className="text-foreground max-w-3xl mx-auto text-lg">
-                Driving innovation and excellence in research through collaborative initiatives, cutting-edge projects, and industry partnerships.
-              </p>
+              <p className="text-foreground max-w-3xl mx-auto text-lg">{`
+                ${i18next.t("auto.driving_innovation_and_excellence_in_research_through_p7maut")}
+              `}</p>
             </motion.div>
 
             {/* Objectives */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="mb-20"
-            >
+            <motion.div initial={{
+            opacity: 0,
+            y: 20
+          }} animate={{
+            opacity: 1,
+            y: 0
+          }} transition={{
+            duration: 0.6,
+            delay: 0.2
+          }} className="mb-20">
               <h2 className="text-4xl font-bold text-center mb-12">
-                <span className="text-primary">Our Objectives</span>
+                <span className="text-primary">{i18next.t("auto.our_objectives_1ra71dd")}</span>
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {objectives.map((objective, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6, delay: index * 0.1 }}
-                    className="p-8 rounded-2xl bg-white shadow-lg border border-border"
-                  >
+                {objectives.map((objective, index) => <motion.div key={index} initial={{
+                opacity: 0,
+                y: 30
+              }} whileInView={{
+                opacity: 1,
+                y: 0
+              }} viewport={{
+                once: true
+              }} transition={{
+                duration: 0.6,
+                delay: index * 0.1
+              }} className="p-8 rounded-2xl bg-white shadow-lg border border-border">
                     <div className="flex items-start space-x-4">
                       <div className={`w-16 h-16 bg-gradient-to-r ${objective.color} rounded-xl flex items-center justify-center flex-shrink-0`}>
                         <objective.icon className="w-8 h-8 text-white" />
@@ -240,64 +254,76 @@ const ResearchDevelopmentCell = () => {
                         </p>
                       </div>
                     </div>
-                  </motion.div>
-                ))}
+                  </motion.div>)}
               </div>
             </motion.div>
 
             {/* Achievements */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="mb-20"
-            >
+            <motion.div initial={{
+            opacity: 0,
+            y: 20
+          }} whileInView={{
+            opacity: 1,
+            y: 0
+          }} viewport={{
+            once: true
+          }} transition={{
+            duration: 0.6
+          }} className="mb-20">
               <h2 className="text-4xl font-bold text-center mb-12">
-                <span className="text-primary">Key Achievements</span>
+                <span className="text-primary">{i18next.t("auto.key_achievements_34bznq")}</span>
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-                {achievements.map((achievement, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.4, delay: index * 0.1 }}
-                    className="text-center p-6 rounded-2xl bg-white shadow-lg border border-border"
-                  >
+                {achievements.map((achievement, index) => <motion.div key={index} initial={{
+                opacity: 0,
+                scale: 0.9
+              }} whileInView={{
+                opacity: 1,
+                scale: 1
+              }} viewport={{
+                once: true
+              }} transition={{
+                duration: 0.4,
+                delay: index * 0.1
+              }} className="text-center p-6 rounded-2xl bg-white shadow-lg border border-border">
                     <achievement.icon className="w-12 h-12 text-primary mx-auto mb-4" />
                     <div className="text-3xl font-bold text-foreground mb-2">{achievement.value}</div>
                     <p className="text-muted-foreground mb-1">{achievement.label}</p>
                     <span className={`text-sm ${achievement.change.startsWith('+') ? 'text-green-600' : 'text-red-600'}`}>
                       {achievement.change}
                     </span>
-                  </motion.div>
-                ))}
+                  </motion.div>)}
               </div>
             </motion.div>
 
             {/* Ongoing Projects */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="mb-20"
-            >
+            <motion.div initial={{
+            opacity: 0,
+            y: 20
+          }} whileInView={{
+            opacity: 1,
+            y: 0
+          }} viewport={{
+            once: true
+          }} transition={{
+            duration: 0.6
+          }} className="mb-20">
               <h2 className="text-4xl font-bold text-center mb-12">
-                <span className="text-primary">Ongoing Projects</span>
+                <span className="text-primary">{i18next.t("auto.ongoing_projects_17lgqoa")}</span>
               </h2>
               <div className="space-y-6">
-                {ongoingProjects.map((project, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6, delay: index * 0.1 }}
-                    className="p-8 rounded-2xl bg-white shadow-lg border border-border"
-                  >
+                {ongoingProjects.map((project, index) => <motion.div key={index} initial={{
+                opacity: 0,
+                y: 30
+              }} whileInView={{
+                opacity: 1,
+                y: 0
+              }} viewport={{
+                once: true
+              }} transition={{
+                duration: 0.6,
+                delay: index * 0.1
+              }} className="p-8 rounded-2xl bg-white shadow-lg border border-border">
                     <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-6">
                       <div className="flex-1">
                         <h3 className="text-2xl font-bold text-foreground mb-3">
@@ -308,13 +334,13 @@ const ResearchDevelopmentCell = () => {
                         </p>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
                           <div>
-                            <span className="font-semibold text-primary">Lead:</span> {project.lead}
+                            <span className="font-semibold text-primary">{i18next.t("auto.lead_3lxutv")}</span> {project.lead}
                           </div>
                           <div>
-                            <span className="font-semibold text-primary">Funding:</span> {project.funding}
+                            <span className="font-semibold text-primary">{i18next.t("auto.funding_1weeciu")}</span> {project.funding}
                           </div>
                           <div>
-                            <span className="font-semibold text-primary">Duration:</span> {project.duration}
+                            <span className="font-semibold text-primary">{i18next.t("auto.duration_3hqo3l")}</span> {project.duration}
                           </div>
                         </div>
                       </div>
@@ -324,32 +350,38 @@ const ResearchDevelopmentCell = () => {
                         </span>
                       </div>
                     </div>
-                  </motion.div>
-                ))}
+                  </motion.div>)}
               </div>
             </motion.div>
 
             {/* Upcoming Events */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="mb-20"
-            >
+            <motion.div initial={{
+            opacity: 0,
+            y: 20
+          }} whileInView={{
+            opacity: 1,
+            y: 0
+          }} viewport={{
+            once: true
+          }} transition={{
+            duration: 0.6
+          }} className="mb-20">
               <h2 className="text-4xl font-bold text-center mb-12">
-                <span className="text-primary">Upcoming Events</span>
+                <span className="text-primary">{i18next.t("auto.upcoming_events_1poq4ou")}</span>
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                {upcomingEvents.map((event, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6, delay: index * 0.1 }}
-                    className="p-6 rounded-2xl bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200"
-                  >
+                {upcomingEvents.map((event, index) => <motion.div key={index} initial={{
+                opacity: 0,
+                y: 30
+              }} whileInView={{
+                opacity: 1,
+                y: 0
+              }} viewport={{
+                once: true
+              }} transition={{
+                duration: 0.6,
+                delay: index * 0.1
+              }} className="p-6 rounded-2xl bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200">
                     <div className="text-center">
                       <Calendar className="w-12 h-12 text-blue-600 mx-auto mb-4" />
                       <h3 className="text-xl font-bold text-blue-900 mb-2">
@@ -366,73 +398,78 @@ const ResearchDevelopmentCell = () => {
                         {event.type}
                       </span>
                     </div>
-                  </motion.div>
-                ))}
+                  </motion.div>)}
               </div>
             </motion.div>
 
             {/* Innovation Hub */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="mb-20"
-            >
+            <motion.div initial={{
+            opacity: 0,
+            y: 20
+          }} whileInView={{
+            opacity: 1,
+            y: 0
+          }} viewport={{
+            once: true
+          }} transition={{
+            duration: 0.6
+          }} className="mb-20">
               <h2 className="text-4xl font-bold text-center mb-12">
-                <span className="text-primary">Innovation Hub</span>
+                <span className="text-primary">{i18next.t("auto.innovation_hub_m8zvcn")}</span>
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div className="p-6 rounded-2xl bg-gradient-to-br from-purple-50 to-purple-100 border border-purple-200">
                   <Zap className="w-12 h-12 text-purple-600 mb-4" />
-                  <h3 className="text-xl font-bold text-purple-900 mb-2">Incubation Center</h3>
-                  <p className="text-purple-700 text-sm">
-                    Supporting startup ideas and innovative projects from students and faculty.
-                  </p>
+                  <h3 className="text-xl font-bold text-purple-900 mb-2">{i18next.t("auto.incubation_center_1ny2fkw")}</h3>
+                  <p className="text-purple-700 text-sm">{`
+                    ${i18next.t("auto.supporting_startup_ideas_and_innovative_projects_from_1c8x71a")}
+                  `}</p>
                 </div>
                 <div className="p-6 rounded-2xl bg-gradient-to-br from-green-50 to-green-100 border border-green-200">
                   <Target className="w-12 h-12 text-green-600 mb-4" />
-                  <h3 className="text-xl font-bold text-green-900 mb-2">Technology Transfer</h3>
-                  <p className="text-green-700 text-sm">
-                    Facilitating the transfer of research outcomes to industry and society.
-                  </p>
+                  <h3 className="text-xl font-bold text-green-900 mb-2">{i18next.t("auto.technology_transfer_1h9fjxk")}</h3>
+                  <p className="text-green-700 text-sm">{`
+                    ${i18next.t("auto.facilitating_the_transfer_of_research_outcomes_to_1yz6qjx")}
+                  `}</p>
                 </div>
                 <div className="p-6 rounded-2xl bg-gradient-to-br from-orange-50 to-orange-100 border border-orange-200">
                   <Award className="w-12 h-12 text-orange-600 mb-4" />
-                  <h3 className="text-xl font-bold text-orange-900 mb-2">IP Management</h3>
-                  <p className="text-orange-700 text-sm">
-                    Managing intellectual property rights and patent applications.
-                  </p>
+                  <h3 className="text-xl font-bold text-orange-900 mb-2">{i18next.t("auto.ip_management_1vfeej3")}</h3>
+                  <p className="text-orange-700 text-sm">{`
+                    ${i18next.t("auto.managing_intellectual_property_rights_and_patent_applications_1092cgv")}
+                  `}</p>
                 </div>
               </div>
             </motion.div>
 
             {/* Contact */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="p-8 md:p-12 rounded-3xl bg-primary text-primary-foreground text-center"
-            >
+            <motion.div initial={{
+            opacity: 0,
+            y: 20
+          }} whileInView={{
+            opacity: 1,
+            y: 0
+          }} viewport={{
+            once: true
+          }} transition={{
+            duration: 0.6
+          }} className="p-8 md:p-12 rounded-3xl bg-primary text-primary-foreground text-center">
               <Lightbulb className="w-16 h-16 mx-auto mb-6" />
-              <h2 className="text-3xl font-bold mb-4">Research & Development Support</h2>
-              <p className="text-white/90 mb-8 max-w-2xl mx-auto">
-                For innovation ideas, project collaboration, or research funding opportunities.
-              </p>
+              <h2 className="text-3xl font-bold mb-4">{i18next.t("auto.research_development_support_eh5mee")}</h2>
+              <p className="text-white/90 mb-8 max-w-2xl mx-auto">{`
+                ${i18next.t("auto.for_innovation_ideas_project_collaboration_or_research_1kghn5r")}
+              `}</p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                  <div className="font-bold">Director - R&D Cell</div>
-                  <div className="text-white/80">Dr. Nagendra Prasad Verma</div>
-                  <div className="text-white/80">rnd@magadhmahilacollege.org</div>
+                  <div className="font-bold">{i18next.t("auto.director_r_d_cell_wopoy6")}</div>
+                  <div className="text-white/80">{i18next.t("auto.dr_nagendra_prasad_verma_nwre9")}</div>
+                  <div className="text-white/80">{i18next.t("auto.rnd_magadhmahilacollege_org_1bbf7yc")}</div>
                 </div>
               </div>
             </motion.div>
           </div>
         </section>
       </div>
-    </>
-  );
+    </>;
 };
-
 export default ResearchDevelopmentCell;

@@ -1,12 +1,13 @@
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useEffect, Suspense } from 'react';
+import { useEffect, Suspense, useCallback, useState } from 'react';
 import { HelmetProvider } from 'react-helmet-async';
 import { BilingualProvider } from './contexts/BilingualContext';
 import Navbar from './components/Navbar';
 import SlidingNotice from './components/SlidingNotice';
 import Footer from './components/Footer';
 import IQACStickyLayout from './components/IQACStickyLayout';
+import LanguageSelectionModal from './components/LanguageSelectionModal';
 import Home from './pages/Home';
 import About from './pages/About';
 import Academics from './pages/Academics';
@@ -81,6 +82,7 @@ import PeerTeamVisitPhotos from './pages/IQAC/PeerTeamVisitPhotos';
 import VideoRecordingNAACPeerTeamVisit from './pages/IQAC/VideoRecordingNAACPeerTeamVisit';
 import RevisitNAACPeerTeam from './pages/IQAC/RevisitNAACPeerTeam';
 import AQAR from './pages/IQAC/AQAR';
+import AcademicCalendar from './pages/IQAC/AcademicCalendar';
 
 // IQAC Feedback Forms
 import StudentFeedbackForm from './pages/IQAC/StudentFeedbackForm';
@@ -137,6 +139,7 @@ import StaffCouncil from './pages/administration/StaffCouncil';
 import CentresList202021 from './pages/administration/CentresList202021';
 import StaffProfile from './pages/administration/StaffProfile';
 import TeachingStaffSanctionedPost from './pages/administration/TeachingStaffSanctionedPost';
+import StudentCabinet from './pages/administration/StudentCabinet';
 import Cells20232024 from './pages/administration/Cells20232024';
 import Cells20242025 from './pages/administration/Cells20242025';
 import Cells20252026 from './pages/administration/Cells20252026';
@@ -147,6 +150,7 @@ import GeneralInformation from './pages/admissions/GeneralInformation';
 import IntakeCapacity from './pages/admissions/IntakeCapacity';
 import Eligibility from './pages/admissions/Eligibility';
 import FeeStructure from './pages/admissions/FeeStructure';
+import OrdinenceRegulations from './pages/admissions/OrdinenceRegulations';
 import UGAdmission from './pages/admissions/UGAdmission';
 import PGAdmission from './pages/admissions/PGAdmission';
 import ComputerApplicationCourse from './pages/admissions/ComputerApplicationCourse';
@@ -162,6 +166,7 @@ import Notifications from './pages/Notifications';
 import Notices from './pages/Notices';
 
 import { Toaster } from './components/ui/toaster';
+import { getStoredLanguagePreference, persistLanguagePreference } from './lib/languagePreference';
 
 // Component to handle scroll to top on route change
 function ScrollToTop() {
@@ -176,6 +181,34 @@ function ScrollToTop() {
 
 function App() {
   const { i18n } = useTranslation();
+  const [showLanguageSelectionModal, setShowLanguageSelectionModal] = useState(false);
+
+  useEffect(() => {
+    const currentLang = (i18n.resolvedLanguage || i18n.language || 'en').toLowerCase();
+    document.documentElement.lang = currentLang.startsWith('hi') ? 'hi' : 'en';
+  }, [i18n.language, i18n.resolvedLanguage]);
+
+  useEffect(() => {
+    if (!i18n.isInitialized) return;
+
+    const storedLanguage = getStoredLanguagePreference();
+    if (storedLanguage) {
+      persistLanguagePreference(storedLanguage);
+      if (!i18n.language?.toLowerCase().startsWith(storedLanguage)) {
+        i18n.changeLanguage(storedLanguage);
+      }
+      setShowLanguageSelectionModal(false);
+      return;
+    }
+
+    setShowLanguageSelectionModal(true);
+  }, [i18n, i18n.isInitialized]);
+
+  const handleInitialLanguageSelection = useCallback(language => {
+    const normalizedLanguage = persistLanguagePreference(language) || 'en';
+    i18n.changeLanguage(normalizedLanguage);
+    setShowLanguageSelectionModal(false);
+  }, [i18n]);
 
   if (!i18n.isInitialized) {
     return <div>Loading translations...</div>;
@@ -186,6 +219,7 @@ function App() {
       <HelmetProvider>
         <BilingualProvider>
           <div>
+            <LanguageSelectionModal isOpen={showLanguageSelectionModal} onSelect={handleInitialLanguageSelection} />
             <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
               <ScrollToTop />
               <Navbar />
@@ -258,8 +292,10 @@ function App() {
                 <Route path="best-practices-2023-24" element={<IQACBestPractices2023 />} />
                 <Route path="best-practices-photo-gallery" element={<IQACBestPracticesPhotoGallery />} />
                 <Route path="composition-of-iqac" element={<CompositionOfIQAC />} />
+                <Route path="academic-calendar" element={<AcademicCalendar />} />
                 <Route path="best-practices" element={<IQACBestPractices />} />
                 <Route path="criteria" element={<Criteria />} />
+                <Route path="infrastructure-maintenance" element={<InfrastructureMaintenance />} />
                 <Route path="objectives-of-iqac" element={<ObjectivesOfIQAC />} />
                 <Route path="minutes-of-iqac" element={<MinutesOfIQAC />} />
                 <Route path="naac-peer-team-visit" element={<NAACPeerTeamVisit />} />
@@ -296,6 +332,7 @@ function App() {
               <Route path="/administration/centres-list-2020-21" element={<CentresList202021 />} />
               <Route path="/administration/staff-profile" element={<StaffProfile />} />
               <Route path="/administration/teaching-staff-sanctioned-post" element={<TeachingStaffSanctionedPost />} />
+              <Route path="/administration/student-cabinet" element={<StudentCabinet />} />
               <Route path="/administration/cells/2023-2024" element={<Cells20232024 />} />
               <Route path="/administration/cells/2024-2025" element={<Cells20242025 />} />
               <Route path="/administration/cells/2025-2026" element={<Cells20252026 />} />
@@ -306,6 +343,7 @@ function App() {
               <Route path="/admissions/intake-capacity" element={<IntakeCapacity />} />
               <Route path="/admissions/eligibility" element={<Eligibility />} />
               <Route path="/admissions/fee-structure" element={<FeeStructure />} />
+              <Route path="/admissions/ordinence-regulations" element={<OrdinenceRegulations />} />
               <Route path="/admissions/ug-admission" element={<UGAdmission />} />
               <Route path="/admissions/pg-admission" element={<PGAdmission />} />
               <Route path="/admissions/computer-application-course" element={<ComputerApplicationCourse />} />

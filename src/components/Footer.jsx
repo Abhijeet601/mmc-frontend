@@ -1,26 +1,8 @@
+import i18next from "i18next";
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import {
-  Mail,
-  Phone,
-  MapPin,
-  Facebook,
-  Twitter,
-  Instagram,
-  Linkedin,
-  Youtube,
-  MessageCircle,
-  Send,
-  Info,
-  FileText,
-  ExternalLink,
-  Download,
-  Globe,
-  GraduationCap,
-  Users,
-  Home
-} from 'lucide-react';
+import { Mail, Phone, MapPin, Facebook, Twitter, Instagram, Linkedin, Youtube, MessageCircle, Send, Info, FileText, ExternalLink, Download, Globe, GraduationCap, Users, Home } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { r2Url } from '@/lib/r2Assets';
 
@@ -33,334 +15,308 @@ const container = {
     }
   }
 };
-
 const itemUp = {
-  hidden: { opacity: 0, y: 24 },
+  hidden: {
+    opacity: 0,
+    y: 24
+  },
   show: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.6, ease: 'easeOut' }
+    transition: {
+      duration: 0.6,
+      ease: 'easeOut'
+    }
   }
 };
 /* --------------------------------------------------- */
 
 const Footer = () => {
-  const { t, i18n } = useTranslation();
+  const {
+    t,
+    i18n
+  } = useTranslation();
   const tEn = i18n.getFixedT('en');
   const tHi = i18n.getFixedT('hi');
-
-  const quickLinks = [
-    { path: '/about', label: t('footer.quickLinksItems.about') },
-    { path: '/academics', label: t('footer.quickLinksItems.academics') },
-    { path: '/admissions', label: t('footer.quickLinksItems.admissions') },
-    { path: '/campus-life', label: t('footer.quickLinksItems.campusLife') },
-    { path: '/contact', label: t('footer.quickLinksItems.contact') }
-  ];
-
-  const importantLinks = [
-    { path: '/tenders', label: t('footer.importantLinksItems.tenders') },
-    { path: '/notices', label: t('footer.importantLinksItems.notices') },
-    { path: '/aqar', label: t('footer.importantLinksItems.aqar') },
-    { path: '/annual-reports', label: t('footer.importantLinksItems.annualReports') },
-    { path: '/media-gallery', label: t('footer.importantLinksItems.mediaGallery') },
-    { path: '/privacy-policy', label: t('footer.importantLinksItems.privacyPolicy') },
-    { path: '/terms', label: t('footer.importantLinksItems.terms') },
-    { path: '/disclaimer', label: t('footer.importantLinksItems.disclaimer') },
-    { path: '/rti', label: t('footer.importantLinksItems.rti') },
-    { path: '/rti-manual', label: t('footer.importantLinksItems.rtiManual') },
-    { path: '/fee-refund-policy', label: t('footer.importantLinksItems.feeRefundPolicy') },
-    { path: '/online-payment-policy', label: t('footer.importantLinksItems.onlinePaymentPolicy') },
-    { path: '/transaction-fee-clause', label: t('footer.importantLinksItems.transactionFeeClause') }
-  ];
-
-  const socialLinks = [
-    { icon: Facebook, href: '#', label: 'Facebook' },
-    { icon: Twitter, href: '#', label: 'Twitter' },
-    { icon: Instagram, href: '#', label: 'Instagram' },
-    { icon: Linkedin, href: '#', label: 'LinkedIn' },
-    { icon: Youtube, href: '#', label: 'YouTube' },
-    { icon: MessageCircle, href: '#', label: 'WhatsApp' },
-    { icon: Send, href: '#', label: 'Telegram' }
-  ];
-
-  return (
-    <footer className="relative bg-navbar text-primary-foreground overflow-hidden">
+  const quickLinks = [{
+    path: '/about',
+    label: t('footer.quickLinksItems.about')
+  }, {
+    path: '/academics',
+    label: t('footer.quickLinksItems.academics')
+  }, {
+    path: '/admissions',
+    label: t('footer.quickLinksItems.admissions')
+  }, {
+    path: '/campus-life',
+    label: t('footer.quickLinksItems.campusLife')
+  }, {
+    path: '/contact',
+    label: t('footer.quickLinksItems.contact')
+  }];
+  const importantLinks = [{
+    path: '/tenders',
+    label: t('footer.importantLinksItems.tenders')
+  }, {
+    path: '/notices',
+    label: t('footer.importantLinksItems.notices')
+  }, {
+    path: '/aqar',
+    label: t('footer.importantLinksItems.aqar')
+  }, {
+    path: '/annual-reports',
+    label: t('footer.importantLinksItems.annualReports')
+  }, {
+    path: '/media-gallery',
+    label: t('footer.importantLinksItems.mediaGallery')
+  }, {
+    path: '/privacy-policy',
+    label: t('footer.importantLinksItems.privacyPolicy')
+  }, {
+    path: '/terms',
+    label: t('footer.importantLinksItems.terms')
+  }, {
+    path: '/disclaimer',
+    label: t('footer.importantLinksItems.disclaimer')
+  }, {
+    path: '/rti',
+    label: t('footer.importantLinksItems.rti')
+  }, {
+    path: '/rti-manual',
+    label: t('footer.importantLinksItems.rtiManual')
+  }, {
+    path: '/fee-refund-policy',
+    label: t('footer.importantLinksItems.feeRefundPolicy')
+  }, {
+    path: '/online-payment-policy',
+    label: t('footer.importantLinksItems.onlinePaymentPolicy')
+  }, {
+    path: '/transaction-fee-clause',
+    label: t('footer.importantLinksItems.transactionFeeClause')
+  }];
+  const quickLinkIcons = {
+    '/about': Info,
+    '/academics': GraduationCap,
+    '/admissions': Users,
+    '/campus-life': Home,
+    '/contact': Phone
+  };
+  const externalLinks = [{
+    href: 'https://naac.gov.in/',
+    label: i18next.t("auto.national_assessment_and_accreditation_council_naac_dmto7d")
+  }, {
+    href: 'https://www.ugc.gov.in/',
+    label: i18next.t("auto.university_grants_commission_ugc_mllpj5")
+  }, {
+    href: 'https://nkn.gov.in/',
+    label: i18next.t("auto.national_knowledge_network_17ooqzb")
+  }, {
+    href: 'https://nad.gov.in/',
+    label: i18next.t("auto.national_academic_depository_nad_180764g")
+  }, {
+    href: 'https://www.education.gov.in/',
+    label: i18next.t("auto.ministry_of_human_resource_development_mhrd_17uqfvb")
+  }, {
+    href: 'https://scholarships.gov.in/',
+    label: i18next.t("auto.national_scholarship_portal_7s91yd")
+  }, {
+    href: 'https://aishe.gov.in/',
+    label: i18next.t("auto.all_india_survey_on_higher_education_aishe_1mvlexg")
+  }, {
+    href: 'https://www.aarogyasetu.gov.in/',
+    label: i18next.t("auto.arogya_setu_1ge1er5")
+  }, {
+    href: 'https://www.mygov.in/campaigns/bharat-padhe-online-campaign/',
+    label: i18next.t("auto.bharat_padhe_online_campaign_1l2eq9s")
+  }, {
+    href: 'https://pup.samarth.ac.in/index.php/site/login',
+    label: i18next.t("auto.pu_samarth_194spyo")
+  }];
+  const toTelHref = number => `tel:${String(number).replace(/[^\d+]/g, '')}`;
+  const toMailHref = email => `mailto:${String(email).trim()}`;
+  const hasValue = (value, key) => {
+    const text = String(value || '').trim();
+    return text.length > 0 && text !== key;
+  };
+  const contactDetails = [{
+    key: 'footer.contactDetails.address',
+    icon: MapPin,
+    value: t('footer.contactDetails.address')
+  }, {
+    key: 'footer.contactDetails.phone',
+    icon: Phone,
+    value: t('footer.contactDetails.phone'),
+    href: toTelHref(t('footer.contactDetails.phone'))
+  }, {
+    key: 'footer.contactDetails.mobile',
+    icon: Phone,
+    value: t('footer.contactDetails.mobile'),
+    href: toTelHref(t('footer.contactDetails.mobile'))
+  }, {
+    key: 'footer.contactDetails.email',
+    icon: Mail,
+    value: t('footer.contactDetails.email'),
+    href: toMailHref(t('footer.contactDetails.email'))
+  }].filter(item => hasValue(item.value, item.key));
+  const socialLinks = [{
+    icon: Facebook,
+    href: '#',
+    label: i18next.t("auto.facebook_1s8mezx")
+  }, {
+    icon: Twitter,
+    href: '#',
+    label: i18next.t("auto.twitter_1af6ik8")
+  }, {
+    icon: Instagram,
+    href: '#',
+    label: i18next.t("auto.instagram_1sbvenx")
+  }, {
+    icon: Linkedin,
+    href: '#',
+    label: i18next.t("auto.linkedin_19hwqir")
+  }, {
+    icon: Youtube,
+    href: '#',
+    label: i18next.t("auto.youtube_dbvxsw")
+  }, {
+    icon: MessageCircle,
+    href: '#',
+    label: i18next.t("auto.whatsapp_vml2gt")
+  }, {
+    icon: Send,
+    href: '#',
+    label: i18next.t("auto.telegram_159tyxw")
+  }];
+  const sectionCardClass = 'rounded-xl border border-white/15 bg-white/5 p-4 md:p-5 shadow-sm h-fit';
+  const sectionTitleClass = 'text-xs font-semibold uppercase tracking-wider mb-3 flex items-center gap-2';
+  const linkClass = 'flex items-start gap-2 text-sm text-primary-foreground/90 hover:text-highlight transition-colors';
+  return <footer className="relative bg-navbar text-primary-foreground overflow-hidden">
 
       {/* BACKGROUND EFFECT */}
       <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-white/5 opacity-30 pointer-events-none" />
 
-      <motion.div
-        variants={container}
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true }}
-        className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-14"
-      >
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
-
-          {/* LOGO + DESCRIPTION */}
-          <motion.div variants={itemUp} className="text-center">
-
-            <Link to="/" className="inline-block">
-              {/* LOGO CONTAINER MOVED UP */}
-              <div className="relative max-w-[400px] mx-auto -mt-6">
-
-                {/* BIGGER SVG SHAPE TOUCHING TOP */}
-                <svg viewBox="0 0 400 160" className="w-full">
-                  <path
-                    d="M0 0 H400 V80 C300 160 100 160 0 80 Z"
-                    fill="white"
-                  />
-                  <path
-                    d="M0 0 H400 V80 C300 160 100 160 0 80 Z"
-                    fill="none"
-                    stroke="hsl(var(--primary))"
-                    strokeWidth="4"
-                  />
-                </svg>
-
-                {/* LOGO CONTENT */}
-                <div className="absolute inset-0 flex items-center justify-center gap-3 px-6">
-                  <motion.img
-                    src={r2Url('Magadh_Mahila_College.png')}
-                    alt="Magadh Mahila College Logo"
-                    className="w-14 h-14"
-                    whileHover={{ scale: 1.1, rotate: 5 }}
-                  />
-
-                  <div className="text-left leading-tight">
-                    <h1 className="font-serif font-bold text-primary">
-                      <span className="block text-base">{tHi('hero.title')}</span>
-                      <span className="block text-sm">{tEn('hero.title')}</span>
-                    </h1>
-                    <p className="text-xs text-gray-500">
-                      Patna University
-                    </p>
-                  </div>
-                </div>
+      <motion.div variants={container} initial="hidden" whileInView="show" viewport={{
+      once: true
+    }} className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-4 md:gap-5 items-start">
+          <motion.div variants={itemUp} className={`md:col-span-2 xl:col-span-3 ${sectionCardClass}`}>
+            <Link to="/" className="inline-flex items-center gap-3 mb-3">
+              <motion.img src={r2Url('Magadh_Mahila_College.png')} alt={i18next.t("auto.magadh_mahila_college_logo_a2cjxf")} className="w-14 h-14 rounded-lg bg-white p-1 shadow-sm" whileHover={{
+              scale: 1.05
+            }} />
+              <div className="text-left leading-tight">
+                <h1 className="font-serif font-bold text-white">
+                  <span className="block text-base">{tHi('hero.title')}</span>
+                  <span className="block text-sm">{tEn('hero.title')}</span>
+                </h1>
+                <p className="text-xs text-primary-foreground/70 mt-1">{i18next.t("auto.patna_university_1phuj3f")}</p>
               </div>
             </Link>
 
-            <p className="mt-4 text-muted-foreground text-sm">
+            <p className="text-sm text-primary-foreground/80 leading-relaxed">
               {t('footer.description')}
             </p>
           </motion.div>
 
-          {/* QUICK LINKS */}
-          <motion.div variants={itemUp}>
-            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-              <Info className="w-5 h-5" />
+          <motion.div variants={itemUp} className={`xl:col-span-2 ${sectionCardClass}`}>
+            <h3 className={sectionTitleClass}>
+              <Info className="w-4 h-4" />
               {t('footer.quickLinks')}
             </h3>
-            <nav className="space-y-2">
-              {quickLinks.map(link => (
-                <Link
-                  key={link.path}
-                  to={link.path}
-                  className="block text-sm hover:text-highlight transition flex items-center gap-2"
-                >
-                  {link.path === '/about' && <Info className="w-4 h-4" />}
-                  {link.path === '/academics' && <GraduationCap className="w-4 h-4" />}
-                  {link.path === '/admissions' && <Users className="w-4 h-4" />}
-                  {link.path === '/campus-life' && <Home className="w-4 h-4" />}
-                  {link.path === '/contact' && <Phone className="w-4 h-4" />}
-                  {link.label}
-                </Link>
-              ))}
+            <nav>
+              <ul className="space-y-1.5">
+                {quickLinks.map(link => {
+                const Icon = quickLinkIcons[link.path] || Info;
+                return <li key={link.path}>
+                      <Link to={link.path} className={linkClass}>
+                        <Icon className="w-4 h-4 mt-0.5 shrink-0" />
+                        <span>{link.label}</span>
+                      </Link>
+                    </li>;
+              })}
+              </ul>
             </nav>
           </motion.div>
 
-          {/* IMPORTANT LINKS */}
-          <motion.div variants={itemUp}>
-            <h3 className="text-base font-semibold mb-4 flex items-center gap-2">
-              <FileText className="w-5 h-5" />
+          <motion.div variants={itemUp} className={`xl:col-span-2 ${sectionCardClass}`}>
+            <h3 className={sectionTitleClass}>
+              <FileText className="w-4 h-4" />
               {t('footer.importantLinks')}
             </h3>
-            <nav className="space-y-2">
-              {importantLinks.map(link => (
-                <Link
-                  key={link.path}
-                  to={link.path}
-                  className="block text-xs hover:text-highlight transition flex items-center gap-2"
-                >
-                  <Download className="w-4 h-4" />
-                  {link.label}
-                </Link>
-              ))}
+            <nav>
+              <ul className="space-y-1.5 max-h-64 overflow-y-auto pr-1">
+                {importantLinks.map(link => <li key={link.path}>
+                    <Link to={link.path} className="flex items-start gap-2 text-xs text-primary-foreground/90 hover:text-highlight transition-colors">
+                      <Download className="w-4 h-4 mt-0.5 shrink-0" />
+                      <span>{link.label}</span>
+                    </Link>
+                  </li>)}
+              </ul>
             </nav>
           </motion.div>
 
-          {/* EXTERNAL IMPORTANT LINKS */}
-          <motion.div variants={itemUp}>
-            <h3 className="text-base font-semibold mb-4 flex items-center gap-2">
-              <Globe className="w-5 h-5" />
-              External Important Links
+          <motion.div variants={itemUp} className={`xl:col-span-2 ${sectionCardClass}`}>
+            <h3 className={sectionTitleClass}>
+              <Globe className="w-4 h-4" />
+              {t('footer.externalLinks')}
             </h3>
-            <nav className="space-y-2">
-              <a
-                href="https://naac.gov.in/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block text-xs hover:text-highlight transition flex items-center gap-2"
-              >
-                <ExternalLink className="w-4 h-4" />
-                National Assessment and Accreditation Council (NAAC)
-              </a>
-              <a
-                href="https://www.ugc.gov.in/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block text-xs hover:text-highlight transition flex items-center gap-2"
-              >
-                <ExternalLink className="w-4 h-4" />
-                University Grants Commission (UGC)
-              </a>
-              <a
-                href="https://nkn.gov.in/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block text-xs hover:text-highlight transition flex items-center gap-2"
-              >
-                <ExternalLink className="w-4 h-4" />
-                National Knowledge Network
-              </a>
-              <a
-                href="https://nad.gov.in/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block text-xs hover:text-highlight transition flex items-center gap-2"
-              >
-                <ExternalLink className="w-4 h-4" />
-                National Academic Depository (NAD)
-              </a>
-              <a
-                href="https://www.education.gov.in/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block text-xs hover:text-highlight transition flex items-center gap-2"
-              >
-                <ExternalLink className="w-4 h-4" />
-                Ministry of Human Resource Development (MHRD)
-              </a>
-              <a
-                href="https://scholarships.gov.in/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block text-xs hover:text-highlight transition flex items-center gap-2"
-              >
-                <ExternalLink className="w-4 h-4" />
-                National Scholarship Portal
-              </a>
-              <a
-                href="https://aishe.gov.in/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block text-xs hover:text-highlight transition flex items-center gap-2"
-              >
-                <ExternalLink className="w-4 h-4" />
-                All India Survey on Higher Education (AISHE)
-              </a>
-              <a
-                href="https://www.aarogyasetu.gov.in/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block text-xs hover:text-highlight transition flex items-center gap-2"
-              >
-                <ExternalLink className="w-4 h-4" />
-                Arogya Setu
-              </a>
-              <a
-                href="https://www.mygov.in/campaigns/bharat-padhe-online-campaign/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block text-xs hover:text-highlight transition flex items-center gap-2"
-              >
-                <ExternalLink className="w-4 h-4" />
-                Bharat Padhe Online campaign
-              </a>
-              <a
-                href="https://pup.samarth.ac.in/index.php/site/login"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block text-xs hover:text-highlight transition flex items-center gap-2"
-              >
-                <ExternalLink className="w-4 h-4" />
-                PU SAMARTH
-              </a>
+            <nav>
+              <ul className="space-y-1.5 max-h-64 overflow-y-auto pr-1">
+                {externalLinks.map(link => <li key={link.href}>
+                    <a href={link.href} target="_blank" rel="noopener noreferrer" className="flex items-start gap-2 text-xs text-primary-foreground/90 hover:text-highlight transition-colors">
+                      <ExternalLink className="w-4 h-4 mt-0.5 shrink-0" />
+                      <span>{link.label}</span>
+                    </a>
+                  </li>)}
+              </ul>
             </nav>
           </motion.div>
 
-          {/* CONTACT */}
-          <motion.div variants={itemUp}>
-            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-              <Phone className="w-5 h-5" />
+          <motion.div variants={itemUp} className={`xl:col-span-3 ${sectionCardClass}`}>
+            <h3 className={sectionTitleClass}>
+              <Phone className="w-4 h-4" />
               {t('footer.contactInfo')}
             </h3>
-
-            <div className="space-y-3 text-sm">
-              <div className="flex gap-3">
-                <MapPin className="w-5 h-5 text-highlight" />
-                {t('footer.contactDetails.address')}
-              </div>
-              <div className="flex gap-3">
-                <Phone className="w-5 h-5 text-highlight" />
-                {t('footer.contactDetails.phone')}
-              </div>
-              <div className="flex gap-3">
-                <Phone className="w-5 h-5 text-highlight" />
-                {t('footer.contactDetails.mobile')}
-              </div>
-              <div className="flex gap-3">
-                <Phone className="w-5 h-5 text-highlight" />
-                {t('footer.contactDetails.fax')}
-              </div>
-              <div className="flex gap-3">
-                <Mail className="w-5 h-5 text-highlight" />
-                {t('footer.contactDetails.email')}
-              </div>
-            </div>
+            <ul className="space-y-2.5 text-sm">
+              {contactDetails.map((item, index) => {
+              const Icon = item.icon;
+              return <li key={`${item.value}-${index}`} className="flex items-start gap-2.5 text-primary-foreground/90">
+                    <Icon className="w-4 h-4 mt-1 shrink-0 text-highlight" />
+                    {item.href ? <a href={item.href} className="hover:text-highlight transition-colors break-words">
+                        {item.value}
+                      </a> : <span className="break-words">{item.value}</span>}
+                  </li>;
+            })}
+            </ul>
           </motion.div>
         </div>
 
         {/* SOCIAL ICONS */}
-        <motion.div variants={itemUp} className="mt-10 flex justify-center gap-4">
-          {socialLinks.map(social => (
-            <motion.a
-              key={social.label}
-              href={social.href}
-              whileHover={{ scale: 1.2 }}
-              className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-highlight transition"
-              aria-label={social.label}
-            >
-              <social.icon className="w-5 h-5" />
-            </motion.a>
-          ))}
+        <motion.div variants={itemUp} className="mt-8 flex flex-wrap justify-center gap-3">
+          {socialLinks.map(social => <motion.a key={social.label} href={social.href} whileHover={{
+          scale: 1.2
+        }} className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-highlight transition" aria-label={social.label}>
+              <social.icon className="w-4 h-4" />
+            </motion.a>)}
         </motion.div>
 
         {/* DIVIDER */}
-        <div className="mt-12 h-px bg-white/10" />
+        <div className="mt-8 h-px bg-white/10" />
 
         {/* COPYRIGHT */}
-        <div className="mt-6 text-center text-sm space-y-2">
+        <div className="mt-5 text-center text-sm space-y-1.5">
           <p>{t('footer.copyright')}</p>
 
           <p className="text-xs text-muted-foreground">
-            Managed by{' '}
-            <a
-              href="https://ards.in/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-semibold text-highlight hover:underline inline-flex items-center gap-1"
-            >
+            {t('footer.managedBy')}{' '}
+            <a href="https://ards.in/" target="_blank" rel="noopener noreferrer" className="font-semibold text-highlight hover:underline inline-flex items-center gap-1">
               <Globe className="w-3 h-3" />
-              Alpenrose Digital Solutions
+              {t('footer.companyName')}
             </a>
           </p>
         </div>
 
       </motion.div>
-    </footer>
-  );
+    </footer>;
 };
-
 export default Footer;

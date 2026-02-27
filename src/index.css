@@ -165,6 +165,7 @@ body {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
+    text-transform: uppercase;
   }
 
   /* Logo container - centered and responsive */
