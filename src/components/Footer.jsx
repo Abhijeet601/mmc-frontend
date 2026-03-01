@@ -160,32 +160,16 @@ const Footer = () => {
   }].filter(item => hasValue(item.value, item.key));
   const socialLinks = [{
     icon: Facebook,
-    href: '#',
+    href: 'https://facebook.com/magadhmahila',
     label: i18next.t("auto.facebook_1s8mezx")
   }, {
-    icon: Twitter,
-    href: '#',
-    label: i18next.t("auto.twitter_1af6ik8")
-  }, {
     icon: Instagram,
-    href: '#',
+    href: 'https://www.instagram.com/magadh.mahila.college/?hl=en',
     label: i18next.t("auto.instagram_1sbvenx")
   }, {
-    icon: Linkedin,
-    href: '#',
-    label: i18next.t("auto.linkedin_19hwqir")
-  }, {
     icon: Youtube,
-    href: '#',
+    href: 'https://youtube.com/@magadh_mahila_college?si=yrRaQ5mkbjScDxMk',
     label: i18next.t("auto.youtube_dbvxsw")
-  }, {
-    icon: MessageCircle,
-    href: '#',
-    label: i18next.t("auto.whatsapp_vml2gt")
-  }, {
-    icon: Send,
-    href: '#',
-    label: i18next.t("auto.telegram_159tyxw")
   }];
   const sectionCardClass = 'rounded-xl border border-white/15 bg-white/5 p-4 md:p-5 shadow-sm h-fit';
   const sectionTitleClass = 'text-xs font-semibold uppercase tracking-wider mb-3 flex items-center gap-2';
