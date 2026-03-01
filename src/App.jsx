@@ -150,7 +150,7 @@ import GeneralInformation from './pages/admissions/GeneralInformation';
 import IntakeCapacity from './pages/admissions/IntakeCapacity';
 import Eligibility from './pages/admissions/Eligibility';
 import FeeStructure from './pages/admissions/FeeStructure';
-import OrdinenceRegulations from './pages/admissions/OrdinenceRegulations';
+import OrdinanceRegulations from './pages/admissions/OrdinenceRegulations';
 import UGAdmission from './pages/admissions/UGAdmission';
 import PGAdmission from './pages/admissions/PGAdmission';
 import ComputerApplicationCourse from './pages/admissions/ComputerApplicationCourse';
@@ -343,7 +343,8 @@ function App() {
               <Route path="/admissions/intake-capacity" element={<IntakeCapacity />} />
               <Route path="/admissions/eligibility" element={<Eligibility />} />
               <Route path="/admissions/fee-structure" element={<FeeStructure />} />
-              <Route path="/admissions/ordinence-regulations" element={<OrdinenceRegulations />} />
+              <Route path="/admissions/ordinance-regulations" element={<OrdinanceRegulations />} />
+              <Route path="/admissions/ordinence-regulations" element={<Navigate to="/admissions/ordinance-regulations" replace />} />
               <Route path="/admissions/ug-admission" element={<UGAdmission />} />
               <Route path="/admissions/pg-admission" element={<PGAdmission />} />
               <Route path="/admissions/computer-application-course" element={<ComputerApplicationCourse />} />

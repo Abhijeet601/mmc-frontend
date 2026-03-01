@@ -57,7 +57,7 @@ const Home = () => {
         <HeroSection />
 
         {/* WELCOME MESSAGE */}
-        <section className="py-10 bg-gray-50 relative overflow-hidden">
+        <section className="py-12 md:py-16 bg-gray-50 relative overflow-hidden">
           {/* Animated Background */}
           <motion.div className="absolute inset-0 opacity-10" animate={{
           background: ['radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.3) 0%, transparent 50%)', 'radial-gradient(circle at 80% 80%, rgba(139, 69, 19, 0.3) 0%, transparent 50%)', 'radial-gradient(circle at 40% 60%, rgba(59, 130, 246, 0.3) 0%, transparent 50%)', 'radial-gradient(circle at 60% 30%, rgba(139, 69, 19, 0.3) 0%, transparent 50%)']
@@ -334,7 +334,7 @@ const Home = () => {
         </section>
 
         {/* ANTI RAGGING SECTION */}
-        <section className="py-10 bg-gray-50 relative overflow-hidden">
+        <section className="py-12 md:py-16 bg-gray-50 relative overflow-hidden">
           <div className="px-4 text-center relative z-10">
             <motion.div initial={{
             opacity: 0,
@@ -460,14 +460,14 @@ const Home = () => {
         </section>
 
         {/* QUICK HIGHLIGHTS */}
-        <section className="pt-0 pb-12 bg-gray-50">
+        <section className="py-0 bg-gray-50">
           <div className="px-4">
             <QuickHighlights />
           </div>
         </section>
 
         {/* NOTICE & EVENTS (SCROLLING) */}
-        <section className="py-8 bg-white relative">
+        <section className="py-0 bg-white relative">
           <motion.div className="absolute inset-0 bg-gradient-to-br from-blue-50/20 via-white to-maroon-50/20" animate={{
           background: ['linear-gradient(45deg, rgba(59, 130, 246, 0.1), rgba(255, 255, 255, 0.8), rgba(139, 69, 19, 0.1))', 'linear-gradient(135deg, rgba(139, 69, 19, 0.1), rgba(255, 255, 255, 0.8), rgba(59, 130, 246, 0.1))', 'linear-gradient(225deg, rgba(59, 130, 246, 0.1), rgba(255, 255, 255, 0.8), rgba(139, 69, 19, 0.1))', 'linear-gradient(315deg, rgba(139, 69, 19, 0.1), rgba(255, 255, 255, 0.8), rgba(59, 130, 246, 0.1))']
         }} transition={{
@@ -494,7 +494,7 @@ const Home = () => {
         </section>
 
         {/* VISITORS SECTION */}
-        <section className="py-10 bg-white relative overflow-hidden">
+        <section className="py-12 md:py-16 bg-white relative overflow-hidden">
           <motion.div className="absolute inset-0 bg-gradient-to-br from-blue-50/10 via-white to-maroon-50/10" animate={{
           background: ['linear-gradient(45deg, rgba(59, 130, 246, 0.05), rgba(255, 255, 255, 0.9), rgba(139, 69, 19, 0.05))', 'linear-gradient(135deg, rgba(139, 69, 19, 0.05), rgba(255, 255, 255, 0.9), rgba(59, 130, 246, 0.05))', 'linear-gradient(225deg, rgba(59, 130, 246, 0.05), rgba(255, 255, 255, 0.9), rgba(139, 69, 19, 0.05))', 'linear-gradient(315deg, rgba(139, 69, 19, 0.05), rgba(255, 255, 255, 0.9), rgba(59, 130, 246, 0.05))']
         }} transition={{
@@ -582,7 +582,7 @@ const Home = () => {
         </section>
 
         {/* WOMEN EMPOWERMENT SECTION */}
-        <section className="relative py-10 bg-white overflow-hidden border-t border-gray-100">
+        <section className="relative py-12 md:py-16 bg-white overflow-hidden border-t border-gray-100">
           <motion.div initial={{
           opacity: 0,
           y: 30
@@ -638,7 +638,7 @@ const Home = () => {
 
 
         {/* FEATURES */}
-        <section className="py-10 bg-white relative overflow-hidden">
+        <section className="py-0 bg-white relative overflow-hidden">
           {/* Animated Background Pattern */}
           <motion.div className="absolute inset-0 opacity-5" animate={{
           backgroundPosition: ['0% 0%', '50% 50%', '100% 100%', '0% 0%']
@@ -689,7 +689,7 @@ const Home = () => {
         {/* ANTI RAGGING SECTION (moved above) */}
 
         {/* DOWNLOAD HANDBOOK */}
-        <section className="py-10 bg-white border-t border-gray-100 relative overflow-hidden">
+        <section className="py-12 md:py-16 bg-white border-t border-gray-100 relative overflow-hidden">
           {/* Animated Background */}
           <motion.div className="absolute inset-0 opacity-5" animate={{
           backgroundPosition: ['0% 0%', '100% 100%', '0% 0%']
@@ -799,7 +799,7 @@ const Home = () => {
         </section>
 
         {/* CLOSING MESSAGE */}
-        <section className="py-10 bg-navbar text-navbar-foreground text-center">
+        <section className="py-12 md:py-16 bg-navbar text-navbar-foreground text-center">
           <motion.div initial={{
           opacity: 0,
           y: 20

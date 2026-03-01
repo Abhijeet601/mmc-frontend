@@ -261,10 +261,6 @@ const StaffCouncil = () => {
     name: i18next.t("auto.dr_anamika_1plfpel")
   }, {
     sl: 7,
-    department: 'English',
-    name: i18next.t("auto.dr_anchit_pandey_115dl6r")
-  }, {
-    sl: 8,
     department: 'Chemistry',
     name: i18next.t("auto.dr_priya_p6ftta")
   }, {

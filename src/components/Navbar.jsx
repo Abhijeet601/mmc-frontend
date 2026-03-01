@@ -221,7 +221,7 @@ const Navbar = () => {
     to: "/admissions/eligibility"
   }, {
     label: i18next.t("auto.ordinence_regulations_wl9xkn"),
-    to: "/admissions/ordinence-regulations"
+    to: "/admissions/ordinance-regulations"
   }, {
     label: i18next.t("auto.admitted_students_17o0un3"),
     to: "/admissions/admitted-students-year-wise"
@@ -271,15 +271,15 @@ const Navbar = () => {
 
 
       {/* ========== TOP BAR ========== */}
-      <div className="hidden md:block bg-primary text-primary-foreground text-sm relative overflow-hidden">
+      <div className="hidden md:block bg-primary text-primary-foreground text-xs relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-500"></div>
-        <div className="max-w-7xl mx-auto px-4 h-10 flex justify-between items-center uppercase relative z-10">
-          <div className="flex gap-4">
-            <Link to="/" className="nav-link hover:text-white transition-colors duration-300 flex items-center gap-2">
+        <div className="max-w-7xl mx-auto px-4 h-10 flex justify-between items-center uppercase relative z-10 whitespace-nowrap">
+          <div className="flex gap-4 items-center min-w-0">
+            <Link to="/" className="nav-link text-xs hover:text-white transition-colors duration-300 flex items-center gap-2">
               <Home className="w-4 h-4" />
               {t('nav.home')}
             </Link>
-            <Link to="/notifications" className="nav-link hover:text-white transition-colors duration-300 flex items-center gap-2">
+            <Link to="/notifications" className="nav-link text-xs hover:text-white transition-colors duration-300 flex items-center gap-2">
               <motion.div whileHover={{
               scale: 1.2
             }} transition={{
@@ -289,16 +289,16 @@ const Navbar = () => {
               </motion.div>
               {t('nav.notifications')}
             </Link>
-            <Link to="/tenders" className="nav-link hover:text-white transition-colors duration-300 flex items-center gap-2">
+            <Link to="/tenders" className="nav-link text-xs hover:text-white transition-colors duration-300 flex items-center gap-2">
               <FileText className="w-4 h-4" />
               {t('nav.tenders')}
             </Link>
           </div>
 
-          <div className="flex gap-4 items-center flex-wrap ml-4">
+          <div className="flex gap-4 items-center flex-nowrap ml-4 whitespace-nowrap">
             {/* Language selector */}
-            <div className="flex items-center gap-2 text-white text-xs">
-              <span className="font-medium">{t('nav.language')}</span>
+            <div className="flex items-center gap-2 text-white text-xs whitespace-nowrap">
+              <span className="text-xs font-medium">{t('nav.language')}</span>
               <div className="flex items-center bg-white/10 rounded-md p-0.5 backdrop-blur-sm">
                 <button onClick={() => {
                 handleLanguageChange('en');
@@ -315,8 +315,8 @@ const Navbar = () => {
             </div>
 
             {/* Theme selector */}
-            <div className="flex items-center gap-2 text-white text-xs">
-              <span className="font-medium">{t('nav.theme')}</span>
+            <div className="flex items-center gap-2 text-white text-xs whitespace-nowrap">
+              <span className="text-xs font-medium">{t('nav.theme')}</span>
               <div className="flex items-center bg-white/10 rounded-md p-0.5 backdrop-blur-sm">
                 <button onClick={() => setTheme('blue')} className={`theme-button flex items-center px-2.5 py-1 text-xs rounded-sm ${theme === 'blue' ? 'bg-white/20 font-semibold shadow-sm' : 'opacity-90 hover:bg-white/10'}`} aria-pressed={theme === 'blue'}>
                   <span className="inline-block w-2 h-2 bg-blue-500 rounded-full mr-1.5"></span>
@@ -348,10 +348,10 @@ const Navbar = () => {
 
       {/* ========== MAIN NAV ========== */}
       <div className={`hidden md:block bg-white border-b transition-shadow duration-300 ${scrolled ? 'shadow-md' : ''}`}>
-        <div className="max-w-7xl mx-auto px-4 h-20 flex justify-between items-center relative">
+        <div className="max-w-7xl mx-auto px-4 h-20 flex items-center relative">
 
           {/* LEFT NAVIGATION */}
-          <nav className="hidden md:grid grid-cols-3 grid-rows-2 gap-2 uppercase text-xs pr-8 lg:pr-56 items-center">
+          <nav className="hidden md:grid flex-1 min-w-0 grid-cols-3 grid-rows-2 gap-2 uppercase text-xs pr-8 lg:pr-56 items-center whitespace-nowrap">
             {/* ABOUT DROPDOWN */}
             <div className="relative" ref={aboutDropdownRef} onMouseEnter={() => {
             if (aboutCloseTimeoutRef.current) {
@@ -797,7 +797,7 @@ const Navbar = () => {
           </nav>
 
           {/* RIGHT NAVIGATION */}
-          <div className="hidden md:flex gap-4 uppercase text-xs pl-8 lg:pl-48 items-center">
+          <div className="hidden md:flex flex-1 min-w-0 justify-end gap-4 uppercase text-xs pl-8 lg:pl-48 items-center whitespace-nowrap">
             {/* ACADEMICS DROPDOWN */}
             <div className="relative" ref={rightAcademicsDropdownRef} onMouseEnter={() => {
             if (rightAcademicsCloseTimeoutRef.current) {
@@ -1445,7 +1445,7 @@ const Navbar = () => {
       </AnimatePresence>
 
       {/* ========== SVG SHIELD LOGO ========== */}
-      <Link to="/" aria-label={i18next.t("auto.magadh_mahila_college_home_a1mmo7")} className="logo-container hidden md:block absolute left-1/2 -translate-x-1/2 top-0 z-40 pointer-events-none">
+      <Link to="/" aria-label={i18next.t("auto.magadh_mahila_college_home_a1mmo7")} className="logo-container hidden md:block absolute left-1/2 -translate-x-1/2 -ml-2 top-0 z-40 pointer-events-none">
         <div className="relative w-52 md:w-72 lg:w-88 xl:w-96 max-w-[500px]">
           <svg viewBox="0 0 400 140" className="w-full h-auto drop-shadow-lg max-w-[400px]" xmlns="http://www.w3.org/2000/svg">
             <defs>
@@ -1480,6 +1480,7 @@ const Navbar = () => {
           </div>
         </div>
       </Link>
+
     </motion.header>;
 };
 export default Navbar;

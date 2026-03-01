@@ -107,6 +107,12 @@ const Committees = () => {
   };
   const getCellValue = (row, column) => {
     const normalized = column.toLowerCase().replace(/[^a-z0-9]/g, '');
+    if (normalized === 'criteria') {
+      return row.criteria || row.department || '';
+    }
+    if (normalized === 'department') {
+      return row.department || row.criteria || '';
+    }
     return row[normalized] || row[column.toLowerCase().replace(/\s+/g, '')] || row[column.toLowerCase()] || '';
   };
   const TableComponent = ({
@@ -144,7 +150,7 @@ const Committees = () => {
             {expandedYear === year && <div className="px-6 py-6 bg-white">
                 {(allCommittees[year] || []).map((committee, idx) => <div key={`${year}-${committee.title}-${idx}`} className="mb-8">
                     <h3 className="text-2xl font-bold text-blue-600 mb-4">{committee.title}</h3>
-                    <TableComponent data={committee.data} columns={['Sl', 'Name', 'Designation', 'Department']} />
+                    <TableComponent data={committee.data} columns={/naac/i.test(committee.title) ? ['Sl', 'Name', 'Designation', 'Criteria'] : ['Sl', 'Name', 'Designation', 'Department']} />
                   </div>)}
               </div>}
           </div>)}

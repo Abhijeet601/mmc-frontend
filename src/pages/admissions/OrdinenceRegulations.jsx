@@ -1,22 +1,32 @@
 import i18next from "i18next";
 import React from 'react';
 import { r2Url } from '@/lib/r2Assets';
-const ordinanceDocuments = [{
-  title: i18next.t("auto.bba_ordinance_and_regulations_7xis2n"),
-  file: 'BBA ordinance and regulations.pdf'
-}, {
-  title: i18next.t("auto.bca_ordinance_and_regulations_ul21by"),
-  file: 'BCA ordinance regulation 2022.pdf'
-}, {
-  title: i18next.t("auto.nep_ordinance_and_regulations_b_a_b_eijwqc"),
-  file: 'Nep ordinance and regulation.pdf'
-}];
+
 const ORDINANCE_FOLDER = 'data files/Ordinence & Regulations';
-const OrdinenceRegulations = () => {
+const OrdinanceRegulations = () => {
+  const ordinanceDocuments = [{
+    title: i18next.t("auto.bba_ordinance_and_regulations_7xis2n", {
+      defaultValue: 'BBA Ordinance and Regulations'
+    }),
+    file: 'BBA ordinance and regulations.pdf'
+  }, {
+    title: i18next.t("auto.bca_ordinance_and_regulations_ul21by", {
+      defaultValue: 'BCA Ordinance and Regulations'
+    }),
+    file: 'BCA ordinance regulation 2022.pdf'
+  }, {
+    title: i18next.t("auto.nep_ordinance_and_regulations_b_a_b_eijwqc", {
+      defaultValue: 'NEP Ordinance and Regulations - B.A./B.Sc./B.Com'
+    }),
+    file: 'Nep ordinance and regulation.pdf'
+  }];
+
   return <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-white rounded-lg shadow-lg p-6 sm:p-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-6">{i18next.t("auto.ordinence_regulations_wl9xkn")}</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-6">{i18next.t("auto.ordinence_regulations_wl9xkn", {
+          defaultValue: 'Ordinance & Regulations'
+        })}</h1>
 
           <div className="space-y-4">
             {ordinanceDocuments.map(doc => <div key={doc.file} className="border border-gray-200 rounded-lg p-4 sm:p-5 flex items-center justify-between gap-4">
@@ -32,4 +42,4 @@ const OrdinenceRegulations = () => {
       </div>
     </div>;
 };
-export default OrdinenceRegulations;
+export default OrdinanceRegulations;

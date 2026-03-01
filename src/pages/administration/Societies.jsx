@@ -36,15 +36,21 @@ const Societies = () => {
               <li>{i18next.t("auto.general_secretary_mab5zh")}</li>
               <li>{i18next.t("auto.assistant_general_secretary_11e3kxl")}</li>
               <li>{i18next.t("auto.cultural_secretary_frnfxb")}</li>
+              <li>{i18next.t("auto.assistant_cultural_secretary_xxx123")}</li>
               <li>{i18next.t("auto.sports_secretary_1qkhg4i")}</li>
+              <li>{i18next.t("auto.assistant_sports_secretary_yyy456")}</li>
               <li>{i18next.t("auto.sanitation_secretary_1s9q5ev")}</li>
+              <li>{i18next.t("auto.assistant_sanitation_secretary_zzz789")}</li>
             </ul>
           </div>
           <div className="bg-blue-100 p-4 rounded">
             <ul className="space-y-2 text-gray-800">
               <li>{i18next.t("auto.science_and_it_secretary_1p3f5g9")}</li>
+              <li>{i18next.t("auto.assistant_science_and_it_secretary_aaa111")}</li>
               <li>{i18next.t("auto.green_earth_brigade_secretary_nn9pec")}</li>
+              <li>{i18next.t("auto.assistant_green_earth_brigade_secretary_bbb222")}</li>
               <li>{i18next.t("auto.environment_secretary_a6rmku")}</li>
+              <li>{i18next.t("auto.assistant_environment_secretary_ccc333")}</li>
               <li>{i18next.t("auto.treasurer_drgcjq")}</li>
             </ul>
           </div>
@@ -55,72 +61,7 @@ const Societies = () => {
         `}</p>
       </section>
 
-      <section className="mb-12">
-        <h2 className="text-2xl font-bold text-gray-800 mb-4">{i18next.t("auto.sahodara_society_the_house_system_3cg7pp")}</h2>
-        <div className="bg-gradient-to-r from-green-500 to-green-600 p-6 rounded-lg text-white mb-4">
-          <h3 className="text-xl font-bold mb-2">{i18next.t("auto.the_daughter_of_same_mother_10vvoca")}</h3>
-          <p>{`
-            ${i18next.t("auto.mmc_has_the_liberty_to_be_proud_1amrdcd")}
-          `}</p>
-        </div>
 
-        <h3 className="text-xl font-bold text-gray-800 mb-3">{i18next.t("auto.the_four_houses_1pb98sl")}</h3>
-        <div className="grid md:grid-cols-4 gap-4 mb-6">
-          <div className="bg-gradient-to-br from-red-100 to-red-200 p-4 rounded text-center">
-            <h4 className="font-bold text-gray-800 mb-2">{i18next.t("auto.jagriti_1um1efj")}</h4>
-            <p className="text-sm text-gray-700">{i18next.t("auto.awakening_awareness_v9uw4f")}</p>
-          </div>
-          <div className="bg-gradient-to-br from-yellow-100 to-yellow-200 p-4 rounded text-center">
-            <h4 className="font-bold text-gray-800 mb-2">{i18next.t("auto.maitri_17p57qn")}</h4>
-            <p className="text-sm text-gray-700">{i18next.t("auto.friendship_unity_roetf0")}</p>
-          </div>
-          <div className="bg-gradient-to-br from-blue-100 to-blue-200 p-4 rounded text-center">
-            <h4 className="font-bold text-gray-800 mb-2">{i18next.t("auto.pragati_1lcg6hp")}</h4>
-            <p className="text-sm text-gray-700">{i18next.t("auto.progress_development_1br1ux9")}</p>
-          </div>
-          <div className="bg-gradient-to-br from-purple-100 to-purple-200 p-4 rounded text-center">
-            <h4 className="font-bold text-gray-800 mb-2">{i18next.t("auto.samriddhi_wzv43k")}</h4>
-            <p className="text-sm text-gray-700">{i18next.t("auto.prosperity_growth_1uwaogf")}</p>
-          </div>
-        </div>
-
-        <h3 className="text-xl font-bold text-gray-800 mb-3">{i18next.t("auto.leadership_competition_1bpk34f")}</h3>
-        <p className="text-justify text-gray-800 mb-4">{`
-          ${i18next.t("auto.the_house_captains_vice_captains_coordinate_with_14w4lzu")}
-        `}</p>
-
-        <h3 className="text-xl font-bold text-gray-800 mb-3">{i18next.t("auto.objectives_of_sahodara_society_18wrsst")}</h3>
-        <div className="space-y-3">
-          <div className="flex items-start">
-            <span className="text-green-600 font-bold mr-3">✓</span>
-            <p className="text-gray-800"><strong>{i18next.t("auto.platform_to_showcase_talent_9s0nv4")}</strong>{` ${i18next.t("auto.through_various_activities_a80mgg")}`}</p>
-          </div>
-          <div className="flex items-start">
-            <span className="text-green-600 font-bold mr-3">✓</span>
-            <p className="text-gray-800"><strong>{i18next.t("auto.enhancing_administrative_qualities_x2vjjx")}</strong>{` ${i18next.t("auto.among_students_o79gid")}`}</p>
-          </div>
-          <div className="flex items-start">
-            <span className="text-green-600 font-bold mr-3">✓</span>
-            <p className="text-gray-800"><strong>{i18next.t("auto.developing_sense_of_healthy_competitiveness_1if02bu")}</strong>{` ${i18next.t("auto.in_a_supportive_environment_1orkhkz")}`}</p>
-          </div>
-          <div className="flex items-start">
-            <span className="text-green-600 font-bold mr-3">✓</span>
-            <p className="text-gray-800"><strong>{i18next.t("auto.enhancing_discipline_2y93i8")}</strong>{` ${i18next.t("auto.in_the_college_through_student_leadership_20oymz")}`}</p>
-          </div>
-          <div className="flex items-start">
-            <span className="text-green-600 font-bold mr-3">✓</span>
-            <p className="text-gray-800"><strong>{i18next.t("auto.promoting_indian_culture_1fj24af")}</strong>{` ${i18next.t("auto.and_moral_values_among_students_gnifwb")}`}</p>
-          </div>
-        </div>
-
-        <h3 className="text-xl font-bold text-gray-800 mb-3 mt-6">{i18next.t("auto.values_promoted_ofpohz")}</h3>
-        <p className="text-justify text-gray-800 mb-4">{`
-          ${i18next.t("auto.the_house_system_provides_opportunities_for_college_1acicy0")}
-        `}</p>
-        <p className="text-justify text-gray-800">{`
-          ${i18next.t("auto.participation_in_house_activities_contributes_to_dedication_102e3tn")}
-        `}</p>
-      </section>
 
       <section className="mb-12 bg-green-50 p-6 rounded-lg">
         <h2 className="text-2xl font-bold text-green-700 mb-4">{i18next.t("auto.department_societies_1f7yyzd")}</h2>

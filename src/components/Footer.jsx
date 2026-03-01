@@ -45,7 +45,7 @@ const Footer = () => {
     path: '/academics',
     label: t('footer.quickLinksItems.academics')
   }, {
-    path: '/admissions',
+    path: '/admissions/general-information',
     label: t('footer.quickLinksItems.admissions')
   }, {
     path: '/campus-life',
@@ -61,7 +61,7 @@ const Footer = () => {
     path: '/notices',
     label: t('footer.importantLinksItems.notices')
   }, {
-    path: '/aqar',
+    path: '/iqac/aqar',
     label: t('footer.importantLinksItems.aqar')
   }, {
     path: '/annual-reports',
@@ -97,7 +97,7 @@ const Footer = () => {
   const quickLinkIcons = {
     '/about': Info,
     '/academics': GraduationCap,
-    '/admissions': Users,
+    '/admissions/general-information': Users,
     '/campus-life': Home,
     '/contact': Phone
   };

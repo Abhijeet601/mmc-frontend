@@ -34,9 +34,11 @@ const AdmittedStudentsYearWise = () => {
       url: r2Url('documents/admission/admitted-students/ADMITTED-IN-2020-PART-III-UG-R.pdf')
     }]
   };
+  const years = Object.keys(pdfs).sort((a, b) => Number(b) - Number(a));
+
   return <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-4">{i18next.t("auto.admitted_students_year_wise_peiynt")}</h1>
-      {Object.keys(pdfs).map(year => <div key={year} className="mb-6">
+      {years.map(year => <div key={year} className="mb-6">
           <h2 className="text-2xl font-semibold mb-2">{year}</h2>
           <ul className="list-disc list-inside">
             {pdfs[year].map(pdf => <li key={pdf.name}>

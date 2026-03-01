@@ -166,6 +166,9 @@ body {
     align-items: center;
     gap: 0.5rem;
     text-transform: uppercase;
+    white-space: nowrap;
+    font-size: 0.75rem;
+    line-height: 1rem;
   }
 
   /* Logo container - centered and responsive */

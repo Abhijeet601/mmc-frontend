@@ -13,8 +13,8 @@ const HeroSection = () => {
   const [videoError, setVideoError] = useState(false);
   const accreditationValue = t('hero.accreditations');
   const accreditationItems = typeof accreditationValue === 'string' ? accreditationValue.split('|').map(item => item.trim()).filter(Boolean) : [];
-  return <section className="relative isolate flex min-h-[82vh] items-center justify-center overflow-hidden bg-slate-950 sm:min-h-[88vh] md:min-h-[94vh]">
-      {!videoError && <video key={HERO_VIDEO_SRC} src={HERO_VIDEO_SRC} data-skip-r2-rewrite="true" className="absolute inset-0 z-0 h-full w-full object-cover object-center" autoPlay loop muted defaultMuted playsInline preload="auto" onError={() => setVideoError(true)}>{`
+  return <section className="relative isolate flex min-h-[90vh] items-center justify-center overflow-hidden bg-slate-950 sm:min-h-[96vh] md:min-h-[102vh]">
+      {!videoError && <video key={HERO_VIDEO_SRC} src={HERO_VIDEO_SRC} data-skip-r2-rewrite="true" className="absolute inset-0 z-0 h-full w-full object-cover object-top" autoPlay loop muted defaultMuted playsInline preload="auto" onError={() => setVideoError(true)}>{`
           ${i18next.t("auto.your_browser_does_not_support_the_video_1tdl0az")}
         `}</video>}
 

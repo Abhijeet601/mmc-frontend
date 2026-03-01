@@ -40,9 +40,12 @@ const Departments = () => {
     icon: BookOpen,
     description: i18next.t("auto.english_language_literature_and_communication_skills_development_5ynr8u"),
     color: 'from-primary to-highlight',
-    highlights: `The Department of English came into being with the inception of the college in 1946 headed by Prof. Illa Mullick till 1984. Dr. Khushboo is the present head of the Department.
+    highlights: `The Department of English is one of prestigious Departments that came into being with the inception of the college itself in 1946. Since then, the department has been adorned by several gems like Prof Illa Mullick, Dr Farida Kalim, Dr Zaira Kalim, Dr Manju Rani Sinha, Dr Rashmi Zafar, Dr Rekha Jha. In 2009 the baton was passed on to Dr Kamlesh Kumari who headed the Department till July 2015. Dr Archana Jaiswal is the Head of Department at present. Since its inception the Department has been incessantly striving towards the all round development of the students with a missionary zeal. Recognising the global importance of English, the Deptt. aims at the enhancement of all the four skills L, S, R, W. To reach the target, not only the students but the teachers also try to improve and enrich themselves. They attend seminars and conferences regularly and present papers. They are engaged in publications and research works. For the inculcation and enhancement of language of the students, several activities are organized by the Deptt. The department runs Language Proficiency Course in two languages: German and English.
 
-The mission of the department is to empower women through academic knowledge, spiritual strength, social consciousness and a positive self image. It aspires to nurture deeper analytical sensibilities in learners with equally efficient language and communication skills so that they could effectively cope up with the professional challenges of their lives. The department trains the students not only in academic field, but also provides ample opportunities for them to learn creative arts, social service, environment awareness, leadership quality and value based personality development. English department of Magadh Mahila College is a pioneer in terms of conducting several academic activities like Extempore, Debate, Quiz, Poetry writing competition, Story writing competition, Declamation etc. It also runs literary society in collaboration with other language departments in the college. Apart from B.A(English Hons), the department is successfully running three certificate courses in Language Proficiency, German Language and Japanese Language. Dr. Archana Jaiswal is the coordinator for six months Language Proficiency Program and German Language course. Dr. Khushboo is the coordinator of six months Japanese language course.`,
+VISION: The Department aims at:
+a) Enhancing the language ability of the students in the department and the feel for literature
+b) Producing rankers in the university list
+c) All round personality development of the students so that they can meet the challenging demands of life and be the successful responsible citizens of the nation.`,
     faculty: [{
       name: i18next.t("auto.dr_archana_jaiswal_16hzx8g"),
       designation: 'Associate Professor, HOD English',
@@ -54,9 +57,6 @@ The mission of the department is to empower women through academic knowledge, sp
     }, {
       name: i18next.t("auto.dr_anamika_1plfpel"),
       designation: 'Guest Faculty, English'
-    }, {
-      name: i18next.t("auto.dr_anchit_pandey_115dl6r"),
-      designation: 'Guest Faculty, English'
     }]
   }, {
     name: i18next.t("auto.department_of_persian_b5ffy2"),
@@ -64,7 +64,7 @@ The mission of the department is to empower women through academic knowledge, sp
     icon: BookOpen,
     description: i18next.t("auto.classical_persian_language_literature_and_cultural_studies_17161jv"),
     color: 'from-primary to-highlight',
-    highlights: 'Department of Persian was established in 1957 by Late Prof. Bilquis Afaque, who was the founder teacher of this department followed by Prof. Khursheed Jahan. She joined the P.G. department in 1973. Dr. Shaheda Khanam is the present head of the department.',
+    highlights: 'Department of Persian was established in 1957 by Late Prof. Bilquis Afaque, who was the founder teacher of this department followed by Prof. Khursheed Jahan. She joined the P.G. department in 1973. Dr. Shahida Khanam is the present head of the department.',
     faculty: [{
       name: i18next.t("auto.dr_shahida_khanam_133t7gj"),
       designation: 'HOD, Persian'
@@ -75,8 +75,12 @@ The mission of the department is to empower women through academic knowledge, sp
     icon: BookOpen,
     description: i18next.t("auto.sanskrit_language_classical_texts_and_indian_philosophical_nullw2"),
     color: 'from-primary to-highlight',
-    highlights: 'Department of Sanskrit started with the inception of the college in 1946. In 1985 Dr. Sudha Rani joined as the H.O.D of the Department. On 1st January 1999 she was elevated to the post of Head of the University Department of Sanskrit and Prof. (Dr.) Pramila Gupta succeeded as the Head in 1996. In 2006 Prof. (Dr.) Kiran Mala is the present Head. She joined the department in 2003.',
+    highlights: 'Department of Sanskrit started with the inception of the college in 1946. In 1985 Dr. Sudha Rani joined as the H.O.D of the Department. On 1st January 1999 she was elevated to the post of Head of the University Department of Sanskrit and Prof. (Dr.) Pramila Gupta succeeded as the Head in 1996. Current Head: Dr. Shipra Prabha.',
     faculty: [{
+      name: i18next.t("auto.dr_shipra_prabha_1eqwrhg"),
+      designation: 'HOD, Sanskrit',
+      image: 'https://pub-c7047204b6824b4ea67be147e7ebb0ac.r2.dev/public/faculty/Dr.%20Shipra%20Prabha%2C%20HOD%2C%20Hindi.jpeg'
+    }, {
       name: i18next.t("auto.dr_bharti_kumari_34sh8w"),
       designation: 'Guest Faculty, Sanskrit'
     }]
@@ -104,7 +108,7 @@ The Department of Mathematics in Magadh Mahila College was established in 1948. 
     icon: Target,
     description: i18next.t("auto.statistical_methods_probability_and_data_analysis_199hs5y"),
     color: 'from-primary to-highlight',
-    highlights: `The Department of Statistics in Magadh Mahila College came into existence in July, 2014. The teaching of Statistics at undergraduate level was started in Magadh Mahila College from academic session 2014-2015 with the proper permission from the Government of Bihar. Statistics is a very important subject for science as well as social science students. Till now there is no regular teacher in the Department. Prof. (Dr.) Abha Sharan a faculty member of Physics Department, was the founder Head of the Statistics Department from July 2014 to 30 Nov. 2017. On 1 December 2017, after the retirement of Prof. (Dr.) Abha Sharan, Ms. Sonu Rani Assistant Professor, Department of Physics became the Head of the Statistics Department. Dr. Priyadarshini, Ms. Bhavana Kumari, Mr. Alok Pritam and Ms. Anjum Khatoon are the visiting faculty members of the Departments. Prof. (Dr.) Anchala Kumari, a Retired Professor of the Department of Statistics, Patna University is also engaging classes and guiding our students. She is an excellent teacher and our students will get benefited a lot from her vast experience. Academic as well as extracurricular performance of our students is consistently good.`,
+    highlights: `The Department of Statistics in Magadh Mahila College came into existence in July, 2014. The teaching of Statistics at undergraduate level was started in Magadh Mahila College from academic session 2014-2015 with the proper permission from the Government of Bihar. Statistics is a very important subject for science as well as social science students. Till now there is no regular teacher in the Department. Prof. (Dr.) Abha Sharan a faculty member of Physics Department, was the founder Head of the Statistics Department from July 2014 to 30 Nov. 2017. On 1 December 2017, after the retirement of Prof. (Dr.) Abha Sharan, Ms. Sonu Rani Assistant Professor, Department of Physics became the Head of the Statistics Department.`,
     faculty: [{
       name: i18next.t("auto.dr_madhu_kumari_gupta_vqlz92"),
       designation: 'Assistant Professor, Statistics',
@@ -143,7 +147,7 @@ The Department of Mathematics in Magadh Mahila College was established in 1948. 
     icon: Microscope,
     description: i18next.t("auto.organic_inorganic_and_physical_chemistry_with_advanced_635wqy"),
     color: 'from-primary to-highlight',
-    highlights: `Department Started in 1947. Honours teaching started from 1976. P.G Course started from 1984. The Department of Chemistry was started in 1948 with introduction of the Intermediate Education in Science. Dr. (Mrs.) Rani Chakrovarti (Nee Mishra) was the founder Head and contributed to the introduction of B.Sc. course in 1966. Subsequently Professor Dr Sarojini Srivastava (1973–1991), Dr. Gomati Venkatraman (1991-2001) headed the department. Dr Sarojini Srivastava elevated to the post of Principal of the college (1991-95). The B.Sc. honours teaching in chemistry was started in 1976. The M.Sc. course in chemistry started in 1984. The present head is Professor Dr. Rani Azad. The department has the distinction of being the first in the country to introduce a new course M.Sc. in Herbal Chemistry in 2008. The course was granted by U.G.C. under its Innovative Programme. The teachers of the department are actively engaged in research works as is evident from the list of publications in standard journals and production of PhD. Three minor research projects financed by UGC were completed successfully and one Major Research Project is going on under Prof. (Dr.) Rani Azad. Department also conducted a large number of National symposium/seminar and workshop financed by the UGC and DST.`,
+    highlights: `Department Started in 1947. Honours teaching started from 1976. P.G Course started from 1984. The Department of Chemistry was started in 1948 with introduction of the Intermediate Education in Science. Dr. (Mrs.) Rani Chakrovarti (Nee Mishra) was the founder Head and contributed to the introduction of B.Sc. course in 1966. Subsequently Professor Dr Sarojini Srivastava (1973–1991), Dr. Gomati Venkatraman (1991-2001) headed the department. Dr Sarojini Srivastava elevated to the post of Principal of the college (1991-95). The B.Sc. honours teaching in chemistry was started in 1976. The M.Sc. course in chemistry started in 1984. The present head is Dr. Shyam Deo Yadav. The department has the distinction of being the first in the country to introduce a new course M.Sc. in Herbal Chemistry in 2008. The course was granted by U.G.C. under its Innovative Programme. The teachers of the department are actively engaged in research works as is evident from the list of publications in standard journals and production of PhD. Three minor research projects financed by UGC were completed successfully and one Major Research Project is going on under Prof. (Dr.) Rani Azad. Department also conducted a large number of National symposium/seminar and workshop financed by the UGC and DST.`,
     faculty: [{
       name: i18next.t("auto.dr_shyam_deo_yadav_z16psm"),
       designation: 'HOD, Chemistry',
@@ -185,7 +189,7 @@ The Department of Mathematics in Magadh Mahila College was established in 1948. 
     icon: Microscope,
     description: i18next.t("auto.plant_sciences_biodiversity_and_environmental_studies_1tbq7z4"),
     color: 'from-primary to-highlight',
-    highlights: `The Department of Botany came into existence in 1947. B.Sc. (Hons) Classes started in 1976. The department of Botany was established along with Zoology as Department of Biology in 1948. The Department of Biology flourished under the headship of Ms. B. Joshua. This department was awarded with 'STAR DEPARTMENT' by UGC, New Delhi under CPE Programme in November – 2011. The teaching of B.Sc. course in Botany was started in 1966. B.Sc. (Hons) classes started only in 1976. Post graduate classes started in 1986 with Plant Pathology & Experimental Taxonomy as special papers. Post graduate course functioned smoothly till 1997. Prof. (Dr.) Sumedha Kathuria is the present Head of the department. The department is selected as the star department under the CPE scheme of the UGC in Sept 2011. The results have been excellent and department has produced many toppers in Honours and P.G. level examinations. Many students of the Department have competed in medical entrance exams and now they are renowned doctors. Majority of the students opt for higher studies in Botany, Bio-technology, and Bio-Chemistry. As part of extension activities department encourages students to work towards environment awareness and protection under the banner of "Green Earth Brigade (GEB)". The GEB organizes special lectures, seminars and workshops regularly to promote awareness about environmental issues. A workshop on "Pollution and Public Health" was organized on November 29 – 30, 2011. Students of the department are also encouraged to participate in science seminars and conferences. Teachers of the department escort the students to various programmes on science and science related issues. Students attended the National Conference on 'Development of Agriculture in Bihar 2011' on the theme "A farmer's journey from field to industry" on 23rd & 24th September 2011.`,
+    highlights: `The Department of Botany came into existence in 1947. B.Sc. (Hons) Classes started in 1976. The department of Botany was established along with Zoology as Department of Biology in 1948. The Department of Biology flourished under the headship of Ms. B. Joshua. This department was awarded with 'STAR DEPARTMENT' by UGC, New Delhi under CPE Programme in November – 2011. The teaching of B.Sc. course in Botany was started in 1966. B.Sc. (Hons) classes started only in 1976. Post graduate classes started in 1986 with Plant Pathology & Experimental Taxonomy as special papers. Post graduate course functioned smoothly till 1997.Dr. Pushpanjali Khare is the present Head of the department. The department is selected as the star department under the CPE scheme of the UGC in Sept 2011. The results have been excellent and department has produced many toppers in Honours and P.G. level examinations. Many students of the Department have competed in medical entrance exams and now they are renowned doctors. Majority of the students opt for higher studies in Botany, Bio-technology, and Bio-Chemistry. As part of extension activities department encourages students to work towards environment awareness and protection under the banner of "Green Earth Brigade (GEB)". The GEB organizes special lectures, seminars and workshops regularly to promote awareness about environmental issues. A workshop on "Pollution and Public Health" was organized on November 29 – 30, 2011. Students of the department are also encouraged to participate in science seminars and conferences. Teachers of the department escort the students to various programmes on science and science related issues. Students attended the National Conference on 'Development of Agriculture in Bihar 2011' on the theme "A farmer's journey from field to industry" on 23rd & 24th September 2011.`,
     faculty: [{
       name: i18next.t("auto.dr_pushpanjali_khare_1x6i46f"),
       designation: 'Associate Professor, HOD Botany',
@@ -219,7 +223,7 @@ The Department of Mathematics in Magadh Mahila College was established in 1948. 
     icon: Users,
     description: i18next.t("auto.human_behavior_mental_processes_and_psychological_research_cmybsr"),
     color: 'from-primary to-highlight',
-    highlights: `The department was established with the inception of the college in the year 1946. Dr. Sharda Sinha was the founding head of the department. Currently, Ms. Nidhi Singh a Clinical Psychologist and Assistant Professor is heading the department. Department has two permanent faculties named Nidhi Singh and Dr. Namrata who are working since July 2017. It has five guest faculties. The department aims to enhance the growth of Psychology as a subject and profession. It introduces various Psychological techniques to understand human behavior in different settings and tries to adequately skill students in taking Psychology to the communities and fit market demands and enrich the personality using Psychology in everyday life. It also aims to improve the mental health of the students by training students to apply Psychology for self and other's benefit.
+    highlights: `The department was established with the inception of the college in the year 1946. Dr. Sharda Sinha was the founding head of the department. Currently,Dr. Namrata is heading the department. Department has two permanent faculties named Nidhi Singh and Dr. Namrata who are working since July 2017. It has five guest faculties. The department aims to enhance the growth of Psychology as a subject and profession. It introduces various Psychological techniques to understand human behavior in different settings and tries to adequately skill students in taking Psychology to the communities and fit market demands and enrich the personality using Psychology in everyday life. It also aims to improve the mental health of the students by training students to apply Psychology for self and other's benefit.
 
 Department also organizes Guidance, Counselling, and Mental Health Services for college students. Invited Lectures & Workshops are also frequently organized. It offers Mental Health Check-ups, Personality assessments, and Interest Tests for college students. It observes important days like World Mental Health Day and World Suicide Prevention Day etc. Department offers UG and PG courses in Psychology.`,
     faculty: [{
@@ -535,33 +539,16 @@ There is a separate library and Reading Room for the B.B.A. Students. They must 
     icon: Target,
     description: i18next.t("auto.computer_applications_programming_and_software_fundamentals_t9xhnm"),
     color: 'from-primary to-highlight',
-    highlights: `Department of Computer Applications runs three programme e.g. B.A. / B.Sc. in Computer Applications (BCA), Post Graduate Diploma in Computer Applications (PGDCA) and CIC. Professor Dr Padmavathy Srinivasan, Head, Department of Physics was the founder coordinator of this programme. The department was started with only five computers donated by Smt Kamala Sinha, Member of Parliament. Presently there are more than 100 computers. The department runs on self financing basis. The department has 30 teachers – six University Professors, one senior scientist and 23 lecturers. Majority of the teachers possess adequate qualification and committed. The department has grown tremendously due to the dedication and continuous effort of the faculty members in a short span of 10 years. The students are doing extremely well in job market as software developer and analyst.
+    highlights: `The Department of Computer Applications runs two programmes, Bachelor in Computer Applications (BCA) and Certificate Course in Computer Applications. Prof. Dr. Padmavathy Srinivasan, Head, Department of Physics was the founder coordinator of this programme. Dr. Manish Kumar Verma, Assistant Professor, Department of Physics is the present coordinator of the department.
 
-The department is the only centre in Bihar which conducts UGC Refresher course and Orientation programme in IT and e- learning. The department has conducted nine UGC Refresher courses on Computers and e- Learning for university and college teachers for the Academic staff college, Patna University in post accreditation period. We have also conducted large number of Laboratory sessions on Computers for Refresher courses on other subjects, Orientation Programmes and short couses for teachers. A special training programme "Saskham' on Cloud Computing under NMEICT sponsored by MHRD, Govt of India and supported by Microsoft Corporation was also organized by us. Thirty two perticipants from various colleges of Patna and Magadh University took part in the programme. Dr Dolly Sinha worked as the Nodal officer for the NMEICT.
-
-The department also designed a 45-days short course on Basic Computing to train students, teachers and staff members of the college. The study material for this course was also developed by the department. In an unique system of sharing knowledge, the students of the department help the students and teachers of other subjects in learning computers during the laboratory classes.
-
-As part extension activity, the students of the department organizes special training sessions for the children of class IV staff of the college.
+The department runs on self financing basis. The department has 10 teachers. The students are doing extremely well in job market as software developer and analyst. The department has conducted UGC Refresher courses on Computers and e- Learning for university and college teachers for the Academic staff college, Patna University.
 
 Academic Programmes / Courses :
-1. Three Year Degree Honours (Vocational ) Course (B.C.A.)
-Course | Seat
-B.A. in Computer Applications [ B.A. (C.A.) ] | Seats – 40
-B.Sc. in Computer Applications [B. Sc. (C.A.)] | Seats – 40
-Total Seats : 40
+1. Three Year Degree Honours (Vocational) Course (B.C.A.)
+Seats - 60
 
-2. Past Graduate Diploma in Computer Applications (P.G.D.C.A)
-Course | Seat
-One Year Post Graduation Diploma (Vocational) Course | Seats – 40
-
-3. Certificate in Computer Applications (C.I.C)
-Course | Seat
-A 45 days Short-Term College Level Certificate Course | Seats – 60
-
-Sl No. | Courses
-1. | B.A. / B.Sc. in COMPUTER APPLICATIONS
-2. | Post Graduate Diploma in COMPUTER APPLICATIONS
-3. | Certificate Course in COMPUTER APPLICATIONS`,
+2. Certificate Course in Computer Applications
+A 45 days Short-Term College Level Certificate Course | Seats - 60`,
     faculty: [{
       name: i18next.t("auto.dr_manish_kumar_verma_jzs2rk"),
       designation: 'Coordinator, BCA',
@@ -928,7 +915,7 @@ The Department of Commerce directs its efforts to support the missions of the co
                     }} transition={{
                       duration: 0.3
                     }}>
-                              {member.image ? <img src={r2Url(`images/faculty/${member.image}`)} alt={member.name} className="w-full h-full object-contain" /> : <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-100 to-indigo-100 text-primary font-bold text-2xl">
+                              {member.image ? (member.image.startsWith('http://') || member.image.startsWith('https://') ? <img src={member.image} alt={member.name} className="w-full h-full object-contain" /> : <img src={r2Url(`images/faculty/${member.image}`)} alt={member.name} className="w-full h-full object-contain" />) : <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-100 to-indigo-100 text-primary font-bold text-2xl">
                                   {getInitials(member.name)}
                                 </div>}
                               <motion.div className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity" />

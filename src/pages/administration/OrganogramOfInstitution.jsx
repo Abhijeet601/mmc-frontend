@@ -1,6 +1,6 @@
 import i18next from "i18next";
 import React from 'react';
-const ORGANOGRAM_IMAGE = '/data files/Administration/Organogram of Institution/WhatsApp Image 2026-02-26 at 10.53.33 PM.jpeg';
+const ORGANOGRAM_IMAGE = 'https://pub-c7047204b6824b4ea67be147e7ebb0ac.r2.dev/public/data%20files/organograms.jpeg';
 const OrganogramOfInstitution = () => {
   return <div className="container mx-auto px-4 py-8">
       <h1 className="text-4xl font-bold mb-2">{i18next.t("auto.organogram_of_institution_1osjh2z")}</h1>

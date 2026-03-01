@@ -892,21 +892,21 @@
         "department": ""
       },
       {
-        "sl": "10.",
+        "sl": "10",
         "name": "Mr. Ravi Prakash",
         "designation": "Head Assistant",
         "department": ""
       },
       {
-        "sl": "11.",
-        "name": "Mr. Aashutosh Kumar",
-        "designation": "MD, Aviweb Technologies",
+        "sl": "11",
+        "name": "Mr. Som Shekhar",
+        "designation": "IT Staff, MMC",
         "department": ""
       },
       {
-        "sl": "12.",
-        "name": "Mr. Som Shekhar",
-        "designation": "IT Staff, MMC",
+        "sl": "12",
+        "name": "Mr Vikrant Mishra",
+        "designation": "Founder, Alpenrose Digital Solutions",
         "department": ""
       }
     ]
@@ -1043,12 +1043,6 @@
         "sl": "08",
         "name": "Dr. Archna Kumari",
         "designation": "Department of Sociology",
-        "department": ""
-      },
-      {
-        "sl": "09",
-        "name": "Dr. Anchit Pandey",
-        "designation": "Department of English (Guest Faculty)",
         "department": ""
       },
       {
@@ -1712,7 +1706,7 @@
       },
       {
         "sl": "04.",
-        "name": "Dr. Angur Kumar",
+        "name": "Dr. Angur Kumari",
         "designation": "Department of Economics",
         "department": ""
       },
@@ -1795,7 +1789,7 @@
       },
       {
         "sl": "09",
-        "name": "Dr. Angur Kumar",
+        "name": "Dr. Angur Kumari",
         "designation": "Department of Economics",
         "department": ""
       },
@@ -2612,7 +2606,7 @@
       },
       {
         "sl": "02.",
-        "name": "Dr. Prity Mishra, Assistant Professor Department of Physics",
+        "name": "Dr. Priti Mishra, Assistant Professor Department of Physics",
         "designation": "Vice-President",
         "department": ""
       },

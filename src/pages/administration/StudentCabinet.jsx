@@ -1,6 +1,6 @@
 import i18next from "i18next";
 import React from 'react';
-const STUDENT_CABINET_FOLDER = '/data files/Administration/Student Cabbinet';
+const STUDENT_CABINET_FOLDER = 'https://pub-c7047204b6824b4ea67be147e7ebb0ac.r2.dev/public/data%20files/Student%20Cabbinet';
 const studentCabinetImages = [{
   title: i18next.t("auto.student_cabinet_2023_2024_1e0qvm8"),
   file: 'WhatsApp Image 2026-02-26 at 10.37.05 PM.jpeg'

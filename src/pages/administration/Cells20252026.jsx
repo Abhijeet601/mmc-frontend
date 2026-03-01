@@ -203,12 +203,12 @@ const Cells20252026 = () => {
     designation: 'Head Assistant'
   }, {
     sl: '11',
-    name: i18next.t("auto.mr_aashutosh_kumar_a6sure"),
-    designation: 'MD, Aviweb Technologies'
-  }, {
-    sl: '12',
     name: i18next.t("auto.mr_som_shekhar_5jmz7v"),
     designation: 'IT Staff, MMC'
+  }, {
+    sl: '12',
+    name: 'Mr Vikrant Mishra',
+    designation: 'Founder, Alpenrose Digital Solutions'
   }];
   const antiSexualHarassmentCell = [{
     sl: '01',
