@@ -277,7 +277,7 @@ const Footer = () => {
 
         {/* SOCIAL ICONS */}
         <motion.div variants={itemUp} className="mt-8 flex flex-wrap justify-center gap-3">
-          {socialLinks.map(social => <motion.a key={social.label} href={social.href} whileHover={{
+          {socialLinks.map(social => <motion.a key={social.label} href={social.href} target="_blank" rel="noopener noreferrer" whileHover={{
           scale: 1.2
         }} className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-highlight transition" aria-label={social.label}>
               <social.icon className="w-4 h-4" />
