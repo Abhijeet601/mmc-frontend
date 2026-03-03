@@ -1431,9 +1431,7 @@ const Navbar = () => {
 
             {/* Bottom Section: Quick Action Buttons */}
             <div className="border-t border-gray-200 p-4 space-y-3">
-              <Link to="/admissions" onClick={closeMobileMenu} className="block w-full bg-primary text-primary-foreground text-center py-3 px-4 rounded-lg font-semibold uppercase text-sm hover:bg-primary/90 transition-colors">{`
-                ${i18next.t("auto.apply_now_20djl3")}
-              `}</Link>
+
               <Link to="/contact" onClick={closeMobileMenu} className="block w-full bg-primary text-primary-foreground text-center py-3 px-4 rounded-lg font-semibold uppercase text-sm hover:bg-primary/90 transition-colors">{`
                 ${i18next.t("auto.contact_us_14c3gdf")}
               `}</Link>

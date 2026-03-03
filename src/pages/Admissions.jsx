@@ -107,25 +107,7 @@ const Admissions = () => {
               <p className="text-foreground max-w-3xl mx-auto mb-8">
                 {t('admissions.description')}
               </p>
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Button
-                  onClick={handleApplyClick}
-                  size="lg"
-                  className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-xl hover:shadow-2xl transition-all duration-300 group"
-                >
-                  <motion.span
-                    className="flex items-center gap-2"
-                    animate={{ x: [0, 5, 0] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                  >
-                    Apply Now
-                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                  </motion.span>
-                </Button>
-              </motion.div>
+
             </motion.div>
 
             <motion.div

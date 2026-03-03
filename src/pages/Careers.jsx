@@ -265,10 +265,7 @@ const Careers = () => {
                             ))}
                           </ul>
                         </div>
-                        <div className="flex items-center text-primary font-medium hover:text-primary/80 transition-colors cursor-pointer">
-                          <span>Apply Now</span>
-                          <ArrowRight className="w-4 h-4 ml-2" />
-                        </div>
+
                       </div>
                     </motion.div>
                   ))}

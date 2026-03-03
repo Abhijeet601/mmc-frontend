@@ -2,7 +2,7 @@ import i18next from "i18next";
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
-import { GraduationCap, Users, Award, BookOpen, Mail, Phone, Calendar, TrendingUp, FileText, Download, ExternalLink } from 'lucide-react';
+import { GraduationCap, Users, Award, BookOpen, Mail, Phone, Calendar, TrendingUp, Download, ExternalLink } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { r2Url } from '@/lib/r2Assets';
 const ResearchGuidesPhdScholars = () => {
@@ -199,30 +199,7 @@ const ResearchGuidesPhdScholars = () => {
             </motion.div>
 
             {/* Contact */}
-            <motion.div initial={{
-            opacity: 0,
-            y: 20
-          }} whileInView={{
-            opacity: 1,
-            y: 0
-          }} viewport={{
-            once: true
-          }} transition={{
-            duration: 0.6
-          }} className="mt-20 p-8 md:p-12 rounded-3xl bg-primary text-primary-foreground text-center">
-              <FileText className="w-16 h-16 mx-auto mb-6" />
-              <h2 className="text-3xl font-bold mb-4">{i18next.t("auto.research_guidance_support_1i5fslh")}</h2>
-              <p className="text-white/90 mb-8 max-w-2xl mx-auto">{`
-                ${i18next.t("auto.for_phd_admissions_research_guidance_or_information_3h46oj")}
-              `}</p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                  <div className="font-bold">{i18next.t("auto.phd_coordinator_1hwn0o3")}</div>
-                  <div className="text-white/80">{i18next.t("auto.dr_nagendra_prasad_verma_nwre9")}</div>
-                  <div className="text-white/80">{i18next.t("auto.phd_magadhmahilacollege_org_goor7k")}</div>
-                </div>
-              </div>
-            </motion.div>
+  
           </div>
         </section>
       </div>
