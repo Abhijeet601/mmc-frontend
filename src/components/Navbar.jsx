@@ -1,7 +1,7 @@
 import i18next from "i18next";
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { Menu, X, ChevronDown, Info, Building, Shield, UserCheck, BookOpen, GraduationCap, Home, Phone, TrendingUp, Users, Bell, FileText, Award } from 'lucide-react';
+import { Menu, X, ChevronDown, Info, Building, Shield, BookOpen, GraduationCap, Home, Phone, TrendingUp, Users, Bell, FileText, Award } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../contexts/ThemeContext';
 import { useBilingual } from '../contexts/BilingualContext';
@@ -292,6 +292,10 @@ const Navbar = () => {
             <Link to="/tenders" className="nav-link text-xs hover:text-white transition-colors duration-300 flex items-center gap-2">
               <FileText className="w-4 h-4" />
               {t('nav.tenders')}
+            </Link>
+            <Link to="/erp" className="nav-link text-xs hover:text-white transition-colors duration-300 flex items-center gap-2">
+              <BookOpen className="w-4 h-4" />
+              ERP Portal
             </Link>
           </div>
 

@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { Bell, Download, Link as LinkIcon, Pin } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { getPublicNotices, NOTICE_CATEGORIES } from '@/services/notifications';
+
 const NoticeBoardPage = ({
   title,
   subtitle,
@@ -17,6 +18,7 @@ const NoticeBoardPage = ({
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+
   const fetchItems = async () => {
     setLoading(true);
     setError('');
@@ -33,21 +35,26 @@ const NoticeBoardPage = ({
       setLoading(false);
     }
   };
+
   useEffect(() => {
     fetchItems();
   }, [category]);
+
   const boardTitle = pageTitle || `${title} - Magadh Mahila College`;
   const boardDescription = metaDescription || subtitle;
   const shouldShowPublishDate = category === NOTICE_CATEGORIES.NOTIFICATIONS || category === NOTICE_CATEGORIES.NOTICES || category === NOTICE_CATEGORIES.UPCOMING_EVENTS;
+
   const sortedItems = useMemo(() => {
     return [...items].sort((a, b) => {
       if (a.pinned && !b.pinned) return -1;
       if (!a.pinned && b.pinned) return 1;
+
       const bDate = new Date(b.publishDate || b.createdAt).getTime();
       const aDate = new Date(a.publishDate || a.createdAt).getTime();
       return bDate - aDate;
     });
   }, [items]);
+
   const formatPublishDate = value => {
     if (!value) return '';
     const parsed = new Date(value);
@@ -58,6 +65,7 @@ const NoticeBoardPage = ({
       year: 'numeric'
     });
   };
+
   return <div className="min-h-screen bg-gray-50">
       <Helmet>
         <title>{boardTitle}</title>
@@ -135,4 +143,5 @@ const NoticeBoardPage = ({
       </div>
     </div>;
 };
+
 export default NoticeBoardPage;

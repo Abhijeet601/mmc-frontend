@@ -3,11 +3,12 @@ import { Helmet } from 'react-helmet-async';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FileText, UserCheck, CreditCard, CheckCircle, Calendar, Mail, Sparkles, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { toast } from '@/components/ui/use-toast';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 const Admissions = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const admissionSteps = [
     {
@@ -60,11 +61,7 @@ const Admissions = () => {
   ];
 
   const handleApplyClick = () => {
-    toast({
-      title: "🚧 Application Portal",
-      description: "This feature isn't implemented yet—but don't worry! You can request it in your next prompt! 🚀",
-      duration: 5000,
-    });
+    navigate('/erp/student');
   };
 
   return (
@@ -107,6 +104,15 @@ const Admissions = () => {
               <p className="text-foreground max-w-3xl mx-auto mb-8">
                 {t('admissions.description')}
               </p>
+              <div className="flex justify-center">
+                <Button
+                  onClick={handleApplyClick}
+                  size="lg"
+                  className="bg-primary text-white hover:bg-primary/90 shadow-lg"
+                >
+                  Open Online ERP Admission Portal
+                </Button>
+              </div>
 
             </motion.div>
 

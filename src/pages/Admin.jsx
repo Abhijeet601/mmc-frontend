@@ -299,7 +299,8 @@ const Admin = () => {
                 {successMessage}
               </div>}
             <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_20px_50px_-35px_rgba(15,23,42,0.45)]">
-              {loading ? <div className="px-6 py-10 text-center text-slate-500">{i18next.t("auto.loading_1ooa6x9")}</div> : notifications.length === 0 ? <div className="px-6 py-10 text-center text-slate-500">{i18next.t("auto.no_notices_found_xpxstx")}</div> : <ul className="grid gap-4 p-4 md:p-6">
+              {loading ? <div className="px-6 py-10 text-center text-slate-500">{i18next.t("auto.loading_1ooa6x9")}</div> : notifications.length === 0 ? <div className="px-6 py-10 text-center text-slate-500">{i18next.t("auto.no_notices_found_xpxstx")}</div> : <div className="overflow-x-auto overscroll-x-contain">
+                  <ul className="grid min-w-[860px] gap-4 p-4 md:p-6">
                   {notifications.map((notification, index) => <motion.li key={notification.id} initial={{
               opacity: 0,
               y: 10
@@ -309,8 +310,8 @@ const Admin = () => {
             }} transition={{
               delay: index * 0.03
             }} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
-                      <div className="flex items-center justify-between">
-                        <div className="flex-1 min-w-0">
+                      <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+                        <div className="min-w-0 flex-1">
                           <div className="flex items-center flex-wrap gap-2">
                             <p className="text-lg font-semibold text-slate-900 truncate">{notification.title}</p>
                             <span className="inline-flex items-center rounded-full bg-sky-100 px-2.5 py-1 text-xs font-semibold text-sky-800">
@@ -333,25 +334,31 @@ const Admin = () => {
                           </div>
                         </div>
 
-                        <div className="ml-4 flex items-center gap-2">
-                          <motion.button whileHover={{
+                        <div className="flex shrink-0 flex-col gap-2 lg:min-w-[220px] lg:items-end">
+                          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">Actions</p>
+                          <div className="flex w-full flex-wrap gap-2 lg:justify-end">
+                            <motion.button whileHover={{
                     y: -1
                   }} whileTap={{
                     scale: 0.95
-                  }} onClick={() => handleEditNotification(notification)} className="rounded-lg p-2 text-sky-600 transition hover:bg-sky-50 hover:text-sky-900" title={i18next.t("auto.edit_yjfqt5")}>
-                            <Edit className="h-4 w-4" />
-                          </motion.button>
-                          <motion.button whileHover={{
+                  }} onClick={() => handleEditNotification(notification)} className="inline-flex items-center gap-2 rounded-xl border border-sky-200 bg-sky-50 px-3.5 py-2 text-sm font-semibold text-sky-700 transition hover:border-sky-300 hover:bg-sky-100 hover:text-sky-900" title={i18next.t("auto.edit_yjfqt5")}>
+                              <Edit className="h-4 w-4" />
+                              Edit
+                            </motion.button>
+                            <motion.button whileHover={{
                     y: -1
                   }} whileTap={{
                     scale: 0.95
-                  }} onClick={() => handleDeleteNotification(notification.id)} className="rounded-lg p-2 text-rose-600 transition hover:bg-rose-50 hover:text-rose-900" title={i18next.t("auto.delete_16wmut8")}>
-                            <Trash2 className="h-4 w-4" />
-                          </motion.button>
+                  }} onClick={() => handleDeleteNotification(notification.id)} className="inline-flex items-center gap-2 rounded-xl border border-rose-200 bg-rose-50 px-3.5 py-2 text-sm font-semibold text-rose-700 transition hover:border-rose-300 hover:bg-rose-100 hover:text-rose-900" title={i18next.t("auto.delete_16wmut8")}>
+                              <Trash2 className="h-4 w-4" />
+                              Delete
+                            </motion.button>
+                          </div>
                         </div>
                       </div>
                     </motion.li>)}
-                </ul>}
+                  </ul>
+                </div>}
             </div>
             {authError && <p className="mt-4 text-sm text-rose-600">{authError}</p>}
           </div>}

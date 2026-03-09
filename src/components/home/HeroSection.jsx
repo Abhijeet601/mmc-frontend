@@ -98,7 +98,7 @@ const HeroSection = () => {
       }} transition={{
         duration: 0.8,
         delay: 0.6
-      }} className="flex w-full max-w-xl flex-col gap-3 sm:flex-row sm:justify-center sm:gap-4">
+        }} className="flex w-full max-w-xl flex-col gap-3 sm:flex-row sm:justify-center sm:gap-4">
           <motion.div whileHover={{
           scale: 1.03
         }} whileTap={{
@@ -127,6 +127,16 @@ const HeroSection = () => {
         }} className="w-full sm:w-auto">
             <Button asChild size="lg" variant="outline" className="h-12 w-full min-w-[220px] border-2 border-white/70 bg-white/5 px-6 text-white hover:border-white hover:bg-white/15 hover:text-white">
               <Link to="/about">{t('hero.exploreLegacy')}</Link>
+            </Button>
+          </motion.div>
+
+          <motion.div whileHover={{
+          scale: 1.03
+        }} whileTap={{
+          scale: 0.98
+        }} className="w-full sm:w-auto">
+            <Button asChild size="lg" className="h-12 w-full min-w-[220px] bg-white text-primary hover:bg-white/90">
+              <Link to="/erp">ERP Portal</Link>
             </Button>
           </motion.div>
         </motion.div>

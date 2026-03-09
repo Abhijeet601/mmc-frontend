@@ -158,6 +158,11 @@ import VocationalAdmission from './pages/admissions/VocationalAdmission';
 import CommerceAdmission from './pages/admissions/CommerceAdmission';
 import BBAAdmission from './pages/admissions/BBAAdmission';
 import AdmittedStudentsYearWise from './pages/admissions/AdmittedStudentsYearWise';
+import ERPAdminPanel from './pages/erp/ERPAdminPanel';
+import ERPApplicationForm from './pages/erp/ERPApplicationForm';
+import ERPPortal from './pages/erp/ERPPortal';
+import ERPStudentAuth from './pages/erp/ERPStudentAuth';
+import ERPStudentDashboard from './pages/erp/ERPStudentDashboard';
 
 // Admin page
 import Admin from './pages/Admin';
@@ -352,6 +357,13 @@ function App() {
               <Route path="/admissions/commerce-admission" element={<CommerceAdmission />} />
               <Route path="/admissions/bba-admission" element={<BBAAdmission />} />
               <Route path="/admissions/admitted-students-year-wise" element={<AdmittedStudentsYearWise />} />
+              <Route path="/erp" element={<ERPPortal />} />
+              <Route path="/erp/student" element={<ERPStudentAuth />} />
+              <Route path="/erp/application" element={<ERPApplicationForm />} />
+              <Route path="/erp/dashboard" element={<ERPStudentDashboard />} />
+              <Route path="/erp/admin" element={<ERPAdminPanel />} />
+              <Route path="/application-form" element={<ERPApplicationForm />} />
+              <Route path="/dashboard" element={<ERPStudentDashboard />} />
 
               <Route path="/terms-conditions" element={<TermsConditions />} />
               <Route path="/disclaimer" element={<Disclaimer />} />
