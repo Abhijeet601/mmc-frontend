@@ -6,299 +6,169 @@ import {
   ArrowRight,
   Bell,
   Building2,
-  CircleDollarSign,
-  CreditCard,
-  FileSpreadsheet,
+  CheckCircle2,
+  GraduationCap,
   ShieldCheck,
-  Sparkles,
-  UserRound,
-  UserRoundPlus,
 } from 'lucide-react';
+import ERPBackdrop from '@/components/erp/ERPBackdrop';
 import ERPPageTransition from '@/components/erp/ERPPageTransition';
 import ERPSurfaceCard from '@/components/erp/ERPSurfaceCard';
 
-const portalCards = [
-  {
-    title: 'Student Portal',
-    description:
-      'Register, submit admission form, pay application fee, view shortlist status, and complete hostel allocation.',
-    to: '/erp/student',
-    icon: UserRound,
-    badge: 'Admission + Hostel',
-    gradient: 'from-indigo-500 to-cyan-500',
-    highlights: ['New registration and login', 'Application tracking updates', 'Fee payment and allocation'],
-  },
-  {
-    title: 'Admin Portal',
-    description:
-      'Manage records, export student sheets, upload shortlist, and monitor hostel payment progress in one place.',
-    to: '/erp/admin',
-    icon: ShieldCheck,
-    badge: 'Admin Control',
-    gradient: 'from-emerald-500 to-cyan-500',
-    highlights: ['Shortlist and records control', 'Payment and workflow monitoring', 'Data export and verification'],
-  },
-];
-
-const workflow = [
-  { label: 'Registration', icon: UserRoundPlus },
-  { label: 'Application Form', icon: FileSpreadsheet },
-  { label: 'Application Fee Payment', icon: CircleDollarSign },
-  { label: 'Shortlisting', icon: ShieldCheck },
-  { label: 'Hostel Allocation', icon: Building2 },
-  { label: 'Final Payment', icon: CreditCard },
+const studentFeatures = [
+  'Student Registration',
+  'Login',
+  'Admission Form Submission',
+  'Application Status Tracking',
+  'Fee Payment',
+  'Hostel Allocation Status',
+  'Notifications',
 ];
 
 const ERPPortal = () => (
   <>
     <Helmet>
-      <title>Hostel ERP | Magadh Mahila College</title>
+      <title>Hostel Admission &amp; Management System | Magadh Mahila College</title>
       <meta
         name="description"
-        content="Magadh Mahila College ERP for admission processing, student shortlisting, and hostel allocation."
+        content="Student hostel ERP for admission application, document upload, status tracking, fee payment, and room allocation updates."
       />
     </Helmet>
 
-    <section className="relative isolate overflow-hidden bg-[#F8FAFC] px-4 py-14 sm:px-6 lg:px-8">
-      <motion.div
-        className="erp-soft-grid pointer-events-none absolute inset-0 opacity-80"
-        animate={{ backgroundPosition: ['0px 0px', '26px 18px', '0px 0px'] }}
-        transition={{ duration: 24, repeat: Infinity, ease: 'linear' }}
-      />
-      <motion.div
-        className="pointer-events-none absolute -left-24 top-8 h-80 w-80 rounded-full bg-cyan-200/65 blur-3xl"
-        animate={{ x: [0, 36, 0], y: [0, 24, 0] }}
-        transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut' }}
-      />
-      <motion.div
-        className="pointer-events-none absolute right-0 top-0 h-80 w-80 rounded-full bg-indigo-200/55 blur-3xl"
-        animate={{ x: [0, -36, 0], y: [0, 26, 0] }}
-        transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
-      />
-      {[0, 1, 2, 3].map((item) => (
-        <motion.div
-          key={item}
-          className="pointer-events-none absolute rounded-full bg-[radial-gradient(circle,rgba(255,255,255,0.95),rgba(255,255,255,0))] blur-2xl"
-          style={{
-            width: item % 2 === 0 ? 132 : 96,
-            height: item % 2 === 0 ? 132 : 96,
-            left: `${14 + item * 22}%`,
-            top: `${12 + (item % 2) * 28}%`,
-          }}
-          animate={{
-            y: [0, item % 2 === 0 ? -18 : 18, 0],
-            x: [0, item % 2 === 0 ? 10 : -10, 0],
-            opacity: [0.18, 0.3, 0.18],
-          }}
-          transition={{
-            duration: 7 + item,
-            repeat: Infinity,
-            ease: 'easeInOut',
-            delay: item * 0.5,
-          }}
-        />
-      ))}
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_10%_20%,rgba(255,255,255,0.96),transparent_40%),radial-gradient(circle_at_85%_10%,rgba(224,242,254,0.82),transparent_45%),radial-gradient(circle_at_50%_100%,rgba(236,253,245,0.82),transparent_45%)]" />
-
-      <ERPPageTransition className="relative z-10 mx-auto max-w-7xl">
-        <div className="mb-12 flex flex-wrap items-start justify-between gap-5">
-          <motion.div
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-            className="max-w-3xl"
-          >
-            <p className="inline-flex items-center gap-2 rounded-full border border-indigo-100 bg-white px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-indigo-700 shadow-sm">
-              <Sparkles className="h-3.5 w-3.5" />
-              MMC Hostel ERP
-            </p>
-            <h1 className="mt-4 text-balance text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl lg:text-[3.4rem]">
-              Premium Admission + Hostel ERP
-            </h1>
-            <motion.span
-              className="mt-4 block h-1 w-40 rounded-full bg-[linear-gradient(90deg,rgba(79,70,229,0.22),rgba(6,182,212,0.82),rgba(79,70,229,0.22))]"
-              style={{ backgroundSize: '200% 100%' }}
-              initial={{ opacity: 0, scaleX: 0.4 }}
-              animate={{ opacity: 1, scaleX: 1, backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'] }}
-              transition={{
-                opacity: { duration: 0.35, delay: 0.18 },
-                scaleX: { duration: 0.55, delay: 0.18, ease: [0.22, 1, 0.36, 1] },
-                backgroundPosition: { duration: 8, repeat: Infinity, ease: 'linear' },
-              }}
-            />
-            <motion.p
-              className="mt-4 max-w-2xl text-sm leading-7 text-slate-600 sm:text-base"
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.45, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
-            >
-              Modern student admission and hostel management workflow with a clean, secure, and responsive experience.
-            </motion.p>
-          </motion.div>
-
-          <motion.button
-            type="button"
-            className="erp-bell rounded-xl border border-indigo-100 bg-white p-3 text-indigo-600 shadow-sm transition hover:shadow-md"
-            aria-label="Notifications"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.35, delay: 0.18 }}
-            whileHover={{ y: -2, scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            <Bell className="h-5 w-5" />
-          </motion.button>
-        </div>
-
-        <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-          {portalCards.map((card, index) => {
-            const Icon = card.icon;
-
-            return (
-              <motion.div
-                key={card.title}
-                initial={{ opacity: 0, y: 22 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.25 }}
-                transition={{ duration: 0.45, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
-              >
-                <ERPSurfaceCard
-                  className="group relative flex h-full flex-col overflow-hidden p-6 sm:p-7"
-                  animatedBorder
-                  delay={index * 0.06}
-                >
-                  <div className={`pointer-events-none absolute inset-x-0 top-0 h-1 bg-gradient-to-r ${card.gradient}`} />
-                  <div className="pointer-events-none absolute -right-10 -top-10 h-28 w-28 rounded-full bg-cyan-100/70 blur-2xl transition duration-500 group-hover:scale-110" />
-                  <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.18),transparent_28%,transparent)]" />
-
-                  <div className="relative z-[2] flex h-full flex-col">
-                    <div className="flex items-start justify-between gap-4">
-                      <div>
-                        <p className="inline-flex items-center gap-2 rounded-full border border-cyan-200 bg-cyan-50 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-cyan-700">
-                          <Icon className="h-3.5 w-3.5" />
-                          {card.badge}
-                        </p>
-                        <h2 className="mt-5 text-2xl font-semibold tracking-tight text-slate-900">{card.title}</h2>
-                      </div>
-                      <div
-                        className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br ${card.gradient} text-white shadow-[0_18px_38px_-24px_rgba(79,70,229,0.6)]`}
-                      >
-                        <Icon className="h-6 w-6" />
-                      </div>
-                    </div>
-
-                    <p className="mt-3 text-sm leading-7 text-slate-600">{card.description}</p>
-
-                    <div className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-                      {card.highlights.map((item) => (
-                        <div
-                          key={item}
-                          className="rounded-2xl border border-slate-200/80 bg-slate-50/85 px-3 py-3 text-xs font-medium leading-5 text-slate-600 shadow-[0_12px_32px_-30px_rgba(15,23,42,0.45)]"
-                        >
-                          {item}
-                        </div>
-                      ))}
-                    </div>
-
-                    <motion.div className="mt-auto pt-7" initial="rest" whileHover="hover" whileTap="tap">
-                      <motion.div variants={{ rest: { scale: 1 }, hover: { scale: 1.02 }, tap: { scale: 0.985 } }}>
-                        <Link
-                          to={card.to}
-                          className="group/portal relative inline-flex items-center gap-2 overflow-hidden rounded-xl px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-300/35 transition-shadow duration-300 hover:shadow-[0_14px_30px_rgba(79,70,229,0.32)]"
-                        >
-                          <span className="absolute inset-0 bg-[linear-gradient(135deg,#4F46E5,#06B6D4)] transition-opacity duration-300 group-hover/portal:opacity-0" />
-                          <span className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover/portal:opacity-100 bg-[linear-gradient(135deg,#4338CA,#0891B2)]" />
-                          <span className="relative z-[1]">Open Portal</span>
-                          <span className="relative z-[1] transition-transform duration-200 group-hover/portal:translate-x-1">
-                            <ArrowRight className="h-4 w-4" />
-                          </span>
-                        </Link>
-                      </motion.div>
-                    </motion.div>
-                  </div>
-                </ERPSurfaceCard>
-              </motion.div>
-            );
-          })}
-        </div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.18 }}
-          transition={{ duration: 0.5, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
+    <ERPBackdrop className="min-h-screen py-6 sm:py-8">
+      <ERPPageTransition className="relative z-10 mx-auto flex min-h-[calc(100vh-3rem)] max-w-6xl flex-col">
+        <motion.header
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+          className="rounded-[32px] border border-white/80 bg-white/80 px-6 py-7 shadow-[0_30px_70px_-44px_rgba(15,23,42,0.28)] backdrop-blur md:px-8"
         >
-          <ERPSurfaceCard className="mt-8 overflow-hidden p-5 sm:p-6" animatedBorder hover={false} delay={0.2}>
-            <div className="flex flex-wrap items-end justify-between gap-3">
-              <div>
-                <p className="text-xs uppercase tracking-[0.13em] text-indigo-600">Workflow</p>
-                <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-900">Hostel admission journey</h2>
-              </div>
-              <p className="max-w-2xl text-sm leading-6 text-slate-500">
-                Each step stays visible and easy to follow, with restrained motion to keep the process clear.
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+            <div className="max-w-3xl">
+              <p className="inline-flex items-center gap-2 rounded-full border border-sky-100 bg-sky-50 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-sky-700">
+                <Building2 className="h-3.5 w-3.5" />
+                MMC Hostel ERP
+              </p>
+              <h1 className="erp-display mt-5 text-balance text-4xl font-semibold text-slate-950 sm:text-5xl lg:text-[3.4rem]">
+                Hostel Admission &amp; Management System
+              </h1>
+              <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-600 sm:text-base">
+                A centralized platform for students to apply for hostel admission, track application status, complete
+                fee payments, and manage hostel allocation.
               </p>
             </div>
 
-            <div className="mt-6 flex flex-col xl:flex-row xl:items-stretch">
-              {workflow.map((item, index) => (
-                <React.Fragment key={item.label}>
-                  <motion.div
-                    initial={{ opacity: 0, y: 18 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, amount: 0.25 }}
-                    transition={{ duration: 0.4, delay: index * 0.06, ease: [0.22, 1, 0.36, 1] }}
-                    whileHover={{ y: -3 }}
-                    className="group relative"
-                  >
-                    <div className="relative rounded-2xl border border-slate-200/85 bg-white/85 p-4 shadow-[0_20px_45px_-38px_rgba(15,23,42,0.5)] transition duration-300 group-hover:border-cyan-200 group-hover:shadow-[0_20px_45px_-30px_rgba(79,70,229,0.18)] xl:min-h-full xl:w-[10.5rem]">
-                      <div className="flex items-center gap-4 xl:flex-col xl:items-start">
-                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,rgba(79,70,229,0.12),rgba(6,182,212,0.18))] text-cyan-700">
-                          <item.icon className="h-5 w-5" />
-                        </div>
-                        <div>
-                          <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-400">
-                            Step {index + 1}
-                          </p>
-                          <p className="mt-1 text-sm font-semibold leading-6 text-slate-900">{item.label}</p>
-                        </div>
-                      </div>
-                      <motion.div
-                        className="mt-4 h-[2px] rounded-full bg-[linear-gradient(90deg,rgba(79,70,229,0.18),rgba(6,182,212,0.7),rgba(79,70,229,0.18))]"
-                        initial={{ scaleX: 0.45, opacity: 0.5 }}
-                        whileInView={{ scaleX: 1, opacity: 1 }}
-                        viewport={{ once: true, amount: 0.3 }}
-                        transition={{ duration: 0.5, delay: index * 0.06 + 0.12 }}
-                        style={{ transformOrigin: 'left' }}
-                      />
-                    </div>
-                  </motion.div>
-
-                  {index < workflow.length - 1 ? (
-                    <div className="relative flex h-8 items-center justify-center xl:h-auto xl:flex-1">
-                      <motion.div
-                        className="h-full w-px rounded-full bg-[linear-gradient(180deg,rgba(79,70,229,0.08),rgba(6,182,212,0.6),rgba(79,70,229,0.08))] xl:h-px xl:w-full"
-                        initial={{ scaleY: 0.2, scaleX: 0.2, opacity: 0.3 }}
-                        whileInView={{ scaleY: 1, scaleX: 1, opacity: 1 }}
-                        viewport={{ once: true, amount: 0.2 }}
-                        transition={{ duration: 0.45, delay: index * 0.06 + 0.16 }}
-                        style={{ transformOrigin: 'center' }}
-                      />
-                      <motion.span
-                        className="absolute flex h-5 w-5 items-center justify-center rounded-full border border-cyan-200 bg-white text-cyan-600 shadow-sm"
-                        animate={{ y: [0, -1, 0], x: [0, 1, 0] }}
-                        transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut', delay: index * 0.15 }}
-                      >
-                        <ArrowRight className="h-3 w-3 rotate-90 xl:rotate-0" />
-                      </motion.span>
-                    </div>
-                  ) : null}
-                </React.Fragment>
-              ))}
+            <div className="flex items-center gap-3 self-start">
+              <span className="hidden items-center gap-2 rounded-full border border-slate-200 bg-white/90 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-600 shadow-sm sm:inline-flex">
+                <ShieldCheck className="h-3.5 w-3.5 text-cyan-700" />
+                Student Portal Only
+              </span>
+              <motion.div
+                whileHover={{ y: -2, scale: 1.02 }}
+                className="erp-bell inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-slate-200 bg-white/92 text-cyan-700 shadow-sm"
+              >
+                <Bell className="h-5 w-5" />
+              </motion.div>
             </div>
-          </ERPSurfaceCard>
-        </motion.div>
+          </div>
+        </motion.header>
+
+        <main className="flex flex-1 items-center justify-center py-12 sm:py-16">
+          <motion.div
+            initial={{ opacity: 0, y: 22 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
+            className="w-full max-w-4xl"
+          >
+            <ERPSurfaceCard className="group relative overflow-hidden p-7 sm:p-9 lg:p-11" animatedBorder glowEffect>
+              <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.88),rgba(255,255,255,0.74))]" />
+              <div className="pointer-events-none absolute -right-20 top-0 h-56 w-56 rounded-full bg-cyan-100/80 blur-3xl transition duration-500 group-hover:scale-110" />
+              <div className="pointer-events-none absolute -bottom-20 left-6 h-40 w-40 rounded-full bg-emerald-100/70 blur-3xl transition duration-500 group-hover:scale-110" />
+
+              <div className="relative z-[1] grid gap-8 lg:grid-cols-[1.04fr,0.96fr] lg:items-start">
+                <div>
+                  <div className="inline-flex h-16 w-16 items-center justify-center rounded-[1.4rem] bg-[linear-gradient(135deg,#0F4C81,#0EA5A9)] text-white shadow-[0_22px_48px_-24px_rgba(15,76,129,0.48)]">
+                    <GraduationCap className="h-8 w-8" />
+                  </div>
+                  <p className="mt-6 text-xs font-semibold uppercase tracking-[0.18em] text-cyan-700">Student Portal</p>
+                  <h2 className="mt-3 text-3xl font-semibold tracking-tight text-slate-950 sm:text-[2.3rem]">
+                    Admission, payments, and allocation in one student workspace
+                  </h2>
+                  <p className="mt-4 max-w-xl text-sm leading-7 text-slate-600 sm:text-base">
+                    Students can register, submit hostel admission applications, upload documents, track application
+                    progress, pay hostel fees, and check room allocation status.
+                  </p>
+
+                  <div className="mt-6 flex flex-wrap gap-3">
+                    <span className="inline-flex items-center gap-2 rounded-full border border-cyan-100 bg-cyan-50 px-3 py-1.5 text-xs font-medium text-cyan-700">
+                      <ShieldCheck className="h-3.5 w-3.5" />
+                      Secure student authentication
+                    </span>
+                    <span className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-600">
+                      <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
+                      Optimized for desktop, tablet, and mobile
+                    </span>
+                  </div>
+                </div>
+
+                <div className="rounded-[30px] border border-slate-200/80 bg-white/84 p-5 shadow-[0_22px_48px_-36px_rgba(15,23,42,0.28)] backdrop-blur sm:p-6">
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Student Services</p>
+
+                  <div className="mt-5 space-y-3">
+                    {studentFeatures.map((feature, index) => (
+                      <motion.div
+                        key={feature}
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.35, delay: 0.14 + index * 0.05 }}
+                        className="flex items-start gap-3 rounded-2xl border border-slate-100 bg-slate-50/90 px-4 py-4 text-sm text-slate-700 shadow-[0_14px_30px_-34px_rgba(15,23,42,0.32)]"
+                      >
+                        <span className="mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,rgba(15,76,129,0.1),rgba(14,165,169,0.16))] text-cyan-700">
+                          <CheckCircle2 className="h-4 w-4" />
+                        </span>
+                        <span className="font-medium">{feature}</span>
+                      </motion.div>
+                    ))}
+                  </div>
+
+                  <div className="mt-8">
+                    <p className="text-sm text-slate-500">
+                      Continue to the student login page to begin or resume your hostel admission process.
+                    </p>
+                    <motion.div className="mt-4" whileHover={{ y: -2 }} whileTap={{ scale: 0.985 }}>
+                      <Link
+                        to="/erp/student"
+                        className="group/student relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-2xl px-5 py-4 text-sm font-semibold text-white shadow-[0_18px_42px_-22px_rgba(15,76,129,0.42)] transition duration-300 hover:shadow-[0_22px_46px_-20px_rgba(14,165,169,0.46)]"
+                      >
+                        <span className="absolute inset-0 bg-[linear-gradient(135deg,#0F4C81,#0EA5A9)]" />
+                        <span className="absolute inset-0 bg-[linear-gradient(135deg,#0C3D68,#0B7285)] opacity-0 transition-opacity duration-300 group-hover/student:opacity-100" />
+                        <span className="absolute inset-0 rounded-2xl ring-1 ring-white/25" />
+                        <span className="relative z-[1]">Open Student Portal</span>
+                        <ArrowRight className="relative z-[1] h-4 w-4 transition-transform duration-300 group-hover/student:translate-x-1" />
+                      </Link>
+                    </motion.div>
+                  </div>
+                </div>
+              </div>
+            </ERPSurfaceCard>
+          </motion.div>
+        </main>
+
+        <motion.footer
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
+          className="mt-auto flex flex-col gap-2 border-t border-slate-200/70 px-2 pt-6 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between"
+        >
+          <p className="font-medium text-slate-700">MMC Hostel ERP System</p>
+          <Link
+            to="/system-admin"
+            className="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-700 transition hover:text-cyan-900"
+          >
+            Staff Login
+          </Link>
+        </motion.footer>
       </ERPPageTransition>
-    </section>
+    </ERPBackdrop>
   </>
 );
 

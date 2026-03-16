@@ -5,7 +5,7 @@ import { ArrowRight, Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useTranslation } from 'react-i18next';
-const HERO_VIDEO_SRC = 'https://pub-c7047204b6824b4ea67be147e7ebb0ac.r2.dev/public/hero-section-video.mp4';
+const HERO_VIDEO_SRC = 'https://pub-c7047204b6824b4ea67be147e7ebb0ac.r2.dev/public/images/MMC720p.mp4';
 const HeroSection = () => {
   const {
     t
@@ -99,43 +99,25 @@ const HeroSection = () => {
         duration: 0.8,
         delay: 0.6
         }} className="flex w-full max-w-xl flex-col gap-3 sm:flex-row sm:justify-center sm:gap-4">
-          <motion.div whileHover={{
-          scale: 1.03
-        }} whileTap={{
-          scale: 0.98
-        }} className="w-full sm:w-auto">
-            <Button asChild size="lg" className="group h-12 w-full min-w-[220px] bg-primary px-6 text-white shadow-2xl hover:bg-primary/85">
-              <a href="https://formbuilder.ccavenue.com/live/patna-university" target="_blank" rel="noopener noreferrer" aria-label={i18next.t("auto.open_admission_fee_payment_portal_in_a_1vqtut9")}>{`
-                ${i18next.t("auto.admission_fee_payment_22tca8")}
-                `}<motion.span animate={{
-                x: [0, 5, 0]
-              }} transition={{
-                duration: 1.4,
-                repeat: Infinity,
-                repeatDelay: 0.2
-              }}>
+          <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }} className="w-full sm:w-auto">
+            <Button asChild size="lg" className="group h-12 w-full min-w-[220px] bg-primary text-white shadow-2xl hover:bg-primary/90">
+              <a href="https://formbuilder.ccavenue.com/live/patna-university" target="_blank" rel="noopener noreferrer" aria-label="Open admission fee payment portal">
+                Admission Fee Payment
+                <motion.span animate={{ x: [0, 5, 0] }} transition={{ duration: 1.4, repeat: Infinity, repeatDelay: 0.2 }}>
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </motion.span>
               </a>
             </Button>
           </motion.div>
 
-          <motion.div whileHover={{
-          scale: 1.03
-        }} whileTap={{
-          scale: 0.98
-        }} className="w-full sm:w-auto">
-            <Button asChild size="lg" variant="outline" className="h-12 w-full min-w-[220px] border-2 border-white/70 bg-white/5 px-6 text-white hover:border-white hover:bg-white/15 hover:text-white">
-              <Link to="/about">{t('hero.exploreLegacy')}</Link>
+          <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }} className="w-full sm:w-auto">
+            <Button asChild size="lg" variant="outline" className="h-12 w-full min-w-[220px] border-2 border-white/70 bg-white/15 px-6 text-white hover:border-white hover:bg-white/25 hover:text-white">
+              <Link to="/about">Explore Our Legacy</Link>
             </Button>
           </motion.div>
 
-          <motion.div whileHover={{
-          scale: 1.03
-        }} whileTap={{
-          scale: 0.98
-        }} className="w-full sm:w-auto">
-            <Button asChild size="lg" className="h-12 w-full min-w-[220px] bg-white text-primary hover:bg-white/90">
+          <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }} className="w-full sm:w-auto">
+            <Button asChild size="lg" className="group h-12 w-full min-w-[220px] bg-primary text-white shadow-2xl hover:bg-primary/90">
               <Link to="/erp">ERP Portal</Link>
             </Button>
           </motion.div>

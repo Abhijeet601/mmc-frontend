@@ -1,6 +1,22 @@
-const API_BASE = import.meta.env.VITE_ERP_API_BASE || '';
-const fallbackApiBaseUrl =
-  typeof window !== 'undefined' && window.location?.origin ? window.location.origin : '';
+const API_BASE =
+  import.meta.env.VITE_ERP_API_BASE ||
+  import.meta.env.VITE_API_BASE ||
+  import.meta.env.VITE_API_BASE_URL ||
+  '';
+const browserLocation = typeof window !== 'undefined' ? window.location : null;
+const browserOrigin = browserLocation?.origin || '';
+const fallbackApiBaseUrl = (() => {
+  if (!browserLocation?.origin) return '';
+  if (!['3000', '4173', '5173'].includes(browserLocation.port)) return browserLocation.origin;
+
+  try {
+    const backendUrl = new URL(browserLocation.origin);
+    backendUrl.port = '8000';
+    return backendUrl.origin;
+  } catch (_) {
+    return browserLocation.origin;
+  }
+})();
 
 const rawApiBaseUrl = (API_BASE || fallbackApiBaseUrl).trim().replace(/\/+$/, '');
 const ERP_API_BASE_URL = rawApiBaseUrl.replace(/\/api$/i, '');
@@ -38,7 +54,7 @@ const parseError = async (response) => {
 const parseNetworkError = (error) => {
   if (error?.name === 'AbortError') return 'Request timed out. Please try again.';
   if (error instanceof TypeError) {
-    return `Unable to reach ERP API at ${ERP_API_BASE_URL}. Check VITE_ERP_API_BASE and backend server status.`;
+    return `Unable to reach ERP API at ${ERP_API_BASE_URL}. Check VITE_ERP_API_BASE, VITE_API_BASE, and backend server status.`;
   }
   return error?.message || 'Network request failed.';
 };
@@ -77,10 +93,26 @@ const request = async (
 
   if (responseType === 'blob') return response.blob();
   if (response.status === 204) return null;
+  if (!response.headers.get('content-type')?.toLowerCase().includes('application/json')) {
+    throw new Error(
+      `ERP API at ${requestUrl} returned a non-JSON response. Check VITE_ERP_API_BASE or your /api proxy.`
+    );
+  }
   return response.json();
 };
 
 const authPayloadToken = (data) => data?.access_token || data?.token || '';
+
+const triggerDownload = (blob, filename) => {
+  const url = window.URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  window.URL.revokeObjectURL(url);
+};
 
 export const getStudentToken = () => localStorage.getItem(ERP_STUDENT_TOKEN_KEY) || '';
 export const setStudentToken = (token) => localStorage.setItem(ERP_STUDENT_TOKEN_KEY, token);
@@ -124,6 +156,12 @@ export const loginStudent = async ({ email, dob, date_of_birth, password }) => {
   setApplicationCompleted(Boolean(data?.application_completed));
   return data;
 };
+
+export const resetStudentPassword = (payload) =>
+  request('/api/reset-password', {
+    method: 'POST',
+    body: payload,
+  });
 
 export const getApplicationForm = () =>
   request('/api/application', {
@@ -240,37 +278,107 @@ export const toggleShortlistStudent = (studentId, shortlisted = true) =>
     token: getAdminToken(),
   });
 
-export const allocateHostel = (studentId, hostelName) =>
+export const allocateHostel = (studentId, allocation) =>
   request(`/api/admin/students/${studentId}/allocate-hostel`, {
     method: 'PATCH',
-    body: { hostel_name: hostelName },
+    body:
+      typeof allocation === 'string'
+        ? { hostel_name: allocation }
+        : {
+            hostel_name: allocation?.hostel_name,
+            room_id: allocation?.room_id,
+            bed_number: allocation?.bed_number,
+          },
     token: getAdminToken(),
   });
 
-export const uploadShortlist = (file) => {
+export const uploadShortlist = (file, hostelName = '') => {
   const formData = new FormData();
   formData.append('file', file);
-  return request('/api/admin/upload-shortlist', {
+  if (hostelName) formData.append('hostel_name', hostelName);
+  return request('/api/admin/bulk/shortlist/upload', {
     method: 'POST',
     body: formData,
     token: getAdminToken(),
   });
 };
 
-export const downloadStudentsExcel = async () => {
-  const blob = await request('/api/admin/export-excel', {
+export const uploadBulkShortlist = uploadShortlist;
+
+export const downloadShortlistTemplate = async () => {
+  const blob = await request('/api/admin/bulk/shortlist/template', {
     token: getAdminToken(),
     responseType: 'blob',
   });
+  triggerDownload(blob, `bulk_shortlist_template_${new Date().toISOString().slice(0, 10)}.xlsx`);
+};
 
-  const url = window.URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = `hostel_erp_students_${new Date().toISOString().slice(0, 10)}.xlsx`;
-  document.body.appendChild(link);
-  link.click();
-  link.remove();
-  window.URL.revokeObjectURL(url);
+export const uploadBulkAllocation = (file, hostelName = '') => {
+  const formData = new FormData();
+  formData.append('file', file);
+  if (hostelName) formData.append('hostel_name', hostelName);
+  return request('/api/admin/bulk/allocation/upload', {
+    method: 'POST',
+    body: formData,
+    token: getAdminToken(),
+  });
+};
+
+export const downloadAllocationTemplate = async () => {
+  const blob = await request('/api/admin/bulk/allocation/template', {
+    token: getAdminToken(),
+    responseType: 'blob',
+  });
+  triggerDownload(blob, `bulk_allocation_template_${new Date().toISOString().slice(0, 10)}.xlsx`);
+};
+
+export const getAdminHostelRooms = () =>
+  request('/api/admin/hostel/rooms', {
+    token: getAdminToken(),
+  });
+
+export const createAdminHostelRoom = (payload) =>
+  request('/api/admin/hostel/rooms', {
+    method: 'POST',
+    body: payload,
+    token: getAdminToken(),
+  });
+
+export const updateAdminHostelRoom = (roomId, payload) =>
+  request(`/api/admin/hostel/rooms/${roomId}`, {
+    method: 'PATCH',
+    body: payload,
+    token: getAdminToken(),
+  });
+
+export const downloadStudentsExcel = async ({
+  search = '',
+  course = '',
+  category = '',
+  session = '',
+  program = '',
+  shortlist = '',
+  verified = '',
+  hostel_state = '',
+} = {}) => {
+  const query = new URLSearchParams();
+  if (search) query.set('search', search);
+  if (course) query.set('course', course);
+  if (category) query.set('category', category);
+  if (session) query.set('session', session);
+  if (program) query.set('program', program);
+  if (shortlist) query.set('shortlist', shortlist);
+  if (verified) query.set('verified', verified);
+  if (hostel_state) query.set('hostel_state', hostel_state);
+
+  const queryString = query.toString();
+  const path = queryString ? `/api/admin/export-excel?${queryString}` : '/api/admin/export-excel';
+
+  const blob = await request(path, {
+    token: getAdminToken(),
+    responseType: 'blob',
+  });
+  triggerDownload(blob, `hostel_erp_students_${new Date().toISOString().slice(0, 10)}.xlsx`);
 };
 
 export const resolveAssetUrl = (relativeOrAbsolutePath) => {

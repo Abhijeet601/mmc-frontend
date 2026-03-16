@@ -10,12 +10,13 @@ import {
   GraduationCap,
   Home,
   ImagePlus,
+  MapPinned,
   Save,
   Sparkles,
   UserSquare2,
-  Users2,
 } from 'lucide-react';
 import ERPButton from '@/components/erp/ERPButton';
+import ERPBackdrop from '@/components/erp/ERPBackdrop';
 import ERPPageTransition from '@/components/erp/ERPPageTransition';
 import ERPSurfaceCard from '@/components/erp/ERPSurfaceCard';
 import { toast } from '@/components/ui/use-toast';
@@ -29,7 +30,8 @@ import {
 
 const categoryOptions = ['UR', 'EWS', 'BC', 'EBC', 'SC', 'ST'];
 const religionOptions = ['Hindu', 'Muslim', 'Sikh', 'Christian', 'Other'];
-const courseOptions = ['BA', 'BSc', 'BCom', 'BSW', 'BCA', 'BBA'];
+const ugCourseOptions = ['BA', 'BSc', 'BCom', 'BSW', 'BCA', 'BBA'];
+const pgCourseOptions = ['MA', 'MSc'];
 const programOptions = ['UG', 'PG'];
 const resultTypes = ['Pass', 'Appearing', 'Division', 'CGPA'];
 
@@ -57,10 +59,10 @@ const initialForm = {
   aggregate_percentage: '',
   admission_application_id: '',
   college_name: 'Magadh Mahila College',
-  course_name: 'BA',
+  course_name: '',
   honours_subject: '',
   session: '2026-27',
-  program: 'UG',
+  program: '',
   roll_number: '',
 };
 
@@ -70,10 +72,10 @@ const inputClass =
 const textareaClass = `${inputClass} h-auto min-h-[120px] py-3`;
 
 const steps = [
-  { key: 'personal', title: 'Personal', icon: UserSquare2 },
-  { key: 'family', title: 'Family', icon: Users2 },
-  { key: 'academic', title: 'Academic', icon: GraduationCap },
-  { key: 'admission', title: 'Admission', icon: BookText },
+  { key: 'personal', title: 'Personal Details', icon: UserSquare2 },
+  { key: 'academic', title: 'Academic Information', icon: GraduationCap },
+  { key: 'address', title: 'Address Information', icon: MapPinned },
+  { key: 'documents', title: 'Admission & Documents', icon: BookText },
 ];
 
 const requiredFields = [
@@ -105,6 +107,8 @@ const requiredFields = [
 ];
 
 const formatValue = (value) => (value === null || value === undefined ? '' : String(value));
+
+const getCourseOptions = (program) => (program === 'PG' ? pgCourseOptions : ugCourseOptions);
 
 const Label = ({ title, required = false, children }) => (
   <label className="block text-sm font-medium text-slate-700">
@@ -180,6 +184,21 @@ const ERPApplicationForm = () => {
     }
   }, [form.total_marks, form.marks_obtained]);
 
+  const selectedCourseOptions = useMemo(
+    () => (form.program ? getCourseOptions(form.program) : []),
+    [form.program],
+  );
+
+  useEffect(() => {
+    if (!form.program) {
+      setForm((prev) => (prev.course_name ? { ...prev, course_name: '' } : prev));
+      return;
+    }
+    if (!selectedCourseOptions.includes(form.course_name)) {
+      setForm((prev) => ({ ...prev, course_name: selectedCourseOptions[0] || '' }));
+    }
+  }, [form.course_name, form.program, selectedCourseOptions]);
+
   const completion = useMemo(() => {
     const filledFields = requiredFields.reduce((count, key) => {
       const value = form[key];
@@ -237,7 +256,7 @@ const ERPApplicationForm = () => {
         title: 'Application submitted',
         description: response.message || 'Application submitted successfully.',
       });
-      navigate('/dashboard');
+      navigate('/erp/dashboard');
     } catch (error) {
       toast({
         title: 'Submission failed',
@@ -250,6 +269,16 @@ const ERPApplicationForm = () => {
   };
 
   const renderStep = () => {
+    const isProgramSelected = Boolean(form.program);
+    const isPgStudent = form.program === 'PG';
+    const qualifyingExamLabel = isPgStudent ? 'Graduation' : 'Intermediate';
+    const institutionLabel = `${qualifyingExamLabel} College Name`;
+    const boardLabel = isPgStudent ? 'Graduation University' : 'Intermediate Board';
+    const totalMarksLabel = `${qualifyingExamLabel} Total Marks`;
+    const marksObtainedLabel = `${qualifyingExamLabel} Marks Obtained`;
+    const resultTypeLabel = `${qualifyingExamLabel} Result Type`;
+    const percentageLabel = `${qualifyingExamLabel} Aggregate Percentage`;
+
     switch (steps[currentStep].key) {
       case 'personal':
         return (
@@ -291,7 +320,6 @@ const ERPApplicationForm = () => {
                 onChange={(event) => handleChange('gender', event.target.value)}
               >
                 <option value="Female">Female</option>
-                <option value="Male">Male</option>
                 <option value="Other">Other</option>
               </select>
             </Label>
@@ -347,40 +375,102 @@ const ERPApplicationForm = () => {
                 onChange={(event) => handleChange('nationality', event.target.value)}
               />
             </Label>
-            <div className="md:col-span-2">
-              <Label title="Student Photo" required>
-                <label className="mt-2 flex min-h-[152px] cursor-pointer flex-col items-center justify-center rounded-[28px] border border-dashed border-cyan-200 bg-cyan-50/70 px-5 py-6 text-center">
-                  <ImagePlus className="h-8 w-8 text-cyan-600" />
-                  <span className="mt-3 text-sm font-medium text-slate-800">
-                    {photoFile ? photoFile.name : 'Upload student photograph'}
-                  </span>
-                  <span className="mt-1 text-xs uppercase tracking-[0.16em] text-slate-400">
-                    JPG, PNG or WEBP
-                  </span>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    disabled={!isEditable}
-                    onChange={(event) => {
-                      const file = event.target.files?.[0] || null;
-                      setPhotoFile(file);
-                      if (file) setPhotoPreview(URL.createObjectURL(file));
-                    }}
-                  />
-                </label>
-              </Label>
-              {photoPreview ? (
-                <img
-                  src={photoPreview}
-                  alt="Student preview"
-                  className="mt-4 h-36 w-28 rounded-3xl object-cover shadow-[0_16px_40px_-26px_rgba(15,23,42,0.5)]"
-                />
-              ) : null}
-            </div>
           </div>
         );
-      case 'family':
+      case 'academic':
+        return (
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="md:col-span-2">
+              <Label title="Are you a UG student or PG student?" required>
+                <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                  {programOptions.map((item) => {
+                    const active = form.program === item;
+                    return (
+                      <button
+                        key={item}
+                        type="button"
+                        disabled={!isEditable}
+                        aria-pressed={active}
+                        onClick={() => handleChange('program', item)}
+                        className={`rounded-[24px] border px-5 py-4 text-left transition ${
+                          active
+                            ? 'border-cyan-300 bg-cyan-50 text-cyan-900 shadow-[0_18px_40px_-32px_rgba(14,116,144,0.55)]'
+                            : 'border-white/60 bg-white/90 text-slate-700 shadow-[0_18px_40px_-32px_rgba(15,23,42,0.45)]'
+                        } ${!isEditable ? 'cursor-not-allowed opacity-70' : 'hover:border-cyan-200 hover:bg-cyan-50/60'}`}
+                      >
+                        <p className="text-sm font-semibold">{item}</p>
+                        <p className="mt-1 text-xs text-slate-500">
+                          {item === 'UG' ? 'Show intermediate details' : 'Show graduation details'}
+                        </p>
+                      </button>
+                    );
+                  })}
+                </div>
+              </Label>
+            </div>
+            {!isProgramSelected ? (
+              <div className="md:col-span-2 rounded-[28px] border border-dashed border-cyan-200 bg-cyan-50/70 px-6 py-8 text-center text-sm text-slate-600">
+                Select `UG` or `PG` to open the academic details form.
+              </div>
+            ) : null}
+            {isProgramSelected ? (
+              <>
+            <Label title={institutionLabel} required>
+              <input
+                className={inputClass}
+                value={form.intermediate_college_name}
+                disabled={!isEditable}
+                onChange={(event) => handleChange('intermediate_college_name', event.target.value)}
+              />
+            </Label>
+            <Label title={boardLabel} required>
+              <input
+                className={inputClass}
+                value={form.intermediate_board}
+                disabled={!isEditable}
+                onChange={(event) => handleChange('intermediate_board', event.target.value)}
+              />
+            </Label>
+            <Label title={totalMarksLabel} required>
+              <input
+                type="number"
+                className={inputClass}
+                value={form.total_marks}
+                disabled={!isEditable}
+                onChange={(event) => handleChange('total_marks', event.target.value)}
+              />
+            </Label>
+            <Label title={marksObtainedLabel} required>
+              <input
+                type="number"
+                className={inputClass}
+                value={form.marks_obtained}
+                disabled={!isEditable}
+                onChange={(event) => handleChange('marks_obtained', event.target.value)}
+              />
+            </Label>
+            <Label title={resultTypeLabel} required>
+              <select
+                className={inputClass}
+                value={form.result_type}
+                disabled={!isEditable}
+                onChange={(event) => handleChange('result_type', event.target.value)}
+              >
+                {resultTypes.map((item) => (
+                  <option key={item} value={item}>
+                    {item}
+                  </option>
+                ))}
+              </select>
+            </Label>
+            <Label title={percentageLabel} required>
+              <input className={inputClass} value={form.aggregate_percentage} readOnly />
+            </Label>
+              </>
+            ) : null}
+          </div>
+        );
+      case 'address':
         return (
           <div className="grid gap-4 md:grid-cols-2">
             <Label title="Father's Name" required>
@@ -428,62 +518,6 @@ const ERPApplicationForm = () => {
             </div>
           </div>
         );
-      case 'academic':
-        return (
-          <div className="grid gap-4 md:grid-cols-2">
-            <Label title="Intermediate College Name" required>
-              <input
-                className={inputClass}
-                value={form.intermediate_college_name}
-                disabled={!isEditable}
-                onChange={(event) => handleChange('intermediate_college_name', event.target.value)}
-              />
-            </Label>
-            <Label title="Intermediate Board" required>
-              <input
-                className={inputClass}
-                value={form.intermediate_board}
-                disabled={!isEditable}
-                onChange={(event) => handleChange('intermediate_board', event.target.value)}
-              />
-            </Label>
-            <Label title="Total Marks" required>
-              <input
-                type="number"
-                className={inputClass}
-                value={form.total_marks}
-                disabled={!isEditable}
-                onChange={(event) => handleChange('total_marks', event.target.value)}
-              />
-            </Label>
-            <Label title="Marks Obtained" required>
-              <input
-                type="number"
-                className={inputClass}
-                value={form.marks_obtained}
-                disabled={!isEditable}
-                onChange={(event) => handleChange('marks_obtained', event.target.value)}
-              />
-            </Label>
-            <Label title="Result Type" required>
-              <select
-                className={inputClass}
-                value={form.result_type}
-                disabled={!isEditable}
-                onChange={(event) => handleChange('result_type', event.target.value)}
-              >
-                {resultTypes.map((item) => (
-                  <option key={item} value={item}>
-                    {item}
-                  </option>
-                ))}
-              </select>
-            </Label>
-            <Label title="Aggregate Percentage" required>
-              <input className={inputClass} value={form.aggregate_percentage} readOnly />
-            </Label>
-          </div>
-        );
       default:
         return (
           <div className="grid gap-4 md:grid-cols-2">
@@ -507,10 +541,13 @@ const ERPApplicationForm = () => {
               <select
                 className={inputClass}
                 value={form.course_name}
-                disabled={!isEditable}
+                disabled={!isEditable || !form.program}
                 onChange={(event) => handleChange('course_name', event.target.value)}
               >
-                {courseOptions.map((item) => (
+                {!form.program ? (
+                  <option value="">Select UG or PG first</option>
+                ) : null}
+                {selectedCourseOptions.map((item) => (
                   <option key={item} value={item}>
                     {item}
                   </option>
@@ -533,20 +570,6 @@ const ERPApplicationForm = () => {
                 onChange={(event) => handleChange('session', event.target.value)}
               />
             </Label>
-            <Label title="Program" required>
-              <select
-                className={inputClass}
-                value={form.program}
-                disabled={!isEditable}
-                onChange={(event) => handleChange('program', event.target.value)}
-              >
-                {programOptions.map((item) => (
-                  <option key={item} value={item}>
-                    {item}
-                  </option>
-                ))}
-              </select>
-            </Label>
             <Label title="Roll Number">
               <input
                 className={inputClass}
@@ -555,6 +578,42 @@ const ERPApplicationForm = () => {
                 onChange={(event) => handleChange('roll_number', event.target.value)}
               />
             </Label>
+            <div className="md:col-span-2">
+              <Label title="Student Photo" required>
+                <label className="mt-2 flex min-h-[152px] cursor-pointer flex-col items-center justify-center rounded-[28px] border border-dashed border-cyan-200 bg-cyan-50/70 px-5 py-6 text-center">
+                  <ImagePlus className="h-8 w-8 text-cyan-600" />
+                  <span className="mt-3 text-sm font-medium text-slate-800">
+                    {photoFile ? photoFile.name : 'Upload student photograph'}
+                  </span>
+                  <span className="mt-1 text-xs uppercase tracking-[0.16em] text-slate-400">
+                    JPG, PNG or WEBP
+                  </span>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    disabled={!isEditable}
+                    onChange={(event) => {
+                      const file = event.target.files?.[0] || null;
+                      setPhotoFile(file);
+                      if (file) setPhotoPreview(URL.createObjectURL(file));
+                    }}
+                  />
+                </label>
+              </Label>
+            </div>
+            {photoPreview ? (
+              <div className="md:col-span-2">
+                <img
+                  src={photoPreview}
+                  alt="Student preview"
+                  className="h-36 w-28 rounded-3xl object-cover shadow-[0_16px_40px_-26px_rgba(15,23,42,0.5)]"
+                />
+              </div>
+            ) : null}
+            <div className="md:col-span-2 rounded-[28px] border border-slate-200 bg-slate-50/80 px-5 py-4 text-sm text-slate-600">
+              Document upload currently captures the required student photograph for the hostel admission workflow.
+            </div>
           </div>
         );
     }
@@ -566,18 +625,7 @@ const ERPApplicationForm = () => {
         <title>Application Form | Hostel ERP</title>
       </Helmet>
 
-      <section className="erp-shell erp-radial-backdrop relative isolate overflow-hidden px-4 py-14 sm:px-6 lg:px-8">
-        <motion.div
-          className="pointer-events-none absolute -left-12 top-20 h-80 w-80 rounded-full bg-sky-300/25 blur-3xl"
-          animate={{ x: [0, 42, 0], y: [0, 38, 0] }}
-          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
-        />
-        <motion.div
-          className="pointer-events-none absolute right-0 top-0 h-96 w-96 rounded-full bg-emerald-300/16 blur-3xl"
-          animate={{ x: [0, -44, 0], y: [0, 30, 0] }}
-          transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut' }}
-        />
-
+      <ERPBackdrop className="py-14">
         <ERPPageTransition className="relative z-10 mx-auto max-w-7xl space-y-6">
           <div className="grid gap-5 lg:grid-cols-[1.1fr,0.9fr]">
             <ERPSurfaceCard className="erp-glass-panel p-7">
@@ -587,9 +635,12 @@ const ERPApplicationForm = () => {
                     <Sparkles className="h-3.5 w-3.5" />
                     Hostel Application
                   </p>
-                  <h1 className="erp-display mt-4 text-4xl font-bold text-slate-950">Complete your application workflow.</h1>
+                  <h1 className="erp-display mt-4 text-4xl font-bold text-slate-950">
+                    Complete the structured hostel admission form.
+                  </h1>
                   <p className="mt-3 max-w-2xl text-slate-600">
-                    Save your draft anytime. Once submitted, the application stays editable until admin verification.
+                    Personal details, academic details, address information, and document upload are organized into
+                    clear steps with draft-save support before final submission.
                   </p>
                 </div>
                 <div className="rounded-3xl border border-white/60 bg-white/80 px-5 py-4 shadow-[0_24px_50px_-35px_rgba(15,23,42,0.45)]">
@@ -605,10 +656,12 @@ const ERPApplicationForm = () => {
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Completion</p>
                   <p className="mt-3 text-4xl font-bold text-slate-950">{completion}%</p>
-                  <p className="mt-2 text-sm text-slate-600">All required fields and photo must be present before final submission.</p>
+                  <p className="mt-2 text-sm text-slate-600">
+                    All required fields and the student photograph must be present before final submission.
+                  </p>
                 </div>
                 <Link
-                  to="/dashboard"
+                  to="/erp/dashboard"
                   className="inline-flex items-center gap-2 rounded-2xl border border-white/70 bg-white/80 px-4 py-2.5 text-sm font-semibold text-slate-700"
                 >
                   <ArrowLeft className="h-4 w-4" />
@@ -749,7 +802,7 @@ const ERPApplicationForm = () => {
             </Link>
           </div>
         </ERPPageTransition>
-      </section>
+      </ERPBackdrop>
     </>
   );
 };

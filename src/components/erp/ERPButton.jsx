@@ -3,13 +3,13 @@ import { motion } from 'framer-motion';
 
 const variantStyles = {
   primary:
-    'text-white shadow-lg shadow-indigo-300/35 bg-[linear-gradient(135deg,#4F46E5,#06B6D4)] hover:shadow-[0_12px_30px_rgba(79,70,229,0.32)]',
+    'text-white shadow-[0_18px_40px_-22px_rgba(15,76,129,0.45)] bg-[linear-gradient(135deg,#0F4C81,#0EA5A9)] hover:shadow-[0_22px_44px_-22px_rgba(14,165,169,0.42)]',
   secondary:
-    'text-indigo-700 border border-indigo-200 bg-white hover:border-cyan-300 hover:text-cyan-700 hover:shadow-[0_8px_22px_rgba(6,182,212,0.18)]',
+    'text-slate-700 border border-slate-200 bg-white/90 hover:border-cyan-200 hover:text-cyan-800 hover:shadow-[0_12px_28px_-20px_rgba(14,165,169,0.3)]',
   success:
-    'text-white shadow-lg shadow-emerald-300/30 bg-[linear-gradient(135deg,#22C55E,#06B6D4)] hover:shadow-[0_12px_28px_rgba(34,197,94,0.28)]',
+    'text-white shadow-[0_18px_40px_-22px_rgba(16,185,129,0.34)] bg-[linear-gradient(135deg,#059669,#14B8A6)] hover:shadow-[0_22px_44px_-20px_rgba(16,185,129,0.4)]',
   danger:
-    'text-red-700 border border-red-200 bg-red-50 hover:bg-red-100 hover:shadow-[0_8px_20px_rgba(239,68,68,0.18)]',
+    'text-red-700 border border-red-200 bg-red-50 hover:bg-red-100 hover:shadow-[0_12px_28px_-20px_rgba(239,68,68,0.28)]',
 };
 
 const ERPButton = ({
@@ -52,7 +52,7 @@ const ERPButton = ({
       whileHover={whileHover || { scale: 1.03, y: -1 }}
       whileTap={whileTap || { scale: 0.98 }}
       className={[
-        'erp-ripple-btn relative inline-flex items-center gap-2 overflow-hidden rounded-xl px-4 py-2.5 text-sm font-semibold transition duration-300 disabled:cursor-not-allowed disabled:opacity-60',
+        'erp-ripple-btn relative inline-flex items-center gap-2 overflow-hidden rounded-2xl px-4 py-2.5 text-sm font-semibold transition duration-300 disabled:cursor-not-allowed disabled:opacity-60',
         variantStyles[variant] || variantStyles.primary,
         className,
       ].join(' ')}

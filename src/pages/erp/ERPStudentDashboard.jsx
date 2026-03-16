@@ -3,18 +3,20 @@ import { Helmet } from 'react-helmet-async';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
-  BadgeCheck,
+  BellRing,
+  Building2,
   CreditCard,
   Download,
   FileText,
   Home,
   LogOut,
-  MailCheck,
+  MapPinned,
   RefreshCw,
   ShieldCheck,
-  Sparkles,
+  WalletCards,
 } from 'lucide-react';
 import ERPButton from '@/components/erp/ERPButton';
+import ERPBackdrop from '@/components/erp/ERPBackdrop';
 import ERPMetricCard from '@/components/erp/ERPMetricCard';
 import ERPPageTransition from '@/components/erp/ERPPageTransition';
 import ERPSurfaceCard from '@/components/erp/ERPSurfaceCard';
@@ -65,9 +67,9 @@ const summaryEntries = (summary = {}) => [
   ['Program', summary.program],
   ['Honours Subject', summary.honours_subject],
   ['Category', summary.category],
-  ['Religion', summary.religion],
   ['Father Name', summary.father_name],
   ['Guardian Mobile', summary.guardian_mobile_number],
+  ['Preferred Hostel', summary.preferred_hostel],
 ];
 
 const ERPStudentDashboard = () => {
@@ -80,9 +82,9 @@ const ERPStudentDashboard = () => {
   const [applicationTxn, setApplicationTxn] = useState('');
   const [hostelTxn, setHostelTxn] = useState('');
   const [preferredHostel, setPreferredHostel] = useState('Vaidehi Hostel');
-  const [flashMessage, setFlashMessage] = useState('');
 
   const tracker = useMemo(() => decorateTracker(dashboard?.tracker || []), [dashboard]);
+  const notifications = dashboard?.notifications || [];
 
   const loadDashboard = async () => {
     setLoading(true);
@@ -91,7 +93,7 @@ const ERPStudentDashboard = () => {
       setDashboard(data);
       if (data?.preferred_hostel) setPreferredHostel(data.preferred_hostel);
       if (data?.form_status !== 'submitted') {
-        navigate('/application-form', { replace: true });
+        navigate('/erp/application-form', { replace: true });
       }
     } catch (error) {
       toast({
@@ -112,7 +114,7 @@ const ERPStudentDashboard = () => {
       return;
     }
     if (getApplicationCompleted() === false) {
-      navigate('/application-form', { replace: true });
+      navigate('/erp/application-form', { replace: true });
       return;
     }
     void loadDashboard();
@@ -124,7 +126,6 @@ const ERPStudentDashboard = () => {
       const data = await payApplicationFee({
         transaction_id: applicationTxn.trim() || undefined,
       });
-      setFlashMessage(`Application fee recorded. Email status: ${data.email_status}.`);
       setApplicationTxn('');
       toast({
         title: 'Application fee successful',
@@ -148,7 +149,6 @@ const ERPStudentDashboard = () => {
       const data = await payHostelFee({
         transaction_id: hostelTxn.trim() || undefined,
       });
-      setFlashMessage(`Hostel fee recorded. Email status: ${data.email_status}.`);
       setHostelTxn('');
       toast({
         title: 'Hostel payment successful',
@@ -174,7 +174,6 @@ const ERPStudentDashboard = () => {
         title: 'Preference saved',
         description: data.message || 'Hostel preference saved successfully.',
       });
-      setFlashMessage('Hostel preference saved. Waiting for admin allocation.');
       await loadDashboard();
     } catch (error) {
       toast({
@@ -190,35 +189,24 @@ const ERPStudentDashboard = () => {
   return (
     <>
       <Helmet>
-        <title>Student Dashboard | Hostel ERP</title>
+        <title>Student Dashboard | Hostel Admission &amp; Management System</title>
       </Helmet>
 
-      <section className="erp-shell erp-radial-backdrop relative isolate overflow-hidden px-4 py-14 sm:px-6 lg:px-8">
-        <motion.div
-          className="pointer-events-none absolute -left-20 top-20 h-80 w-80 rounded-full bg-sky-300/25 blur-3xl"
-          animate={{ x: [0, 46, 0], y: [0, 34, 0] }}
-          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
-        />
-        <motion.div
-          className="pointer-events-none absolute right-0 top-0 h-96 w-96 rounded-full bg-emerald-300/16 blur-3xl"
-          animate={{ x: [0, -44, 0], y: [0, 34, 0] }}
-          transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut' }}
-        />
-
+      <ERPBackdrop className="py-14">
         <ERPPageTransition className="relative z-10 mx-auto max-w-7xl space-y-6">
           <ERPSurfaceCard className="erp-glass-panel overflow-hidden p-7 sm:p-8">
             <div className="flex flex-wrap items-start justify-between gap-4">
               <div>
                 <p className="inline-flex items-center gap-2 rounded-full border border-cyan-200 bg-cyan-50 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-cyan-700">
-                  <Sparkles className="h-3.5 w-3.5" />
+                  <ShieldCheck className="h-3.5 w-3.5" />
                   Student Dashboard
                 </p>
                 <h1 className="erp-display mt-4 text-4xl font-bold text-slate-950">
-                  {dashboard?.student_name || 'Student'} hostel admission journey
+                  {dashboard?.student_name || 'Student'} hostel admission dashboard
                 </h1>
                 <p className="mt-3 max-w-2xl text-slate-600">
-                  Application number {dashboard?.application_number || '-'} with real-time verification, shortlist, and
-                  payment tracking.
+                  Application number {dashboard?.application_number || '-'} with live status tracking, payment status,
+                  hostel allocation, and student notifications.
                 </p>
               </div>
 
@@ -227,7 +215,7 @@ const ERPStudentDashboard = () => {
                   <RefreshCw className="h-4 w-4" />
                   Refresh
                 </ERPButton>
-                <ERPButton variant="secondary" onClick={() => navigate('/application-form')}>
+                <ERPButton variant="secondary" onClick={() => navigate('/erp/application-form')}>
                   <FileText className="h-4 w-4" />
                   Application Form
                 </ERPButton>
@@ -243,22 +231,6 @@ const ERPStudentDashboard = () => {
                 </ERPButton>
               </div>
             </div>
-
-            {flashMessage ? (
-              <motion.div
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="mt-6 rounded-3xl border border-emerald-200 bg-emerald-50/90 px-5 py-4 text-sm text-emerald-900"
-              >
-                <div className="flex items-start gap-3">
-                  <MailCheck className="mt-0.5 h-5 w-5 text-emerald-600" />
-                  <div>
-                    <p className="font-semibold">Latest action completed</p>
-                    <p className="mt-1">{flashMessage}</p>
-                  </div>
-                </div>
-              </motion.div>
-            ) : null}
           </ERPSurfaceCard>
 
           {loading ? (
@@ -276,72 +248,73 @@ const ERPStudentDashboard = () => {
                   delay={0.02}
                 />
                 <ERPMetricCard
-                  title="Registration Fee"
+                  title="Application Fee"
                   value={dashboard?.application_payment_status === 'paid' ? 'Paid' : 'Pending'}
                   icon={CreditCard}
-                  subtitle={`Amount ₹${dashboard?.application_fee_amount || 1000}`}
+                  subtitle={`INR ${dashboard?.application_fee_amount || 1000}`}
                   delay={0.08}
                 />
                 <ERPMetricCard
-                  title="Shortlist Status"
-                  value={dashboard?.shortlist_status || 'pending'}
-                  icon={BadgeCheck}
-                  subtitle={dashboard?.allocated_hostel || 'Hostel not allocated yet'}
+                  title="Hostel Allocation"
+                  value={dashboard?.allocated_hostel || 'Pending'}
+                  icon={Building2}
+                  subtitle={
+                    dashboard?.room_number
+                      ? `Block ${dashboard.hostel_block || '-'} | Room ${dashboard.room_number}`
+                      : 'Room assignment pending'
+                  }
                   delay={0.14}
                 />
                 <ERPMetricCard
-                  title="Hostel Fee"
-                  value={dashboard?.hostel_status || 'not_available'}
-                  icon={Home}
-                  subtitle={
-                    dashboard?.hostel_fee_amount ? `Amount ₹${dashboard.hostel_fee_amount}` : 'Available after allocation'
-                  }
+                  title="Notifications"
+                  value={notifications.length}
+                  icon={BellRing}
+                  subtitle={notifications[0]?.title || 'No new alerts'}
                   delay={0.2}
                 />
               </div>
 
-              <ERPSurfaceCard className="erp-glass-panel p-6 sm:p-7">
-                <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-                  <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Status Tracker</p>
-                    <h2 className="mt-2 text-2xl font-semibold text-slate-900">Application progress</h2>
-                  </div>
-                  <span
-                    className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-semibold uppercase tracking-[0.16em] ${
-                      statusTone[dashboard?.hostel_status] || statusTone.pending
-                    }`}
-                  >
-                    {dashboard?.hostel_status?.replace(/_/g, ' ') || 'pending'}
-                  </span>
-                </div>
-                <ERPStatusTracker items={tracker} />
-              </ERPSurfaceCard>
-
-              <div className="grid gap-6 xl:grid-cols-[1.15fr,0.85fr]">
+              <div className="grid gap-6 xl:grid-cols-[1.1fr,0.9fr]">
                 <div className="space-y-6">
+                  <ERPSurfaceCard className="erp-glass-panel p-6 sm:p-7">
+                    <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+                      <div>
+                        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Progress</p>
+                        <h2 className="mt-2 text-2xl font-semibold text-slate-900">Application lifecycle</h2>
+                      </div>
+                      <span
+                        className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-semibold uppercase tracking-[0.16em] ${
+                          statusTone[dashboard?.hostel_status] || statusTone.pending
+                        }`}
+                      >
+                        {dashboard?.hostel_status?.replace(/_/g, ' ') || 'pending'}
+                      </span>
+                    </div>
+                    <ERPStatusTracker items={tracker} />
+                  </ERPSurfaceCard>
+
                   <ERPSurfaceCard className="erp-glass-panel p-6">
                     <div className="flex flex-wrap items-start justify-between gap-4">
                       <div>
-                        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
-                          Registration Fee
-                        </p>
-                        <h2 className="mt-2 text-2xl font-semibold text-slate-900">Application payment</h2>
+                        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Payments</p>
+                        <h2 className="mt-2 text-2xl font-semibold text-slate-900">Fee management</h2>
                       </div>
-                      <span
-                        className={`inline-flex rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] ${
-                          statusTone[dashboard?.application_payment_status] || statusTone.pending
-                        }`}
-                      >
-                        {dashboard?.application_payment_status}
-                      </span>
+                      <div className="rounded-2xl border border-slate-200 bg-white/80 px-4 py-3 text-sm text-slate-600">
+                        Hostel fee status: <span className="font-semibold text-slate-900">{dashboard?.hostel_status}</span>
+                      </div>
                     </div>
 
-                    {dashboard?.application_payment_status === 'paid' ? (
-                      <div className="mt-5 rounded-3xl border border-emerald-200 bg-emerald-50/80 p-5">
-                        <p className="text-sm text-emerald-900">Application fee already paid.</p>
-                        {dashboard?.application_receipt ? (
+                    <div className="mt-5 grid gap-4 xl:grid-cols-2">
+                      <div className="rounded-[1.75rem] border border-slate-200 bg-white/80 p-5">
+                        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Application Fee</p>
+                        <p className="mt-3 text-xl font-semibold text-slate-900">INR {dashboard?.application_fee_amount || 1000}</p>
+                        <p className="mt-2 text-sm text-slate-600">
+                          Status: <span className="font-semibold">{dashboard?.application_payment_status}</span>
+                        </p>
+
+                        {dashboard?.application_payment_status === 'paid' ? (
                           <a
-                            href={receiptHref(dashboard.application_receipt)}
+                            href={receiptHref(dashboard?.application_receipt)}
                             target="_blank"
                             rel="noreferrer"
                             className="mt-4 inline-flex items-center gap-2 rounded-2xl bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white"
@@ -349,50 +322,79 @@ const ERPStudentDashboard = () => {
                             <Download className="h-4 w-4" />
                             Download Receipt
                           </a>
-                        ) : null}
+                        ) : (
+                          <>
+                            <label className="mt-4 block text-sm font-medium text-slate-700">
+                              Transaction ID
+                              <span className="ml-2 text-xs uppercase tracking-[0.16em] text-slate-400">Optional</span>
+                              <input
+                                className={inputClass}
+                                value={applicationTxn}
+                                onChange={(event) => setApplicationTxn(event.target.value)}
+                                placeholder="Leave blank to auto-generate demo ID"
+                              />
+                            </label>
+                            <ERPButton disabled={payingApplication} onClick={handleApplicationPayment} className="mt-4">
+                              <WalletCards className="h-4 w-4" />
+                              {payingApplication ? 'Processing...' : 'Pay Application Fee'}
+                            </ERPButton>
+                          </>
+                        )}
                       </div>
-                    ) : (
-                      <div className="mt-5 grid gap-4 md:grid-cols-[1fr,auto]">
-                        <label className="block text-sm font-medium text-slate-700">
-                          Transaction ID
-                          <span className="ml-2 text-xs uppercase tracking-[0.16em] text-slate-400">Optional for demo</span>
-                          <input
-                            className={inputClass}
-                            value={applicationTxn}
-                            onChange={(event) => setApplicationTxn(event.target.value)}
-                            placeholder="Leave blank to auto-generate demo ID"
-                          />
-                        </label>
-                        <div className="self-end">
-                          <ERPButton disabled={payingApplication} onClick={handleApplicationPayment}>
-                            <CreditCard className="h-4 w-4" />
-                            {payingApplication ? 'Processing...' : `Pay ₹${dashboard?.application_fee_amount || 1000}`}
-                          </ERPButton>
-                        </div>
+
+                      <div className="rounded-[1.75rem] border border-slate-200 bg-white/80 p-5">
+                        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Hostel Fee</p>
+                        <p className="mt-3 text-xl font-semibold text-slate-900">
+                          {dashboard?.hostel_fee_amount ? `INR ${dashboard.hostel_fee_amount}` : 'Awaiting allocation'}
+                        </p>
+                        <p className="mt-2 text-sm text-slate-600">
+                          Status: <span className="font-semibold">{dashboard?.hostel_status?.replace(/_/g, ' ')}</span>
+                        </p>
+
+                        {dashboard?.hostel_status === 'paid' ? (
+                          <a
+                            href={receiptHref(dashboard?.hostel_receipt)}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="mt-4 inline-flex items-center gap-2 rounded-2xl bg-cyan-700 px-4 py-2.5 text-sm font-semibold text-white"
+                          >
+                            <Download className="h-4 w-4" />
+                            Download Final Receipt
+                          </a>
+                        ) : dashboard?.allocated_hostel ? (
+                          <>
+                            <label className="mt-4 block text-sm font-medium text-slate-700">
+                              Transaction ID
+                              <span className="ml-2 text-xs uppercase tracking-[0.16em] text-slate-400">Optional</span>
+                              <input
+                                className={inputClass}
+                                value={hostelTxn}
+                                onChange={(event) => setHostelTxn(event.target.value)}
+                                placeholder="Leave blank to auto-generate demo ID"
+                              />
+                            </label>
+                            <ERPButton disabled={payingHostel} onClick={handleHostelPayment} className="mt-4">
+                              <CreditCard className="h-4 w-4" />
+                              {payingHostel ? 'Processing...' : 'Pay Hostel Fee'}
+                            </ERPButton>
+                          </>
+                        ) : (
+                          <p className="mt-4 text-sm text-slate-500">
+                            Hostel fee payment becomes available after allocation is completed.
+                          </p>
+                        )}
                       </div>
-                    )}
+                    </div>
                   </ERPSurfaceCard>
 
                   <ERPSurfaceCard className="erp-glass-panel p-6">
                     <div className="flex flex-wrap items-start justify-between gap-4">
                       <div>
-                        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Hostel Allocation</p>
-                        <h2 className="mt-2 text-2xl font-semibold text-slate-900">Preference, allocation, final payment</h2>
+                        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Allocation</p>
+                        <h2 className="mt-2 text-2xl font-semibold text-slate-900">Hostel and room details</h2>
                       </div>
-                      <span
-                        className={`inline-flex rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] ${
-                          statusTone[dashboard?.hostel_status] || statusTone.pending
-                        }`}
-                      >
-                        {dashboard?.hostel_status?.replace(/_/g, ' ') || 'pending'}
-                      </span>
+                      <MapPinned className="h-5 w-5 text-cyan-600" />
                     </div>
-
-                    {dashboard?.shortlist_status !== 'shortlisted' ? (
-                      <div className="mt-5 rounded-3xl border border-slate-200 bg-slate-100/80 p-5 text-sm text-slate-600">
-                        Hostel preference and payment unlock after the shortlist is uploaded by admin.
-                      </div>
-                    ) : null}
 
                     {dashboard?.can_choose_hostel && !dashboard?.allocated_hostel ? (
                       <div className="mt-5 grid gap-4 md:grid-cols-[1fr,auto]">
@@ -415,47 +417,22 @@ const ERPStudentDashboard = () => {
                       </div>
                     ) : null}
 
-                    {dashboard?.allocated_hostel ? (
-                      <div className="mt-5 rounded-3xl border border-cyan-200 bg-cyan-50/80 p-5">
-                        <p className="text-sm text-cyan-900">
-                          Allocated Hostel: <span className="font-semibold">{dashboard.allocated_hostel}</span>
-                        </p>
-                        <p className="mt-2 text-sm text-cyan-800">
-                          Payable amount: <span className="font-semibold">₹{dashboard.hostel_fee_amount}</span>
-                        </p>
-
-                        {dashboard?.hostel_status === 'paid' ? (
-                          <a
-                            href={receiptHref(dashboard.hostel_receipt)}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="mt-4 inline-flex items-center gap-2 rounded-2xl bg-cyan-700 px-4 py-2.5 text-sm font-semibold text-white"
-                          >
-                            <Download className="h-4 w-4" />
-                            Download Final Receipt
-                          </a>
-                        ) : (
-                          <div className="mt-4 grid gap-4 md:grid-cols-[1fr,auto]">
-                            <label className="block text-sm font-medium text-slate-700">
-                              Transaction ID
-                              <span className="ml-2 text-xs uppercase tracking-[0.16em] text-slate-400">Optional for demo</span>
-                              <input
-                                className={inputClass}
-                                value={hostelTxn}
-                                onChange={(event) => setHostelTxn(event.target.value)}
-                                placeholder="Leave blank to auto-generate demo ID"
-                              />
-                            </label>
-                            <div className="self-end">
-                              <ERPButton disabled={payingHostel} onClick={handleHostelPayment}>
-                                <CreditCard className="h-4 w-4" />
-                                {payingHostel ? 'Processing...' : `Pay ₹${dashboard.hostel_fee_amount}`}
-                              </ERPButton>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    ) : null}
+                    <div className="mt-5 grid gap-3 sm:grid-cols-2">
+                      {[
+                        ['Hostel Block', dashboard?.hostel_block],
+                        ['Room Number', dashboard?.room_number],
+                        ['Bed Allocation', dashboard?.bed_number],
+                        ['Allocated Hostel', dashboard?.allocated_hostel],
+                      ].map(([label, value]) => (
+                        <div
+                          key={label}
+                          className="rounded-2xl border border-slate-200/70 bg-white/80 px-4 py-4 text-sm shadow-[0_18px_40px_-32px_rgba(15,23,42,0.36)]"
+                        >
+                          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">{label}</p>
+                          <p className="mt-2 font-semibold text-slate-900">{value || 'Pending'}</p>
+                        </div>
+                      ))}
+                    </div>
                   </ERPSurfaceCard>
                 </div>
 
@@ -463,8 +440,44 @@ const ERPStudentDashboard = () => {
                   <ERPSurfaceCard className="erp-glass-panel p-6">
                     <div className="flex items-start justify-between gap-3">
                       <div>
+                        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Notifications</p>
+                        <h2 className="mt-2 text-2xl font-semibold text-slate-900">Important updates</h2>
+                      </div>
+                      <BellRing className="h-5 w-5 text-cyan-600" />
+                    </div>
+
+                    <div className="mt-5 space-y-3">
+                      {notifications.length ? (
+                        notifications.map((item, index) => (
+                          <motion.div
+                            key={`${item.title}-${index}`}
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: index * 0.05 }}
+                            className="rounded-2xl border border-slate-200/70 bg-white/80 px-4 py-4"
+                          >
+                            <p className="font-semibold text-slate-900">{item.title}</p>
+                            <p className="mt-2 text-sm leading-6 text-slate-600">{item.description}</p>
+                            {item.created_at ? (
+                              <p className="mt-3 text-xs font-medium uppercase tracking-[0.16em] text-slate-400">
+                                {new Date(item.created_at).toLocaleString('en-IN')}
+                              </p>
+                            ) : null}
+                          </motion.div>
+                        ))
+                      ) : (
+                        <p className="rounded-2xl border border-slate-200 bg-slate-50/70 px-4 py-4 text-sm text-slate-500">
+                          No notifications available yet.
+                        </p>
+                      )}
+                    </div>
+                  </ERPSurfaceCard>
+
+                  <ERPSurfaceCard className="erp-glass-panel p-6">
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
                         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Profile Snapshot</p>
-                        <h2 className="mt-2 text-2xl font-semibold text-slate-900">Submitted details</h2>
+                        <h2 className="mt-2 text-2xl font-semibold text-slate-900">Student summary</h2>
                       </div>
                       {dashboard?.photo_url ? (
                         <img
@@ -482,7 +495,7 @@ const ERPStudentDashboard = () => {
                           className="flex items-center justify-between gap-3 rounded-2xl border border-slate-200/70 bg-white/80 px-4 py-3 text-sm"
                         >
                           <span className="text-slate-500">{label}</span>
-                          <span className="font-medium text-slate-900">{value || '-'}</span>
+                          <span className="font-medium text-right text-slate-900">{value || '-'}</span>
                         </div>
                       ))}
                     </div>
@@ -533,7 +546,7 @@ const ERPStudentDashboard = () => {
             </Link>
           </div>
         </ERPPageTransition>
-      </section>
+      </ERPBackdrop>
     </>
   );
 };

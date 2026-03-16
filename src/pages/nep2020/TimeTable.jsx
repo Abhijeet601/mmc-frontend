@@ -30,6 +30,10 @@ const TimeTable = () => {
                   <h3 className="text-xl font-medium text-gray-800 mb-2">{i18next.t("auto.bca_time_table_2026_1ienpns")}</h3>
                   <iframe src={r2Url('timetables/BCA Time Table 2026 (1).pdf')} width="100%" height="600px" title={i18next.t("auto.bca_time_table_2026_1ienpns")} className="border border-gray-300 rounded"></iframe>
                 </div>
+                <div>
+                  <h3 className="text-xl font-medium text-gray-800 mb-2">{i18next.t("auto.b_com_time_table_1mwjm4q")}</h3>
+                  <iframe src={r2Url('timetables/B. Com Time Table.pdf')} width="100%" height="600px" title={i18next.t("auto.b_com_time_table_1mwjm4q")} className="border border-gray-300 rounded"></iframe>
+                </div>
               </div>
 
               <div className="bg-blue-50 border-l-4 border-blue-500 p-4 mt-6">

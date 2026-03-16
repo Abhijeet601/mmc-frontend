@@ -1,0 +1,25 @@
+
+  [32m[1mVITE[22m v7.3.1[39m  [2mready in [0m[1m912[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m3000[22m/[39m
+  [32m➜[39m  [1mNetwork[22m: [36mhttp://10.234.41.123:[1m3000[22m/[39m
+[2m11:49:27 am[22m [36m[1m[vite][22m[39m [32m.env changed, restarting server...[39m
+[2m11:49:28 am[22m [36m[1m[vite][22m[39m server restarted.
+[2m11:50:43 am[22m [36m[1m[vite][22m[39m [32m.env changed, restarting server...[39m
+[2m11:50:44 am[22m [36m[1m[vite][22m[39m server restarted.
+[2m12:09:20 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/erp/ERPApplicationForm.jsx[22m
+[2m12:15:06 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/erp/ERPApplicationForm.jsx[22m
+[2m12:21:28 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/erp/ERPAdminPanel.jsx, /src/pages/erp/ERPStudentDashboard.jsx, /src/pages/erp/ERPApplicationForm.jsx, /src/pages/erp/ERPStudentAuth.jsx[22m
+[2m12:22:17 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/erp/ERPAdminPanel.jsx[22m
+[2m12:22:22 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/erp/ERPAdminPanel.jsx[22m
+[2m12:22:28 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/erp/ERPAdminPanel.jsx[22m
+[2m12:22:37 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/erp/ERPAdminPanel.jsx[22m
+[2m12:22:45 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/erp/ERPAdminPanel.jsx[22m
+[2m12:28:22 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/erp/ERPApplicationForm.jsx[22m
+[2m12:28:30 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/Footer.jsx[22m
+[2m12:31:22 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/administration/Committees.jsx[22m
+[2m1:05:17 pm[22m [36m[1m[vite][22m[39m [32m.env.local changed, restarting server...[39m
+[2m1:05:18 pm[22m [36m[1m[vite][22m[39m server restarted.
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m3000[22m/[39m
+  [32m➜[39m  [1mNetwork[22m: [36mhttp://192.168.1.5:[1m3000[22m/[39m

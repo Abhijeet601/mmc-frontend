@@ -36,7 +36,7 @@ const ERPStatusTracker = ({
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.28, delay: index * 0.06 }}
           whileHover={{ y: -3 }}
-          className="rounded-2xl border border-white/60 bg-white/80 p-4 shadow-[0_18px_40px_-28px_rgba(15,23,42,0.45)] backdrop-blur-xl"
+          className="rounded-[24px] border border-white/70 bg-white/82 p-4 shadow-[0_18px_40px_-30px_rgba(15,23,42,0.28)] backdrop-blur-xl"
         >
           <div className="flex items-start justify-between gap-3">
             <div>

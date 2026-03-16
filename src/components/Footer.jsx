@@ -38,6 +38,8 @@ const Footer = () => {
   } = useTranslation();
   const tEn = i18n.getFixedT('en');
   const tHi = i18n.getFixedT('hi');
+  const englishFooterYear = tEn('footer.copyright').match(/\b20\d{2}\b/)?.[0] || String(new Date().getFullYear());
+  const localizedCopyright = t('footer.copyright').replace(/\b20\d{2}\b/, englishFooterYear);
   const quickLinks = [{
     path: '/about',
     label: t('footer.quickLinksItems.about')
@@ -289,7 +291,7 @@ const Footer = () => {
 
         {/* COPYRIGHT */}
         <div className="mt-5 text-center text-sm space-y-1.5">
-          <p>{t('footer.copyright')}</p>
+          <p>{localizedCopyright}</p>
 
           <p className="text-xs text-muted-foreground">
             {t('footer.managedBy')}{' '}

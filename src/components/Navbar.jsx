@@ -1427,6 +1427,23 @@ const Navbar = () => {
             duration: 0.3,
             ease: [0.4, 0, 0.2, 1]
           }}>
+                <Link to="/notifications" onClick={closeMobileMenu} className="block uppercase text-sm py-3 hover:text-primary font-medium transition-colors">
+                  {t('nav.notifications')}
+                </Link>
+              </motion.div>
+              <motion.div variants={{
+            hidden: {
+              opacity: 0,
+              x: -20
+            },
+            visible: {
+              opacity: 1,
+              x: 0
+            }
+          }} transition={{
+            duration: 0.3,
+            ease: [0.4, 0, 0.2, 1]
+          }}>
                 <Link to="/tenders" onClick={closeMobileMenu} className="block uppercase text-sm py-3 hover:text-primary font-medium transition-colors">{`
                   ${i18next.t("auto.tenders_1gv9o4a")}
                 `}</Link>

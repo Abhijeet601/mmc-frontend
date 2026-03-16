@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
+import { ArrowRight, Bell, Download, FileText, Link as LinkIcon } from 'lucide-react';
 import { getPublicNotices, NOTICE_CATEGORIES } from '@/services/notifications';
 
 const NOTICE_NOTE_TILT_CLASSES = [
@@ -39,6 +40,18 @@ const dedupeBoardItems = (items = []) => {
 
   return deduped;
 };
+
+const mapNoticeItems = (items = []) =>
+  dedupeBoardItems(
+    items.map((item) => ({
+      id: item.id,
+      title: item.title,
+      description: item.description || '',
+      link: item.link || item.fileUrl || '#',
+      fileUrl: item.fileUrl || '',
+      publishDate: item.publishDate || item.createdAt || '',
+    })),
+  );
 
 /* ================= Scroll List ================= */
 const ScrollList = ({ items, accent, emptyText, variant = 'default' }) => {
@@ -144,45 +157,116 @@ const ScrollList = ({ items, accent, emptyText, variant = 'default' }) => {
   );
 };
 
+const UpdatePreviewCard = ({
+  title,
+  items,
+  emptyText,
+  buttonLabel,
+  buttonTo,
+  icon: Icon,
+  iconClassName,
+}) => (
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true }}
+    transition={{ duration: 0.6 }}
+    className="overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-sm"
+  >
+    <div className="flex flex-col gap-4 border-b border-slate-200 bg-slate-50/70 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex items-center gap-4">
+        <span className={`flex h-12 w-12 items-center justify-center rounded-2xl ${iconClassName}`}>
+          <Icon className="h-6 w-6" />
+        </span>
+        <div>
+          <h3 className="text-2xl font-bold text-slate-900">{title}</h3>
+          <p className="text-sm text-slate-500">
+            {items.length ? `${items.length} latest updates` : 'No updates yet'}
+          </p>
+        </div>
+      </div>
+
+      <Link
+        to={buttonTo}
+        className="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-primary/90"
+      >
+        {buttonLabel}
+        <ArrowRight className="h-4 w-4" />
+      </Link>
+    </div>
+
+    {items.length === 0 ? (
+      <div className="px-6 py-12 text-center text-sm text-slate-500">{emptyText}</div>
+    ) : (
+      <div className="divide-y divide-slate-100">
+        {items.map((item, index) => {
+          const publishedDate = formatPublishDate(item.publishDate);
+          const href = item.link || item.fileUrl || '';
+          const hasFile = Boolean(item.fileUrl);
+
+          return (
+            <a
+              key={item.id || `${item.title}-${index}`}
+              href={href || '#'}
+              target={href ? '_blank' : undefined}
+              rel={href ? 'noopener noreferrer' : undefined}
+              className={`block px-6 py-4 transition ${href ? 'hover:bg-slate-50' : 'pointer-events-none'}`}
+            >
+              <div className="flex items-start justify-between gap-4">
+                <div className="min-w-0">
+                  <p className="text-base font-semibold text-slate-900 line-clamp-2">
+                    {item.title || item.text}
+                  </p>
+                  {item.description ? (
+                    <p className="mt-2 text-sm text-slate-600 line-clamp-2">{item.description}</p>
+                  ) : null}
+                  {publishedDate ? (
+                    <p className="mt-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+                      Published {publishedDate}
+                    </p>
+                  ) : null}
+                </div>
+
+                {href ? (
+                  <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600">
+                    {hasFile ? <Download className="h-4 w-4" /> : <LinkIcon className="h-4 w-4" />}
+                  </span>
+                ) : null}
+              </div>
+            </a>
+          );
+        })}
+      </div>
+    )}
+  </motion.div>
+);
+
 /* ================= Main Component ================= */
 const NoticeAndEvents = () => {
   const { t } = useTranslation();
   const [notices, setNotices] = useState([]);
   const [events, setEvents] = useState([]);
+  const [notifications, setNotifications] = useState([]);
+  const [tenders, setTenders] = useState([]);
 
   useEffect(() => {
     let mounted = true;
 
     const loadNotifications = async () => {
       try {
-        const [noticeData, eventData] = await Promise.all([
+        const [noticeData, eventData, notificationData, tenderData] = await Promise.all([
           getPublicNotices({ publishTo: NOTICE_CATEGORIES.NOTICES, limit: 10 }),
           getPublicNotices({ publishTo: NOTICE_CATEGORIES.UPCOMING_EVENTS, limit: 10 }),
+          getPublicNotices({ publishTo: NOTICE_CATEGORIES.NOTIFICATIONS, limit: 6 }),
+          getPublicNotices({ publishTo: NOTICE_CATEGORIES.TENDERS, limit: 6 }),
         ]);
 
         if (!mounted) return;
 
-        setNotices(
-          dedupeBoardItems(
-            noticeData.map((item) => ({
-              title: item.title,
-              link: item.link || item.fileUrl || '#',
-              fileUrl: item.fileUrl || '',
-              publishDate: item.publishDate || '',
-            })),
-          ),
-        );
-
-        setEvents(
-          dedupeBoardItems(
-            eventData.map((item) => ({
-              title: item.title,
-              link: item.link || item.fileUrl || '#',
-              fileUrl: item.fileUrl || '',
-              publishDate: item.publishDate || '',
-            })),
-          ),
-        );
+        setNotices(mapNoticeItems(noticeData));
+        setEvents(mapNoticeItems(eventData));
+        setNotifications(mapNoticeItems(notificationData));
+        setTenders(mapNoticeItems(tenderData));
       } catch (error) {
         console.error('Failed to load notice/event board:', error);
       }
@@ -247,6 +331,28 @@ const NoticeAndEvents = () => {
             </Link>
           </motion.div>
 
+        </div>
+
+        <div className="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-2">
+          <UpdatePreviewCard
+            title={t('nav.notifications')}
+            items={notifications}
+            emptyText={t('notices.noNotifications', 'No notifications available right now.')}
+            buttonLabel={t('notices.viewAllNotifications', 'Show All Notifications')}
+            buttonTo="/notifications"
+            icon={Bell}
+            iconClassName="bg-blue-100 text-blue-700"
+          />
+
+          <UpdatePreviewCard
+            title={t('nav.tenders')}
+            items={tenders}
+            emptyText={t('notices.noTenders', 'No tenders available right now.')}
+            buttonLabel={t('notices.viewAllTenders', 'Show All Tenders')}
+            buttonTo="/tenders"
+            icon={FileText}
+            iconClassName="bg-amber-100 text-amber-700"
+          />
         </div>
       </div>
     </section>

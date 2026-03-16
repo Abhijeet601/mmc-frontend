@@ -43,8 +43,8 @@ const ERPMetricCard = ({
 
   return (
     <ERPSurfaceCard className="erp-metric-card relative overflow-hidden p-4" animatedBorder delay={delay}>
-      <div className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-indigo-100/70 blur-2xl" />
-      <div className="pointer-events-none absolute -left-6 bottom-0 h-20 w-20 rounded-full bg-cyan-100/60 blur-2xl" />
+      <div className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-sky-100/80 blur-2xl" />
+      <div className="pointer-events-none absolute -left-6 bottom-0 h-20 w-20 rounded-full bg-emerald-100/60 blur-2xl" />
 
       <div className="relative z-[2] flex items-start justify-between gap-3">
         <div>
@@ -58,14 +58,14 @@ const ERPMetricCard = ({
         <motion.div
           animate={{ scale: [1, 1.08, 1] }}
           transition={{ duration: 2.8, repeat: Infinity, ease: 'easeInOut' }}
-          className="flex h-11 w-11 items-center justify-center rounded-xl bg-[linear-gradient(135deg,#4F46E5,#06B6D4)] text-white shadow-[0_10px_24px_rgba(79,70,229,0.32)]"
+          className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,#0F4C81,#0EA5A9)] text-white shadow-[0_16px_32px_-20px_rgba(15,76,129,0.5)]"
         >
           <Icon className="h-5 w-5" />
         </motion.div>
       </div>
 
       <div className="relative z-[2] mt-3">
-        <svg width="100%" viewBox="0 0 84 28" className="h-8 text-cyan-500/75">
+        <svg width="100%" viewBox="0 0 84 28" className="h-8 text-cyan-600/75">
           <path
             d={buildSparklinePath(sparkline)}
             fill="none"

@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { ExternalLink, Download, Phone, Mail, MapPin, Users, Shield, Heart, Award, BookOpen, GraduationCap, Star, CheckCircle, Calendar, FileText, Home as HomeIcon, Sparkles, Target, Lightbulb, Zap, Trophy, Globe, Rocket } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import HeroSection from '@/components/home/HeroSection';
 import QuickHighlights from '@/components/home/QuickHighlights';
@@ -148,12 +149,16 @@ const Home = () => {
             </motion.div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <motion.div initial={{
-              opacity: 0,
-              x: -30
-            }} whileInView={{
-              opacity: 1,
-              x: 0
+              <motion.a
+                href="https://governor.bih.nic.in/"
+                target="_blank"
+                rel="noopener noreferrer"
+                initial={{
+                opacity: 0,
+                x: -30
+              }} whileInView={{
+                opacity: 1,
+                x: 0
             }} viewport={{
               once: true
             }} transition={{
@@ -184,29 +189,23 @@ const Home = () => {
                 duration: 0.6,
                 delay: 0.2
               }}>
-                  <img src={r2Url('images/Arif_Md.jpeg')} alt={i18next.t("auto.hon_ble_chancellor_a987cv")} loading="lazy" className="w-32 h-32 rounded-full mx-auto mb-4 object-contain shadow-lg" />
-                  <motion.h3 className="text-lg font-semibold text-primary dark:text-white mb-2" whileHover={{
-                  x: 5
-                }} transition={{
-                  type: 'spring',
-                  stiffness: 400
-                }}>{`
-                    ${i18next.t("auto.shri_arif_mohammed_khan_z09icf")}
-                  `}</motion.h3>
-                  <motion.p className="text-2xl font-bold text-primary dark:text-white" whileHover={{
-                  x: 5
-                }} transition={{
-                  type: 'spring',
-                  stiffness: 400
-                }}>{`
-                    ${i18next.t("auto.hon_ble_chancellor_a987cv")}
-                  `}</motion.p>
+                  <img src="https://pub-c7047204b6824b4ea67be147e7ebb0ac.r2.dev/public/images/Lt%20Gen%20Shri%20Syed%20Ata%20Hasnain%20(Retd.).jpeg" alt="Hon'ble Lt Gen Shri Syed Ata Hasnain (Retd.)" loading="lazy" className="w-32 h-32 rounded-full mx-auto mb-4 object-contain shadow-lg" />
+                  <motion.h3 className="text-lg font-semibold text-primary dark:text-white mb-1" whileHover={{ x: 5 }} transition={{ type: 'spring', stiffness: 400 }}>
+                    Hon'ble
+                  </motion.h3>
+                  <motion.p className="text-xl font-bold text-primary dark:text-white leading-snug" whileHover={{ x: 5 }} transition={{ type: 'spring', stiffness: 400 }}>
+                    Lt Gen Shri Syed Ata Hasnain (Retd.)
+                  </motion.p>
                 </motion.div>
                 <div className="space-y-3">
                 </div>
-              </motion.div>
+              </motion.a>
 
-              <motion.div initial={{
+              <motion.a
+                href="https://pup.ac.in/"
+                target="_blank"
+                rel="noopener noreferrer"
+                initial={{
               opacity: 0,
               x: 30
             }} whileInView={{
@@ -265,9 +264,10 @@ const Home = () => {
                 </motion.div>
                 <div className="space-y-3">
                 </div>
-              </motion.div>
+              </motion.a>
 
               {/* SEPARATE CARD: Principal */}
+              <Link to="/about/principal-profile" className="block">
               <motion.div initial={{
               opacity: 0,
               x: 30
@@ -329,6 +329,7 @@ const Home = () => {
                 <div className="space-y-3">
                 </div>
               </motion.div>
+              </Link>
             </div>
           </div>
         </section>
