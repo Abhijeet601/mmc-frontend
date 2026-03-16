@@ -333,27 +333,7 @@ const NoticeAndEvents = () => {
 
         </div>
 
-        <div className="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-2">
-          <UpdatePreviewCard
-            title={t('nav.notifications')}
-            items={notifications}
-            emptyText={t('notices.noNotifications', 'No notifications available right now.')}
-            buttonLabel={t('notices.viewAllNotifications', 'Show All Notifications')}
-            buttonTo="/notifications"
-            icon={Bell}
-            iconClassName="bg-blue-100 text-blue-700"
-          />
 
-          <UpdatePreviewCard
-            title={t('nav.tenders')}
-            items={tenders}
-            emptyText={t('notices.noTenders', 'No tenders available right now.')}
-            buttonLabel={t('notices.viewAllTenders', 'Show All Tenders')}
-            buttonTo="/tenders"
-            icon={FileText}
-            iconClassName="bg-amber-100 text-amber-700"
-          />
-        </div>
       </div>
     </section>
   );

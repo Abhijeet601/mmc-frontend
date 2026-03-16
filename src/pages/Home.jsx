@@ -196,6 +196,10 @@ const Home = () => {
                   <motion.p className="text-xl font-bold text-primary dark:text-white leading-snug" whileHover={{ x: 5 }} transition={{ type: 'spring', stiffness: 400 }}>
                     Lt Gen Shri Syed Ata Hasnain (Retd.)
                   </motion.p>
+                  <motion.p className="text-2xl font-bold text-primary dark:text-white mb-2" whileHover={{ x: 5 }} transition={{ type: 'spring', stiffness: 400 }}>
+                    CHANCELLOR
+                  </motion.p>
+
                 </motion.div>
                 <div className="space-y-3">
                 </div>
@@ -267,7 +271,7 @@ const Home = () => {
               </motion.a>
 
               {/* SEPARATE CARD: Principal */}
-              <Link to="/about/principal-profile" className="block">
+              <Link to="/about/principal" className="block">
               <motion.div initial={{
               opacity: 0,
               x: 30
