@@ -89,6 +89,7 @@ const statusTone = {
 
 const navItems = [
   { key: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { key: 'old-students', label: 'Old Students Management', icon: Users2 },
   { key: 'admissions', label: 'Admissions', icon: BookCheck },
   { key: 'students', label: 'Students', icon: Users2 },
   { key: 'hostels', label: 'Hostel Management', icon: Building2 },
@@ -540,7 +541,7 @@ const ERPAdminPanel = () => {
     <div className="space-y-6">
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <ERPMetricCard title="Total Applications" value={dashboard?.total_applications ?? 0} icon={Users2} delay={0.02} />
-        <ERPMetricCard title="Approved Students" value={dashboard?.verified_students ?? 0} icon={CheckCircle2} delay={0.08} />
+        <ERPMetricCard title="Old Students" value={dashboard?.old_students ?? 0} icon={Users2} delay={0.08} />
         <ERPMetricCard title="Pending Applications" value={dashboard?.pending_applications ?? 0} icon={Filter} delay={0.14} />
         <ERPMetricCard
           title="Hostel Occupancy"
@@ -549,6 +550,7 @@ const ERPAdminPanel = () => {
           subtitle={`${dashboard?.available_beds ?? 0} beds available`}
           delay={0.2}
         />
+
       </div>
 
       <div className="grid gap-6 xl:grid-cols-[1.08fr,0.92fr]">

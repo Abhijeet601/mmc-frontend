@@ -176,8 +176,7 @@ const Home = () => {
                 duration: 1,
                 delay: 0.5
               }} />
-
-                <motion.div className="text-center mb-4" initial={{
+                <motion.div className="min-h-[200px] flex flex-col items-center justify-center" initial={{
                 opacity: 0,
                 scale: 0.9
               }} whileInView={{
@@ -189,20 +188,22 @@ const Home = () => {
                 duration: 0.6,
                 delay: 0.2
               }}>
-                  <img src="https://pub-c7047204b6824b4ea67be147e7ebb0ac.r2.dev/public/images/Lt%20Gen%20Shri%20Syed%20Ata%20Hasnain%20(Retd.).jpeg" alt="Hon'ble Lt Gen Shri Syed Ata Hasnain (Retd.)" loading="lazy" className="w-32 h-32 rounded-full mx-auto mb-4 object-contain shadow-lg" />
-                  <motion.h3 className="text-lg font-semibold text-primary dark:text-white mb-1" whileHover={{ x: 5 }} transition={{ type: 'spring', stiffness: 400 }}>
-                    Hon'ble
-                  </motion.h3>
-                  <motion.p className="text-xl font-bold text-primary dark:text-white leading-snug" whileHover={{ x: 5 }} transition={{ type: 'spring', stiffness: 400 }}>
-                    Lt Gen Shri Syed Ata Hasnain (Retd.)
-                  </motion.p>
-                  <motion.p className="text-2xl font-bold text-primary dark:text-white mb-2" whileHover={{ x: 5 }} transition={{ type: 'spring', stiffness: 400 }}>
-                    CHANCELLOR
-                  </motion.p>
-
+                  <img src="https://pub-c7047204b6824b4ea67be147e7ebb0ac.r2.dev/public/images/Lt%20Gen%20Shri%20Syed%20Ata%20Hasnain%20(Retd.).jpeg" alt="Hon'ble Lt Gen Shri Syed Ata Hasnain (Retd.)" loading="lazy" className="w-32 h-32 rounded-full mx-auto mb-6 object-contain shadow-lg" />
+                  <div className="text-center space-y-1">
+                    <motion.h3 className="text-lg font-semibold text-primary dark:text-white leading-tight" whileHover={{ x: 5 }} transition={{ type: 'spring', stiffness: 400 }}>
+                    
+                    </motion.h3>
+                    <motion.p className="text-xl font-bold text-primary dark:text-white leading-snug" whileHover={{ x: 5 }} transition={{ type: 'spring', stiffness: 400 }}>
+                      Lt Gen Shri Syed Ata Hasnain (Retd.)
+                    </motion.p>
+                    <motion.p className="text-xl font-bold text-primary dark:text-white leading-tight" whileHover={{ x: 5 }} transition={{ type: 'spring', stiffness: 400 }}>
+                       Hon'ble Chancellor
+                    </motion.p>
+                  </div>
                 </motion.div>
                 <div className="space-y-3">
                 </div>
+
               </motion.a>
 
               <motion.a
@@ -232,7 +233,7 @@ const Home = () => {
                 duration: 1,
                 delay: 0.5
               }} />
-                <motion.div className="text-center mb-4" initial={{
+                <motion.div className="min-h-[200px] flex flex-col items-center justify-center" initial={{
                 opacity: 0,
                 scale: 0.9
               }} whileInView={{
@@ -243,13 +244,14 @@ const Home = () => {
               }} transition={{
                 duration: 0.6
               }}>
-                  <motion.img loading="lazy" src={r2Url('images/Namita_singh_VC_PU.jpeg')} alt={i18next.t("auto.officiating_vice_chancellor_patna_university_1nsffvc")} className="w-32 h-32 rounded-full mx-auto mb-4 object-cover shadow-lg" whileHover={{
+                  <motion.img loading="lazy" src={r2Url('images/Namita_singh_VC_PU.jpeg')} alt={i18next.t("auto.officiating_vice_chancellor_patna_university_1nsffvc")} className="w-32 h-32 rounded-full mx-auto mb-6 object-cover shadow-lg" whileHover={{
                   scale: 1.05
                 }} transition={{
                   type: 'spring',
                   stiffness: 300
                 }} />
-                  <motion.h3 className="text-lg font-semibold text-primary dark:text-white mb-2" whileHover={{
+                  <div className="text-center space-y-1">
+                    <motion.h3 className="text-lg font-semibold text-primary dark:text-white leading-tight" whileHover={{
                   x: 5
                 }} transition={{
                   type: 'spring',
@@ -257,7 +259,7 @@ const Home = () => {
                 }}>{`
                     ${i18next.t("auto.prof_namita_singh_1wa186d")}
                   `}</motion.h3>
-                  <motion.p className="text-2xl font-bold text-primary dark:text-white" whileHover={{
+                    <motion.p className="text-xl font-bold text-primary dark:text-white leading-tight" whileHover={{
                   x: 5
                 }} transition={{
                   type: 'spring',
@@ -265,9 +267,11 @@ const Home = () => {
                 }}>{`
                     ${i18next.t("auto.officiating_vice_chancellor_patna_university_1nsffvc")}
                   `}</motion.p>
+                  </div>
                 </motion.div>
                 <div className="space-y-3">
                 </div>
+
               </motion.a>
 
               {/* SEPARATE CARD: Principal */}
@@ -296,7 +300,7 @@ const Home = () => {
                 duration: 1,
                 delay: 0.5
               }} />
-                <motion.div className="text-center mb-4" initial={{
+                <motion.div className="min-h-[200px] flex flex-col items-center justify-center" initial={{
                 opacity: 0,
                 scale: 0.9
               }} whileInView={{
@@ -307,13 +311,14 @@ const Home = () => {
               }} transition={{
                 duration: 0.6
               }}>
-                  <motion.img loading="lazy" src={r2Url('images/principal.jpg')} alt={i18next.t("auto.principal_11qfhbr")} className="w-32 h-32 rounded-full mx-auto mb-4 object-cover shadow-lg" whileHover={{
+                  <motion.img loading="lazy" src={r2Url('images/principal.jpg')} alt={i18next.t("auto.principal_11qfhbr")} className="w-32 h-32 rounded-full mx-auto mb-6 object-cover shadow-lg" whileHover={{
                   scale: 1.05
                 }} transition={{
                   type: 'spring',
                   stiffness: 300
                 }} />
-                  <motion.h3 className="text-lg font-semibold text-primary dark:text-white mb-2" whileHover={{
+                  <div className="text-center space-y-1">
+                    <motion.h3 className="text-lg font-semibold text-primary dark:text-white leading-tight" whileHover={{
                   x: 5
                 }} transition={{
                   type: 'spring',
@@ -321,7 +326,7 @@ const Home = () => {
                 }}>{`
                     ${i18next.t("auto.prof_dr_nagendra_prasad_verma_gf7mxh")}
                   `}</motion.h3>
-                  <motion.p className="text-2xl font-bold text-primary dark:text-white" whileHover={{
+                    <motion.p className="text-xl font-bold text-primary dark:text-white leading-tight" whileHover={{
                   x: 5
                 }} transition={{
                   type: 'spring',
@@ -329,9 +334,11 @@ const Home = () => {
                 }}>{`
                     ${i18next.t("auto.principal_magadh_mahila_college_17k5nw6")}
                   `}</motion.p>
+                  </div>
                 </motion.div>
                 <div className="space-y-3">
                 </div>
+
               </motion.div>
               </Link>
             </div>
