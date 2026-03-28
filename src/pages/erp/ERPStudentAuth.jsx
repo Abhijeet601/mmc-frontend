@@ -219,7 +219,7 @@ const ERPStudentAuth = () => {
                     transition={{ delay: index * 0.06 }}
                     className="rounded-[1.5rem] border border-white/70 bg-white/80 p-5 shadow-[0_22px_48px_-36px_rgba(15,23,42,0.45)]"
                   >
-                    <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,rgba(29,78,216,0.12),rgba(6,182,212,0.18))] text-sky-700">
+                    <div className="erp-brand-soft flex h-11 w-11 items-center justify-center rounded-2xl">
                       <module.icon className="h-5 w-5" />
                     </div>
                     <h2 className="mt-4 text-lg font-semibold text-slate-900">{module.title}</h2>
@@ -282,7 +282,7 @@ const ERPStudentAuth = () => {
           </div>
 
             <ERPSurfaceCard className="erp-glass-panel relative overflow-hidden p-6 sm:p-8" animatedBorder>
-              <div className="pointer-events-none absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-cyan-500 via-blue-500 to-emerald-400" />
+              <div className="erp-brand-bar pointer-events-none absolute inset-x-0 top-0 h-1" />
 
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Access Portal</p>
             <h2 className="mt-3 text-3xl font-semibold text-slate-900">Student authentication</h2>

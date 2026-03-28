@@ -16,17 +16,19 @@ const ERPSurfaceCard = ({
     whileHover={
       hover
         ? {
-            y: -5,
-            scale: 1.004,
-            boxShadow: '0 28px 58px -34px rgba(14, 165, 169, 0.38)',
+            y: -4,
+            scale: 1.02,
+            boxShadow: 'var(--shadow-card-hover)',
           }
         : undefined
     }
     className={[
-      'erp-surface-card relative overflow-hidden rounded-[28px] border border-slate-200/80 bg-white/95 shadow-[0_18px_40px_-30px_rgba(15,23,42,0.25)] backdrop-blur-md',
+      'erp-surface-card relative overflow-hidden rounded-2xl border border-border bg-card text-card-foreground shadow-[var(--shadow-card)] backdrop-blur-md',
       animatedBorder ? 'erp-gradient-border' : '',
-      glowEffect ? 'before:absolute before:inset-0 before:rounded-[28px] before:bg-gradient-to-r before:from-sky-500/10 before:via-cyan-500/10 before:to-emerald-500/10 before:opacity-0 before:transition-opacity hover:before:opacity-100' : '',
-      hover ? 'transition-all duration-300 hover:border-cyan-100' : '',
+      glowEffect
+        ? 'before:absolute before:inset-0 before:rounded-2xl before:bg-gradient-to-r before:from-primary/10 before:via-accent/10 before:to-info/10 before:opacity-0 before:transition-opacity hover:before:opacity-100'
+        : '',
+      hover ? 'transition-all duration-300 hover:border-primary/50' : '',
       className,
     ].join(' ')}
   >

@@ -7,7 +7,7 @@ const __dirname = path.dirname(__filename);
 
 const workspaceRoot = path.resolve(__dirname, '..');
 const sources = [
-  { src: path.join(workspaceRoot, 'data files', 'Namita singh VC PU.jpeg'), destName: 'Namita_singh_VC_PU.jpeg' },
+  { src: path.join(workspaceRoot, 'data files', 'images', 'New folder', '2Profile_of_VC_Prof_Ajay_Kumar_Singh.jpg'), destName: 'vc_profile.jpg' },
   { src: path.join(workspaceRoot, 'data files', 'Arif Md.jpeg'), destName: 'Arif_Md.jpeg' },
   { src: path.join(workspaceRoot, 'data files', 'Alumini Meet', 'mmc_alumni_2023meet-7-768x511.jpg'), destName: 'alumni_mmc_alumni_2023meet_7_768x511.jpg' },
   { src: path.join(workspaceRoot, 'data files', 'Alumini Meet', 'mmc_alumni_2023meet-8-768x511.jpeg'), destName: 'alumni_mmc_alumni_2023meet_8_768x511.jpeg' },

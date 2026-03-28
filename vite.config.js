@@ -26,6 +26,17 @@ export default defineConfig({
   },
   build: {
     // Increase chunk size warning limit to avoid benign warnings for this bundle
-    chunkSizeWarningLimit: 700
+    chunkSizeWarningLimit: 700,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (!id.includes('node_modules')) return undefined
+          if (id.includes('@tanstack') || id.includes('xlsx')) return 'erp-data'
+          if (id.includes('framer-motion') || id.includes('lucide-react')) return 'erp-ui'
+          if (id.includes('@radix-ui')) return 'radix-ui'
+          return undefined
+        },
+      },
+    },
   }
 })

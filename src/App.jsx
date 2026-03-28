@@ -169,11 +169,11 @@ import PdfViewer from './pages/PdfViewer';
 import { Toaster } from './components/ui/toaster';
 import { getStoredLanguagePreference, persistLanguagePreference } from './lib/languagePreference';
 
-const ERPAdminPanel = lazy(() => import('./pages/erp/ERPAdminPanel'));
 const ERPApplicationForm = lazy(() => import('./pages/erp/ERPApplicationForm'));
 const ERPPortal = lazy(() => import('./pages/erp/ERPPortal'));
 const ERPStudentAuth = lazy(() => import('./pages/erp/ERPStudentAuth'));
-const ERPStudentDashboard = lazy(() => import('./pages/erp/ERPStudentDashboard'));
+const ERPAdminWorkspace = lazy(() => import('./pages/erp/ERPAdminWorkspace'));
+const ERPStudentWorkspace = lazy(() => import('./pages/erp/ERPStudentWorkspace'));
 
 // Component to handle scroll to top on route change
 function ScrollToTop() {
@@ -186,17 +186,22 @@ function ScrollToTop() {
   return null;
 }
 
-// Always show the main site chrome (navbar, notices, footer) on every route.
-const isStandaloneErpRoute = () => false;
-
 function ChromeAwareLayout({ children }) {
   const { pathname } = useLocation();
-  const showCollegeChrome = !isStandaloneErpRoute(pathname);
+  const hideCollegeChrome =
+    pathname.startsWith('/system-admin') ||
+    pathname.startsWith('/admin-login');
+  const showCollegeChrome = !hideCollegeChrome;
+  const showSlidingNotice =
+    showCollegeChrome &&
+    !pathname.startsWith('/erp') &&
+    pathname !== '/application-form' &&
+    pathname !== '/dashboard';
 
   return (
     <>
       {showCollegeChrome ? <Navbar /> : null}
-      {showCollegeChrome ? <SlidingNotice /> : null}
+      {showSlidingNotice ? <SlidingNotice /> : null}
       {children}
       {showCollegeChrome ? <Footer /> : null}
       <Toaster />
@@ -378,17 +383,17 @@ function App() {
               <Route path="/admissions/bba-admission" element={<BBAAdmission />} />
               <Route path="/admissions/admitted-students-year-wise" element={<AdmittedStudentsYearWise />} />
               <Route path="/erp" element={<ERPPortal />} />
-              <Route path="/erp/student" element={<ERPStudentAuth />} />
-              <Route path="/erp/student/*" element={<ERPStudentAuth />} />
+              <Route path="/erp/student" element={<Navigate to="/erp/student/login" replace />} />
+              <Route path="/erp/student/login" element={<ERPStudentAuth />} />
+              <Route path="/erp/student/*" element={<ERPStudentWorkspace />} />
               <Route path="/erp/application" element={<Navigate to="/erp/application-form" replace />} />
               <Route path="/erp/application-form" element={<ERPApplicationForm />} />
-              <Route path="/erp/dashboard" element={<ERPStudentDashboard />} />
-              <Route path="/admin-login" element={<ERPAdminPanel />} />
-              <Route path="/admin-login/*" element={<ERPAdminPanel />} />
-              <Route path="/system-admin" element={<ERPAdminPanel />} />
-              <Route path="/system-admin/*" element={<ERPAdminPanel />} />
+              <Route path="/erp/dashboard" element={<Navigate to="/erp/student/dashboard" replace />} />
+              <Route path="/erp/admin/*" element={<ERPAdminWorkspace />} />
+              <Route path="/admin-login/*" element={<Navigate to="/erp/admin/login" replace />} />
+              <Route path="/system-admin/*" element={<Navigate to="/erp/admin/dashboard" replace />} />
               <Route path="/application-form" element={<Navigate to="/erp/application-form" replace />} />
-              <Route path="/dashboard" element={<Navigate to="/erp/dashboard" replace />} />
+              <Route path="/dashboard" element={<Navigate to="/erp/student/dashboard" replace />} />
 
               <Route path="/terms-conditions" element={<TermsConditions />} />
               <Route path="/disclaimer" element={<Disclaimer />} />

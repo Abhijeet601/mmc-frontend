@@ -244,7 +244,7 @@ const Home = () => {
               }} transition={{
                 duration: 0.6
               }}>
-                  <motion.img loading="lazy" src={r2Url('images/Namita_singh_VC_PU.jpeg')} alt={i18next.t("auto.officiating_vice_chancellor_patna_university_1nsffvc")} className="w-32 h-32 rounded-full mx-auto mb-6 object-cover shadow-lg" whileHover={{
+                  <motion.img loading="lazy" src={r2Url('images/vc_profile.jpg')} alt={i18next.t("auto.officiating_vice_chancellor_patna_university_1nsffvc")} className="w-32 h-32 rounded-full mx-auto mb-6 object-cover shadow-lg" whileHover={{
                   scale: 1.05
                 }} transition={{
                   type: 'spring',

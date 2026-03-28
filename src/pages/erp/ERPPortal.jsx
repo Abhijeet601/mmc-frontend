@@ -52,19 +52,19 @@ const ERPPortal = () => (
                 Hostel Admission &amp; Management System
               </h1>
               <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-600 sm:text-base">
-                A centralized platform for students to apply for hostel admission, track application status, complete
-                fee payments, and manage hostel allocation.
+                A modern hostel ERP for students and university staff, combining applications, room allocation,
+                hostel payments, analytics, and audit-ready operations in one premium workspace.
               </p>
             </div>
 
             <div className="flex items-center gap-3 self-start">
               <span className="hidden items-center gap-2 rounded-full border border-slate-200 bg-white/90 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-600 shadow-sm sm:inline-flex">
-                <ShieldCheck className="h-3.5 w-3.5 text-cyan-700" />
-                Student Portal Only
+                <ShieldCheck className="h-3.5 w-3.5 text-primary" />
+                Student + Admin Workspaces
               </span>
               <motion.div
                 whileHover={{ y: -2, scale: 1.02 }}
-                className="erp-bell inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-slate-200 bg-white/92 text-cyan-700 shadow-sm"
+                className="erp-bell inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-slate-200 bg-white/92 text-primary shadow-sm"
               >
                 <Bell className="h-5 w-5" />
               </motion.div>
@@ -81,15 +81,15 @@ const ERPPortal = () => (
           >
             <ERPSurfaceCard className="group relative overflow-hidden p-7 sm:p-9 lg:p-11" animatedBorder glowEffect>
               <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.88),rgba(255,255,255,0.74))]" />
-              <div className="pointer-events-none absolute -right-20 top-0 h-56 w-56 rounded-full bg-cyan-100/80 blur-3xl transition duration-500 group-hover:scale-110" />
-              <div className="pointer-events-none absolute -bottom-20 left-6 h-40 w-40 rounded-full bg-emerald-100/70 blur-3xl transition duration-500 group-hover:scale-110" />
+              <div className="pointer-events-none absolute -right-20 top-0 h-56 w-56 rounded-full bg-primary/10 blur-3xl transition duration-500 group-hover:scale-110" />
+              <div className="pointer-events-none absolute -bottom-20 left-6 h-40 w-40 rounded-full bg-accent/10 blur-3xl transition duration-500 group-hover:scale-110" />
 
               <div className="relative z-[1] grid gap-8 lg:grid-cols-[1.04fr,0.96fr] lg:items-start">
                 <div>
-                  <div className="inline-flex h-16 w-16 items-center justify-center rounded-[1.4rem] bg-[linear-gradient(135deg,#0F4C81,#0EA5A9)] text-white shadow-[0_22px_48px_-24px_rgba(15,76,129,0.48)]">
+                  <div className="erp-brand-gradient inline-flex h-16 w-16 items-center justify-center rounded-[1.4rem] shadow-[var(--shadow-card-hover)]">
                     <GraduationCap className="h-8 w-8" />
                   </div>
-                  <p className="mt-6 text-xs font-semibold uppercase tracking-[0.18em] text-cyan-700">Student Portal</p>
+                  <p className="mt-6 text-xs font-semibold uppercase tracking-[0.18em] text-primary">Student Portal</p>
                   <h2 className="mt-3 text-3xl font-semibold tracking-tight text-slate-950 sm:text-[2.3rem]">
                     Admission, payments, and allocation in one student workspace
                   </h2>
@@ -111,7 +111,7 @@ const ERPPortal = () => (
                 </div>
 
                 <div className="rounded-[30px] border border-slate-200/80 bg-white/84 p-5 shadow-[0_22px_48px_-36px_rgba(15,23,42,0.28)] backdrop-blur sm:p-6">
-                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Student Services</p>
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Platform Services</p>
 
                   <div className="mt-5 space-y-3">
                     {studentFeatures.map((feature, index) => (
@@ -122,7 +122,7 @@ const ERPPortal = () => (
                         transition={{ duration: 0.35, delay: 0.14 + index * 0.05 }}
                         className="flex items-start gap-3 rounded-2xl border border-slate-100 bg-slate-50/90 px-4 py-4 text-sm text-slate-700 shadow-[0_14px_30px_-34px_rgba(15,23,42,0.32)]"
                       >
-                        <span className="mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,rgba(15,76,129,0.1),rgba(14,165,169,0.16))] text-cyan-700">
+                        <span className="erp-brand-soft mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-2xl">
                           <CheckCircle2 className="h-4 w-4" />
                         </span>
                         <span className="font-medium">{feature}</span>
@@ -132,20 +132,29 @@ const ERPPortal = () => (
 
                   <div className="mt-8">
                     <p className="text-sm text-slate-500">
-                      Continue to the student login page to begin or resume your hostel admission process.
+                      Open the student workspace to continue admissions, or jump to the admin control center for
+                      hostel operations.
                     </p>
-                    <motion.div className="mt-4" whileHover={{ y: -2 }} whileTap={{ scale: 0.985 }}>
+                    <div className="mt-4 flex flex-col gap-3">
+                      <motion.div whileHover={{ y: -2 }} whileTap={{ scale: 0.985 }}>
+                        <Link
+                          to="/erp/student/login"
+                          className="group/student relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-2xl px-5 py-4 text-sm font-semibold text-white shadow-[0_18px_42px_-22px_rgba(15,76,129,0.42)] transition duration-300 hover:shadow-[0_22px_46px_-20px_rgba(14,165,169,0.46)]"
+                        >
+                          <span className="erp-brand-gradient absolute inset-0" />
+                          <span className="erp-brand-gradient absolute inset-0 opacity-0 transition-opacity duration-300 group-hover/student:opacity-100" />
+                          <span className="absolute inset-0 rounded-2xl ring-1 ring-white/25" />
+                          <span className="relative z-[1]">Open Student Workspace</span>
+                          <ArrowRight className="relative z-[1] h-4 w-4 transition-transform duration-300 group-hover/student:translate-x-1" />
+                        </Link>
+                      </motion.div>
                       <Link
-                        to="/erp/student"
-                        className="group/student relative inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-2xl px-5 py-4 text-sm font-semibold text-white shadow-[0_18px_42px_-22px_rgba(15,76,129,0.42)] transition duration-300 hover:shadow-[0_22px_46px_-20px_rgba(14,165,169,0.46)]"
+                        to="/erp/admin/login"
+                        className="inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 py-4 text-sm font-semibold text-slate-700 transition hover:border-primary/30 hover:text-primary"
                       >
-                        <span className="absolute inset-0 bg-[linear-gradient(135deg,#0F4C81,#0EA5A9)]" />
-                        <span className="absolute inset-0 bg-[linear-gradient(135deg,#0C3D68,#0B7285)] opacity-0 transition-opacity duration-300 group-hover/student:opacity-100" />
-                        <span className="absolute inset-0 rounded-2xl ring-1 ring-white/25" />
-                        <span className="relative z-[1]">Open Student Portal</span>
-                        <ArrowRight className="relative z-[1] h-4 w-4 transition-transform duration-300 group-hover/student:translate-x-1" />
+                        Open Admin Workspace
                       </Link>
-                    </motion.div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -161,8 +170,8 @@ const ERPPortal = () => (
         >
           <p className="font-medium text-slate-700">MMC Hostel ERP System</p>
           <Link
-            to="/system-admin"
-            className="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-700 transition hover:text-cyan-900"
+            to="/erp/admin/login"
+            className="text-xs font-semibold uppercase tracking-[0.18em] text-primary transition hover:opacity-80"
           >
             Staff Login
           </Link>

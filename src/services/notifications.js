@@ -1,6 +1,9 @@
 import { toR2AssetUrl } from '@/lib/r2Assets';
 
-const API_BASE = import.meta.env.VITE_API_BASE;
+const API_BASE =
+  import.meta.env.VITE_API_BASE ||
+  import.meta.env.VITE_API_BASE_URL ||
+  '';
 const fallbackApiBaseUrl =
   typeof window !== 'undefined' && window.location?.origin ? window.location.origin : '';
 
@@ -106,7 +109,7 @@ const parseNetworkError = (error) => {
   }
 
   if (error instanceof TypeError) {
-    return `Unable to reach API at ${API_BASE_URL}. Check VITE_API_BASE and backend CORS_ORIGINS.`;
+    return `Unable to reach API at ${API_BASE_URL}. Check VITE_API_BASE, VITE_API_BASE_URL, and backend CORS_ORIGINS.`;
   }
 
   return error?.message || 'Network request failed.';

@@ -28,6 +28,18 @@ import {
   submitApplication,
 } from '@/services/erpApi';
 
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import debounce from "lodash.debounce";
+import {
+  personalSchema,
+  academicSchema,
+  addressSchema,
+  documentSchema,
+} from '@/validation/applicationSchema';
+
+
+
 const categoryOptions = ['UR', 'EWS', 'BC', 'EBC', 'SC', 'ST'];
 const religionOptions = ['Hindu', 'Muslim', 'Sikh', 'Christian', 'Other'];
 const ugCourseOptions = ['BA', 'BSc', 'BCom', 'BSW', 'BCA', 'BBA'];
@@ -77,6 +89,15 @@ const steps = [
   { key: 'address', title: 'Address Information', icon: MapPinned },
   { key: 'documents', title: 'Admission & Documents', icon: BookText },
 ];
+
+const stepSchemas = [
+  personalSchema,
+  academicSchema,
+  addressSchema,
+  documentSchema,
+];
+
+
 
 const requiredFields = [
   'name',
@@ -128,7 +149,21 @@ const ERPApplicationForm = () => {
   const [registrationDob, setRegistrationDob] = useState('');
   const [isEditable, setIsEditable] = useState(true);
   const [currentStep, setCurrentStep] = useState(0);
-  const [form, setForm] = useState(initialForm);
+  const formMethods = useForm({
+    resolver: zodResolver(stepSchemas[currentStep]),
+    defaultValues: initialForm,
+    mode: "onChange",
+  });
+
+  const {
+    register,
+    handleSubmit,
+    trigger,
+    watch,
+    setValue,
+    setError,
+    formState: { errors },
+  } = formMethods;
   const [photoFile, setPhotoFile] = useState(null);
   const [photoPreview, setPhotoPreview] = useState('');
 
@@ -150,13 +185,14 @@ const ERPApplicationForm = () => {
         setRegistrationDob(formatValue(data.registration_date_of_birth));
         setIsEditable(Boolean(data.is_editable));
         setPhotoPreview(data?.data?.student_photo_url ? resolveAssetUrl(data.data.student_photo_url) : '');
-        setForm((prev) => ({
-          ...prev,
-          ...Object.fromEntries(Object.entries(prev).map(([key]) => [key, formatValue(data?.data?.[key]) || prev[key]])),
-          email: data.email,
-          mobile_number: data.mobile_number,
-          date_of_birth: formatValue(data?.data?.date_of_birth || data.registration_date_of_birth),
-        }));
+    Object.entries(initialForm).forEach(([key]) => {
+      const value = formatValue(data?.data?.[key]) || initialForm[key];
+      setValue(key, value);
+    });
+    setValue('email', data.email);
+    setValue('mobile_number', data.mobile_number);
+    setValue('date_of_birth', formatValue(data?.data?.date_of_birth || data.registration_date_of_birth));
+
       } catch (error) {
         toast({
           title: 'Unable to load application form',
@@ -175,38 +211,56 @@ const ERPApplicationForm = () => {
     };
   }, [navigate]);
 
+  const watchedData = watch();
+
   useEffect(() => {
-    const totalMarks = Number(form.total_marks);
-    const marksObtained = Number(form.marks_obtained);
+    const totalMarks = Number(watchedData.total_marks);
+    const marksObtained = Number(watchedData.marks_obtained);
     if (Number.isFinite(totalMarks) && totalMarks > 0 && Number.isFinite(marksObtained)) {
       const percentage = ((marksObtained / totalMarks) * 100).toFixed(2);
-      setForm((prev) => (prev.aggregate_percentage === percentage ? prev : { ...prev, aggregate_percentage: percentage }));
+      setValue('aggregate_percentage', percentage);
     }
-  }, [form.total_marks, form.marks_obtained]);
+  }, [watchedData.total_marks, watchedData.marks_obtained, setValue]);
 
   const selectedCourseOptions = useMemo(
-    () => (form.program ? getCourseOptions(form.program) : []),
-    [form.program],
+    () => (watchedData.program ? getCourseOptions(watchedData.program) : []),
+    [watchedData.program],
+  );
+
+  const debouncedSave = useMemo(
+    () =>
+      debounce(async (data) => {
+        try {
+          if (isEditable) {
+            await saveApplicationDraft(buildPayload(data));
+          }
+        } catch (e) {
+          // Silent fail for autosave
+        }
+      }, 1000),
+    [isEditable]
   );
 
   useEffect(() => {
-    if (!form.program) {
-      setForm((prev) => (prev.course_name ? { ...prev, course_name: '' } : prev));
-      return;
-    }
-    if (!selectedCourseOptions.includes(form.course_name)) {
-      setForm((prev) => ({ ...prev, course_name: selectedCourseOptions[0] || '' }));
-    }
-  }, [form.course_name, form.program, selectedCourseOptions]);
+    debouncedSave(watchedData);
+    return () => debouncedSave.cancel();
+  }, [watchedData, debouncedSave]);
 
   const completion = useMemo(() => {
     const filledFields = requiredFields.reduce((count, key) => {
-      const value = form[key];
-      return String(value || '').trim() ? count + 1 : count;
+      return watchedData[key] ? count + 1 : count;
     }, 0);
+
     const photoDone = photoFile || photoPreview ? 1 : 0;
-    return Math.round(((filledFields + photoDone) / (requiredFields.length + 1)) * 100);
-  }, [form, photoFile, photoPreview]);
+
+    return Math.round(
+      ((filledFields + photoDone) / (requiredFields.length + 1)) * 100
+    );
+  }, [watchedData, photoFile, photoPreview]);
+
+  const isLastStep = currentStep === steps.length - 1;
+  const isFormComplete = completion === 100;
+  const canSubmit = isLastStep && isFormComplete && isEditable && !submitting;
 
   const statusLabel = useMemo(() => {
     if (!isEditable) return 'Verified and locked';
@@ -215,13 +269,9 @@ const ERPApplicationForm = () => {
     return 'New application';
   }, [formStatus, isEditable]);
 
-  const handleChange = (key, value) => {
-    setForm((prev) => ({ ...prev, [key]: value }));
-  };
-
-  const buildPayload = () => {
+  const buildPayload = (data = watch()) => {
     const payload = new FormData();
-    Object.entries(form).forEach(([key, value]) => {
+    Object.entries(data).forEach(([key, value]) => {
       payload.append(key, value ?? '');
     });
     if (photoFile) payload.append('student_photo', photoFile);
@@ -231,11 +281,11 @@ const ERPApplicationForm = () => {
   const handleSaveDraft = async () => {
     setSavingDraft(true);
     try {
-      const response = await saveApplicationDraft(buildPayload());
-      setFormStatus((prev) => (prev === 'submitted' ? prev : 'draft'));
+      const data = watch();
+      await saveApplicationDraft(buildPayload(data));
       toast({
         title: 'Draft saved',
-        description: response.message || 'Application draft saved successfully.',
+        description: 'Application draft saved successfully.',
       });
     } catch (error) {
       toast({
@@ -248,10 +298,10 @@ const ERPApplicationForm = () => {
     }
   };
 
-  const handleSubmit = async () => {
+  const onSubmit = async (data) => {
     setSubmitting(true);
     try {
-      const response = await submitApplication(buildPayload());
+      const response = await submitApplication(buildPayload(data));
       toast({
         title: 'Application submitted',
         description: response.message || 'Application submitted successfully.',
@@ -263,14 +313,21 @@ const ERPApplicationForm = () => {
         description: error.message || 'Unable to submit application.',
         duration: 7000,
       });
+      if (error.errors) {
+        Object.entries(error.errors).forEach(([key, message]) => {
+          setError(key, { message });
+        });
+      }
     } finally {
       setSubmitting(false);
     }
   };
 
+
+
   const renderStep = () => {
-    const isProgramSelected = Boolean(form.program);
-    const isPgStudent = form.program === 'PG';
+    const isProgramSelected = Boolean(watchedData.program);
+    const isPgStudent = watchedData.program === 'PG';
     const qualifyingExamLabel = isPgStudent ? 'Graduation' : 'Intermediate';
     const institutionLabel = `${qualifyingExamLabel} College Name`;
     const boardLabel = isPgStudent ? 'Graduation University' : 'Intermediate Board';
@@ -287,64 +344,74 @@ const ERPApplicationForm = () => {
               <input className={inputClass} value={applicationNumber} readOnly />
             </Label>
             <Label title="Email ID">
-              <input className={inputClass} value={form.email} readOnly />
+              <input className={inputClass} value={watchedData.email} readOnly />
             </Label>
             <Label title="Mobile Number">
-              <input className={inputClass} value={form.mobile_number} readOnly />
+              <input className={inputClass} value={watchedData.mobile_number} readOnly />
             </Label>
             <Label title="Registration DOB">
               <input className={inputClass} value={registrationDob} readOnly />
             </Label>
             <Label title="Student Name" required>
               <input
-                className={inputClass}
-                value={form.name}
+                {...register("name")}
+                className={`${inputClass} ${errors.name ? "border-red-500" : ""}`}
                 disabled={!isEditable}
-                onChange={(event) => handleChange('name', event.target.value)}
               />
+              {errors.name && (
+                <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>
+              )}
             </Label>
+
             <Label title="Date of Birth" required>
               <input
                 type="date"
-                className={inputClass}
-                value={form.date_of_birth}
+                {...register("date_of_birth")}
+                className={`${inputClass} ${errors.date_of_birth ? "border-red-500" : ""}`}
                 disabled={!isEditable}
-                onChange={(event) => handleChange('date_of_birth', event.target.value)}
               />
+              {errors.date_of_birth && (
+                <p className="text-red-500 text-xs mt-1">{errors.date_of_birth.message}</p>
+              )}
             </Label>
             <Label title="Gender" required>
-              <select
-                className={inputClass}
-                value={form.gender}
-                disabled={!isEditable}
-                onChange={(event) => handleChange('gender', event.target.value)}
-              >
-                <option value="Female">Female</option>
-                <option value="Other">Other</option>
-              </select>
-            </Label>
+                <select
+                  {...register("gender")}
+                  className={`${inputClass} ${errors.gender ? "border-red-500" : ""}`}
+                  disabled={!isEditable}
+                >
+                  <option value="Female">Female</option>
+                  <option value="Other">Other</option>
+                </select>
+                {errors.gender && (
+                  <p className="text-red-500 text-xs mt-1">{errors.gender.message}</p>
+                )}
+              </Label>
             <Label title="Blood Group" required>
               <input
-                className={inputClass}
-                value={form.blood_group}
+                {...register("blood_group")}
+                className={`${inputClass} ${errors.blood_group ? "border-red-500" : ""}`}
                 disabled={!isEditable}
-                onChange={(event) => handleChange('blood_group', event.target.value)}
               />
+              {errors.blood_group && (
+                <p className="text-red-500 text-xs mt-1">{errors.blood_group.message}</p>
+              )}
             </Label>
             <Label title="Aadhaar Number" required>
               <input
-                className={inputClass}
-                value={form.aadhaar_number}
+                {...register("aadhaar_number")}
+                className={`${inputClass} ${errors.aadhaar_number ? "border-red-500" : ""}`}
                 disabled={!isEditable}
-                onChange={(event) => handleChange('aadhaar_number', event.target.value)}
               />
+              {errors.aadhaar_number && (
+                <p className="text-red-500 text-xs mt-1">{errors.aadhaar_number.message}</p>
+              )}
             </Label>
             <Label title="Category" required>
               <select
-                className={inputClass}
-                value={form.category}
+                {...register("category")}
+                className={`${inputClass} ${errors.category ? "border-red-500" : ""}`}
                 disabled={!isEditable}
-                onChange={(event) => handleChange('category', event.target.value)}
               >
                 {categoryOptions.map((item) => (
                   <option key={item} value={item}>
@@ -352,28 +419,35 @@ const ERPApplicationForm = () => {
                   </option>
                 ))}
               </select>
+              {errors.category && (
+                <p className="text-red-500 text-xs mt-1">{errors.category.message}</p>
+              )}
             </Label>
             <Label title="Religion" required>
               <select
-                className={inputClass}
-                value={form.religion}
+                {...register("religion")}
+                className={`${inputClass} ${errors.religion ? "border-red-500" : ""}`}
                 disabled={!isEditable}
-                onChange={(event) => handleChange('religion', event.target.value)}
               >
                 {religionOptions.map((item) => (
                   <option key={item} value={item}>
                     {item}
                   </option>
                 ))}
-              </select>
-            </Label>
+                </select>
+                {errors.religion && (
+                  <p className="text-red-500 text-xs mt-1">{errors.religion.message}</p>
+                )}
+              </Label>
             <Label title="Nationality" required>
               <input
-                className={inputClass}
-                value={form.nationality}
+                {...register("nationality")}
+                className={`${inputClass} ${errors.nationality ? "border-red-500" : ""}`}
                 disabled={!isEditable}
-                onChange={(event) => handleChange('nationality', event.target.value)}
               />
+              {errors.nationality && (
+                <p className="text-red-500 text-xs mt-1">{errors.nationality.message}</p>
+              )}
             </Label>
           </div>
         );
@@ -384,14 +458,14 @@ const ERPApplicationForm = () => {
               <Label title="Are you a UG student or PG student?" required>
                 <div className="mt-3 grid gap-3 sm:grid-cols-2">
                   {programOptions.map((item) => {
-                    const active = form.program === item;
+                    const active = watchedData.program === item;
                     return (
                       <button
                         key={item}
                         type="button"
                         disabled={!isEditable}
                         aria-pressed={active}
-                        onClick={() => handleChange('program', item)}
+                        onClick={() => setValue('program', item)}
                         className={`rounded-[24px] border px-5 py-4 text-left transition ${
                           active
                             ? 'border-cyan-300 bg-cyan-50 text-cyan-900 shadow-[0_18px_40px_-32px_rgba(14,116,144,0.55)]'
@@ -417,44 +491,51 @@ const ERPApplicationForm = () => {
               <>
             <Label title={institutionLabel} required>
               <input
-                className={inputClass}
-                value={form.intermediate_college_name}
+                {...register("intermediate_college_name")}
+                className={`${inputClass} ${errors.intermediate_college_name ? "border-red-500" : ""}`}
                 disabled={!isEditable}
-                onChange={(event) => handleChange('intermediate_college_name', event.target.value)}
               />
+              {errors.intermediate_college_name && (
+                <p className="text-red-500 text-xs mt-1">{errors.intermediate_college_name.message}</p>
+              )}
             </Label>
             <Label title={boardLabel} required>
               <input
-                className={inputClass}
-                value={form.intermediate_board}
+                {...register("intermediate_board")}
+                className={`${inputClass} ${errors.intermediate_board ? "border-red-500" : ""}`}
                 disabled={!isEditable}
-                onChange={(event) => handleChange('intermediate_board', event.target.value)}
               />
+              {errors.intermediate_board && (
+                <p className="text-red-500 text-xs mt-1">{errors.intermediate_board.message}</p>
+              )}
             </Label>
             <Label title={totalMarksLabel} required>
               <input
                 type="number"
-                className={inputClass}
-                value={form.total_marks}
+                {...register("total_marks")}
+                className={`${inputClass} ${errors.total_marks ? "border-red-500" : ""}`}
                 disabled={!isEditable}
-                onChange={(event) => handleChange('total_marks', event.target.value)}
               />
+              {errors.total_marks && (
+                <p className="text-red-500 text-xs mt-1">{errors.total_marks.message}</p>
+              )}
             </Label>
             <Label title={marksObtainedLabel} required>
               <input
                 type="number"
-                className={inputClass}
-                value={form.marks_obtained}
+                {...register("marks_obtained")}
+                className={`${inputClass} ${errors.marks_obtained ? "border-red-500" : ""}`}
                 disabled={!isEditable}
-                onChange={(event) => handleChange('marks_obtained', event.target.value)}
               />
+              {errors.marks_obtained && (
+                <p className="text-red-500 text-xs mt-1">{errors.marks_obtained.message}</p>
+              )}
             </Label>
             <Label title={resultTypeLabel} required>
               <select
-                className={inputClass}
-                value={form.result_type}
+                {...register("result_type")}
+                className={`${inputClass} ${errors.result_type ? "border-red-500" : ""}`}
                 disabled={!isEditable}
-                onChange={(event) => handleChange('result_type', event.target.value)}
               >
                 {resultTypes.map((item) => (
                   <option key={item} value={item}>
@@ -462,9 +543,16 @@ const ERPApplicationForm = () => {
                   </option>
                 ))}
               </select>
+              {errors.result_type && (
+                <p className="text-red-500 text-xs mt-1">{errors.result_type.message}</p>
+              )}
             </Label>
             <Label title={percentageLabel} required>
-              <input className={inputClass} value={form.aggregate_percentage} readOnly />
+              <input
+                {...register("aggregate_percentage")}
+                className={inputClass}
+                readOnly
+              />
             </Label>
               </>
             ) : null}
@@ -475,45 +563,55 @@ const ERPApplicationForm = () => {
           <div className="grid gap-4 md:grid-cols-2">
             <Label title="Father's Name" required>
               <input
-                className={inputClass}
-                value={form.father_name}
+                {...register("father_name")}
+                className={`${inputClass} ${errors.father_name ? "border-red-500" : ""}`}
                 disabled={!isEditable}
-                onChange={(event) => handleChange('father_name', event.target.value)}
               />
+              {errors.father_name && (
+                <p className="text-red-500 text-xs mt-1">{errors.father_name.message}</p>
+              )}
             </Label>
             <Label title="Mother's Name" required>
               <input
-                className={inputClass}
-                value={form.mother_name}
+                {...register("mother_name")}
+                className={`${inputClass} ${errors.mother_name ? "border-red-500" : ""}`}
                 disabled={!isEditable}
-                onChange={(event) => handleChange('mother_name', event.target.value)}
               />
+              {errors.mother_name && (
+                <p className="text-red-500 text-xs mt-1">{errors.mother_name.message}</p>
+              )}
             </Label>
             <Label title="Local Guardian Name" required>
               <input
-                className={inputClass}
-                value={form.local_guardian_name}
+                {...register("local_guardian_name")}
+                className={`${inputClass} ${errors.local_guardian_name ? "border-red-500" : ""}`}
                 disabled={!isEditable}
-                onChange={(event) => handleChange('local_guardian_name', event.target.value)}
               />
+              {errors.local_guardian_name && (
+                <p className="text-red-500 text-xs mt-1">{errors.local_guardian_name.message}</p>
+              )}
             </Label>
             <Label title="Guardian Mobile Number" required>
               <input
-                className={inputClass}
-                value={form.guardian_mobile_number}
+                {...register("guardian_mobile_number")}
+                className={`${inputClass} ${errors.guardian_mobile_number ? "border-red-500" : ""}`}
                 disabled={!isEditable}
-                onChange={(event) => handleChange('guardian_mobile_number', event.target.value)}
               />
+              {errors.guardian_mobile_number && (
+                <p className="text-red-500 text-xs mt-1">{errors.guardian_mobile_number.message}</p>
+              )}
             </Label>
             <div className="md:col-span-2">
               <Label title="Correspondence Address" required>
                 <textarea
+                  {...register("correspondence_address")}
                   rows={5}
-                  className={textareaClass}
-                  value={form.correspondence_address}
+                  className={`${textareaClass} ${errors.correspondence_address ? "border-red-500" : ""}`}
                   disabled={!isEditable}
-                  onChange={(event) => handleChange('correspondence_address', event.target.value)}
                 />
+                {errors.correspondence_address && (
+                  <p className="text-red-500 text-xs mt-1">{errors.correspondence_address.message}</p>
+                )}
               </Label>
             </div>
           </div>
@@ -523,28 +621,31 @@ const ERPApplicationForm = () => {
           <div className="grid gap-4 md:grid-cols-2">
             <Label title="Admission Application ID" required>
               <input
-                className={inputClass}
-                value={form.admission_application_id}
+                {...register("admission_application_id")}
+                className={`${inputClass} ${errors.admission_application_id ? "border-red-500" : ""}`}
                 disabled={!isEditable}
-                onChange={(event) => handleChange('admission_application_id', event.target.value)}
               />
+              {errors.admission_application_id && (
+                <p className="text-red-500 text-xs mt-1">{errors.admission_application_id.message}</p>
+              )}
             </Label>
             <Label title="College Name" required>
               <input
-                className={inputClass}
-                value={form.college_name}
+                {...register("college_name")}
+                className={`${inputClass} ${errors.college_name ? "border-red-500" : ""}`}
                 disabled={!isEditable}
-                onChange={(event) => handleChange('college_name', event.target.value)}
               />
+              {errors.college_name && (
+                <p className="text-red-500 text-xs mt-1">{errors.college_name.message}</p>
+              )}
             </Label>
             <Label title="Course Name" required>
               <select
-                className={inputClass}
-                value={form.course_name}
-                disabled={!isEditable || !form.program}
-                onChange={(event) => handleChange('course_name', event.target.value)}
+                {...register("course_name")}
+                className={`${inputClass} ${errors.course_name ? "border-red-500" : ""}`}
+                disabled={!isEditable || !watchedData.program}
               >
-                {!form.program ? (
+                {!watchedData.program ? (
                   <option value="">Select UG or PG first</option>
                 ) : null}
                 {selectedCourseOptions.map((item) => (
@@ -553,29 +654,35 @@ const ERPApplicationForm = () => {
                   </option>
                 ))}
               </select>
+              {errors.course_name && (
+                <p className="text-red-500 text-xs mt-1">{errors.course_name.message}</p>
+              )}
             </Label>
             <Label title="Honours Subject" required>
               <input
-                className={inputClass}
-                value={form.honours_subject}
+                {...register("honours_subject")}
+                className={`${inputClass} ${errors.honours_subject ? "border-red-500" : ""}`}
                 disabled={!isEditable}
-                onChange={(event) => handleChange('honours_subject', event.target.value)}
               />
+              {errors.honours_subject && (
+                <p className="text-red-500 text-xs mt-1">{errors.honours_subject.message}</p>
+              )}
             </Label>
             <Label title="Session" required>
               <input
-                className={inputClass}
-                value={form.session}
+                {...register("session")}
+                className={`${inputClass} ${errors.session ? "border-red-500" : ""}`}
                 disabled={!isEditable}
-                onChange={(event) => handleChange('session', event.target.value)}
               />
+              {errors.session && (
+                <p className="text-red-500 text-xs mt-1">{errors.session.message}</p>
+              )}
             </Label>
             <Label title="Roll Number">
               <input
+                {...register("roll_number")}
                 className={inputClass}
-                value={form.roll_number}
                 disabled={!isEditable}
-                onChange={(event) => handleChange('roll_number', event.target.value)}
               />
             </Label>
             <div className="md:col-span-2">
@@ -670,7 +777,7 @@ const ERPApplicationForm = () => {
               </div>
               <div className="mt-5 h-3 overflow-hidden rounded-full bg-slate-100">
                 <motion.div
-                  className="h-full rounded-full bg-gradient-to-r from-cyan-400 via-blue-500 to-emerald-400"
+                  className="erp-brand-bar h-full rounded-full"
                   animate={{ width: `${completion}%` }}
                   transition={{ duration: 0.35 }}
                 />
@@ -766,13 +873,24 @@ const ERPApplicationForm = () => {
                         Previous
                       </ERPButton>
                       <ERPButton
-                        variant="secondary"
-                        disabled={currentStep === steps.length - 1}
-                        onClick={() => setCurrentStep((prev) => Math.min(prev + 1, steps.length - 1))}
-                      >
-                        Next
-                        <ArrowRight className="h-4 w-4" />
-                      </ERPButton>
+  variant="secondary"
+  disabled={currentStep === steps.length - 1}
+  onClick={async () => {
+    const isValid = await trigger();
+
+    if (!isValid) {
+      const firstError = Object.keys(errors)[0];
+      const el = document.querySelector(`[name="${firstError}"]`);
+      el?.scrollIntoView({ behavior: "smooth", block: "center" });
+      return;
+    }
+
+    setCurrentStep((prev) => prev + 1);
+  }}
+>
+  Next
+</ERPButton>
+
                     </div>
 
                     <div className="flex flex-wrap gap-3">
@@ -784,10 +902,16 @@ const ERPApplicationForm = () => {
                         <Save className="h-4 w-4" />
                         {savingDraft ? 'Saving...' : 'Save Draft'}
                       </ERPButton>
-                      <ERPButton disabled={submitting || savingDraft || !isEditable} onClick={handleSubmit}>
-                        <CheckCircle2 className="h-4 w-4" />
-                        {submitting ? 'Submitting...' : 'Submit Application'}
-                      </ERPButton>
+{canSubmit && (
+  <ERPButton
+    disabled={submitting || savingDraft}
+    onClick={formMethods.handleSubmit(onSubmit)}
+  >
+    <CheckCircle2 className="h-4 w-4" />
+    {submitting ? 'Submitting...' : 'Submit Application'}
+  </ERPButton>
+)}
+
                     </div>
                   </div>
                 </>

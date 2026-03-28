@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import {
@@ -15,6 +15,7 @@ import {
   LayoutDashboard,
   LogIn,
   LogOut,
+  Plus,
   RefreshCw,
   Search,
   Settings,
@@ -36,20 +37,25 @@ import {
   allocateHostel,
   clearAdminToken,
   createAdminHostelRoom,
+  createOldStudent,
+  deleteOldStudent,
   downloadStudentsExcel,
   getAdminDashboard,
   getAdminHostelRooms,
   getAdminStudentDetail,
   getAdminStudents,
+  getOldStudents,
   getAdminToken,
   loginAdmin,
   resolveAssetUrl,
   downloadAllocationTemplate,
   downloadShortlistTemplate,
   toggleShortlistStudent,
+  updateOldStudent,
   updateAdminHostelRoom,
   uploadBulkAllocation,
   uploadBulkShortlist,
+  bulkUploadOldStudents,
   verifyStudentApplication,
 } from '@/services/erpApi';
 
@@ -65,6 +71,31 @@ const defaultFilters = {
   shortlist: '',
   verified: '',
   hostel_state: '',
+};
+
+const defaultOldStudentsFilters = {
+  search: '',
+  hostel_name: '',
+  status: '',
+  limit: 50,
+  offset: 0,
+};
+
+const initialOldStudentForm = {
+  hostel_id: '',
+  student_name: '',
+  admission_id: '',
+  roll_number: '',
+  course_name: '',
+  session: '',
+  mobile_number: '',
+  email: '',
+  category: '',
+  hostel_name: '',
+  block_name: '',
+  room_number: '',
+  bed_number: '',
+  old_student_status: 'ACTIVE',
 };
 
 const initialRoomForm = {
@@ -85,6 +116,12 @@ const statusTone = {
   awaiting_allocation: 'border-slate-200 bg-slate-100 text-slate-600',
   preference_pending: 'border-slate-200 bg-slate-100 text-slate-600',
   not_available: 'border-slate-200 bg-slate-100 text-slate-600',
+};
+
+const oldStudentStatusTone = {
+  ACTIVE: 'border-emerald-200 bg-emerald-50 text-emerald-700',
+  LEFT: 'border-amber-200 bg-amber-50 text-amber-700',
+  SUSPENDED: 'border-rose-200 bg-rose-50 text-rose-700',
 };
 
 const navItems = [
@@ -169,6 +206,16 @@ const Badge = ({ value }) => (
   </span>
 );
 
+const OldStudentBadge = ({ value }) => (
+  <span
+    className={`inline-flex rounded-full border px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] ${
+      oldStudentStatusTone[value] || 'border-slate-200 bg-slate-100 text-slate-600'
+    }`}
+  >
+    {String(value || 'ACTIVE')}
+  </span>
+);
+
 const DetailMetric = ({ label, value, className = '' }) => (
   <div
     className={`rounded-[26px] border border-white/70 bg-white/88 px-4 py-4 shadow-[0_18px_40px_-30px_rgba(15,23,42,0.35)] backdrop-blur ${className}`}
@@ -236,6 +283,25 @@ const ERPAdminPanel = () => {
   const [selectedStudentDetail, setSelectedStudentDetail] = useState(null);
   const [roomForm, setRoomForm] = useState(initialRoomForm);
   const [editingRoomId, setEditingRoomId] = useState(null);
+  const [oldStudentsData, setOldStudentsData] = useState({ total: 0, items: [] });
+  const [oldStudentsLoading, setOldStudentsLoading] = useState(false);
+  const [oldStudentsFilters, setOldStudentsFilters] = useState(defaultOldStudentsFilters);
+  const [oldStudentsPage, setOldStudentsPage] = useState(1);
+  const [oldStudentModalOpen, setOldStudentModalOpen] = useState(false);
+  const [oldStudentEditMode, setOldStudentEditMode] = useState(false);
+  const [oldStudentCurrent, setOldStudentCurrent] = useState(null);
+  const [oldStudentForm, setOldStudentForm] = useState(initialOldStudentForm);
+  const [oldStudentSaving, setOldStudentSaving] = useState(false);
+  const [oldBulkFile, setOldBulkFile] = useState(null);
+  const [oldBulkOptions, setOldBulkOptions] = useState({
+    updateExisting: true,
+    generateIds: false,
+    idPrefix: 'OLD',
+    idStart: '',
+  });
+  const [oldBulkResult, setOldBulkResult] = useState(null);
+  const [oldBulkLoading, setOldBulkLoading] = useState(false);
+  const oldStudentsLoadedRef = useRef(false);
 
   const activeCourseList = useMemo(
     () => Array.from(new Set((studentsData.items || []).map((item) => item.course_name).filter(Boolean))),
@@ -310,8 +376,28 @@ const ERPAdminPanel = () => {
       setStudentsData({ total: 0, items: [] });
       setRoomsData({ total: 0, items: [] });
       setSelectedStudentDetail(null);
+      setOldStudentsData({ total: 0, items: [] });
+      setOldStudentsFilters(defaultOldStudentsFilters);
+      setOldStudentsPage(1);
+      oldStudentsLoadedRef.current = false;
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadOldStudents = async (nextFilters = oldStudentsFilters) => {
+    setOldStudentsLoading(true);
+    try {
+      const data = await getOldStudents(nextFilters);
+      setOldStudentsData(data);
+    } catch (error) {
+      toast({
+        title: 'Old students load failed',
+        description: error.message || 'Unable to fetch old student records.',
+        duration: 7000,
+      });
+    } finally {
+      setOldStudentsLoading(false);
     }
   };
 
@@ -323,6 +409,14 @@ const ERPAdminPanel = () => {
       void loadData(defaultFilters);
     }
   }, []);
+
+  useEffect(() => {
+    if (!loggedIn || selectedSection !== 'old-students') return;
+    if (!oldStudentsLoadedRef.current) {
+      oldStudentsLoadedRef.current = true;
+      void loadOldStudents(defaultOldStudentsFilters);
+    }
+  }, [loggedIn, selectedSection]);
 
   const handleAdminLogin = async (event) => {
     event.preventDefault();
@@ -535,6 +629,140 @@ const ERPAdminPanel = () => {
 
   const closeStudentDetail = () => {
     setSelectedStudentDetail(null);
+  };
+
+  const openOldStudentModal = (student = null) => {
+    if (student) {
+      setOldStudentEditMode(true);
+      setOldStudentCurrent(student);
+      setOldStudentForm({
+        hostel_id: student.hostel_id || '',
+        student_name: student.student_name || '',
+        admission_id: student.admission_id || '',
+        roll_number: student.roll_number || '',
+        course_name: student.course_name || '',
+        session: student.session || '',
+        mobile_number: student.mobile_number || '',
+        email: student.email || '',
+        category: student.category || '',
+        hostel_name: student.hostel_name || '',
+        block_name: student.block_name || '',
+        room_number: student.room_number || '',
+        bed_number: student.bed_number || '',
+        old_student_status: student.old_student_status || 'ACTIVE',
+      });
+    } else {
+      setOldStudentEditMode(false);
+      setOldStudentCurrent(null);
+      setOldStudentForm(initialOldStudentForm);
+    }
+    setOldStudentModalOpen(true);
+  };
+
+  const closeOldStudentModal = () => {
+    setOldStudentModalOpen(false);
+    setOldStudentEditMode(false);
+    setOldStudentCurrent(null);
+    setOldStudentForm(initialOldStudentForm);
+  };
+
+  const handleOldStudentInputChange = (event) => {
+    const { name, value } = event.target;
+    setOldStudentForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleOldStudentSave = async (event) => {
+    event.preventDefault();
+    setOldStudentSaving(true);
+    try {
+      if (oldStudentEditMode && oldStudentCurrent) {
+        const { hostel_id: _, ...payload } = oldStudentForm;
+        await updateOldStudent(oldStudentCurrent.id, payload);
+        toast({ title: 'Old student updated', description: `${oldStudentForm.student_name} saved successfully.` });
+      } else {
+        await createOldStudent(oldStudentForm);
+        toast({ title: 'Old student created', description: 'New old student record added.' });
+      }
+      closeOldStudentModal();
+      await loadOldStudents(oldStudentsFilters);
+    } catch (error) {
+      toast({
+        title: 'Save failed',
+        description: error.message || 'Unable to save old student record.',
+        duration: 7000,
+      });
+    } finally {
+      setOldStudentSaving(false);
+    }
+  };
+
+  const handleOldStudentDelete = async (student) => {
+    if (!student) return;
+    if (!confirm(`Delete ${student.student_name || student.hostel_id}?`)) return;
+    try {
+      await deleteOldStudent(student.id);
+      toast({ title: 'Old student deleted' });
+      await loadOldStudents(oldStudentsFilters);
+    } catch (error) {
+      toast({
+        title: 'Delete failed',
+        description: error.message || 'Unable to delete old student record.',
+        duration: 7000,
+      });
+    }
+  };
+
+  const handleOldStudentsFilterApply = () => {
+    const nextFilters = { ...oldStudentsFilters, offset: 0 };
+    setOldStudentsFilters(nextFilters);
+    setOldStudentsPage(1);
+    void loadOldStudents(nextFilters);
+  };
+
+  const handleOldStudentsPageChange = (nextPage) => {
+    if (nextPage < 1) return;
+    const nextFilters = {
+      ...oldStudentsFilters,
+      offset: (nextPage - 1) * oldStudentsFilters.limit,
+    };
+    setOldStudentsPage(nextPage);
+    setOldStudentsFilters(nextFilters);
+    void loadOldStudents(nextFilters);
+  };
+
+  const handleOldStudentsBulkUpload = async (event) => {
+    event.preventDefault();
+    if (!oldBulkFile) {
+      toast({ title: 'Select a file', description: 'Upload an Excel or CSV file first.' });
+      return;
+    }
+    setOldBulkLoading(true);
+    try {
+      const idStartValue = Number(oldBulkOptions.idStart);
+      const options = {
+        updateExisting: oldBulkOptions.updateExisting,
+        generateIds: oldBulkOptions.generateIds,
+        idPrefix: oldBulkOptions.idPrefix,
+        idStart: Number.isFinite(idStartValue) && idStartValue > 0 ? idStartValue : undefined,
+      };
+      const result = await bulkUploadOldStudents(oldBulkFile, options);
+      setOldBulkResult(result);
+      toast({
+        title: 'Bulk upload complete',
+        description: `${result.created} created, ${result.updated} updated, ${result.generated_ids} IDs generated. ${result.invalid_registrations || result.room_errors ? 'Some rows failed.' : ''}`,
+        duration: 7000,
+      });
+      setOldBulkFile(null);
+      await loadOldStudents(oldStudentsFilters);
+    } catch (error) {
+      toast({
+        title: 'Bulk upload failed',
+        description: error.message || 'Unable to process bulk upload.',
+        duration: 7000,
+      });
+    } finally {
+      setOldBulkLoading(false);
+    }
   };
 
   const renderDashboardSection = () => (
@@ -918,6 +1146,305 @@ const ERPAdminPanel = () => {
     </div>
   );
 
+  const renderOldStudentsSection = () => {
+    const totalPages = Math.max(1, Math.ceil((oldStudentsData.total || 0) / oldStudentsFilters.limit));
+
+    return (
+      <div className="space-y-6">
+        <ERPSurfaceCard className="erp-glass-panel p-6">
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <SectionTitle
+              eyebrow="Legacy Records"
+              title="Old students management"
+              description="Create, update, and maintain hostel alumni records with fast bulk uploads."
+            />
+            <div className="flex flex-wrap gap-3">
+              <ERPButton variant="secondary" onClick={() => loadOldStudents(oldStudentsFilters)}>
+                <RefreshCw className="h-4 w-4" />
+                Refresh
+              </ERPButton>
+              <ERPButton
+                variant="secondary"
+                onClick={() => {
+                  setOldStudentsFilters(defaultOldStudentsFilters);
+                  setOldStudentsPage(1);
+                  void loadOldStudents(defaultOldStudentsFilters);
+                }}
+              >
+                Reset Filters
+              </ERPButton>
+              <ERPButton onClick={() => openOldStudentModal()}>
+                <Plus className="h-4 w-4" />
+                Add Old Student
+              </ERPButton>
+            </div>
+          </div>
+
+          <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            <label className="space-y-2 text-sm font-medium text-slate-700">
+              Search
+              <div className="relative">
+                <Search className="pointer-events-none absolute left-4 top-3.5 h-4 w-4 text-slate-400" />
+                <input
+                  className={`${inputClass} pl-11`}
+                  value={oldStudentsFilters.search}
+                  onChange={(event) => setOldStudentsFilters((prev) => ({ ...prev, search: event.target.value }))}
+                  placeholder="Hostel ID / name"
+                />
+              </div>
+            </label>
+            <label className="space-y-2 text-sm font-medium text-slate-700">
+              Hostel
+              <input
+                className={inputClass}
+                value={oldStudentsFilters.hostel_name}
+                onChange={(event) => setOldStudentsFilters((prev) => ({ ...prev, hostel_name: event.target.value }))}
+                placeholder="Hostel name"
+              />
+            </label>
+            <label className="space-y-2 text-sm font-medium text-slate-700">
+              Status
+              <select
+                className={inputClass}
+                value={oldStudentsFilters.status}
+                onChange={(event) => setOldStudentsFilters((prev) => ({ ...prev, status: event.target.value }))}
+              >
+                <option value="">All</option>
+                <option value="ACTIVE">Active</option>
+                <option value="LEFT">Left</option>
+                <option value="SUSPENDED">Suspended</option>
+              </select>
+            </label>
+            <label className="space-y-2 text-sm font-medium text-slate-700">
+              Rows
+              <select
+                className={inputClass}
+                value={oldStudentsFilters.limit}
+                onChange={(event) => {
+                  const limit = Number(event.target.value);
+                  const nextFilters = { ...oldStudentsFilters, limit, offset: 0 };
+                  setOldStudentsFilters(nextFilters);
+                  setOldStudentsPage(1);
+                  void loadOldStudents(nextFilters);
+                }}
+              >
+                {[25, 50, 100].map((value) => (
+                  <option key={value} value={value}>
+                    {value} rows
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
+
+          <div className="mt-4">
+            <ERPButton onClick={handleOldStudentsFilterApply}>
+              <Filter className="h-4 w-4" />
+              Apply Filters
+            </ERPButton>
+          </div>
+        </ERPSurfaceCard>
+
+        <ERPSurfaceCard className="erp-glass-panel p-6">
+          <SectionTitle
+            eyebrow="Bulk Upload"
+            title="Create IDs in bulk and update existing records"
+            description="Upload Excel or CSV. Enable auto ID generation if Hostel ID column is missing."
+          />
+          <form className="mt-6 grid gap-5 lg:grid-cols-[1.05fr,0.95fr]" onSubmit={handleOldStudentsBulkUpload}>
+            <div className="space-y-4">
+              <label className="space-y-2 text-sm font-medium text-slate-700">
+                Upload file
+                <input
+                  type="file"
+                  accept=".xlsx,.xls,.csv"
+                  onChange={(event) => setOldBulkFile(event.target.files?.[0] || null)}
+                  className="w-full rounded-2xl border border-slate-200 bg-white/90 px-4 py-3 text-sm shadow-sm"
+                />
+              </label>
+              <div className="rounded-2xl border border-slate-200 bg-white/80 p-4 text-sm text-slate-600">
+                <p className="font-semibold text-slate-900">Supported columns</p>
+                <p className="mt-2">Hostel ID, Student Name, Admission ID, Roll Number, Course, Session, Mobile, Email, Category, Hostel Name, Block, Room, Bed, Status.</p>
+              </div>
+            </div>
+            <div className="space-y-4">
+              <div className="space-y-3 rounded-2xl border border-slate-200 bg-white/80 p-4 text-sm text-slate-700">
+                <label className="flex items-start gap-3">
+                  <input
+                    type="checkbox"
+                    className="mt-1"
+                    checked={oldBulkOptions.updateExisting}
+                    onChange={(event) =>
+                      setOldBulkOptions((prev) => ({ ...prev, updateExisting: event.target.checked }))
+                    }
+                  />
+                  <span>
+                    Update existing records when Hostel ID already exists.
+                  </span>
+                </label>
+                <label className="flex items-start gap-3">
+                  <input
+                    type="checkbox"
+                    className="mt-1"
+                    checked={oldBulkOptions.generateIds}
+                    onChange={(event) =>
+                      setOldBulkOptions((prev) => ({ ...prev, generateIds: event.target.checked }))
+                    }
+                  />
+                  <span>
+                    Auto-generate Hostel IDs for rows with missing IDs.
+                  </span>
+                </label>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <label className="space-y-2">
+                    ID Prefix
+                    <input
+                      className={inputClass}
+                      value={oldBulkOptions.idPrefix}
+                      onChange={(event) => setOldBulkOptions((prev) => ({ ...prev, idPrefix: event.target.value }))}
+                      disabled={!oldBulkOptions.generateIds}
+                    />
+                  </label>
+                  <label className="space-y-2">
+                    Start Number
+                    <input
+                      type="number"
+                      className={inputClass}
+                      value={oldBulkOptions.idStart}
+                      onChange={(event) => setOldBulkOptions((prev) => ({ ...prev, idStart: event.target.value }))}
+                      placeholder="Auto"
+                      disabled={!oldBulkOptions.generateIds}
+                    />
+                  </label>
+                </div>
+              </div>
+              <ERPButton type="submit" disabled={oldBulkLoading}>
+                <Upload className="h-4 w-4" />
+                {oldBulkLoading ? 'Uploading...' : 'Upload & Process'}
+              </ERPButton>
+              {oldBulkResult ? (
+                <div className="rounded-2xl border border-emerald-200 bg-emerald-50/70 p-4 text-sm text-emerald-800">
+                  <p className="font-semibold">{oldBulkResult.message}</p>
+                  <p className="mt-2">
+                    Created: {oldBulkResult.created} · Updated: {oldBulkResult.updated} · IDs Generated: {oldBulkResult.generated_ids}
+                  </p>
+                  <p className="mt-1">
+                    Errors: {oldBulkResult.invalid_registrations} · Room errors: {oldBulkResult.room_errors} · Skipped: {oldBulkResult.skipped_rows}
+                  </p>
+                </div>
+              ) : null}
+            </div>
+          </form>
+        </ERPSurfaceCard>
+
+        <ERPSurfaceCard className="erp-glass-panel p-6">
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <SectionTitle
+              eyebrow="Records"
+              title="Old student list"
+              description="Edit legacy student data and keep hostel allocations accurate."
+            />
+            <div className="rounded-2xl border border-slate-200 bg-white/80 px-4 py-3 text-sm text-slate-600">
+              Total: <span className="font-semibold text-slate-900">{oldStudentsData.total || 0}</span>
+            </div>
+          </div>
+
+          <div className="mt-6 overflow-x-auto">
+            {oldStudentsLoading ? (
+              <ERPLoadingSkeleton rows={6} />
+            ) : (
+              <table className="w-full min-w-[1100px] text-sm">
+                <thead className="text-left text-slate-500">
+                  <tr>
+                    {['Hostel ID', 'Student', 'Course / Session', 'Allocation', 'Status', 'Actions'].map((heading) => (
+                      <th key={heading} className="px-4 py-3 font-semibold uppercase tracking-[0.16em]">
+                        {heading}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {(oldStudentsData.items || []).map((student) => (
+                    <tr key={student.id} className="border-t border-slate-200/70 align-top">
+                      <td className="px-4 py-4">
+                        <p className="font-semibold text-slate-900">{student.hostel_id}</p>
+                        <p className="mt-1 text-xs uppercase tracking-[0.16em] text-slate-400">{student.admission_id || '-'}</p>
+                      </td>
+                      <td className="px-4 py-4">
+                        <p className="font-semibold text-slate-900">{student.student_name}</p>
+                        <p className="mt-2 text-slate-600">{student.email || '-'}</p>
+                        <p className="text-slate-500">{student.mobile_number || '-'}</p>
+                      </td>
+                      <td className="px-4 py-4">
+                        <p className="font-medium text-slate-900">{student.course_name || '-'}</p>
+                        <p className="mt-1 text-slate-500">{student.session || '-'}</p>
+                        <p className="text-slate-500">{student.category || '-'}</p>
+                        <p className="text-slate-500">Roll: {student.roll_number || '-'}</p>
+                      </td>
+                      <td className="px-4 py-4">
+                        <p className="text-slate-700">
+                          Hostel: <span className="font-medium">{student.hostel_name || '-'}</span>
+                        </p>
+                        <p className="text-slate-700">
+                          Block / Room: <span className="font-medium">{student.block_name && student.room_number ? `${student.block_name}-${student.room_number}` : '-'}</span>
+                        </p>
+                        <p className="text-slate-700">
+                          Bed: <span className="font-medium">{student.bed_number || '-'}</span>
+                        </p>
+                      </td>
+                      <td className="px-4 py-4">
+                        <OldStudentBadge value={student.old_student_status} />
+                      </td>
+                      <td className="px-4 py-4">
+                        <div className="grid gap-2">
+                          <ERPButton variant="secondary" onClick={() => openOldStudentModal(student)}>
+                            Edit
+                          </ERPButton>
+                          <ERPButton variant="danger" onClick={() => handleOldStudentDelete(student)}>
+                            Delete
+                          </ERPButton>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                  {!oldStudentsLoading && (!oldStudentsData.items || oldStudentsData.items.length === 0) ? (
+                    <tr>
+                      <td colSpan={6} className="px-4 py-12 text-center text-sm text-slate-500">
+                        No old students match the current filters.
+                      </td>
+                    </tr>
+                  ) : null}
+                </tbody>
+              </table>
+            )}
+          </div>
+
+          <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
+            <p className="text-sm text-slate-500">
+              Page {oldStudentsPage} of {totalPages}
+            </p>
+            <div className="flex gap-2">
+              <ERPButton
+                variant="secondary"
+                disabled={oldStudentsPage <= 1}
+                onClick={() => handleOldStudentsPageChange(oldStudentsPage - 1)}
+              >
+                Previous
+              </ERPButton>
+              <ERPButton
+                variant="secondary"
+                disabled={oldStudentsPage >= totalPages}
+                onClick={() => handleOldStudentsPageChange(oldStudentsPage + 1)}
+              >
+                Next
+              </ERPButton>
+            </div>
+          </div>
+        </ERPSurfaceCard>
+      </div>
+    );
+  };
+
   const renderHostelsSection = () => (
     <div className="space-y-6">
       <div className="grid gap-6 xl:grid-cols-[0.9fr,1.1fr]">
@@ -1233,6 +1760,8 @@ const ERPAdminPanel = () => {
     switch (selectedSection) {
       case 'dashboard':
         return renderDashboardSection();
+      case 'old-students':
+        return renderOldStudentsSection();
       case 'admissions':
         return renderAdmissionsSection();
       case 'students':
@@ -1366,6 +1895,10 @@ const ERPAdminPanel = () => {
                     clearAdminToken();
                     setLoggedIn(false);
                     setSelectedStudentDetail(null);
+                    setOldStudentsData({ total: 0, items: [] });
+                    setOldStudentsFilters(defaultOldStudentsFilters);
+                    setOldStudentsPage(1);
+                    oldStudentsLoadedRef.current = false;
                   }}
                 >
                   <LogOut className="h-4 w-4" />
@@ -1458,6 +1991,177 @@ const ERPAdminPanel = () => {
             </div>
           </div>
         </ERPPageTransition>
+
+        {oldStudentModalOpen ? (
+          <div className="fixed inset-0 z-[95] flex items-center justify-center bg-slate-950/40 backdrop-blur-sm px-4 py-8">
+            <ERPSurfaceCard className="erp-glass-panel w-full max-w-4xl p-6">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Old Student Record</p>
+                  <h2 className="mt-2 text-2xl font-semibold text-slate-900">
+                    {oldStudentEditMode ? 'Edit Old Student' : 'Add Old Student'}
+                  </h2>
+                  <p className="mt-1 text-sm text-slate-500">Keep hostel alumni data complete and searchable.</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={closeOldStudentModal}
+                  className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-600 transition hover:bg-slate-50"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+
+              <form className="mt-6 grid gap-4 md:grid-cols-2" onSubmit={handleOldStudentSave}>
+                <label className="space-y-2 text-sm font-medium text-slate-700">
+                  Hostel ID *
+                  <input
+                    name="hostel_id"
+                    className={inputClass}
+                    value={oldStudentForm.hostel_id}
+                    onChange={handleOldStudentInputChange}
+                    required={!oldStudentEditMode}
+                    disabled={oldStudentEditMode}
+                  />
+                </label>
+                <label className="space-y-2 text-sm font-medium text-slate-700">
+                  Student Name *
+                  <input
+                    name="student_name"
+                    className={inputClass}
+                    value={oldStudentForm.student_name}
+                    onChange={handleOldStudentInputChange}
+                    required
+                  />
+                </label>
+                <label className="space-y-2 text-sm font-medium text-slate-700">
+                  Admission ID
+                  <input
+                    name="admission_id"
+                    className={inputClass}
+                    value={oldStudentForm.admission_id}
+                    onChange={handleOldStudentInputChange}
+                  />
+                </label>
+                <label className="space-y-2 text-sm font-medium text-slate-700">
+                  Roll Number
+                  <input
+                    name="roll_number"
+                    className={inputClass}
+                    value={oldStudentForm.roll_number}
+                    onChange={handleOldStudentInputChange}
+                  />
+                </label>
+                <label className="space-y-2 text-sm font-medium text-slate-700">
+                  Course Name *
+                  <input
+                    name="course_name"
+                    className={inputClass}
+                    value={oldStudentForm.course_name}
+                    onChange={handleOldStudentInputChange}
+                    required
+                  />
+                </label>
+                <label className="space-y-2 text-sm font-medium text-slate-700">
+                  Session *
+                  <input
+                    name="session"
+                    className={inputClass}
+                    value={oldStudentForm.session}
+                    onChange={handleOldStudentInputChange}
+                    required
+                  />
+                </label>
+                <label className="space-y-2 text-sm font-medium text-slate-700">
+                  Mobile Number *
+                  <input
+                    name="mobile_number"
+                    className={inputClass}
+                    value={oldStudentForm.mobile_number}
+                    onChange={handleOldStudentInputChange}
+                    required
+                  />
+                </label>
+                <label className="space-y-2 text-sm font-medium text-slate-700">
+                  Email
+                  <input
+                    name="email"
+                    className={inputClass}
+                    value={oldStudentForm.email}
+                    onChange={handleOldStudentInputChange}
+                  />
+                </label>
+                <label className="space-y-2 text-sm font-medium text-slate-700">
+                  Category
+                  <input
+                    name="category"
+                    className={inputClass}
+                    value={oldStudentForm.category}
+                    onChange={handleOldStudentInputChange}
+                  />
+                </label>
+                <label className="space-y-2 text-sm font-medium text-slate-700">
+                  Hostel Name
+                  <input
+                    name="hostel_name"
+                    className={inputClass}
+                    value={oldStudentForm.hostel_name}
+                    onChange={handleOldStudentInputChange}
+                  />
+                </label>
+                <label className="space-y-2 text-sm font-medium text-slate-700">
+                  Block
+                  <input
+                    name="block_name"
+                    className={inputClass}
+                    value={oldStudentForm.block_name}
+                    onChange={handleOldStudentInputChange}
+                  />
+                </label>
+                <label className="space-y-2 text-sm font-medium text-slate-700">
+                  Room
+                  <input
+                    name="room_number"
+                    className={inputClass}
+                    value={oldStudentForm.room_number}
+                    onChange={handleOldStudentInputChange}
+                  />
+                </label>
+                <label className="space-y-2 text-sm font-medium text-slate-700">
+                  Bed
+                  <input
+                    name="bed_number"
+                    className={inputClass}
+                    value={oldStudentForm.bed_number}
+                    onChange={handleOldStudentInputChange}
+                  />
+                </label>
+                <label className="space-y-2 text-sm font-medium text-slate-700">
+                  Status
+                  <select
+                    name="old_student_status"
+                    className={inputClass}
+                    value={oldStudentForm.old_student_status}
+                    onChange={handleOldStudentInputChange}
+                  >
+                    <option value="ACTIVE">ACTIVE</option>
+                    <option value="LEFT">LEFT</option>
+                    <option value="SUSPENDED">SUSPENDED</option>
+                  </select>
+                </label>
+
+                <div className="md:col-span-2 flex flex-wrap justify-end gap-2 pt-2">
+                  <ERPButton type="button" variant="secondary" onClick={closeOldStudentModal}>
+                    Cancel
+                  </ERPButton>
+                  <ERPButton type="submit" disabled={oldStudentSaving}>
+                    {oldStudentSaving ? 'Saving...' : 'Save'}
+                  </ERPButton>
+                </div>
+              </form>
+            </ERPSurfaceCard>
+          </div>
+        ) : null}
 
         {(detailLoading || selectedStudentDetail) ? (
           <div className="fixed inset-0 z-[90] flex justify-end bg-slate-950/35 backdrop-blur-sm">

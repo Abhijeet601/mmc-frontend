@@ -11,7 +11,7 @@ const fallbackApiBaseUrl = (() => {
 
   try {
     const backendUrl = new URL(browserLocation.origin);
-    backendUrl.port = '8000';
+backendUrl.port = '8001';
     return backendUrl.origin;
   } catch (_) {
     return browserLocation.origin;
@@ -264,6 +264,23 @@ export const getAdminStudentDetail = (studentId) =>
     token: getAdminToken(),
   });
 
+export const getAdminPayments = () =>
+  request('/api/admin/payments', {
+    token: getAdminToken(),
+  });
+
+export const approveAdminPayment = (paymentId) =>
+  request(`/api/admin/approve-payment/${paymentId}`, {
+    method: 'POST',
+    token: getAdminToken(),
+  });
+
+export const rejectAdminPayment = (paymentId) =>
+  request(`/api/admin/reject-payment/${paymentId}`, {
+    method: 'POST',
+    token: getAdminToken(),
+  });
+
 export const verifyStudentApplication = (studentId, verified = true) =>
   request(`/api/admin/students/${studentId}/verify`, {
     method: 'PATCH',
@@ -289,6 +306,12 @@ export const allocateHostel = (studentId, allocation) =>
             room_id: allocation?.room_id,
             bed_number: allocation?.bed_number,
           },
+    token: getAdminToken(),
+  });
+
+export const deleteAdminStudent = (studentId) =>
+  request(`/api/admin/students/${studentId}`, {
+    method: 'DELETE',
     token: getAdminToken(),
   });
 
@@ -337,6 +360,16 @@ export const getAdminHostelRooms = () =>
     token: getAdminToken(),
   });
 
+export const getAdminActivityLogs = ({ limit = 200, offset = 0 } = {}) => {
+  const query = new URLSearchParams();
+  query.set('limit', String(limit));
+  query.set('offset', String(offset));
+
+  return request(`/api/activity-logs?${query.toString()}`, {
+    token: getAdminToken(),
+  });
+};
+
 export const createAdminHostelRoom = (payload) =>
   request('/api/admin/hostel/rooms', {
     method: 'POST',
@@ -380,6 +413,127 @@ export const downloadStudentsExcel = async ({
   });
   triggerDownload(blob, `hostel_erp_students_${new Date().toISOString().slice(0, 10)}.xlsx`);
 };
+
+export const getOldStudents = ({
+  search = '',
+  hostel_name = '',
+  status = '',
+  limit = 50,
+  offset = 0,
+} = {}) => {
+  const query = new URLSearchParams();
+  if (search) query.set('search', search);
+  if (hostel_name) query.set('hostel_name', hostel_name);
+  if (status) query.set('status', status);
+  query.set('limit', String(limit));
+  query.set('offset', String(offset));
+
+  return request(`/api/admin/old-students?${query.toString()}`, {
+    token: getAdminToken(),
+  });
+};
+
+export const createOldStudent = (payload) =>
+  request('/api/admin/old-students', {
+    method: 'POST',
+    body: payload,
+    token: getAdminToken(),
+  });
+
+export const updateOldStudent = (studentId, payload) =>
+  request(`/api/admin/old-students/${studentId}`, {
+    method: 'PUT',
+    body: payload,
+    token: getAdminToken(),
+  });
+
+export const deleteOldStudent = (studentId) =>
+  request(`/api/admin/old-students/${studentId}`, {
+    method: 'DELETE',
+    token: getAdminToken(),
+  });
+
+const buildOldStudentBulkFormData = ({
+  file,
+  rows,
+  previewOnly = true,
+  updateExisting = true,
+  generateIds = true,
+  allocateRooms = true,
+  overwriteHostelId = false,
+} = {}) => {
+  const formData = new FormData();
+  if (file) formData.append('file', file);
+  if (rows) formData.append('rows_json', JSON.stringify(rows));
+  formData.append('preview_only', previewOnly ? 'true' : 'false');
+  formData.append('update_existing', updateExisting ? 'true' : 'false');
+  formData.append('generate_ids', generateIds ? 'true' : 'false');
+  formData.append('allocate_rooms', allocateRooms ? 'true' : 'false');
+  formData.append('overwrite_hostel_id', overwriteHostelId ? 'true' : 'false');
+  return formData;
+};
+
+export const previewBulkUpsertOldStudents = ({
+  file,
+  rows,
+  options: {
+    updateExisting = true,
+    generateIds = true,
+    allocateRooms = true,
+    overwriteHostelId = false,
+  } = {},
+} = {}) =>
+  request('/api/bulk-upsert-old-students', {
+    method: 'POST',
+    body: buildOldStudentBulkFormData({
+      file,
+      rows,
+      previewOnly: true,
+      updateExisting,
+      generateIds,
+      allocateRooms,
+      overwriteHostelId,
+    }),
+    token: getAdminToken(),
+  });
+
+export const commitBulkUpsertOldStudents = ({
+  file,
+  rows,
+  options: {
+    updateExisting = true,
+    generateIds = true,
+    allocateRooms = true,
+    overwriteHostelId = false,
+  } = {},
+} = {}) =>
+  request('/api/bulk-upsert-old-students', {
+    method: 'POST',
+    body: buildOldStudentBulkFormData({
+      file,
+      rows,
+      previewOnly: false,
+      updateExisting,
+      generateIds,
+      allocateRooms,
+      overwriteHostelId,
+    }),
+    token: getAdminToken(),
+  });
+
+export const bulkUploadOldStudents = (file, options = {}) =>
+  request('/api/bulk-upsert-old-students', {
+    method: 'POST',
+    body: buildOldStudentBulkFormData({
+      file,
+      previewOnly: false,
+      updateExisting: options.updateExisting ?? true,
+      generateIds: options.generateIds ?? true,
+      allocateRooms: options.allocateRooms ?? true,
+      overwriteHostelId: options.overwriteHostelId ?? false,
+    }),
+    token: getAdminToken(),
+  });
 
 export const resolveAssetUrl = (relativeOrAbsolutePath) => {
   if (!relativeOrAbsolutePath) return '';

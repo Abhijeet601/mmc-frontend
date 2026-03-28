@@ -37,92 +37,87 @@ body {
 
 @layer base {
   :root {
-    /* Page */
-    --background: 0 0% 100%; /* #FFFFFF */
-    --foreground: 0 0% 11%; /* #1C1C1C */
+    /* ===== PAGE ===== */
+    --background: 0 0% 100%;
+    --foreground: 0 0% 11%;
 
-    /* Sections / Cards */
-    --card: 220 16% 96.1%; /* #F2F4F7 */
+    /* ===== CARDS ===== */
+    --card: 220 16% 96%;
     --card-foreground: 0 0% 11%;
-    --popover: 220 16% 96.1%;
+    --popover: 220 16% 96%;
     --popover-foreground: 0 0% 11%;
 
-    /* Brand (logo & CTA) */
-    --primary: 210 100% 50%; /* Blue */
-    --primary-foreground: 0 0% 100%; /* white */
+    /* ===== BRAND (MAIN BLUE) ===== */
+    --primary: 210 100% 50%;   /* PURE BLUE */
+    --primary-foreground: 0 0% 100%;
 
-    /* Secondary / muted */
-    --secondary: 220 16% 96.1%;
+    /* ===== SECONDARY ===== */
+    --secondary: 220 16% 96%;
     --secondary-foreground: 0 0% 11%;
-    --muted: 220 16% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 220 16% 96%;
+    --muted-foreground: 215 16% 47%;
 
-    /* Highlight / hover */
-    --accent: 210 50% 60%; /* Blue accent */
+    /* ===== ACCENT ===== */
+    --accent: 210 50% 60%;
     --accent-foreground: 0 0% 11%;
 
-    /* Destructive falls back to primary red */
-    --destructive: 0 65% 50.5%;
-    --destructive-foreground: 0 0% 100%;
+    /* ===== STATUS ===== */
+    --success: 142 47% 55%;
+    --warning: 42 100% 56%;
+    --error: 0 65% 50%;
 
+    /* ===== UI ===== */
     --border: 220 14% 90%;
     --input: 220 14% 90%;
-    --ring: 210 50% 60%; /* blue highlight */
+    --ring: 210 50% 60%;
 
-    /* New tokens */
-    --navbar: 210 50% 30%; /* Blue navbar */
-    --navbar-foreground: 0 0% 100%; /* White text on navbar */
-    --section: 220 16% 96.1%; /* #F2F4F7 */
-    --highlight: 210 50% 70%; /* Blue highlight */
+    /* ===== NAVBAR ===== */
+    --navbar: 210 60% 28%;
+    --navbar-foreground: 0 0% 100%;
 
-    /* Mobile settings */
-    --mobile-navbar-height: 3.5rem; /* height used by the fixed mobile navbar */
+    --section: 220 16% 96%;
+    --highlight: 210 50% 70%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
+
+    /* Shadows */
+    --shadow-card: 0 16px 40px -18px rgba(15, 23, 42, 0.14);
+    --shadow-card-hover: 0 20px 60px -26px rgba(15, 23, 42, 0.18);
   }
 
+  /* ===== MAROON THEME ===== */
   .theme-maroon {
-    /* Page */
-    --background: 0 0% 100%; /* Keep light */
-    --foreground: 0 0% 11%; /* #1C1C1C */
+    --background: 0 0% 100%;
+    --foreground: 0 0% 11%;
 
-    /* Sections / Cards */
-    --card: 0 10% 96%; /* Light maroon tint */
-    --card-foreground: 0 0% 11%;
-    --popover: 0 10% 96%;
-    --popover-foreground: 0 0% 11%;
-
-    /* Brand (logo & CTA) */
-    --primary: 0 50% 40%; /* Maroon */
-    --primary-foreground: 0 0% 100%; /* white */
-
-    /* Secondary / muted */
-    --secondary: 0 10% 96%;
-    --secondary-foreground: 0 0% 11%;
-    --muted: 0 10% 96%;
-    --muted-foreground: 0 0% 46.9%;
-
-    /* Highlight / hover */
-    --accent: 0 40% 60%; /* Maroon accent */
-    --accent-foreground: 0 0% 11%;
-
-    /* Destructive falls back to primary maroon */
-    --destructive: 0 50% 40%;
-    --destructive-foreground: 0 0% 100%;
+    --card: 0 10% 96%;
+    --primary: 0 60% 45%;
+    --accent: 0 40% 60%;
 
     --border: 0 10% 90%;
-    --input: 0 10% 90%;
-    --ring: 0 40% 60%; /* maroon highlight */
-
-    /* New tokens */
-    --navbar: 0 50% 20%; /* Maroon navbar */
-    --navbar-foreground: 0 0% 100%; /* White text on navbar */
-    --section: 0 10% 96%; /* Light maroon section */
-    --highlight: 0 40% 70%; /* Maroon highlight */
+    --navbar: 0 60% 25%;
+    --navbar-foreground: 0 0% 100%;
   }
 
   .theme-blue {
     /* Same as :root */
+  }
+
+  .dark {
+    /* Dark mode */
+    --background: 223 40% 8%; /* #0f172a */
+    --foreground: 220 15% 90%;
+    --card: 225 24% 12%;
+    --card-foreground: 220 15% 90%;
+    --popover: 225 24% 14%;
+    --popover-foreground: 220 15% 90%;
+    --border: 223 26% 22%;
+    --input: 223 26% 20%;
+    --ring: 204 100% 64%;
+    --navbar: 223 30% 10%;
+    --navbar-foreground: 0 0% 100%;
+    --section: 225 24% 12%;
+    --highlight: 197 90% 60%;
   }
 
   /* Smooth transitions for theme changes */
@@ -189,6 +184,63 @@ body {
   .mobile-menu-enter button {
     padding-top: 0.75rem;
     padding-bottom: 0.75rem;
+  }
+}
+
+@layer components {
+  /* Premium card styles */
+  .card {
+    @apply relative rounded-2xl border border-border bg-card text-card-foreground shadow-sm transition-all duration-300;
+    box-shadow: var(--shadow-card);
+  }
+
+  .card:hover {
+    @apply -translate-y-1 shadow-lg;
+    box-shadow: var(--shadow-card-hover);
+  }
+
+  .card:active {
+    @apply scale-[0.99];
+  }
+
+  .card {
+    border-radius: 12px;
+    background: hsl(var(--card));
+    border: 1px solid hsl(var(--border));
+  }
+
+  .btn-primary {
+    background: hsl(var(--primary));
+    color: white;
+  }
+
+  .btn-primary:hover {
+    background: hsl(var(--primary) / 0.9);
+  }
+
+  /* Button states */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition duration-200;
+  }
+
+  .btn:disabled {
+    @apply opacity-50 cursor-not-allowed;
+  }
+
+  /* Skeleton loaders */
+  .skeleton {
+    @apply rounded-lg bg-gradient-to-r from-slate-200/70 via-slate-200/30 to-slate-200/70;
+    background-size: 200% 100%;
+    animation: shimmer 1.2s infinite;
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
   }
 }
 
@@ -593,13 +645,14 @@ body {
 
 /* ERP SaaS UI */
 :root {
-  --erp-primary: #0f4c81;
-  --erp-secondary: #0ea5a9;
-  --erp-accent: #10b981;
+  --erp-primary: hsl(var(--primary));
+  --erp-secondary: hsl(var(--accent));
+  --erp-accent: #22c55e;
+
+  --erp-bg: #f8fafc;
+  --erp-surface: #ffffff;
   --erp-ink: #0f172a;
   --erp-muted: #475569;
-  --erp-bg: #eef5fb;
-  --erp-surface: #ffffff;
 }
 
 @keyframes erpBorderShift {
@@ -745,6 +798,89 @@ body {
 .erp-shell {
   font-family: 'Inter', 'Plus Jakarta Sans', sans-serif;
   color: var(--erp-ink);
+}
+
+.erp-brand-gradient {
+  background-image: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
+  color: hsl(var(--primary-foreground));
+}
+
+.erp-brand-soft {
+  background-image: linear-gradient(135deg, hsl(var(--primary) / 0.12), hsl(var(--accent) / 0.18));
+  color: hsl(var(--primary));
+}
+
+.erp-brand-bar {
+  background-image: linear-gradient(90deg, hsl(var(--primary)), hsl(var(--accent)));
+}
+
+.erp-shell .text-blue-500,
+.erp-shell .text-blue-600,
+.erp-shell .text-blue-700,
+.erp-shell .text-cyan-600,
+.erp-shell .text-cyan-700,
+.erp-shell .text-cyan-800,
+.erp-shell .text-sky-700 {
+  color: hsl(var(--primary)) !important;
+}
+
+.erp-shell .bg-blue-50,
+.erp-shell .bg-cyan-50,
+.erp-shell .bg-sky-50 {
+  background-color: hsl(var(--primary) / 0.08) !important;
+}
+
+.erp-shell .border-blue-200,
+.erp-shell .border-cyan-100,
+.erp-shell .border-cyan-200,
+.erp-shell .border-sky-100 {
+  border-color: hsl(var(--primary) / 0.18) !important;
+}
+
+.erp-shell .hover\:border-blue-200:hover,
+.erp-shell .hover\:border-cyan-100:hover,
+.erp-shell .hover\:border-cyan-200:hover,
+.erp-shell .hover\:border-blue-500\/40:hover {
+  border-color: hsl(var(--primary) / 0.35) !important;
+}
+
+.erp-shell .hover\:text-cyan-800:hover,
+.erp-shell .hover\:text-cyan-900:hover,
+.erp-shell .hover\:text-cyan-700:hover {
+  color: hsl(var(--primary)) !important;
+}
+
+.erp-shell .focus\:border-blue-300:focus,
+.erp-shell .focus\:border-cyan-300:focus {
+  border-color: hsl(var(--primary) / 0.35) !important;
+}
+
+.erp-shell .focus\:ring-blue-100:focus,
+.erp-shell .focus\:ring-blue-100\/70:focus,
+.erp-shell .focus\:ring-blue-500\/15:focus,
+.erp-shell .focus\:ring-cyan-100:focus {
+  --tw-ring-color: hsl(var(--primary) / 0.16) !important;
+}
+
+.erp-shell .from-blue-600,
+.erp-shell .from-cyan-400,
+.erp-shell .from-cyan-500,
+.erp-shell .from-indigo-600 {
+  --tw-gradient-from: hsl(var(--primary)) var(--tw-gradient-from-position) !important;
+  --tw-gradient-to: hsl(var(--primary) / 0) var(--tw-gradient-to-position) !important;
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important;
+}
+
+.erp-shell .via-blue-500,
+.erp-shell .via-cyan-500 {
+  --tw-gradient-stops: var(--tw-gradient-from), hsl(var(--primary)) var(--tw-gradient-via-position), var(--tw-gradient-to) !important;
+}
+
+.erp-shell .to-blue-600,
+.erp-shell .to-cyan-500,
+.erp-shell .to-emerald-400,
+.erp-shell .to-emerald-500 {
+  --tw-gradient-to: hsl(var(--accent)) var(--tw-gradient-to-position) !important;
 }
 
 .erp-display {

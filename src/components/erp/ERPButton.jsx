@@ -3,13 +3,17 @@ import { motion } from 'framer-motion';
 
 const variantStyles = {
   primary:
-    'text-white shadow-[0_18px_40px_-22px_rgba(15,76,129,0.45)] bg-[linear-gradient(135deg,#0F4C81,#0EA5A9)] hover:shadow-[0_22px_44px_-22px_rgba(14,165,169,0.42)]',
+    'bg-primary text-primary-foreground shadow-sm hover:shadow-md hover:bg-primary/90',
   secondary:
-    'text-slate-700 border border-slate-200 bg-white/90 hover:border-cyan-200 hover:text-cyan-800 hover:shadow-[0_12px_28px_-20px_rgba(14,165,169,0.3)]',
+    'bg-card border border-border text-foreground hover:bg-secondary/80 hover:border-border',
   success:
-    'text-white shadow-[0_18px_40px_-22px_rgba(16,185,129,0.34)] bg-[linear-gradient(135deg,#059669,#14B8A6)] hover:shadow-[0_22px_44px_-20px_rgba(16,185,129,0.4)]',
+    'bg-success text-success-foreground shadow-sm hover:shadow-md hover:bg-success/90',
+  warning:
+    'bg-warning text-warning-foreground shadow-sm hover:shadow-md hover:bg-warning/90',
   danger:
-    'text-red-700 border border-red-200 bg-red-50 hover:bg-red-100 hover:shadow-[0_12px_28px_-20px_rgba(239,68,68,0.28)]',
+    'bg-error text-error-foreground shadow-sm hover:shadow-md hover:bg-error/90',
+  outline:
+    'bg-transparent border border-border text-foreground hover:bg-secondary/70 hover:text-foreground',
 };
 
 const ERPButton = ({
