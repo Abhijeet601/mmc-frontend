@@ -179,6 +179,9 @@ const Navbar = () => {
     label: t('nav.aboutSub.visitorsNote'),
     to: "/about/visitors-note"
   }, {
+    label: t('nav.aboutSub.recognitionUgc'),
+    to: "/about/recognition-ugc"
+  }, {
     label: t('nav.aboutSub.mis'),
     to: "/about/mis"
   }], [i18n.language]);

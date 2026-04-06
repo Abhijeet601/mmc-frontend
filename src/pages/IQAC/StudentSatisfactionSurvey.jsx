@@ -7,7 +7,7 @@ import { r2Url } from '@/lib/r2Assets';
 import { useTranslation } from 'react-i18next';
 const StudentSatisfactionSurvey = () => {
   useTranslation();
-  const surveyFormLink = 'https://docs.google.com/forms/d/1rWE_80w9hgKh6tlz3tiBtCkBiUc_8DYxo9ClJHHGRII/viewform?pli=1&pli=1&edit_requested=true';
+  const surveyFormLink = 'https://forms.gle/N94BS7FRnBew2ntK8';
   const pdfLinks = [{
     title: i18next.t("auto.student_satisfaction_survey_report_1krtt6g"),
     fileName: 'SSS-report.pdf',

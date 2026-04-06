@@ -127,6 +127,7 @@ import Milestones from './pages/about/Milestones';
 import VisitorsNote from './pages/about/VisitorsNote';
 import ManagementAdministration from './pages/about/ManagementAdministration';
 import MIS from './pages/about/MIS';
+import RecognitionUGC from './pages/about/RecognitionUGC';
 import InstituteDistinctiveness from './pages/about/InstituteDistinctiveness';
 import InfrastructureMaintenance from './pages/about/InfrastructureMaintenance';
 
@@ -423,6 +424,7 @@ function App() {
               <Route path="/about/visitors-note" element={<VisitorsNote />} />
               <Route path="/about/management-administration" element={<ManagementAdministration />} />
               <Route path="/about/mis" element={<MIS />} />
+              <Route path="/about/recognition-ugc" element={<RecognitionUGC />} />
               <Route path="/about/infrastructure-maintenance" element={<InfrastructureMaintenance />} />
               <Route path="/about/institute-distinctiveness" element={<InstituteDistinctiveness />} />
 

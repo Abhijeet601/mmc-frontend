@@ -48,6 +48,7 @@
       "milestones": "Milestones",
       "visitorsNote": "Visitor's Note",
       "managementAdministration": "Management & Administration",
+      "recognitionUgc": "Recognition UGC",
       "infrastructureMaintenance": "Infrastructure Maintenance",
       "mis": "MIS"
     },
@@ -122,6 +123,17 @@
       "staffProfile": "Staff Profile",
       "teachingStaffSanctionedPost": "Teaching Staff Sanctioned Post"
     }
+  },
+  "feeRefundPolicy": {
+    "title": "Fee Refund Policy - Magadh Mahila College",
+    "metaDescription": "View the official fee refund policy for the 2024-25 academic session at Magadh Mahila College.",
+    "documentTitle": "Fee Refund Policy 2024-25"
+  },
+  "recognitionUgc": {
+    "title": "Recognition UGC - Magadh Mahila College",
+    "metaDescription": "View the official UGC recognition document of Magadh Mahila College.",
+    "documentTitle": "UGC Recognition 2(f) 12(B)",
+    "subtitle": "Official UGC recognition document under Sections 2(f) and 12(B)."
   },
   "pages": {
     "principalProfile": "From the Principal's Desk",
@@ -239,6 +251,7 @@
     "quickLinks": "Quick Links",
     "importantLinks": "Important Links",
     "contactInfo": "Contact Information",
+    "mapTitle": "Campus Map",
     "externalLinks": "External Links",
     "followUs": "Follow Us",
     "copyright": "Copyright © 2026 Magadh Mahila College, Patna. All rights reserved.",
@@ -280,7 +293,8 @@
       "address": "North Gandhi Maidan, Patna – 800001",
       "phone": "+91-612-2219454",
       "mobile": "+91-7261805666",
-      "email": "info@magadhmahilacollege.org"
+      "email": "info@magadhmahilacollege.org",
+      "map": "View on Google Maps"
     },
     "managedBy": "Managed by",
     "companyName": "Alpenrose Digital Solutions"
@@ -1110,7 +1124,7 @@
     "disclaimer_g6xc6": "Disclaimer",
     "disclaimer_content_will_be_added_here_cq0jaa": "Disclaimer content will be added here.",
     "fee_refund_policy_139ktkd": "Fee Refund Policy",
-    "fee_refund_policy_content_will_be_added_1geo2q1": "Fee Refund Policy content will be added here.",
+    "fee_refund_policy_content_will_be_added_1geo2q1": "Official fee refund policy document for the academic session 2024-25.",
     "shri_arif_mohammed_khan_z09icf": "Shri Arif Mohammed Khan",
     "hon_ble_chancellor_a987cv": "Hon'ble Chancellor",
     "prof_namita_singh_1wa186d": "Prof. Ajay Kumar Singh",

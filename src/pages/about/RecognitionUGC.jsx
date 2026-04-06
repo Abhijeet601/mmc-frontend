@@ -1,27 +1,25 @@
-import i18next from "i18next";
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { Download, ExternalLink, FileText } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
-import { r2Url } from '@/lib/r2Assets';
+const UGC_RECOGNITION_PDF =
+  'https://pub-c7047204b6824b4ea67be147e7ebb0ac.r2.dev/public/UGC%202f%2012%20b.pdf';
 
-const FEE_REFUND_POLICY_PDF = r2Url('public/1654477_Fee-Refund-Policy-2024-25.pdf');
-
-const FeeRefundPolicy = () => {
+const RecognitionUGC = () => {
   const { t } = useTranslation();
-  const documentTitle = t('feeRefundPolicy.documentTitle', 'Fee Refund Policy 2024-25');
+  const documentTitle = t('recognitionUgc.documentTitle', 'UGC Recognition 2(f) 12(B)');
 
   return (
     <>
       <Helmet>
-        <title>{t('feeRefundPolicy.title', 'Fee Refund Policy - Magadh Mahila College')}</title>
+        <title>{t('recognitionUgc.title', 'Recognition UGC - Magadh Mahila College')}</title>
         <meta
           name="description"
           content={t(
-            'feeRefundPolicy.metaDescription',
-            'View the official fee refund policy for the 2024-25 academic session at Magadh Mahila College.'
+            'recognitionUgc.metaDescription',
+            'View the official UGC recognition document of Magadh Mahila College.'
           )}
         />
       </Helmet>
@@ -42,44 +40,47 @@ const FeeRefundPolicy = () => {
                   </div>
                   <div>
                     <h1 className="text-4xl font-bold text-primary md:text-5xl">
-                      {i18next.t("auto.fee_refund_policy_139ktkd")}
+                      {t('nav.aboutSub.recognitionUgc')}
                     </h1>
                     <p className="text-muted-foreground">
-                      {i18next.t("auto.fee_refund_policy_content_will_be_added_1geo2q1")}
+                      {t(
+                        'recognitionUgc.subtitle',
+                        'Official UGC recognition document under Sections 2(f) and 12(B).'
+                      )}
                     </p>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-3">
                   <a
-                    href={FEE_REFUND_POLICY_PDF}
+                    href={UGC_RECOGNITION_PDF}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 rounded-lg border border-primary px-4 py-2 font-medium text-primary transition-colors hover:bg-primary/5"
                   >
                     <ExternalLink className="h-4 w-4" />
-                    {i18next.t("auto.open_pdf_zqcygz")}
+                    {t('auto.open_pdf_zqcygz')}
                   </a>
                   <a
-                    href={FEE_REFUND_POLICY_PDF}
+                    href={UGC_RECOGNITION_PDF}
                     download
                     className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 font-medium text-primary-foreground transition-colors hover:bg-primary/90"
                   >
                     <Download className="h-4 w-4" />
-                    {i18next.t("auto.download_1ypm7w1")}
+                    {t('auto.download_1ypm7w1')}
                   </a>
                 </div>
               </div>
 
               <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-lg">
                 <object
-                  data={FEE_REFUND_POLICY_PDF}
+                  data={UGC_RECOGNITION_PDF}
                   type="application/pdf"
                   aria-label={documentTitle}
                   className="h-[80vh] w-full"
                 >
                   <iframe
-                    src={FEE_REFUND_POLICY_PDF}
+                    src={UGC_RECOGNITION_PDF}
                     title={documentTitle}
                     className="h-[80vh] w-full border-0"
                   />
@@ -93,4 +94,4 @@ const FeeRefundPolicy = () => {
   );
 };
 
-export default FeeRefundPolicy;
+export default RecognitionUGC;

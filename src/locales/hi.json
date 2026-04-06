@@ -40,7 +40,8 @@
       "feedback": "प्रतिक्रिया",
       "environmentalPolicy": "पर्यावरण नीति",
       "mou": "एमओयू",
-      "futurePlans": "भविष्य की योजनाएं"
+      "futurePlans": "भविष्य की योजनाएं",
+      "recognitionUgc": "UGC मान्यता"
     },
     "iqac": "IQAC",
     "iqacSub": {
@@ -110,6 +111,17 @@
       "staffProfile": "स्टाफ प्रोफाइल",
       "teachingStaffSanctionedPost": "शिक्षण स्टाफ स्वीकृत पद"
     }
+  },
+  "feeRefundPolicy": {
+    "title": "शुल्क वापसी नीति - मगध महिला कॉलेज",
+    "metaDescription": "मगध महिला कॉलेज के शैक्षणिक सत्र 2024-25 के लिए आधिकारिक शुल्क वापसी नीति देखें।",
+    "documentTitle": "शुल्क वापसी नीति 2024-25"
+  },
+  "recognitionUgc": {
+    "title": "UGC मान्यता - मगध महिला कॉलेज",
+    "metaDescription": "मगध महिला कॉलेज का आधिकारिक UGC मान्यता दस्तावेज देखें।",
+    "documentTitle": "UGC मान्यता 2(f) 12(B)",
+    "subtitle": "धारा 2(f) और 12(B) के अंतर्गत आधिकारिक UGC मान्यता दस्तावेज।"
   },
   "home": {
     "title": "होम - मगध महिला कॉलेज | पटना में महिला कॉलेज",
@@ -205,6 +217,7 @@
     "quickLinks": "त्वरित लिंक",
     "importantLinks": "महत्वपूर्ण लिंक",
     "contactInfo": "संपर्क जानकारी",
+    "mapTitle": "कैंपस मैप",
     "externalLinks": "बाहरी लिंक",
     "followUs": "हमारे साथ जुड़ें",
     "copyright": "कॉपीराइट © 2023 मगध महिला कॉलेज, पटना। सभी अधिकार सुरक्षित।",
@@ -252,7 +265,8 @@
       "address": "उत्तर गांधी मैदान, पटना – 800001",
       "phone": "+91-612-2219454",
       "mobile": "+91-7261805666",
-      "email": "info@magadhmahilacollege.org"
+      "email": "info@magadhmahilacollege.org",
+      "map": "गूगल मैप्स पर देखें"
     },
     "managedBy": "द्वारा प्रबंधित",
     "companyName": "अल्पेनरोस डिजिटल सॉल्यूशंस"
@@ -1090,7 +1104,7 @@
     "shri_arif_mohammed_khan_z09icf": "श्री आरिफ मोहम्मद खान",
     "prof_namita_singh_1wa186d": "प्रो. अजय कुमार सिंह",
     "hon_ble_chancellor_a987cv": "माननीय कुलाधिपति",
-    "fee_refund_policy_content_will_be_added_1geo2q1": "शुल्क वापसी नीति सामग्री यहां जोड़ी जाएगी।",
+    "fee_refund_policy_content_will_be_added_1geo2q1": "शैक्षणिक सत्र 2024-25 के लिए आधिकारिक शुल्क वापसी नीति दस्तावेज।",
     "prof_dr_nagendra_prasad_verma_gf7mxh": "प्रो. (डॉ.) नागेंद्र प्रसाद वर्मा",
     "officiating_vice_chancellor_patna_university_1nsffvc": "कुलपति, पटना विश्वविद्यालय",
     "principal_magadh_mahila_college_17k5nw6": "प्राचार्य, मगध महिला कॉलेज",

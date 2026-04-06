@@ -36,6 +36,8 @@ const Footer = () => {
     t,
     i18n
   } = useTranslation();
+  const campusMapUrl = 'https://www.google.com/maps/place/Magadh+Mahila+College/@25.6211654,85.1444519,17z/data=!3m1!4b1!4m6!3m5!1s0x39ed5856e3c09cc7:0xc8a6169d5cd95e88!8m2!3d25.6211654!4d85.1444519!16s%2Fg%2F11c4bhhwgm?entry=ttu&g_ep=EgoyMDI2MDQwMS4wIKXMDSoASAFQAw%3D%3D';
+  const campusMapEmbedUrl = 'https://www.google.com/maps?q=Magadh+Mahila+College,+Patna&z=17&output=embed';
   const tEn = i18n.getFixedT('en');
   const tHi = i18n.getFixedT('hi');
   const englishFooterYear = tEn('footer.copyright').match(/\b20\d{2}\b/)?.[0] || String(new Date().getFullYear());
@@ -143,7 +145,9 @@ const Footer = () => {
   const contactDetails = [{
     key: 'footer.contactDetails.address',
     icon: MapPin,
-    value: t('footer.contactDetails.address')
+    value: t('footer.contactDetails.address'),
+    href: campusMapUrl,
+    external: true
   }, {
     key: 'footer.contactDetails.phone',
     icon: Phone,
@@ -159,6 +163,12 @@ const Footer = () => {
     icon: Mail,
     value: t('footer.contactDetails.email'),
     href: toMailHref(t('footer.contactDetails.email'))
+  }, {
+    key: 'footer.contactDetails.map',
+    icon: MapPin,
+    value: t('footer.contactDetails.map'),
+    href: campusMapUrl,
+    external: true
   }].filter(item => hasValue(item.value, item.key));
   const socialLinks = [{
     icon: Facebook,
@@ -268,12 +278,26 @@ const Footer = () => {
               const Icon = item.icon;
               return <li key={`${item.value}-${index}`} className="flex items-start gap-2.5 text-primary-foreground/90">
                     <Icon className="w-4 h-4 mt-1 shrink-0 text-highlight" />
-                    {item.href ? <a href={item.href} className="hover:text-highlight transition-colors break-words">
+                    {item.href ? <a href={item.href} target={item.external ? "_blank" : undefined} rel={item.external ? "noopener noreferrer" : undefined} className="hover:text-highlight transition-colors break-words">
                         {item.value}
                       </a> : <span className="break-words">{item.value}</span>}
                   </li>;
             })}
             </ul>
+
+            <div className="mt-5 overflow-hidden rounded-xl border border-white/15 bg-white/5">
+              <div className="border-b border-white/10 px-4 py-3">
+                <h4 className="text-sm font-semibold text-white">{t('footer.mapTitle')}</h4>
+              </div>
+              <iframe
+                src={campusMapEmbedUrl}
+                title={t('footer.mapTitle')}
+                className="h-56 w-full border-0"
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                allowFullScreen
+              />
+            </div>
           </motion.div>
         </div>
 
