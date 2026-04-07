@@ -141,7 +141,7 @@ const fallbackCopyText = async (value) => {
 };
 
 const resolveDocumentLink = (documentItem, repositoryLinkMap) =>
-  repositoryLinkMap[documentItem.oldLink] || documentItem.newLink || '';
+  documentItem.newLink || repositoryLinkMap[documentItem.oldLink] || '';
 
 const checkDocumentAvailability = async (newLink) => {
   if (!newLink) return false;
@@ -234,7 +234,7 @@ function DocumentCard({
       <div className="mt-6 flex flex-wrap gap-3">
         <button
           type="button"
-          onClick={() => onOpenDocument(documentItem)}
+          onClick={() => onOpenDocument(newLink, isAvailable)}
           disabled={isUnavailable}
           className={`inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition ${
             isUnavailable
@@ -256,13 +256,20 @@ function DocumentCard({
         </button>
       </div>
 
-      <div className="mt-5 flex-1 rounded-2xl border border-slate-200 bg-slate-50/80 p-4">
+      <div
+        className="mt-5 flex-1 rounded-2xl border border-slate-200 bg-slate-50/80 p-4"
+        role="note"
+        aria-label="Old URL for reference only"
+      >
         <div className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
           <Link2 className="h-3.5 w-3.5" />
           Old URL
         </div>
 
-        <p className="break-all text-sm leading-6 text-slate-500" title="For reference only">
+        <p
+          className="cursor-default break-all text-sm leading-6 text-slate-500"
+          title="For reference only"
+        >
           {documentItem.oldLink}
         </p>
       </div>
@@ -397,10 +404,8 @@ export default function DocumentRepository({
     });
   };
 
-  const handleOpenDocument = (documentItem) => {
-    const newLink = resolveDocumentLink(documentItem, repositoryLinkMap);
-    const isAvailable = availabilityState[newLink] ?? availabilityCache.get(newLink);
-
+  const handleOpenDocument = (newLink, isAvailableFromCard) => {
+    const isAvailable = isAvailableFromCard ?? availabilityState[newLink] ?? availabilityCache.get(newLink);
     if (!newLink || isAvailable === false) {
       toast({
         title: 'File not available',
@@ -410,7 +415,7 @@ export default function DocumentRepository({
       return;
     }
 
-    const openedWindow = window.open(newLink, '_blank');
+    const openedWindow = window.open(newLink, '_blank', 'noopener,noreferrer');
 
     if (!openedWindow) {
       toast({
