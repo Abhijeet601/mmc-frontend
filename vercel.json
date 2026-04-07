@@ -22,12 +22,12 @@
     },
     {
       "source": "/revised-academic-calendar/",
-      "destination": "/iqac/academic-calendar",
+      "destination": "https://pub-c7047204b6824b4ea67be147e7ebb0ac.r2.dev/public/data%20files/IQAC/Academic%20Calender/Academic-Calendar-Admission-2022-2023.pdf",
       "permanent": true
     },
     {
       "source": "/wp-content/uploads/2024/04/Academic-Calendar-Admission-2022-2023.pdf",
-      "destination": "/iqac/academic-calendar",
+      "destination": "https://pub-c7047204b6824b4ea67be147e7ebb0ac.r2.dev/public/data%20files/IQAC/Academic%20Calender/Academic-Calendar-Admission-2022-2023.pdf",
       "permanent": true
     },
     {
