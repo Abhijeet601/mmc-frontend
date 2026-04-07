@@ -1,4 +1,191 @@
 {
+  "redirects": [
+    {
+      "source": "/wp-content/uploads/2024/12/AQAR-2022-23.pdf",
+      "destination": "/documents/IQAC/NAAC/AQAR/AQAR-2022-23.pdf",
+      "permanent": true
+    },
+    {
+      "source": "/wp-content/uploads/2023/06/AQAR-2021-22.pdf",
+      "destination": "/documents/IQAC/NAAC/AQAR/AQAR-2021-22.pdf",
+      "permanent": true
+    },
+    {
+      "source": "/wp-content/uploads/2022/04/AQAR-2020-21.pdf",
+      "destination": "/documents/IQAC/NAAC/AQAR/AQAR-2020-21.pdf",
+      "permanent": true
+    },
+    {
+      "source": "/wp-content/uploads/2022/01/AQAR-2019-20-resubmitted-2.pdf",
+      "destination": "/documents/IQAC/NAAC/AQAR/AQAR-2019-20-resubmitted-2.pdf",
+      "permanent": true
+    },
+    {
+      "source": "/revised-academic-calendar/",
+      "destination": "/iqac/academic-calendar",
+      "permanent": true
+    },
+    {
+      "source": "/wp-content/uploads/2024/04/Academic-Calendar-Admission-2022-2023.pdf",
+      "destination": "/iqac/academic-calendar",
+      "permanent": true
+    },
+    {
+      "source": "/wp-content/uploads/2024/12/Annual_Report_2023-24_MMC_Patna.pdf",
+      "destination": "/annual-reports",
+      "permanent": true
+    },
+    {
+      "source": "/feedback-forms/",
+      "destination": "/about/feedback-forms",
+      "permanent": true
+    },
+    {
+      "source": "/project%20internship-field-work/",
+      "destination": "/iqac/project-internship-fieldwork",
+      "permanent": true
+    },
+    {
+      "source": "/infrastructure-and-facilities/",
+      "destination": "/campus-life",
+      "permanent": true
+    },
+    {
+      "source": "/academic-opportunities/",
+      "destination": "/academics",
+      "permanent": true
+    },
+    {
+      "source": "/internal-examination-grievances-redressal-cell/",
+      "destination": "/grievance",
+      "permanent": true
+    },
+    {
+      "source": "/syllabus-nep/",
+      "destination": "/nep2020/syllabus-nep",
+      "permanent": true
+    },
+    {
+      "source": "/wp-content/uploads/2025/01/SSS_23-24_250104_131730.pdf",
+      "destination": "/documents/IQAC/Student%20Satisfaction%20Survey/SSS-report.pdf",
+      "permanent": true
+    },
+    {
+      "source": "/research/",
+      "destination": "/iqac/research",
+      "permanent": true
+    },
+    {
+      "source": "/extension-activities-nss-ncc/",
+      "destination": "/iqac/extension-activities",
+      "permanent": true
+    },
+    {
+      "source": "/academic-infrastructure-2/",
+      "destination": "/nep2020/academic-infrastructure",
+      "permanent": true
+    },
+    {
+      "source": "/sports-facilities/",
+      "destination": "/campus-life",
+      "permanent": true
+    },
+    {
+      "source": "/central-library/",
+      "destination": "/campus-life",
+      "permanent": true
+    },
+    {
+      "source": "/mis/",
+      "destination": "/about/mis",
+      "permanent": true
+    },
+    {
+      "source": "/infrastructure-maintenance/",
+      "destination": "/about/infrastructure-maintenance",
+      "permanent": true
+    },
+    {
+      "source": "/academics/",
+      "destination": "/academics",
+      "permanent": true
+    },
+    {
+      "source": "/student-cabinet-2023-2024/",
+      "destination": "/administration/student-cabinet",
+      "permanent": true
+    },
+    {
+      "source": "/alumni-meet-2023-on-30th-may-at-magadh-mahila-college/",
+      "destination": "/alumni",
+      "permanent": true
+    },
+    {
+      "source": "/vision-mission/",
+      "destination": "/about/vision-mission",
+      "permanent": true
+    },
+    {
+      "source": "/oath-taking-ceremony-of-newly-elected-students-cabinet-members-of-2023-24-session/",
+      "destination": "/administration/student-cabinet",
+      "permanent": true
+    },
+    {
+      "source": "/international-conference-on-technologicalinnovations-for-climate-change-mitigation-and-global-warming/",
+      "destination": "/events",
+      "permanent": true
+    },
+    {
+      "source": "/cells-2023-2024/",
+      "destination": "/administration/cells/2023-2024",
+      "permanent": true
+    },
+    {
+      "source": "/organisation-structure/",
+      "destination": "/administration/organogram-of-institution",
+      "permanent": true
+    },
+    {
+      "source": "/pdf/audit_report.pdf",
+      "destination": "/documents/mmcaudit.pdf",
+      "permanent": true
+    },
+    {
+      "source": "/category/tenders/",
+      "destination": "/tenders",
+      "permanent": true
+    },
+    {
+      "source": "/national-seminar-on-trends-in-green-chemistry-and-sustainable-development/",
+      "destination": "/events",
+      "permanent": true
+    },
+    {
+      "source": "/minutes-of-iqac/",
+      "destination": "/iqac/minutes-of-iqac",
+      "permanent": true
+    },
+    {
+      "source": "/annual-reports/",
+      "destination": "/annual-reports",
+      "permanent": true
+    },
+    {
+      "source": "/gender-sensitization/",
+      "destination": "/sexual-harassment",
+      "permanent": true
+    },
+    {
+      "source": "/wp-content/uploads/2025/01/7_1-9_programmes.pdf",
+      "destination": "/iqac/criteria",
+      "permanent": true
+    },
+    {
+      "source": "/best-practices-2023-24/",
+      "destination": "/documents/IQAC/Best-practices.pdf",
+      "permanent": true
+    }
+  ],
   "routes": [
     { "handle": "filesystem" },
     { "src": "/.*", "dest": "/index.html" }
