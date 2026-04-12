@@ -71,6 +71,9 @@ const Footer = () => {
     path: '/annual-reports',
     label: t('footer.importantLinksItems.annualReports')
   }, {
+    path: '/important-documents',
+    label: 'Important Documents'
+  }, {
     path: '/media-gallery',
     label: t('footer.importantLinksItems.mediaGallery')
   }, {

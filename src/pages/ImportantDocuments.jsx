@@ -1,0 +1,297 @@
+import React, { useDeferredValue, useState } from 'react';
+import { Helmet } from 'react-helmet-async';
+import { motion } from 'framer-motion';
+import { ArrowUpRight, FileText, Link2, Search } from 'lucide-react';
+
+const documentSections = [
+  {
+    title: 'AQAR Reports',
+    description: 'Annual Quality Assurance Reports for accreditation and institutional reference.',
+    items: [
+      { title: 'AQAR 2022-23', type: 'pdf', url: 'http://magadhmahilacollege.org/wp-content/uploads/2024/12/AQAR-2022-23.pdf' },
+      { title: 'AQAR 2021-22', type: 'pdf', url: 'http://magadhmahilacollege.org/wp-content/uploads/2023/06/AQAR-2021-22.pdf' },
+      { title: 'AQAR 2020-21', type: 'pdf', url: 'http://magadhmahilacollege.org/wp-content/uploads/2022/04/AQAR-2020-21.pdf' },
+      { title: 'AQAR 2019-20', type: 'pdf', url: 'https://magadhmahilacollege.org/wp-content/uploads/2022/01/AQAR-2019-20-resubmitted-2.pdf' },
+    ],
+  },
+  {
+    title: 'Academic Calendars',
+    description: 'Academic session planning, schedules, and calendar references.',
+    items: [
+      { title: 'Academic Calendar 2023-24', type: 'page', url: 'https://magadhmahilacollege.org/revised-academic-calendar/' },
+      { title: 'Academic Calendar 2022-23', type: 'pdf', url: 'http://magadhmahilacollege.org/wp-content/uploads/2024/04/Academic-Calendar-Admission-2022-2023.pdf' },
+    ],
+  },
+  {
+    title: 'Annual Reports',
+    description: 'Institutional annual report resources for academic and administrative review.',
+    items: [
+      { title: 'Annual Report 2023-24', type: 'pdf', url: 'https://magadhmahilacollege.org/wp-content/uploads/2024/12/Annual_Report_2023-24_MMC_Patna.pdf' },
+    ],
+  },
+  {
+    title: 'Academics & Infrastructure',
+    description: 'Core academic resources, research pages, and campus infrastructure information.',
+    items: [
+      { title: 'Feedback Forms', type: 'page', url: 'https://magadhmahilacollege.org/feedback-forms/' },
+      { title: 'Project Internship & Field Work', type: 'page', url: 'https://magadhmahilacollege.org/project%20internship-field-work/' },
+      { title: 'Syllabus NEP', type: 'page', url: 'https://magadhmahilacollege.org/syllabus-nep/' },
+      { title: 'Research', type: 'page', url: 'https://magadhmahilacollege.org/research/' },
+      { title: 'Infrastructure', type: 'page', url: 'https://magadhmahilacollege.org/infrastructure-and-facilities/' },
+      { title: 'Academic Infrastructure', type: 'page', url: 'https://magadhmahilacollege.org/academic-infrastructure-2/' },
+      { title: 'Sports Facilities', type: 'page', url: 'https://magadhmahilacollege.org/sports-facilities/' },
+      { title: 'Central Library', type: 'page', url: 'https://magadhmahilacollege.org/central-library/' },
+      { title: 'Infrastructure Maintenance', type: 'page', url: 'https://magadhmahilacollege.org/infrastructure-maintenance/' },
+    ],
+  },
+  {
+    title: 'Student Activities & Events',
+    description: 'Student participation, extension work, and alumni event resources.',
+    items: [
+      { title: 'Student Cabinet 2023-24', type: 'page', url: 'https://magadhmahilacollege.org/student-cabinet-2023-2024/' },
+      { title: 'Alumni Meet 2023', type: 'page', url: 'https://magadhmahilacollege.org/alumni-meet-2023-on-30th-may-at-magadh-mahila-college/' },
+      { title: 'NSS & NCC Activities', type: 'page', url: 'https://magadhmahilacollege.org/extension-activities-nss-ncc/' },
+    ],
+  },
+  {
+    title: 'Administration & Governance',
+    description: 'Governance, management, grievance, audit, and quality assurance records.',
+    items: [
+      { title: 'Grievance Redressal Cell', type: 'page', url: 'https://magadhmahilacollege.org/internal-examination-grievances-redressal-cell/' },
+      { title: 'MIS', type: 'page', url: 'https://magadhmahilacollege.org/mis/' },
+      { title: 'Organogram', type: 'page', url: 'https://magadhmahilacollege.org/organisation-structure/' },
+      { title: 'Audit Report 2023-24', type: 'pdf', url: 'https://magadhmahilacollege.org/pdf/audit_report.pdf' },
+      { title: 'Minutes of IQAC', type: 'page', url: 'https://magadhmahilacollege.org/minutes-of-iqac/' },
+    ],
+  },
+  {
+    title: 'Other Resources',
+    description: 'General institutional pages and supplementary policy or archive resources.',
+    items: [
+      { title: 'Academics', type: 'page', url: 'https://magadhmahilacollege.org/academics/' },
+      { title: 'Mission & Vision', type: 'page', url: 'https://magadhmahilacollege.org/vision-mission/' },
+      { title: 'Tenders', type: 'page', url: 'https://magadhmahilacollege.org/category/tenders/' },
+      { title: 'Annual Reports (All)', type: 'page', url: 'https://magadhmahilacollege.org/annual-reports/' },
+      { title: 'Gender Sensitization', type: 'page', url: 'https://magadhmahilacollege.org/gender-sensitization/' },
+      { title: 'Programmes PDF', type: 'pdf', url: 'http://magadhmahilacollege.org/wp-content/uploads/2025/01/7_1-9_programmes.pdf' },
+      { title: 'Best Practices', type: 'page', url: 'https://magadhmahilacollege.org/best-practices-2023-24/' },
+    ],
+  },
+];
+
+const totalResources = documentSections.reduce((sum, section) => sum + section.items.length, 0);
+const totalPdfs = documentSections.reduce(
+  (sum, section) => sum + section.items.filter((item) => item.type === 'pdf').length,
+  0,
+);
+
+function resourceMatches(item, section, query) {
+  if (!query) return true;
+
+  const normalizedSection = section.title.toLowerCase();
+  return (
+    item.title.toLowerCase().includes(query) ||
+    item.type.toLowerCase().includes(query) ||
+    normalizedSection.includes(query)
+  );
+}
+
+export default function ImportantDocuments() {
+  const [searchTerm, setSearchTerm] = useState('');
+  const deferredSearchTerm = useDeferredValue(searchTerm.trim().toLowerCase());
+
+  const visibleSections = documentSections
+    .map((section) => ({
+      ...section,
+      items: section.items.filter((item) => resourceMatches(item, section, deferredSearchTerm)),
+    }))
+    .filter((section) => section.items.length > 0);
+
+  const visibleCount = visibleSections.reduce((sum, section) => sum + section.items.length, 0);
+
+  return (
+    <>
+      <Helmet>
+        <title>Important Documents &amp; Resources - Magadh Mahila College</title>
+        <meta
+          name="description"
+          content="Browse important documents and resources for Magadh Mahila College including AQAR reports, academic calendars, annual reports, administration records, infrastructure pages, and student activity links."
+        />
+      </Helmet>
+
+      <div className="min-h-screen bg-[linear-gradient(180deg,#f5f0e6_0%,#ffffff_24%,#edf5f6_100%)]">
+        <section className="px-4 py-14 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-7xl">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.55 }}
+              className="overflow-hidden rounded-[32px] border border-white/70 bg-white/90 shadow-[0_22px_60px_-28px_rgba(15,52,70,0.24)] backdrop-blur"
+            >
+              <div className="border-b border-slate-200/80 bg-[radial-gradient(circle_at_top_right,rgba(13,91,120,0.14),transparent_30%),radial-gradient(circle_at_bottom_left,rgba(168,123,71,0.12),transparent_30%)] px-6 py-8 sm:px-8 lg:px-10">
+                <div className="inline-flex items-center gap-2 rounded-full border border-primary/10 bg-primary/5 px-4 py-2 text-xs font-bold uppercase tracking-[0.22em] text-primary">
+                  <span className="h-2 w-2 rounded-full bg-amber-600" aria-hidden="true" />
+                  Resource Directory
+                </div>
+
+                <div className="mt-6 grid gap-8 lg:grid-cols-[minmax(0,1.2fr)_minmax(260px,0.8fr)] lg:items-end">
+                  <div>
+                    <h1 className="font-serif text-4xl font-bold tracking-tight text-slate-950 sm:text-5xl lg:text-6xl">
+                      Important Documents &amp; Resources
+                    </h1>
+                    <p className="mt-5 max-w-3xl text-base leading-7 text-slate-600 sm:text-lg">
+                      A single access point for key academic, administrative, governance, and
+                      infrastructure documents. Each resource opens in a new tab so users can keep
+                      browsing the site without losing context.
+                    </p>
+                  </div>
+
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <div className="rounded-3xl border border-slate-200 bg-white/95 p-5 shadow-sm">
+                      <p className="font-serif text-3xl font-bold text-slate-950">{totalResources}</p>
+                      <p className="mt-2 text-sm font-medium text-slate-600">
+                        Resources grouped into 7 categories
+                      </p>
+                    </div>
+                    <div className="rounded-3xl border border-slate-200 bg-white/95 p-5 shadow-sm">
+                      <p className="font-serif text-3xl font-bold text-slate-950">{totalPdfs}</p>
+                      <p className="mt-2 text-sm font-medium text-slate-600">
+                        Direct PDF links in the directory
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-8 grid gap-4 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
+                  <div>
+                    <label
+                      htmlFor="important-documents-search"
+                      className="mb-3 block text-sm font-semibold text-slate-800"
+                    >
+                      Search documents by title
+                    </label>
+                    <div className="relative">
+                      <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
+                      <input
+                        id="important-documents-search"
+                        type="search"
+                        value={searchTerm}
+                        onChange={(event) => setSearchTerm(event.target.value)}
+                        placeholder="Search AQAR, audit report, library, student cabinet..."
+                        className="w-full rounded-2xl border border-slate-200 bg-white py-3.5 pl-12 pr-4 text-sm text-slate-900 outline-none transition focus:border-primary/40 focus:ring-4 focus:ring-primary/10"
+                      />
+                    </div>
+                  </div>
+
+                  <div
+                    className="inline-flex min-h-[56px] items-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 text-sm font-semibold text-slate-600"
+                    aria-live="polite"
+                  >
+                    <span className="text-slate-900">{visibleCount}</span>
+                    <span>
+                      resource{visibleCount === 1 ? '' : 's'} shown
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
+                {visibleSections.length === 0 ? (
+                  <div className="rounded-[28px] border border-dashed border-primary/25 bg-primary/5 px-6 py-14 text-center">
+                    <h2 className="font-serif text-3xl font-bold text-slate-950">
+                      No matching resources
+                    </h2>
+                    <p className="mx-auto mt-3 max-w-2xl text-sm leading-7 text-slate-600 sm:text-base">
+                      Try a different keyword or clear the search box to view the full document
+                      directory.
+                    </p>
+                  </div>
+                ) : (
+                  <div className="space-y-6">
+                    {visibleSections.map((section, sectionIndex) => (
+                      <motion.section
+                        key={section.title}
+                        initial={{ opacity: 0, y: 18 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, amount: 0.2 }}
+                        transition={{ duration: 0.4, delay: sectionIndex * 0.04 }}
+                        className="overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-[0_18px_46px_-30px_rgba(15,52,70,0.28)]"
+                      >
+                        <div className="flex flex-col gap-3 border-b border-slate-200 bg-[linear-gradient(90deg,rgba(13,91,120,0.08),rgba(13,91,120,0.02))] px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
+                          <div>
+                            <h2 className="font-serif text-2xl font-bold text-slate-950">
+                              {section.title}
+                            </h2>
+                            <p className="mt-1 text-sm text-slate-600">{section.description}</p>
+                          </div>
+
+                          <div className="inline-flex items-center rounded-full border border-primary/10 bg-white px-4 py-2 text-xs font-bold uppercase tracking-[0.18em] text-primary">
+                            {section.items.length} item{section.items.length === 1 ? '' : 's'}
+                          </div>
+                        </div>
+
+                        <div className="grid gap-5 p-6 md:grid-cols-2 xl:grid-cols-3">
+                          {section.items.map((item) => {
+                            const isPdf = item.type === 'pdf';
+                            const ItemIcon = isPdf ? FileText : Link2;
+
+                            return (
+                              <article
+                                key={`${section.title}-${item.title}`}
+                                className="group flex h-full flex-col rounded-[24px] border border-slate-200 bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(241,247,249,0.92))] p-5 transition duration-300 hover:-translate-y-1 hover:border-primary/20 hover:shadow-[0_18px_34px_-24px_rgba(15,52,70,0.32)]"
+                              >
+                                <div className="flex items-start gap-4">
+                                  <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+                                    <ItemIcon className="h-5 w-5" />
+                                  </div>
+
+                                  <div className="min-w-0">
+                                    <span className="inline-flex rounded-full bg-primary/10 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-primary">
+                                      {isPdf ? 'PDF' : 'Page'}
+                                    </span>
+                                    <a
+                                      href={item.url}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="mt-3 inline-block text-lg font-bold leading-7 text-slate-950 transition group-hover:text-primary hover:text-primary"
+                                    >
+                                      {item.title}
+                                    </a>
+                                    <p className="mt-2 text-sm text-slate-600">
+                                      {isPdf ? 'Direct PDF document' : 'Website page'} opening in a
+                                      new tab.
+                                    </p>
+                                  </div>
+                                </div>
+
+                                <div className="mt-5 break-all rounded-2xl border border-slate-200 bg-white/80 px-4 py-3 text-xs leading-6 text-slate-500">
+                                  {item.url}
+                                </div>
+
+                                <div className="mt-5 pt-1">
+                                  <a
+                                    href={item.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90"
+                                  >
+                                    Open {isPdf ? 'PDF' : 'Link'}
+                                    <ArrowUpRight className="h-4 w-4" />
+                                  </a>
+                                </div>
+                              </article>
+                            );
+                          })}
+                        </div>
+                      </motion.section>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          </div>
+        </section>
+      </div>
+    </>
+  );
+}

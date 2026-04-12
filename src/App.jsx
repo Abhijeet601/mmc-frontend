@@ -16,6 +16,7 @@ import CampusLife from './pages/CampusLife';
 import Contact from './pages/Contact';
 import AnnualReports from './pages/AnnualReports';
 import AuditReport from './pages/AuditReport';
+import ImportantDocuments from './pages/ImportantDocuments';
 
 import TermsConditions from './pages/TermsConditions';
 import Disclaimer from './pages/Disclaimer';
@@ -263,6 +264,7 @@ function App() {
               <Route path="/contact" element={<Contact />} />
               <Route path="/annual-reports" element={<AnnualReports />} />
               <Route path="/audit-report" element={<AuditReport />} />
+              <Route path="/important-documents" element={<ImportantDocuments />} />
 
               {/* Dedicated pages */}
               <Route path="/news" element={<News />} />
