@@ -59,6 +59,9 @@ const Footer = () => {
     label: t('footer.quickLinksItems.contact')
   }];
   const importantLinks = [{
+    path: '/important-documents',
+    label: 'Important Documents'
+  }, {
     path: '/tenders',
     label: t('footer.importantLinksItems.tenders')
   }, {
@@ -70,9 +73,6 @@ const Footer = () => {
   }, {
     path: '/annual-reports',
     label: t('footer.importantLinksItems.annualReports')
-  }, {
-    path: '/important-documents',
-    label: 'Important Documents'
   }, {
     path: '/media-gallery',
     label: t('footer.importantLinksItems.mediaGallery')

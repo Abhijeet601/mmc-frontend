@@ -296,10 +296,6 @@ const Navbar = () => {
               <FileText className="w-4 h-4" />
               {t('nav.tenders')}
             </Link>
-            <Link to="/important-documents" className="nav-link text-xs hover:text-white transition-colors duration-300 flex items-center gap-2">
-              <FileText className="w-4 h-4" />
-              Important Documents
-            </Link>
             <Link to="/erp" className="nav-link text-xs hover:text-white transition-colors duration-300 flex items-center gap-2">
               <BookOpen className="w-4 h-4" />
               ERP Portal
@@ -1436,23 +1432,6 @@ const Navbar = () => {
           }}>
                 <Link to="/notifications" onClick={closeMobileMenu} className="block uppercase text-sm py-3 hover:text-primary font-medium transition-colors">
                   {t('nav.notifications')}
-                </Link>
-              </motion.div>
-              <motion.div variants={{
-            hidden: {
-              opacity: 0,
-              x: -20
-            },
-            visible: {
-              opacity: 1,
-              x: 0
-            }
-              }} transition={{
-            duration: 0.3,
-            ease: [0.4, 0, 0.2, 1]
-          }}>
-                <Link to="/important-documents" onClick={closeMobileMenu} className="block uppercase text-sm py-3 hover:text-primary font-medium transition-colors">
-                  Important Documents
                 </Link>
               </motion.div>
               <motion.div variants={{
