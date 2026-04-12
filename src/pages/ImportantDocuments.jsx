@@ -2,79 +2,190 @@ import React, { useDeferredValue, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { ArrowUpRight, FileText, Link2, Search } from 'lucide-react';
+import { r2Url } from '@/lib/r2Assets';
+
+const normalizeHttps = (url) => url.replace(/^http:\/\//i, 'https://');
+
+const pdfViewerUrl = (fileUrl, title) =>
+  `/pdf-viewer?file=${encodeURIComponent(fileUrl)}&title=${encodeURIComponent(
+    title,
+  )}&back=${encodeURIComponent('/important-documents')}&kind=pdf`;
+
+const internalPdf = (title, filePath, originalUrl) => {
+  const fileUrl = r2Url(filePath);
+
+  return {
+    title,
+    type: 'pdf',
+    href: pdfViewerUrl(fileUrl, title),
+    displayUrl: originalUrl || fileUrl,
+  };
+};
+
+const externalPdf = (title, url) => {
+  const secureUrl = normalizeHttps(url);
+
+  return {
+    title,
+    type: 'pdf',
+    href: pdfViewerUrl(secureUrl, title),
+    displayUrl: secureUrl,
+  };
+};
+
+const pageLink = (title, url, internalUrl = '') => ({
+  title,
+  type: 'page',
+  href: internalUrl || normalizeHttps(url),
+  displayUrl: internalUrl || normalizeHttps(url),
+});
 
 const documentSections = [
   {
     title: 'AQAR Reports',
     description: 'Annual Quality Assurance Reports for accreditation and institutional reference.',
     items: [
-      { title: 'AQAR 2022-23', type: 'pdf', url: 'http://magadhmahilacollege.org/wp-content/uploads/2024/12/AQAR-2022-23.pdf' },
-      { title: 'AQAR 2021-22', type: 'pdf', url: 'http://magadhmahilacollege.org/wp-content/uploads/2023/06/AQAR-2021-22.pdf' },
-      { title: 'AQAR 2020-21', type: 'pdf', url: 'http://magadhmahilacollege.org/wp-content/uploads/2022/04/AQAR-2020-21.pdf' },
-      { title: 'AQAR 2019-20', type: 'pdf', url: 'https://magadhmahilacollege.org/wp-content/uploads/2022/01/AQAR-2019-20-resubmitted-2.pdf' },
+      internalPdf(
+        'AQAR 2022-23',
+        'documents/IQAC/NAAC/AQAR/AQAR-2022-23.pdf',
+        'https://magadhmahilacollege.org/wp-content/uploads/2024/12/AQAR-2022-23.pdf',
+      ),
+      internalPdf(
+        'AQAR 2021-22',
+        'documents/IQAC/NAAC/AQAR/AQAR-2021-22.pdf',
+        'https://magadhmahilacollege.org/wp-content/uploads/2023/06/AQAR-2021-22.pdf',
+      ),
+      internalPdf(
+        'AQAR 2020-21',
+        'documents/IQAC/NAAC/AQAR/AQAR-2020-21.pdf',
+        'https://magadhmahilacollege.org/wp-content/uploads/2022/04/AQAR-2020-21.pdf',
+      ),
+      internalPdf(
+        'AQAR 2019-20',
+        'documents/IQAC/NAAC/AQAR/AQAR-2019-20-resubmitted-2.pdf',
+        'https://magadhmahilacollege.org/wp-content/uploads/2022/01/AQAR-2019-20-resubmitted-2.pdf',
+      ),
     ],
   },
   {
     title: 'Academic Calendars',
     description: 'Academic session planning, schedules, and calendar references.',
     items: [
-      { title: 'Academic Calendar 2023-24', type: 'page', url: 'https://magadhmahilacollege.org/revised-academic-calendar/' },
-      { title: 'Academic Calendar 2022-23', type: 'pdf', url: 'http://magadhmahilacollege.org/wp-content/uploads/2024/04/Academic-Calendar-Admission-2022-2023.pdf' },
+      pageLink(
+        'Academic Calendar 2023-24',
+        'https://magadhmahilacollege.org/revised-academic-calendar/',
+        '/iqac/academic-calendar',
+      ),
+      internalPdf(
+        'Academic Calendar 2022-23',
+        'data files/IQAC/Academic Calender/Academic-Calendar-Admission-2022-2023.pdf',
+        'https://magadhmahilacollege.org/wp-content/uploads/2024/04/Academic-Calendar-Admission-2022-2023.pdf',
+      ),
     ],
   },
   {
     title: 'Annual Reports',
     description: 'Institutional annual report resources for academic and administrative review.',
     items: [
-      { title: 'Annual Report 2023-24', type: 'pdf', url: 'https://magadhmahilacollege.org/wp-content/uploads/2024/12/Annual_Report_2023-24_MMC_Patna.pdf' },
+      externalPdf(
+        'Annual Report 2023-24',
+        'https://magadhmahilacollege.org/wp-content/uploads/2024/12/Annual_Report_2023-24_MMC_Patna.pdf',
+      ),
     ],
   },
   {
     title: 'Academics & Infrastructure',
     description: 'Core academic resources, research pages, and campus infrastructure information.',
     items: [
-      { title: 'Feedback Forms', type: 'page', url: 'https://magadhmahilacollege.org/feedback-forms/' },
-      { title: 'Project Internship & Field Work', type: 'page', url: 'https://magadhmahilacollege.org/project%20internship-field-work/' },
-      { title: 'Syllabus NEP', type: 'page', url: 'https://magadhmahilacollege.org/syllabus-nep/' },
-      { title: 'Research', type: 'page', url: 'https://magadhmahilacollege.org/research/' },
-      { title: 'Infrastructure', type: 'page', url: 'https://magadhmahilacollege.org/infrastructure-and-facilities/' },
-      { title: 'Academic Infrastructure', type: 'page', url: 'https://magadhmahilacollege.org/academic-infrastructure-2/' },
-      { title: 'Sports Facilities', type: 'page', url: 'https://magadhmahilacollege.org/sports-facilities/' },
-      { title: 'Central Library', type: 'page', url: 'https://magadhmahilacollege.org/central-library/' },
-      { title: 'Infrastructure Maintenance', type: 'page', url: 'https://magadhmahilacollege.org/infrastructure-maintenance/' },
+      pageLink('Feedback Forms', 'https://magadhmahilacollege.org/feedback-forms/', '/about/feedback-forms'),
+      pageLink(
+        'Project Internship & Field Work',
+        'https://magadhmahilacollege.org/project%20internship-field-work/',
+        '/iqac/project-internship-fieldwork',
+      ),
+      pageLink('Syllabus NEP', 'https://magadhmahilacollege.org/syllabus-nep/', '/nep2020/syllabus-nep'),
+      pageLink('Research', 'https://magadhmahilacollege.org/research/', '/iqac/research'),
+      pageLink('Infrastructure', 'https://magadhmahilacollege.org/infrastructure-and-facilities/', '/campus-life'),
+      pageLink(
+        'Academic Infrastructure',
+        'https://magadhmahilacollege.org/academic-infrastructure-2/',
+        '/nep2020/academic-infrastructure',
+      ),
+      pageLink('Sports Facilities', 'https://magadhmahilacollege.org/sports-facilities/', '/campus-life'),
+      pageLink('Central Library', 'https://magadhmahilacollege.org/central-library/', '/nep2020/library'),
+      pageLink(
+        'Infrastructure Maintenance',
+        'https://magadhmahilacollege.org/infrastructure-maintenance/',
+        '/about/infrastructure-maintenance',
+      ),
     ],
   },
   {
     title: 'Student Activities & Events',
     description: 'Student participation, extension work, and alumni event resources.',
     items: [
-      { title: 'Student Cabinet 2023-24', type: 'page', url: 'https://magadhmahilacollege.org/student-cabinet-2023-2024/' },
-      { title: 'Alumni Meet 2023', type: 'page', url: 'https://magadhmahilacollege.org/alumni-meet-2023-on-30th-may-at-magadh-mahila-college/' },
-      { title: 'NSS & NCC Activities', type: 'page', url: 'https://magadhmahilacollege.org/extension-activities-nss-ncc/' },
+      pageLink(
+        'Student Cabinet 2023-24',
+        'https://magadhmahilacollege.org/student-cabinet-2023-2024/',
+        '/administration/student-cabinet',
+      ),
+      pageLink(
+        'Alumni Meet 2023',
+        'https://magadhmahilacollege.org/alumni-meet-2023-on-30th-may-at-magadh-mahila-college/',
+        '/alumni',
+      ),
+      pageLink(
+        'NSS & NCC Activities',
+        'https://magadhmahilacollege.org/extension-activities-nss-ncc/',
+        '/iqac/extension-activities',
+      ),
     ],
   },
   {
     title: 'Administration & Governance',
     description: 'Governance, management, grievance, audit, and quality assurance records.',
     items: [
-      { title: 'Grievance Redressal Cell', type: 'page', url: 'https://magadhmahilacollege.org/internal-examination-grievances-redressal-cell/' },
-      { title: 'MIS', type: 'page', url: 'https://magadhmahilacollege.org/mis/' },
-      { title: 'Organogram', type: 'page', url: 'https://magadhmahilacollege.org/organisation-structure/' },
-      { title: 'Audit Report 2023-24', type: 'pdf', url: 'https://magadhmahilacollege.org/pdf/audit_report.pdf' },
-      { title: 'Minutes of IQAC', type: 'page', url: 'https://magadhmahilacollege.org/minutes-of-iqac/' },
+      pageLink(
+        'Grievance Redressal Cell',
+        'https://magadhmahilacollege.org/internal-examination-grievances-redressal-cell/',
+        '/grievance',
+      ),
+      pageLink('MIS', 'https://magadhmahilacollege.org/mis/', '/about/mis'),
+      pageLink(
+        'Organogram',
+        'https://magadhmahilacollege.org/organisation-structure/',
+        '/administration/organogram-of-institution',
+      ),
+      internalPdf(
+        'Audit Report 2023-24',
+        'documents/mmcaudit.pdf',
+        'https://magadhmahilacollege.org/pdf/audit_report.pdf',
+      ),
+      pageLink('Minutes of IQAC', 'https://magadhmahilacollege.org/minutes-of-iqac/', '/iqac/minutes-of-iqac'),
     ],
   },
   {
     title: 'Other Resources',
     description: 'General institutional pages and supplementary policy or archive resources.',
     items: [
-      { title: 'Academics', type: 'page', url: 'https://magadhmahilacollege.org/academics/' },
-      { title: 'Mission & Vision', type: 'page', url: 'https://magadhmahilacollege.org/vision-mission/' },
-      { title: 'Tenders', type: 'page', url: 'https://magadhmahilacollege.org/category/tenders/' },
-      { title: 'Annual Reports (All)', type: 'page', url: 'https://magadhmahilacollege.org/annual-reports/' },
-      { title: 'Gender Sensitization', type: 'page', url: 'https://magadhmahilacollege.org/gender-sensitization/' },
-      { title: 'Programmes PDF', type: 'pdf', url: 'http://magadhmahilacollege.org/wp-content/uploads/2025/01/7_1-9_programmes.pdf' },
-      { title: 'Best Practices', type: 'page', url: 'https://magadhmahilacollege.org/best-practices-2023-24/' },
+      pageLink('Academics', 'https://magadhmahilacollege.org/academics/', '/academics'),
+      pageLink('Mission & Vision', 'https://magadhmahilacollege.org/vision-mission/', '/about/vision-mission'),
+      pageLink('Tenders', 'https://magadhmahilacollege.org/category/tenders/', '/tenders'),
+      pageLink('Annual Reports (All)', 'https://magadhmahilacollege.org/annual-reports/', '/annual-reports'),
+      pageLink(
+        'Gender Sensitization',
+        'https://magadhmahilacollege.org/gender-sensitization/',
+        '/sexual-harassment',
+      ),
+      externalPdf(
+        'Programmes PDF',
+        'https://magadhmahilacollege.org/wp-content/uploads/2025/01/7_1-9_programmes.pdf',
+      ),
+      pageLink(
+        'Best Practices',
+        'https://magadhmahilacollege.org/best-practices-2023-24/',
+        '/iqac/best-practices-2023-24',
+      ),
     ],
   },
 ];
@@ -250,7 +361,7 @@ export default function ImportantDocuments() {
                                       {isPdf ? 'PDF' : 'Page'}
                                     </span>
                                     <a
-                                      href={item.url}
+                                      href={item.href}
                                       target="_blank"
                                       rel="noopener noreferrer"
                                       className="mt-3 inline-block text-lg font-bold leading-7 text-slate-950 transition group-hover:text-primary hover:text-primary"
@@ -265,17 +376,17 @@ export default function ImportantDocuments() {
                                 </div>
 
                                 <div className="mt-5 break-all rounded-2xl border border-slate-200 bg-white/80 px-4 py-3 text-xs leading-6 text-slate-500">
-                                  {item.url}
+                                  {item.displayUrl}
                                 </div>
 
                                 <div className="mt-5 pt-1">
                                   <a
-                                    href={item.url}
+                                    href={item.href}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90"
                                   >
-                                    Open {isPdf ? 'PDF' : 'Link'}
+                                    Open {isPdf ? 'PDF' : 'Page'}
                                     <ArrowUpRight className="h-4 w-4" />
                                   </a>
                                 </div>
