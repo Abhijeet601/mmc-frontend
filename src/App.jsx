@@ -167,6 +167,9 @@ import Alumni from './pages/Alumni';
 import Notifications from './pages/Notifications';
 import Notices from './pages/Notices';
 import PdfViewer from './pages/PdfViewer';
+import WpContent from './pages/WpContent';
+import WpContentUploads from './pages/WpContentUploads';
+import LegacyWpContentPdf from './pages/LegacyWpContentPdf';
 
 import { Toaster } from './components/ui/toaster';
 import { getStoredLanguagePreference, persistLanguagePreference } from './lib/languagePreference';
@@ -280,6 +283,9 @@ function App() {
               <Route path="/notifications" element={<Notifications />} />
               <Route path="/notices" element={<Notices />} />
               <Route path="/pdf-viewer" element={<PdfViewer />} />
+              <Route path="/wp-content" element={<WpContent />} />
+              <Route path="/wp-content/uploads" element={<WpContentUploads />} />
+              <Route path="/wp-content/uploads/:year/:month/:fileName" element={<LegacyWpContentPdf />} />
 
               {/* NIRF pages */}
               <Route path="/nirf" element={<NIRF />} />

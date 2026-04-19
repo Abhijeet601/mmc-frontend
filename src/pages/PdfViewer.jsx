@@ -61,7 +61,7 @@ const PdfViewer = () => {
                   className="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-slate-400 hover:bg-slate-100"
                 >
                   <ArrowLeft className="h-4 w-4" />
-                  Back
+                  Back to Directory
                 </Link>
                 {fileUrl ? (
                   <a
@@ -108,7 +108,7 @@ const PdfViewer = () => {
                     {previewType === 'image' ? 'Image Preview' : 'Document Preview'}
                   </h2>
                   <p className="mt-1 text-sm text-slate-500">
-                    This attachment is displayed on a separate page inside the website.
+                    This attachment is displayed on a dedicated page inside the website.
                   </p>
                 </div>
                 <div className="p-4 md:p-6">

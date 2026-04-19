@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { ArrowUpRight, FileText, Link2, Search } from 'lucide-react';
 import { r2Url } from '@/lib/r2Assets';
+import { getWpContentUploadByUrl } from '@/data/wpContentUploads';
 
 const normalizeHttps = (url) => url.replace(/^http:\/\//i, 'https://');
 
@@ -13,23 +14,29 @@ const pdfViewerUrl = (fileUrl, title) =>
 
 const internalPdf = (title, filePath, originalUrl) => {
   const fileUrl = r2Url(filePath);
+  const legacyDocument = getWpContentUploadByUrl(originalUrl || fileUrl);
+  const href = legacyDocument?.legacyPath || pdfViewerUrl(fileUrl, title);
 
   return {
     title,
     type: 'pdf',
-    href: pdfViewerUrl(fileUrl, title),
-    displayUrl: originalUrl || fileUrl,
+    href,
+    displayUrl: href,
+    sourceUrl: originalUrl || fileUrl,
   };
 };
 
 const externalPdf = (title, url) => {
   const secureUrl = normalizeHttps(url);
+  const legacyDocument = getWpContentUploadByUrl(secureUrl);
+  const href = legacyDocument?.legacyPath || pdfViewerUrl(secureUrl, title);
 
   return {
     title,
     type: 'pdf',
-    href: pdfViewerUrl(secureUrl, title),
-    displayUrl: secureUrl,
+    href,
+    displayUrl: href,
+    sourceUrl: secureUrl,
   };
 };
 
@@ -252,8 +259,8 @@ export default function ImportantDocuments() {
                     </h1>
                     <p className="mt-5 max-w-3xl text-base leading-7 text-slate-600 sm:text-lg">
                       A single access point for key academic, administrative, governance, and
-                      infrastructure documents. Each resource opens in a new tab so users can keep
-                      browsing the site without losing context.
+                      infrastructure documents. PDF resources open on a dedicated viewer page inside
+                      the website, while page links stay within the same site flow.
                     </p>
                   </div>
 
@@ -362,31 +369,30 @@ export default function ImportantDocuments() {
                                     </span>
                                     <a
                                       href={item.href}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
                                       className="mt-3 inline-block text-lg font-bold leading-7 text-slate-950 transition group-hover:text-primary hover:text-primary"
                                     >
                                       {item.title}
                                     </a>
                                     <p className="mt-2 text-sm text-slate-600">
-                                      {isPdf ? 'Direct PDF document' : 'Website page'} opening in a
-                                      new tab.
+                                      {isPdf
+                                        ? 'Direct PDF document with an in-site viewer page.'
+                                        : 'Website page opening on the same website.'}
                                     </p>
                                   </div>
                                 </div>
 
                                 <div className="mt-5 break-all rounded-2xl border border-slate-200 bg-white/80 px-4 py-3 text-xs leading-6 text-slate-500">
-                                  {item.displayUrl}
+                                  <a href={item.href} className="transition hover:text-primary hover:underline">
+                                    {item.displayUrl}
+                                  </a>
                                 </div>
 
                                 <div className="mt-5 pt-1">
                                   <a
                                     href={item.href}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
                                     className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90"
                                   >
-                                    Open {isPdf ? 'PDF' : 'Page'}
+                                    {isPdf ? 'View PDF' : 'Open Page'}
                                     <ArrowUpRight className="h-4 w-4" />
                                   </a>
                                 </div>

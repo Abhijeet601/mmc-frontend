@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta
+    name="description"
+    content="WordPress-style wp-content page for Magadh Mahila College with a direct link to the uploads page."
+  >
+  <title>wp-content | Magadh Mahila College</title>
+  <style>
+    .mmc-wp,
+    .mmc-wp * {
+      box-sizing: border-box;
+    }
+
+    .mmc-wp {
+      --bg: linear-gradient(180deg, #f5f0e6 0%, #ffffff 24%, #edf5f6 100%);
+      --surface: rgba(255, 255, 255, 0.94);
+      --border: #d9e5e8;
+      --text: #183241;
+      --muted: #617481;
+      --accent: #0d5b78;
+      --accent-soft: rgba(13, 91, 120, 0.08);
+      --shadow: 0 22px 54px rgba(15, 52, 70, 0.1);
+      margin: 0;
+      padding: 40px 18px 72px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+      line-height: 1.6;
+    }
+
+    .mmc-shell {
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .mmc-hero,
+    .mmc-card,
+    .mmc-route {
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .mmc-hero {
+      padding: 32px;
+      background:
+        radial-gradient(circle at top right, rgba(13, 91, 120, 0.14), transparent 34%),
+        radial-gradient(circle at bottom left, rgba(168, 123, 71, 0.12), transparent 32%),
+        var(--surface);
+    }
+
+    .mmc-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 14px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .mmc-kicker i {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #b8833f;
+      display: inline-block;
+    }
+
+    .mmc-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(260px, 0.8fr);
+      gap: 24px;
+      align-items: end;
+      margin-top: 18px;
+    }
+
+    .mmc-hero h1,
+    .mmc-card h2 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      letter-spacing: -0.02em;
+      color: #102432;
+    }
+
+    .mmc-hero h1 {
+      font-size: clamp(2.3rem, 4vw, 4rem);
+      line-height: 1.08;
+    }
+
+    .mmc-lead,
+    .mmc-copy,
+    .mmc-meta {
+      color: var(--muted);
+    }
+
+    .mmc-lead {
+      max-width: 760px;
+      margin: 16px 0 0;
+    }
+
+    .mmc-stats {
+      display: grid;
+      gap: 14px;
+    }
+
+    .mmc-stat {
+      padding: 18px;
+      border-radius: 20px;
+      background: #fff;
+      border: 1px solid rgba(13, 91, 120, 0.1);
+    }
+
+    .mmc-stat strong {
+      display: block;
+      font: 700 2rem/1 Georgia, "Times New Roman", serif;
+      color: #102432;
+      margin-bottom: 8px;
+    }
+
+    .mmc-route {
+      margin-top: 28px;
+      padding: 22px 24px;
+      background: rgba(255, 255, 255, 0.82);
+    }
+
+    .mmc-route code {
+      display: block;
+      margin-top: 8px;
+      color: var(--accent);
+      font-size: 0.96rem;
+      font-weight: 700;
+      word-break: break-all;
+    }
+
+    .mmc-card {
+      margin-top: 28px;
+      padding: 28px;
+    }
+
+    .mmc-card-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .mmc-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: #fff;
+      border: 1px solid rgba(13, 91, 120, 0.12);
+      color: var(--accent);
+      font-size: 0.8rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .mmc-copy {
+      margin: 10px 0 0;
+      max-width: 760px;
+    }
+
+    .mmc-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin: 22px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .mmc-list li {
+      padding: 16px 18px;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(241, 247, 249, 0.92));
+      font-weight: 700;
+      color: #112432;
+    }
+
+    .mmc-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 24px;
+    }
+
+    .mmc-action {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 0 18px;
+      border-radius: 16px;
+      border: 1px solid transparent;
+      background: #113f55;
+      color: #fff;
+      font-size: 0.94rem;
+      font-weight: 700;
+      text-decoration: none;
+      transition: transform 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .mmc-action:hover,
+    .mmc-action:focus-visible {
+      background: var(--accent);
+      transform: translateY(-1px);
+      box-shadow: 0 12px 24px rgba(13, 91, 120, 0.18);
+    }
+
+    .mmc-action-secondary {
+      background: #fff;
+      color: var(--accent);
+      border-color: rgba(13, 91, 120, 0.16);
+    }
+
+    .mmc-action-secondary:hover,
+    .mmc-action-secondary:focus-visible {
+      background: rgba(13, 91, 120, 0.08);
+      box-shadow: none;
+    }
+
+    @media (max-width: 860px) {
+      .mmc-grid,
+      .mmc-list {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .mmc-wp {
+        padding: 28px 12px 56px;
+      }
+
+      .mmc-hero,
+      .mmc-card,
+      .mmc-route {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .mmc-card-head {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="mmc-wp">
+    <div class="mmc-shell">
+      <section class="mmc-hero">
+        <div class="mmc-kicker"><i aria-hidden="true"></i>Legacy Route Page</div>
+        <div class="mmc-grid">
+          <div>
+            <h1>wp-content</h1>
+            <p class="mmc-lead">
+              This page acts as the parent route for the preserved WordPress-style document area.
+              The uploads page contains the requested PDF links for AQAR, academic calendar,
+              annual report, and programmes.
+            </p>
+          </div>
+
+          <div class="mmc-stats" aria-label="Page summary">
+            <div class="mmc-stat">
+              <strong>1</strong>
+              <span class="mmc-meta">Child page linked from this parent page</span>
+            </div>
+            <div class="mmc-stat">
+              <strong>7</strong>
+              <span class="mmc-meta">PDF documents listed on the uploads page</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="mmc-route" aria-label="Route information">
+        <strong>Parent route</strong>
+        <code>/wp-content</code>
+      </section>
+
+      <section class="mmc-card" aria-labelledby="mmc-uploads-title">
+        <div class="mmc-card-head">
+          <div>
+            <h2 id="mmc-uploads-title">uploads</h2>
+            <p class="mmc-copy">
+              Open the uploads page to view the requested document list. All links on that page
+              point to their preserved legacy PDF locations.
+            </p>
+          </div>
+          <div class="mmc-pill">Child Page Ready</div>
+        </div>
+
+        <ul class="mmc-list" aria-label="Included documents">
+          <li>AQAR 2022-23</li>
+          <li>AQAR 2021-22</li>
+          <li>AQAR 2020-21</li>
+          <li>AQAR 2019-20</li>
+          <li>Academic Calendar 2022-23</li>
+          <li>Annual Report 2023-24</li>
+          <li>Programmes PDF</li>
+        </ul>
+
+        <div class="mmc-actions">
+          <a class="mmc-action" href="/wp-content/uploads">Open uploads Page</a>
+          <a class="mmc-action mmc-action-secondary" href="/important-documents">Back to Important Documents</a>
+        </div>
+      </section>
+    </div>
+  </main>
+</body>
+</html>

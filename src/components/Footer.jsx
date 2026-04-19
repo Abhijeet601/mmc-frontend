@@ -62,6 +62,9 @@ const Footer = () => {
     path: '/important-documents',
     label: 'Important Documents'
   }, {
+    path: '/wp-content/uploads',
+    label: 'Uploads Page'
+  }, {
     path: '/tenders',
     label: t('footer.importantLinksItems.tenders')
   }, {

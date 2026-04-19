@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta
+    name="description"
+    content="WordPress-style uploads page for Magadh Mahila College with AQAR reports, academic calendar, annual report, and programmes PDF."
+  >
+  <title>wp-content/uploads | Magadh Mahila College</title>
+  <style>
+    .mmc-uploads,
+    .mmc-uploads * {
+      box-sizing: border-box;
+    }
+
+    .mmc-uploads {
+      --bg: linear-gradient(180deg, #f5f0e6 0%, #ffffff 24%, #edf5f6 100%);
+      --surface: rgba(255, 255, 255, 0.94);
+      --border: #d9e5e8;
+      --text: #183241;
+      --muted: #627582;
+      --accent: #0d5b78;
+      --accent-soft: rgba(13, 91, 120, 0.08);
+      --shadow: 0 22px 54px rgba(15, 52, 70, 0.1);
+      margin: 0;
+      padding: 40px 18px 72px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+      line-height: 1.6;
+    }
+
+    .mmc-shell {
+      max-width: 1220px;
+      margin: 0 auto;
+    }
+
+    .mmc-hero,
+    .mmc-section {
+      border: 1px solid var(--border);
+      border-radius: 30px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .mmc-hero {
+      padding: 32px;
+      background:
+        radial-gradient(circle at top right, rgba(13, 91, 120, 0.14), transparent 34%),
+        radial-gradient(circle at bottom left, rgba(168, 123, 71, 0.12), transparent 32%),
+        var(--surface);
+    }
+
+    .mmc-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 14px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .mmc-kicker i {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #b8833f;
+      display: inline-block;
+    }
+
+    .mmc-hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+      gap: 24px;
+      align-items: end;
+      margin-top: 18px;
+    }
+
+    .mmc-hero h1,
+    .mmc-section h2 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      letter-spacing: -0.02em;
+      color: #102432;
+    }
+
+    .mmc-hero h1 {
+      font-size: clamp(2.3rem, 4vw, 4rem);
+      line-height: 1.08;
+    }
+
+    .mmc-lead,
+    .mmc-note,
+    .mmc-meta,
+    .mmc-path {
+      color: var(--muted);
+    }
+
+    .mmc-lead {
+      max-width: 760px;
+      margin: 16px 0 0;
+    }
+
+    .mmc-stats {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .mmc-stat {
+      padding: 18px;
+      border-radius: 20px;
+      background: #fff;
+      border: 1px solid rgba(13, 91, 120, 0.1);
+    }
+
+    .mmc-stat strong {
+      display: block;
+      font: 700 1.95rem/1 Georgia, "Times New Roman", serif;
+      color: #102432;
+      margin-bottom: 8px;
+    }
+
+    .mmc-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 26px;
+    }
+
+    .mmc-action {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 0 18px;
+      border-radius: 16px;
+      border: 1px solid transparent;
+      background: #113f55;
+      color: #fff;
+      font-size: 0.94rem;
+      font-weight: 700;
+      text-decoration: none;
+      transition: transform 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .mmc-action:hover,
+    .mmc-action:focus-visible {
+      background: var(--accent);
+      transform: translateY(-1px);
+      box-shadow: 0 12px 24px rgba(13, 91, 120, 0.18);
+    }
+
+    .mmc-action-secondary {
+      background: #fff;
+      color: var(--accent);
+      border-color: rgba(13, 91, 120, 0.16);
+    }
+
+    .mmc-action-secondary:hover,
+    .mmc-action-secondary:focus-visible {
+      background: rgba(13, 91, 120, 0.08);
+      box-shadow: none;
+    }
+
+    .mmc-layout {
+      display: grid;
+      gap: 24px;
+      margin-top: 30px;
+    }
+
+    .mmc-section {
+      overflow: hidden;
+    }
+
+    .mmc-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: center;
+      padding: 24px 28px;
+      background: linear-gradient(90deg, rgba(13, 91, 120, 0.08), rgba(13, 91, 120, 0.02));
+      border-bottom: 1px solid rgba(13, 91, 120, 0.08);
+    }
+
+    .mmc-head h2 {
+      font-size: clamp(1.35rem, 2vw, 1.8rem);
+    }
+
+    .mmc-count {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: #fff;
+      border: 1px solid rgba(13, 91, 120, 0.12);
+      color: var(--accent);
+      font-size: 0.8rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .mmc-cards {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      padding: 26px;
+    }
+
+    .mmc-card {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      padding: 20px;
+      border-radius: 22px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(241, 247, 249, 0.92));
+      transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .mmc-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(13, 91, 120, 0.22);
+      box-shadow: 0 18px 34px rgba(15, 52, 70, 0.09);
+    }
+
+    .mmc-card-top {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+
+    .mmc-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 16px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+    }
+
+    .mmc-icon svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    .mmc-type {
+      display: inline-flex;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .mmc-title {
+      display: inline-block;
+      margin-top: 10px;
+      color: #112432;
+      font-size: 1.04rem;
+      font-weight: 700;
+      line-height: 1.45;
+      text-decoration: none;
+    }
+
+    .mmc-title:hover,
+    .mmc-title:focus-visible {
+      color: var(--accent);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .mmc-meta {
+      margin: 10px 0 0;
+      font-size: 0.9rem;
+    }
+
+    .mmc-path {
+      margin-top: auto;
+      padding: 12px 14px;
+      border-radius: 16px;
+      border: 1px solid rgba(13, 91, 120, 0.08);
+      background: #fff;
+      font-size: 0.82rem;
+      word-break: break-all;
+    }
+
+    .mmc-path strong {
+      color: #112432;
+    }
+
+    .mmc-card-action {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 0 16px;
+      border-radius: 14px;
+      background: #113f55;
+      color: #fff;
+      font-size: 0.92rem;
+      font-weight: 700;
+      text-decoration: none;
+      transition: transform 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .mmc-card-action:hover,
+    .mmc-card-action:focus-visible {
+      background: var(--accent);
+      transform: translateY(-1px);
+      box-shadow: 0 12px 22px rgba(13, 91, 120, 0.2);
+    }
+
+    @media (max-width: 1080px) {
+      .mmc-hero-grid,
+      .mmc-cards {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .mmc-hero-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .mmc-uploads {
+        padding: 28px 12px 56px;
+      }
+
+      .mmc-hero,
+      .mmc-head,
+      .mmc-cards {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .mmc-stats,
+      .mmc-cards {
+        grid-template-columns: 1fr;
+      }
+
+      .mmc-head {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="mmc-uploads">
+    <div class="mmc-shell">
+      <section class="mmc-hero">
+        <div class="mmc-kicker"><i aria-hidden="true"></i>Legacy Upload Directory</div>
+        <div class="mmc-hero-grid">
+          <div>
+            <h1>wp-content/uploads</h1>
+            <p class="mmc-lead">
+              This uploads page contains the requested PDF links for AQAR 2022-23 to AQAR 2019-20,
+              Academic Calendar 2022-23, Annual Report 2023-24, and Programmes PDF.
+            </p>
+          </div>
+
+          <div class="mmc-stats" aria-label="Uploads summary">
+            <div class="mmc-stat">
+              <strong>7</strong>
+              <span class="mmc-meta">Total PDF files on this page</span>
+            </div>
+            <div class="mmc-stat">
+              <strong>4</strong>
+              <span class="mmc-meta">AQAR reports included</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="mmc-toolbar">
+          <a class="mmc-action mmc-action-secondary" href="/wp-content">Back to wp-content</a>
+          <a class="mmc-action mmc-action-secondary" href="/important-documents">Back to Important Documents</a>
+        </div>
+      </section>
+
+      <div class="mmc-layout">
+        <section class="mmc-section" aria-labelledby="aqar-title">
+          <div class="mmc-head">
+            <div>
+              <h2 id="aqar-title">AQAR Reports</h2>
+              <p class="mmc-note">AQAR 2022-23 to AQAR 2019-20 preserved under legacy upload URLs.</p>
+            </div>
+            <div class="mmc-count">4 PDFs</div>
+          </div>
+
+          <div class="mmc-cards">
+            <article class="mmc-card">
+              <div class="mmc-card-top">
+                <div class="mmc-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none"><path d="M7 3.75H13.5L18 8.25V20.25H7V3.75Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"></path><path d="M13.5 3.75V8.25H18" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"></path><path d="M8.75 14.25H16.25" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"></path><path d="M8.75 17.25H13.75" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"></path></svg>
+                </div>
+                <div>
+                  <span class="mmc-type">PDF</span>
+                  <a class="mmc-title" href="https://magadhmahilacollege.org/wp-content/uploads/2024/12/AQAR-2022-23.pdf" target="_blank" rel="noopener noreferrer">AQAR 2022-23</a>
+                  <p class="mmc-meta">Annual Quality Assurance Report for the 2022-23 session.</p>
+                </div>
+              </div>
+              <div class="mmc-path"><strong>Legacy path:</strong> /wp-content/uploads/2024/12/AQAR-2022-23.pdf</div>
+              <a class="mmc-card-action" href="https://magadhmahilacollege.org/wp-content/uploads/2024/12/AQAR-2022-23.pdf" target="_blank" rel="noopener noreferrer">Open PDF</a>
+            </article>
+
+            <article class="mmc-card">
+              <div class="mmc-card-top">
+                <div class="mmc-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none"><path d="M7 3.75H13.5L18 8.25V20.25H7V3.75Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"></path><path d="M13.5 3.75V8.25H18" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"></path><path d="M8.75 14.25H16.25" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"></path><path d="M8.75 17.25H13.75" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"></path></svg>
+                </div>
+                <div>
+                  <span class="mmc-type">PDF</span>
+                  <a class="mmc-title" href="https://magadhmahilacollege.org/wp-content/uploads/2023/06/AQAR-2021-22.pdf" target="_blank" rel="noopener noreferrer">AQAR 2021-22</a>
+                  <p class="mmc-meta">Annual Quality Assurance Report for the 2021-22 session.</p>
+                </div>
+              </div>
+              <div class="mmc-path"><strong>Legacy path:</strong> /wp-content/uploads/2023/06/AQAR-2021-22.pdf</div>
+              <a class="mmc-card-action" href="https://magadhmahilacollege.org/wp-content/uploads/2023/06/AQAR-2021-22.pdf" target="_blank" rel="noopener noreferrer">Open PDF</a>
+            </article>
+
+            <article class="mmc-card">
+              <div class="mmc-card-top">
+                <div class="mmc-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none"><path d="M7 3.75H13.5L18 8.25V20.25H7V3.75Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"></path><path d="M13.5 3.75V8.25H18" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"></path><path d="M8.75 14.25H16.25" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"></path><path d="M8.75 17.25H13.75" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"></path></svg>
+                </div>
+                <div>
+                  <span class="mmc-type">PDF</span>
+                  <a class="mmc-title" href="https://magadhmahilacollege.org/wp-content/uploads/2022/04/AQAR-2020-21.pdf" target="_blank" rel="noopener noreferrer">AQAR 2020-21</a>
+                  <p class="mmc-meta">Annual Quality Assurance Report for the 2020-21 session.</p>
+                </div>
+              </div>
+              <div class="mmc-path"><strong>Legacy path:</strong> /wp-content/uploads/2022/04/AQAR-2020-21.pdf</div>
+              <a class="mmc-card-action" href="https://magadhmahilacollege.org/wp-content/uploads/2022/04/AQAR-2020-21.pdf" target="_blank" rel="noopener noreferrer">Open PDF</a>
+            </article>
+
+            <article class="mmc-card">
+              <div class="mmc-card-top">
+                <div class="mmc-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none"><path d="M7 3.75H13.5L18 8.25V20.25H7V3.75Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"></path><path d="M13.5 3.75V8.25H18" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"></path><path d="M8.75 14.25H16.25" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"></path><path d="M8.75 17.25H13.75" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"></path></svg>
+                </div>
+                <div>
+                  <span class="mmc-type">PDF</span>
+                  <a class="mmc-title" href="https://magadhmahilacollege.org/wp-content/uploads/2022/01/AQAR-2019-20-resubmitted-2.pdf" target="_blank" rel="noopener noreferrer">AQAR 2019-20</a>
+                  <p class="mmc-meta">Annual Quality Assurance Report for the 2019-20 session.</p>
+                </div>
+              </div>
+              <div class="mmc-path"><strong>Legacy path:</strong> /wp-content/uploads/2022/01/AQAR-2019-20-resubmitted-2.pdf</div>
+              <a class="mmc-card-action" href="https://magadhmahilacollege.org/wp-content/uploads/2022/01/AQAR-2019-20-resubmitted-2.pdf" target="_blank" rel="noopener noreferrer">Open PDF</a>
+            </article>
+          </div>
+        </section>
+
+        <section class="mmc-section" aria-labelledby="records-title">
+          <div class="mmc-head">
+            <div>
+              <h2 id="records-title">Academic and Annual Records</h2>
+              <p class="mmc-note">Requested academic calendar and annual report PDF links.</p>
+            </div>
+            <div class="mmc-count">2 PDFs</div>
+          </div>
+
+          <div class="mmc-cards">
+            <article class="mmc-card">
+              <div class="mmc-card-top">
+                <div class="mmc-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none"><path d="M7 3.75H13.5L18 8.25V20.25H7V3.75Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"></path><path d="M13.5 3.75V8.25H18" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"></path><path d="M8.75 14.25H16.25" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"></path><path d="M8.75 17.25H13.75" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"></path></svg>
+                </div>
+                <div>
+                  <span class="mmc-type">PDF</span>
+                  <a class="mmc-title" href="https://magadhmahilacollege.org/wp-content/uploads/2024/04/Academic-Calendar-Admission-2022-2023.pdf" target="_blank" rel="noopener noreferrer">Academic Calendar 2022-23</a>
+                  <p class="mmc-meta">Academic calendar PDF for the 2022-23 session.</p>
+                </div>
+              </div>
+              <div class="mmc-path"><strong>Legacy path:</strong> /wp-content/uploads/2024/04/Academic-Calendar-Admission-2022-2023.pdf</div>
+              <a class="mmc-card-action" href="https://magadhmahilacollege.org/wp-content/uploads/2024/04/Academic-Calendar-Admission-2022-2023.pdf" target="_blank" rel="noopener noreferrer">Open PDF</a>
+            </article>
+
+            <article class="mmc-card">
+              <div class="mmc-card-top">
+                <div class="mmc-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none"><path d="M7 3.75H13.5L18 8.25V20.25H7V3.75Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"></path><path d="M13.5 3.75V8.25H18" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"></path><path d="M8.75 14.25H16.25" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"></path><path d="M8.75 17.25H13.75" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"></path></svg>
+                </div>
+                <div>
+                  <span class="mmc-type">PDF</span>
+                  <a class="mmc-title" href="https://magadhmahilacollege.org/wp-content/uploads/2024/12/Annual_Report_2023-24_MMC_Patna.pdf" target="_blank" rel="noopener noreferrer">Annual Report 2023-24</a>
+                  <p class="mmc-meta">Annual report PDF for the 2023-24 academic year.</p>
+                </div>
+              </div>
+              <div class="mmc-path"><strong>Legacy path:</strong> /wp-content/uploads/2024/12/Annual_Report_2023-24_MMC_Patna.pdf</div>
+              <a class="mmc-card-action" href="https://magadhmahilacollege.org/wp-content/uploads/2024/12/Annual_Report_2023-24_MMC_Patna.pdf" target="_blank" rel="noopener noreferrer">Open PDF</a>
+            </article>
+          </div>
+        </section>
+
+        <section class="mmc-section" aria-labelledby="programmes-title">
+          <div class="mmc-head">
+            <div>
+              <h2 id="programmes-title">Programmes PDF</h2>
+              <p class="mmc-note">Requested programmes reference PDF.</p>
+            </div>
+            <div class="mmc-count">1 PDF</div>
+          </div>
+
+          <div class="mmc-cards">
+            <article class="mmc-card">
+              <div class="mmc-card-top">
+                <div class="mmc-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none"><path d="M7 3.75H13.5L18 8.25V20.25H7V3.75Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"></path><path d="M13.5 3.75V8.25H18" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"></path><path d="M8.75 14.25H16.25" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"></path><path d="M8.75 17.25H13.75" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"></path></svg>
+                </div>
+                <div>
+                  <span class="mmc-type">PDF</span>
+                  <a class="mmc-title" href="https://magadhmahilacollege.org/wp-content/uploads/2025/01/7_1-9_programmes.pdf" target="_blank" rel="noopener noreferrer">Programmes PDF</a>
+                  <p class="mmc-meta">Programmes reference document preserved under the legacy upload path.</p>
+                </div>
+              </div>
+              <div class="mmc-path"><strong>Legacy path:</strong> /wp-content/uploads/2025/01/7_1-9_programmes.pdf</div>
+              <a class="mmc-card-action" href="https://magadhmahilacollege.org/wp-content/uploads/2025/01/7_1-9_programmes.pdf" target="_blank" rel="noopener noreferrer">Open PDF</a>
+            </article>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

@@ -1,38 +1,8 @@
 {
   "redirects": [
     {
-      "source": "/wp-content/uploads/2024/12/AQAR-2022-23.pdf",
-      "destination": "/documents/IQAC/NAAC/AQAR/AQAR-2022-23.pdf",
-      "permanent": true
-    },
-    {
-      "source": "/wp-content/uploads/2023/06/AQAR-2021-22.pdf",
-      "destination": "/documents/IQAC/NAAC/AQAR/AQAR-2021-22.pdf",
-      "permanent": true
-    },
-    {
-      "source": "/wp-content/uploads/2022/04/AQAR-2020-21.pdf",
-      "destination": "/documents/IQAC/NAAC/AQAR/AQAR-2020-21.pdf",
-      "permanent": true
-    },
-    {
-      "source": "/wp-content/uploads/2022/01/AQAR-2019-20-resubmitted-2.pdf",
-      "destination": "/documents/IQAC/NAAC/AQAR/AQAR-2019-20-resubmitted-2.pdf",
-      "permanent": true
-    },
-    {
       "source": "/revised-academic-calendar/",
-      "destination": "https://pub-c7047204b6824b4ea67be147e7ebb0ac.r2.dev/public/data%20files/IQAC/Academic%20Calender/Academic-Calendar-Admission-2022-2023.pdf",
-      "permanent": true
-    },
-    {
-      "source": "/wp-content/uploads/2024/04/Academic-Calendar-Admission-2022-2023.pdf",
-      "destination": "https://pub-c7047204b6824b4ea67be147e7ebb0ac.r2.dev/public/data%20files/IQAC/Academic%20Calender/Academic-Calendar-Admission-2022-2023.pdf",
-      "permanent": true
-    },
-    {
-      "source": "/wp-content/uploads/2024/12/Annual_Report_2023-24_MMC_Patna.pdf",
-      "destination": "/annual-reports",
+      "destination": "/wp-content/uploads/2024/04/Academic-Calendar-Admission-2022-2023.pdf",
       "permanent": true
     },
     {
@@ -63,11 +33,6 @@
     {
       "source": "/syllabus-nep/",
       "destination": "/nep2020/syllabus-nep",
-      "permanent": true
-    },
-    {
-      "source": "/wp-content/uploads/2025/01/SSS_23-24_250104_131730.pdf",
-      "destination": "/documents/IQAC/Student%20Satisfaction%20Survey/SSS-report.pdf",
       "permanent": true
     },
     {
@@ -147,7 +112,7 @@
     },
     {
       "source": "/pdf/audit_report.pdf",
-      "destination": "/documents/mmcaudit.pdf",
+      "destination": "/pdf-viewer?file=%2Fdocuments%2Fmmcaudit.pdf&title=Audit%20Report%202023-24&back=%2Fimportant-documents&kind=pdf",
       "permanent": true
     },
     {
@@ -176,13 +141,8 @@
       "permanent": true
     },
     {
-      "source": "/wp-content/uploads/2025/01/7_1-9_programmes.pdf",
-      "destination": "/iqac/criteria",
-      "permanent": true
-    },
-    {
       "source": "/best-practices-2023-24/",
-      "destination": "/documents/IQAC/Best-practices.pdf",
+      "destination": "/pdf-viewer?file=%2Fdocuments%2FIQAC%2FBest-practices.pdf&title=Best%20Practices&back=%2Fimportant-documents&kind=pdf",
       "permanent": true
     }
   ],
