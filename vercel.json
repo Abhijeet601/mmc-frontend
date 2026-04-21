@@ -2,7 +2,7 @@
   "redirects": [
     {
       "source": "/revised-academic-calendar/",
-      "destination": "/wp-content/uploads/2024/04/Academic-Calendar-Admission-2022-2023.pdf",
+      "destination": "/iqac/academic-calendar",
       "permanent": true
     },
     {
@@ -57,7 +57,7 @@
     },
     {
       "source": "/central-library/",
-      "destination": "/campus-life",
+      "destination": "/nep2020/library",
       "permanent": true
     },
     {
@@ -97,7 +97,7 @@
     },
     {
       "source": "/international-conference-on-technologicalinnovations-for-climate-change-mitigation-and-global-warming/",
-      "destination": "/events",
+      "destination": "/iqac/best-practices-2023-24",
       "permanent": true
     },
     {
@@ -122,7 +122,7 @@
     },
     {
       "source": "/national-seminar-on-trends-in-green-chemistry-and-sustainable-development/",
-      "destination": "/events",
+      "destination": "/iqac/best-practices-2023-24",
       "permanent": true
     },
     {
@@ -142,7 +142,7 @@
     },
     {
       "source": "/best-practices-2023-24/",
-      "destination": "/pdf-viewer?file=%2Fdocuments%2FIQAC%2FBest-practices.pdf&title=Best%20Practices&back=%2Fimportant-documents&kind=pdf",
+      "destination": "/iqac/best-practices-2023-24",
       "permanent": true
     }
   ],

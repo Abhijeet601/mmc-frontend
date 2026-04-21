@@ -113,6 +113,7 @@ const documentSections = [
       pageLink('Syllabus NEP', 'https://magadhmahilacollege.org/syllabus-nep/', '/nep2020/syllabus-nep'),
       pageLink('Research', 'https://magadhmahilacollege.org/research/', '/iqac/research'),
       pageLink('Infrastructure', 'https://magadhmahilacollege.org/infrastructure-and-facilities/', '/campus-life'),
+      pageLink('Academic Opportunities', 'https://magadhmahilacollege.org/academic-opportunities/', '/academics'),
       pageLink(
         'Academic Infrastructure',
         'https://magadhmahilacollege.org/academic-infrastructure-2/',
@@ -142,6 +143,21 @@ const documentSections = [
         '/alumni',
       ),
       pageLink(
+        'Student Cabinet Oath Taking',
+        'https://magadhmahilacollege.org/oath-taking-ceremony-of-newly-elected-students-cabinet-members-of-2023-24-session/',
+        '/administration/student-cabinet',
+      ),
+      pageLink(
+        'International Conference',
+        'https://magadhmahilacollege.org/international-conference-on-technologicalinnovations-for-climate-change-mitigation-and-global-warming/',
+        '/iqac/best-practices-2023-24',
+      ),
+      pageLink(
+        'National Seminar on Green Chemistry',
+        'https://magadhmahilacollege.org/national-seminar-on-trends-in-green-chemistry-and-sustainable-development/',
+        '/iqac/best-practices-2023-24',
+      ),
+      pageLink(
         'NSS & NCC Activities',
         'https://magadhmahilacollege.org/extension-activities-nss-ncc/',
         '/iqac/extension-activities',
@@ -163,10 +179,19 @@ const documentSections = [
         'https://magadhmahilacollege.org/organisation-structure/',
         '/administration/organogram-of-institution',
       ),
+      pageLink(
+        'Cells 2023-24',
+        'https://magadhmahilacollege.org/cells-2023-2024/',
+        '/administration/cells/2023-2024',
+      ),
       internalPdf(
         'Audit Report 2023-24',
         'documents/mmcaudit.pdf',
         'https://magadhmahilacollege.org/pdf/audit_report.pdf',
+      ),
+      externalPdf(
+        'SSS 2023-24',
+        'https://magadhmahilacollege.org/wp-content/uploads/2025/01/SSS_23-24_250104_131730.pdf',
       ),
       pageLink('Minutes of IQAC', 'https://magadhmahilacollege.org/minutes-of-iqac/', '/iqac/minutes-of-iqac'),
     ],
