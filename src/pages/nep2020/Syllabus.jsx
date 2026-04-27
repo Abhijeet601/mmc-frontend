@@ -6,7 +6,7 @@ import { FileText, Download, ChevronDown, BookOpen, GraduationCap } from 'lucide
 import { r2Url } from '@/lib/r2Assets';
 
 // Subject-wise syllabus data organized by category
-const syllabusData = [
+const ugSyllabusData = [
 // Professional Courses - at top as requested
 {
   subject: 'BBA',
@@ -159,12 +159,47 @@ const syllabusData = [
     url: r2Url('data files/CBCS Syllabus/Urdu.pdf')
   }]
 }];
+
+const pgSyllabusData = [{
+  subject: 'Chemistry',
+  files: [{
+    name: 'Chemistry PG CBCS Syllabus',
+    url: 'https://pub-c7047204b6824b4ea67be147e7ebb0ac.r2.dev/public/PG%20CBCS%20Syllabus/Chemistry-cbcs.pdf'
+  }]
+}, {
+  subject: 'Economics',
+  files: [{
+    name: 'MA Economics Syllabus',
+    url: 'https://pub-c7047204b6824b4ea67be147e7ebb0ac.r2.dev/public/PG%20CBCS%20Syllabus/MA%20(Economics)%20Syllabus%2C%20Patna%20University%20.pdf'
+  }]
+}, {
+  subject: 'Psychology',
+  files: [{
+    name: 'MA Psychology Syllabus',
+    url: 'https://pub-c7047204b6824b4ea67be147e7ebb0ac.r2.dev/public/PG%20CBCS%20Syllabus/MA%20Psy%20Syllabus-1_240907_123519.pdf'
+  }]
+}];
+
+const syllabusCategories = [{
+  id: 'ug',
+  label: 'UG',
+  title: 'UG CBCS Syllabus',
+  data: ugSyllabusData
+}, {
+  id: 'pg',
+  label: 'PG',
+  title: 'PG CBCS Syllabus',
+  data: pgSyllabusData
+}];
+
 const Syllabus = () => {
+  const [activeCategory, setActiveCategory] = useState('ug');
   const [openSubjects, setOpenSubjects] = useState({});
-  const toggleSubject = index => {
+  const selectedCategory = syllabusCategories.find(category => category.id === activeCategory) || syllabusCategories[0];
+  const toggleSubject = key => {
     setOpenSubjects(prev => ({
       ...prev,
-      [index]: !prev[index]
+      [key]: !prev[key]
     }));
   };
   return <>
@@ -218,9 +253,40 @@ const Syllabus = () => {
             </div>
           </motion.div>
 
+          <motion.div initial={{
+          opacity: 0,
+          y: 20
+        }} animate={{
+          opacity: 1,
+          y: 0
+        }} transition={{
+          duration: 0.6,
+          delay: 0.3
+        }} className="mb-8 flex flex-wrap items-center justify-center gap-3">
+            {syllabusCategories.map(category => <button key={category.id} type="button" onClick={() => setActiveCategory(category.id)} className={`inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition-colors ${activeCategory === category.id ? 'bg-primary text-white shadow-md' : 'bg-white text-primary border border-primary/20 hover:bg-primary/5'}`}>
+                <GraduationCap className="w-4 h-4" />
+                {category.label}
+              </button>)}
+          </motion.div>
+
+          <motion.div initial={{
+          opacity: 0,
+          y: 20
+        }} animate={{
+          opacity: 1,
+          y: 0
+        }} transition={{
+          duration: 0.6,
+          delay: 0.35
+        }} className="mb-6 text-center">
+            <h2 className="text-2xl font-bold text-gray-900">{selectedCategory.title}</h2>
+          </motion.div>
+
           {/* Subject Accordion */}
-          <div className="space-y-4">
-            {syllabusData.map((subject, index) => <motion.div key={subject.subject} initial={{
+          {selectedCategory.data.length > 0 ? <div className="space-y-4">
+            {selectedCategory.data.map((subject, index) => {
+              const subjectKey = `${selectedCategory.id}-${index}`;
+              return <motion.div key={`${selectedCategory.id}-${subject.subject}`} initial={{
             opacity: 0,
             y: 20
           }} animate={{
@@ -231,7 +297,7 @@ const Syllabus = () => {
             delay: index * 0.05
           }}>
                 <div className="bg-white rounded-xl shadow-md overflow-hidden">
-                  <button onClick={() => toggleSubject(index)} className="w-full flex items-center justify-between p-5 hover:bg-gray-50 transition-colors duration-200">
+                  <button onClick={() => toggleSubject(subjectKey)} className="w-full flex items-center justify-between p-5 hover:bg-gray-50 transition-colors duration-200">
                     <div className="flex items-center gap-4">
                       <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
                         <FileText className="w-6 h-6 text-primary" />
@@ -244,7 +310,7 @@ const Syllabus = () => {
                       </span>
                     </div>
                     <motion.div animate={{
-                  rotate: openSubjects[index] ? 180 : 0
+                  rotate: openSubjects[subjectKey] ? 180 : 0
                 }} transition={{
                   duration: 0.3
                 }}>
@@ -253,7 +319,7 @@ const Syllabus = () => {
                   </button>
 
                   <AnimatePresence>
-                    {openSubjects[index] && <motion.div initial={{
+                    {openSubjects[subjectKey] && <motion.div initial={{
                   height: 0,
                   opacity: 0
                 }} animate={{
@@ -290,8 +356,17 @@ const Syllabus = () => {
                       </motion.div>}
                   </AnimatePresence>
                 </div>
-              </motion.div>)}
-          </div>
+              </motion.div>;
+            })}
+          </div> : <motion.div initial={{
+          opacity: 0,
+          y: 20
+        }} animate={{
+          opacity: 1,
+          y: 0
+        }} className="rounded-2xl border border-amber-200 bg-amber-50 p-8 text-center text-amber-800 shadow-sm">
+            PG CBCS syllabus PDFs were not found in this workspace. Add the PDF filenames to <span className="font-semibold">pgSyllabusData</span> after placing them in <span className="font-semibold">frontend/public/PG CBCS Syllabus</span>.
+          </motion.div>}
 
           {/* Footer Note */}
           <motion.div initial={{

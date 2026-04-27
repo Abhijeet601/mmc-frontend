@@ -1,7 +1,7 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Download, ExternalLink, FileText } from 'lucide-react';
+import { ArrowLeft, Download, FileText } from 'lucide-react';
 import { Link, useSearchParams } from 'react-router-dom';
 
 const IMAGE_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.webp', '.gif', '.svg', '.bmp', '.avif'];
@@ -66,19 +66,8 @@ const PdfViewer = () => {
                 {fileUrl ? (
                   <a
                     href={fileUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-5 py-2.5 text-sm font-semibold text-blue-700 transition hover:border-blue-300 hover:bg-blue-100"
-                  >
-                    <ExternalLink className="h-4 w-4" />
-                    Open Original
-                  </a>
-                ) : null}
-                {fileUrl ? (
-                  <a
-                    href={fileUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    download
+                    data-pdf-download
                     className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-primary/90"
                   >
                     <Download className="h-4 w-4" />

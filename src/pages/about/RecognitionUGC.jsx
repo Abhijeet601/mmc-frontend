@@ -14,7 +14,7 @@ const RecognitionUGC = () => {
   return (
     <>
       <Helmet>
-        <title>{t('recognitionUgc.title', 'Recognition UGC - Magadh Mahila College')}</title>
+        <title>{t('recognitionUgc.title', 'Recognition UGC 2(f) 12(b) - Magadh Mahila College')}</title>
         <meta
           name="description"
           content={t(

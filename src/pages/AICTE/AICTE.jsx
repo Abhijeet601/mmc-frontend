@@ -2,13 +2,29 @@ import i18next from "i18next";
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
-import { FileText, Download, ExternalLink } from 'lucide-react';
+import { FileText, ExternalLink } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { r2Url } from '@/lib/r2Assets';
+import { pdfViewerPath } from '@/lib/pdfViewer';
+
+const aicteReports = [
+  {
+    title: 'EOA Report 2026-2027',
+    description: 'AICTE Extension of Approval Report 2026-2027',
+    url: 'https://pub-c7047204b6824b4ea67be147e7ebb0ac.r2.dev/public/EOA%20Report%202026-2027.PDF',
+  },
+  {
+    title: i18next.t("auto.aicte_letter_of_approval_report_1tdkvtt"),
+    description: i18next.t("auto.aicte_letter_of_approval_report_1tdkvtt"),
+    url: r2Url('documents/LoA-Report-2024-2025.pdf'),
+  },
+];
+
 const AICTE = () => {
   return <>
       <Helmet>
         <title>{i18next.t("auto.aicte_letter_of_approval_report_2024_2025_1v9eiy9")}</title>
-        <meta name="description" content="View the AICTE Letter of Approval Report for 2024-2025 at Magadh Mahila College." />
+        <meta name="description" content="View the AICTE Letter of Approval Report at Magadh Mahila College." />
       </Helmet>
 
       <div className="pt-0">
@@ -32,7 +48,7 @@ const AICTE = () => {
               `}</p>
             </motion.div>
 
-            {/* PDF Viewer */}
+            {/* PDF Viewers */}
             <motion.div initial={{
             opacity: 0,
             y: 20
@@ -42,31 +58,35 @@ const AICTE = () => {
           }} transition={{
             duration: 0.6,
             delay: 0.2
-          }} className="mb-12">
-              <div className="bg-white rounded-2xl shadow-lg border border-border overflow-hidden">
-                <div className="p-6 border-b border-border">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-3">
-                      <FileText className="w-8 h-8 text-primary" />
-                      <div>
-                        <h2 className="text-xl font-bold text-foreground">{i18next.t("auto.loa_report_2024_2025_pdf_1ifav21")}</h2>
-                        <p className="text-muted-foreground">{i18next.t("auto.aicte_letter_of_approval_report_1tdkvtt")}</p>
+          }} className="mb-12 space-y-8">
+              {aicteReports.map((report) => (
+                <div key={report.title} className="bg-white rounded-2xl shadow-lg border border-border overflow-hidden">
+                  <div className="p-6 border-b border-border">
+                    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                      <div className="flex items-center space-x-3">
+                        <FileText className="w-8 h-8 text-primary" />
+                        <div>
+                          <h2 className="text-xl font-bold text-foreground">{report.title}</h2>
+                          <p className="text-muted-foreground">{report.description}</p>
+                        </div>
                       </div>
+                      <motion.div whileHover={{
+                      scale: 1.05
+                    }} whileTap={{
+                      scale: 0.95
+                    }}>
+                        <Link to={pdfViewerPath({ fileUrl: report.url, title: report.title, back: '/aicte' })} className="inline-flex items-center justify-center space-x-2 bg-primary text-primary-foreground px-6 py-3 rounded-lg hover:bg-primary/90 transition-colors">
+                          <FileText className="w-5 h-5" />
+                          <span>Open PDF</span>
+                        </Link>
+                      </motion.div>
                     </div>
-                    <motion.a href={r2Url('documents/LoA-Report-2024-2025.pdf')} target="_blank" rel="noopener noreferrer" className="inline-flex items-center space-x-2 bg-primary text-primary-foreground px-6 py-3 rounded-lg hover:bg-primary/90 transition-colors" whileHover={{
-                    scale: 1.05
-                  }} whileTap={{
-                    scale: 0.95
-                  }}>
-                      <Download className="w-5 h-5" />
-                      <span>{i18next.t("auto.download_pdf_1f9pgar")}</span>
-                    </motion.a>
+                  </div>
+                  <div className="p-6">
+                    <iframe src={report.url} className="w-full h-[600px] border-0 rounded-lg" title={`${report.title} Preview`} />
                   </div>
                 </div>
-                <div className="p-6">
-                  <iframe src={r2Url('documents/LoA-Report-2024-2025.pdf')} className="w-full h-[600px] border-0 rounded-lg" title={i18next.t("auto.aicte_letter_of_approval_report_2024_2025_1ortdt9")} />
-                </div>
-              </div>
+              ))}
             </motion.div>
 
             {/* Additional Info */}

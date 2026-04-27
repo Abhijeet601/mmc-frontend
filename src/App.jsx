@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useEffect, Suspense, useCallback, useState, lazy } from 'react';
 import { HelmetProvider } from 'react-helmet-async';
@@ -173,6 +173,7 @@ import LegacyWpContentPdf from './pages/LegacyWpContentPdf';
 
 import { Toaster } from './components/ui/toaster';
 import { getStoredLanguagePreference, persistLanguagePreference } from './lib/languagePreference';
+import { isPdfUrl, pdfViewerPath } from './lib/pdfViewer';
 
 const ERPApplicationForm = lazy(() => import('./pages/erp/ERPApplicationForm'));
 const ERPPortal = lazy(() => import('./pages/erp/ERPPortal'));
@@ -187,6 +188,43 @@ function ScrollToTop() {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
+
+  return null;
+}
+
+function PdfLinkInterceptor() {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const handlePdfClick = (event) => {
+      if (event.defaultPrevented || event.button !== 0) return;
+
+      const link = event.target.closest?.('a[href]');
+      if (!link) return;
+      if (link.hasAttribute('data-pdf-download')) return;
+
+      const href = link.getAttribute('href');
+      if (!href || href.startsWith('#') || !isPdfUrl(href)) return;
+
+      event.preventDefault();
+
+      const title =
+        link.getAttribute('aria-label') ||
+        link.getAttribute('title') ||
+        link.textContent?.replace(/\s+/g, ' ').trim() ||
+        'PDF Document';
+
+      navigate(pdfViewerPath({
+        fileUrl: link.href,
+        title,
+        back: `${location.pathname}${location.search}`,
+      }));
+    };
+
+    document.addEventListener('click', handlePdfClick);
+    return () => document.removeEventListener('click', handlePdfClick);
+  }, [location.pathname, location.search, navigate]);
 
   return null;
 }
@@ -257,6 +295,7 @@ function App() {
             <LanguageSelectionModal isOpen={showLanguageSelectionModal} onSelect={handleInitialLanguageSelection} />
             <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
               <ScrollToTop />
+              <PdfLinkInterceptor />
               <ChromeAwareLayout>
                 <Routes>
               <Route path="/" element={<Home />} />

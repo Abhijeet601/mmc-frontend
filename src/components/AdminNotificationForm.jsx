@@ -58,7 +58,6 @@ const AdminNotificationForm = ({
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef(null);
   const currentFileName = selectedFile?.name || notification?.fileName || notification?.file_name || '';
-  const selectedPublishCount = formData.publish_to?.length || 0;
   const handleInputChange = e => {
     const {
       name,
@@ -67,10 +66,9 @@ const AdminNotificationForm = ({
       checked
     } = e.target;
     if (name === 'publish_to') {
-      const selectedValues = e.target.multiple ? Array.from(e.target.selectedOptions, option => option.value) : [value];
       setFormData(prev => ({
         ...prev,
-        publish_to: selectedValues.filter(Boolean)
+        publish_to: value ? [value] : []
       }));
       return;
     }
@@ -119,7 +117,7 @@ const AdminNotificationForm = ({
     try {
       await onSave({
         ...formData,
-        publish_to: isEditing ? formData.publish_to[0] : formData.publish_to,
+        publish_to: formData.publish_to[0],
         file: selectedFile,
         removeFile: removeExistingFile
       });
@@ -185,14 +183,11 @@ const AdminNotificationForm = ({
                 <Layers3 className="h-4 w-4 text-sky-600" />{`
                 ${i18next.t("auto.publish_to_3tpugd")}
               `}</label>
-              <select name="publish_to" value={isEditing ? formData.publish_to[0] || '' : formData.publish_to} onChange={handleInputChange} multiple={!isEditing} size={!isEditing ? PUBLISH_TO_OPTIONS.length : 1} className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-slate-900 shadow-sm outline-none transition focus:border-sky-500 focus:ring-4 focus:ring-sky-100" required>
+              <select name="publish_to" value={formData.publish_to[0] || ''} onChange={handleInputChange} className="h-12 w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-slate-900 shadow-sm outline-none transition focus:border-sky-500 focus:ring-4 focus:ring-sky-100" required>
                 {PUBLISH_TO_OPTIONS.map(option => <option key={option.value} value={option.value}>
                     {option.label}
                   </option>)}
               </select>
-              {!isEditing && <p className="mt-2 text-xs text-slate-500">{`
-                  ${i18next.t("auto.hold_ctrl_windows_or_cmd_mac_to_2okwoa")} `}{selectedPublishCount}
-                </p>}
             </div>
 
             <div>

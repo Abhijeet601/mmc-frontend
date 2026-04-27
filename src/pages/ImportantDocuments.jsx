@@ -101,6 +101,20 @@ const documentSections = [
     ],
   },
   {
+    title: 'NIRF',
+    description: 'National Institutional Ranking Framework reports and submissions.',
+    items: [
+      externalPdf(
+        'NIRF 2025',
+        'https://pub-c7047204b6824b4ea67be147e7ebb0ac.r2.dev/public/NIRF%202025.pdf',
+      ),
+      externalPdf(
+        'NIRF 2024',
+        'https://pub-c7047204b6824b4ea67be147e7ebb0ac.r2.dev/public/nirf%202024.pdf',
+      ),
+    ],
+  },
+  {
     title: 'Academics & Infrastructure',
     description: 'Core academic resources, research pages, and campus infrastructure information.',
     items: [
@@ -293,7 +307,7 @@ export default function ImportantDocuments() {
                     <div className="rounded-3xl border border-slate-200 bg-white/95 p-5 shadow-sm">
                       <p className="font-serif text-3xl font-bold text-slate-950">{totalResources}</p>
                       <p className="mt-2 text-sm font-medium text-slate-600">
-                        Resources grouped into 7 categories
+                        Resources grouped into 8 categories
                       </p>
                     </div>
                     <div className="rounded-3xl border border-slate-200 bg-white/95 p-5 shadow-sm">

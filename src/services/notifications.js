@@ -168,6 +168,13 @@ const appendPublishTargets = (formData, value) => {
     });
 };
 
+const normalizeDateTimeForApi = (value) => {
+  if (!value) return '';
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) return value;
+  return parsed.toISOString();
+};
+
 const normalizeNoticeResponse = (data) =>
   Array.isArray(data) ? data.map(normalizeNotice) : normalizeNotice(data);
 
@@ -186,7 +193,7 @@ const toNoticeFormData = (data = {}, { isUpdate = false } = {}) => {
   }
   appendIfDefined(formData, 'pinned', String(Boolean(data.pinned)));
   appendIfDefined(formData, 'published', String(data.published !== false));
-  appendIfDefined(formData, 'publish_date', data.publishDate ?? data.publish_date ?? '');
+  appendIfDefined(formData, 'publish_date', normalizeDateTimeForApi(data.publishDate ?? data.publish_date ?? ''));
 
   if (isUpdate) {
     appendIfDefined(formData, 'remove_file', String(Boolean(data.removeFile)));
@@ -291,12 +298,12 @@ export const getActiveNotifications = async (publishTo = NOTICE_CATEGORIES.NOTIF
   getPublicNotices({ publishTo });
 
 export const getSlidingNotices = async () => {
-  const [notices, notifications] = await Promise.all([
-    getPublicNotices({ publishTo: NOTICE_CATEGORIES.NOTICES, limit: 10 }),
-    getPublicNotices({ publishTo: NOTICE_CATEGORIES.NOTIFICATIONS, limit: 10 }),
-  ]);
+  const notifications = await getPublicNotices({
+    publishTo: NOTICE_CATEGORIES.NOTIFICATIONS,
+    limit: 10,
+  });
 
-  return dedupeNotices([...notices, ...notifications]).map((item) => ({
+  return dedupeNotices(notifications).map((item) => ({
     text: item.title,
     link: item.link || item.fileUrl || '#',
     fileUrl: item.fileUrl || '',
