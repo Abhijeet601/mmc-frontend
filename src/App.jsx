@@ -17,7 +17,6 @@ import Contact from './pages/Contact';
 import AnnualReports from './pages/AnnualReports';
 import AuditReport from './pages/AuditReport';
 import ImportantDocuments from './pages/ImportantDocuments';
-
 import TermsConditions from './pages/TermsConditions';
 import Disclaimer from './pages/Disclaimer';
 import RTI from './pages/RTI';
@@ -164,6 +163,9 @@ import AdmittedStudentsYearWise from './pages/admissions/AdmittedStudentsYearWis
 // Admin page
 import Admin from './pages/Admin';
 import Alumni from './pages/Alumni';
+import Alumni2023 from './pages/Alumni2023';
+import Alumni2026 from './pages/Alumni2026';
+import AlumniLifetime from './pages/AlumniLifetime';
 import Notifications from './pages/Notifications';
 import Notices from './pages/Notices';
 import PdfViewer from './pages/PdfViewer';
@@ -316,6 +318,9 @@ function App() {
               <Route path="/nss" element={<NSS />} />
               <Route path="/nep-2020" element={<NEP2020 />} />
               <Route path="/alumni" element={<Alumni />} />
+              <Route path="/alumni/2023" element={<Alumni2023 />} />
+              <Route path="/alumni/2026" element={<Alumni2026 />} />
+              <Route path="/alumni/lifetime" element={<AlumniLifetime />} />
 
               {/* Admin page */}
               <Route path="/admin" element={<Admin />} />

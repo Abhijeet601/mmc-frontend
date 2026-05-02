@@ -9,8 +9,8 @@ import { r2Url } from '@/lib/r2Assets';
 const nirfReports = [
   {
     year: '2026',
-    title: i18next.t("auto.nirf_2026_pdf_1bm0td8"),
-    description: i18next.t("auto.national_institutional_ranking_framework_report_10rr0xy"),
+    title: 'NIRF 2026',
+    description: 'National Institutional Ranking Framework report.',
     url: r2Url('documents/NIRF 2026.pdf'),
   },
   {
@@ -35,7 +35,7 @@ const pdfViewerUrl = (fileUrl, title) =>
 const NIRF = () => {
   return <>
       <Helmet>
-        <title>{i18next.t("auto.nirf_2026_national_institutional_ranking_framework_magadh_yp3zvl")}</title>
+        <title>NIRF - National Institutional Ranking Framework | Magadh Mahila College</title>
         <meta name="description" content="View the NIRF report for Magadh Mahila College." />
       </Helmet>
 
@@ -53,11 +53,11 @@ const NIRF = () => {
             duration: 0.6
           }} className="text-center mb-16">
               <h1 className="text-5xl md:text-6xl font-bold mb-6">
-                <span className="text-primary">{i18next.t("auto.nirf_2026_2r8mgg")}</span>
+                <span className="text-primary">NIRF</span>
               </h1>
-              <p className="text-foreground max-w-3xl mx-auto text-lg">{`
-                ${i18next.t("auto.national_institutional_ranking_framework_2026_report_n0d6lp")}
-              `}</p>
+              <p className="text-foreground max-w-3xl mx-auto text-lg">
+                National Institutional Ranking Framework reports of Magadh Mahila College.
+              </p>
             </motion.div>
 
             {/* Year Sections */}
@@ -86,7 +86,7 @@ const NIRF = () => {
                       <FileText className="h-6 w-6" />
                     </div>
                   </div>
-                  <p className="mt-4 text-sm text-muted-foreground">{report.title}</p>
+                  <p className="mt-4 text-sm text-muted-foreground">View report</p>
                 </Link>
               ))}
             </motion.div>
@@ -126,7 +126,7 @@ const NIRF = () => {
                     </div>
                   </div>
                   <div className="p-6">
-                    <iframe src={report.url} className="w-full h-[600px] border-0 rounded-lg" title={`${report.title} Report`} />
+                    <iframe src={report.url} className="w-full h-[600px] border-0 rounded-lg" title={`NIRF ${report.year} report`} />
                   </div>
                 </div>
               ))}

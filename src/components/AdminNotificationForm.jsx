@@ -68,7 +68,9 @@ const AdminNotificationForm = ({
     if (name === 'publish_to') {
       setFormData(prev => ({
         ...prev,
-        publish_to: value ? [value] : []
+        publish_to: checked
+          ? Array.from(new Set([...prev.publish_to, value]))
+          : prev.publish_to.filter(target => target !== value)
       }));
       return;
     }
@@ -117,7 +119,7 @@ const AdminNotificationForm = ({
     try {
       await onSave({
         ...formData,
-        publish_to: formData.publish_to[0],
+        publish_to: isEditing ? formData.publish_to[0] : formData.publish_to,
         file: selectedFile,
         removeFile: removeExistingFile
       });
@@ -183,11 +185,19 @@ const AdminNotificationForm = ({
                 <Layers3 className="h-4 w-4 text-sky-600" />{`
                 ${i18next.t("auto.publish_to_3tpugd")}
               `}</label>
-              <select name="publish_to" value={formData.publish_to[0] || ''} onChange={handleInputChange} className="h-12 w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-slate-900 shadow-sm outline-none transition focus:border-sky-500 focus:ring-4 focus:ring-sky-100" required>
-                {PUBLISH_TO_OPTIONS.map(option => <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>)}
-              </select>
+              <div className="grid gap-2 rounded-xl border border-slate-300 bg-white p-3 shadow-sm">
+                {PUBLISH_TO_OPTIONS.map(option => <label key={option.value} className="flex cursor-pointer items-center gap-3 rounded-lg px-2 py-2 text-sm font-medium text-slate-700 transition hover:bg-sky-50">
+                    <input
+                      type="checkbox"
+                      name="publish_to"
+                      value={option.value}
+                      checked={formData.publish_to.includes(option.value)}
+                      onChange={handleInputChange}
+                      className="h-4 w-4 rounded border-slate-300 text-sky-600 focus:ring-sky-500"
+                    />
+                    <span>{option.label}</span>
+                  </label>)}
+              </div>
             </div>
 
             <div>

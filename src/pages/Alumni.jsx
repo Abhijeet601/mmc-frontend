@@ -1,65 +1,103 @@
-import i18next from "i18next";
-import React from 'react';
-import { motion } from 'framer-motion';
-import { r2Url } from '@/lib/r2Assets';
-const Alumni = () => {
-  const images = [r2Url('images/alumni_mmc_alumni_2023meet_7_768x511.jpg'), r2Url('images/alumni_mmc_alumni_2023meet_8_768x511.jpeg'), r2Url('images/alumni_mmc_alumni_2023meet_9_768x512.jpeg'), r2Url('images/alumni_mmc_alumni_2023meet_11_768x511.jpeg'), r2Url('images/alumni_mmc_alumni_2023meet_12_768x511.jpeg'), r2Url('images/alumni_mmc_alumni_2023meet_13_768x511.jpeg'), r2Url('images/alumni_mmc_alumni_2023meet_14_768x511.jpeg'), r2Url('images/alumni_mmc_alumni_2023meet_15_768x511.jpeg'), r2Url('images/alumni_mmc_alumni_2023meet_16_768x511.jpeg'), r2Url('images/alumni_mmc_alumni_2023meet_17_768x511.jpeg'), r2Url('images/alumni_mmc_alumni_2023meet_18_768x511.jpeg'), r2Url('images/alumni_mmc_alumni_2023meet_19_768x511.jpeg'), r2Url('images/alumni_mmc_alumni_2023meet_20_768x512.jpeg'), r2Url('images/alumni_mmc_alumni_2023meet_21_768x512.jpeg'), r2Url('images/alumni_mmc_alumni_2023meet_22_768x511.jpeg'), r2Url('images/alumni_mmc_alumni_2023meet_23_768x512.jpeg'), r2Url('images/alumni_mmc_alumni_2023meet_24_768x512.jpeg'), r2Url('images/alumni_mmc_alumni_2023meet_77_768x511.jpg'), r2Url('images/alumni_mmc_alumni2023_2_768x511.jpeg'), r2Url('images/alumni_mmc_med1.jpeg'), r2Url('images/alumni_mmc_med2.jpeg')];
-  const containerVariants = {
-    hidden: {
-      opacity: 0
-    },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1
-      }
-    }
-  };
-  const itemVariants = {
-    hidden: {
-      opacity: 0,
-      y: 20
-    },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.5
-      }
-    }
-  };
-  return <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
-        {/* Page Header */}
-        <motion.div initial={{
-        opacity: 0,
-        y: -30
-      }} animate={{
-        opacity: 1,
-        y: 0
-      }} transition={{
-        duration: 0.8
-      }} className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">{`
-            ${i18next.t("auto.alumni_meet_2023_1y00xgt")}
-          `}</h1>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto">{`
-            ${i18next.t("auto.celebrating_our_alumni_community_and_the_memories_hg3948")}
-          `}</p>
-        </motion.div>
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import { CalendarDays, HeartHandshake, UsersRound } from "lucide-react";
 
-        {/* Image Gallery */}
-        <motion.div variants={containerVariants} initial="hidden" animate="visible" className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {images.map((image, index) => <motion.div key={index} variants={itemVariants} whileHover={{
-          scale: 1.05
-        }} whileTap={{
-          scale: 0.95
-        }} className="relative overflow-hidden rounded-lg shadow-lg bg-white">
-              <img src={image} alt={`Alumni Meet 2023 - Image ${index + 1}`} className="w-full h-64 object-cover transition-transform duration-300 hover:scale-110" loading="lazy" />
-              <div className="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-20 transition-opacity duration-300" />
-            </motion.div>)}
-        </motion.div>
-      </div>
-    </div>;
+const cardData = [
+
+    {
+    title: "Alumni Meet 2026",
+    description: "Register for the upcoming meet and view alumni event updates.",
+    link: "/alumni/2026",
+    color: "from-rose-400 to-orange-400",
+    icon: UsersRound,
+  },
+  {
+    title: "Alumni Meet 2023",
+    description: "Browse highlights and memories from the 2023 alumni gathering.",
+    link: "/alumni/2023",
+    color: "from-sky-400 to-indigo-500",
+    icon: CalendarDays,
+  },
+  {
+    title: "Lifetime Members",
+    description: "View the lifetime member document directly inside the page.",
+    link: "/alumni/lifetime",
+    color: "from-emerald-400 to-teal-500",
+    icon: HeartHandshake,
+  },
+];
+
+const pageVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { staggerChildren: 0.12 } },
 };
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 28 },
+  visible: { opacity: 1, y: 0 },
+};
+
+const Alumni = () => {
+  return (
+    <motion.main
+      variants={pageVariants}
+      initial="hidden"
+      animate="visible"
+      className="relative min-h-screen overflow-hidden bg-white"
+    >
+      <div className="absolute left-[-6rem] top-12 h-72 w-72 rounded-full bg-sky-100 blur-3xl" />
+      <div className="absolute bottom-10 right-[-5rem] h-80 w-80 rounded-full bg-rose-100 blur-3xl" />
+
+      <section className="relative mx-auto max-w-6xl px-4 py-16 text-center sm:px-6 lg:px-8 lg:py-20">
+        <motion.p
+          variants={itemVariants}
+          className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-rose-600"
+        >
+          Magadh Mahila College
+        </motion.p>
+        <motion.h1
+          variants={itemVariants}
+          className="mx-auto max-w-3xl text-4xl font-bold text-slate-950 sm:text-5xl"
+        >
+          Alumni Section
+        </motion.h1>
+        <motion.p
+          variants={itemVariants}
+          className="mx-auto mt-5 max-w-2xl text-base leading-7 text-slate-600 sm:text-lg"
+        >
+          Explore meet galleries, upcoming alumni registration, and lifetime member records.
+        </motion.p>
+
+        <motion.div variants={itemVariants} className="mt-12 grid gap-7 md:grid-cols-3">
+          {cardData.map((card) => (
+            <Link to={card.link} key={card.title} className="group block focus:outline-none">
+              <motion.div
+                whileHover={{ scale: 1.035, y: -6 }}
+                transition={{ type: "spring", stiffness: 260, damping: 20 }}
+                className="relative h-full"
+              >
+                <div
+                  className={`absolute inset-0 rounded-3xl bg-gradient-to-r ${card.color} opacity-20 blur-xl transition duration-300 group-hover:opacity-40`}
+                />
+                <div className="relative flex h-full min-h-[260px] flex-col rounded-3xl border border-slate-200 bg-white p-8 text-left shadow-lg shadow-slate-200/70 transition duration-300 group-hover:shadow-2xl group-hover:shadow-slate-300/70 group-focus-visible:ring-2 group-focus-visible:ring-rose-500">
+                  <div
+                    className={`mb-7 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-r ${card.color} text-white shadow-lg`}
+                  >
+                    <card.icon className="h-7 w-7" />
+                  </div>
+                  <h2 className="text-2xl font-bold text-slate-950">{card.title}</h2>
+                  <p className="mt-3 flex-1 text-sm leading-6 text-slate-600">{card.description}</p>
+                  <p className="mt-8 text-sm font-semibold text-rose-700">
+                    Open section <span aria-hidden="true">-&gt;</span>
+                  </p>
+                </div>
+              </motion.div>
+            </Link>
+          ))}
+        </motion.div>
+      </section>
+    </motion.main>
+  );
+};
+
 export default Alumni;

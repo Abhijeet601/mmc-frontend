@@ -15,8 +15,8 @@ const aicteReports = [
     url: 'https://pub-c7047204b6824b4ea67be147e7ebb0ac.r2.dev/public/EOA%20Report%202026-2027.PDF',
   },
   {
-    title: i18next.t("auto.aicte_letter_of_approval_report_1tdkvtt"),
-    description: i18next.t("auto.aicte_letter_of_approval_report_1tdkvtt"),
+    title: 'LoA Report 2024-2025',
+    description: 'AICTE Letter of Approval Report 2024-2025',
     url: r2Url('documents/LoA-Report-2024-2025.pdf'),
   },
 ];
