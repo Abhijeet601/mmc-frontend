@@ -17,6 +17,31 @@ const getInstagramEmbedUrl = (url) => {
   return `${normalized}/embed/captioned/`;
 };
 
+const getYoutubeVideoId = (url) => {
+  if (!url) return '';
+  try {
+    const urlObj = new URL(url);
+    // Handle youtu.be short links
+    if (urlObj.hostname === 'youtu.be') {
+      return urlObj.pathname.slice(1);
+    }
+    // Handle youtube.com links
+    if (urlObj.hostname === 'www.youtube.com' || urlObj.hostname === 'youtube.com') {
+      return urlObj.searchParams.get('v');
+    }
+  } catch (_) {
+    // Fallback: try regex patterns
+    const match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
+    return match ? match[1] : '';
+  }
+  return '';
+};
+
+const getYoutubeEmbedUrl = (url) => {
+  const videoId = getYoutubeVideoId(url);
+  return videoId ? `https://www.youtube.com/embed/${videoId}?modestbranding=1` : '';
+};
+
 // The platform cards were removed from the published social section.
 const socialLinks = [];
 
@@ -85,7 +110,17 @@ const SocialMediaUpdates = () => {
                       rel="noreferrer"
                       className="group overflow-hidden rounded-[24px] border border-slate-200 bg-slate-50/70 shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
                     >
-                      {post.image_url ? (
+                      {getYoutubeEmbedUrl(post.social_url) ? (
+                        <div className="bg-white p-2">
+                          <iframe
+                            title={post.title}
+                            src={getYoutubeEmbedUrl(post.social_url)}
+                            className="h-52 w-full rounded-2xl border-0"
+                            allowFullScreen
+                            loading="lazy"
+                          />
+                        </div>
+                      ) : post.image_url ? (
                         <div className="h-52 overflow-hidden bg-slate-100">
                           <img
                             src={post.image_url}
