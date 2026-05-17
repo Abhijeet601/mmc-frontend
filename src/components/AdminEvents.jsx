@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Globe2, Instagram, Facebook, Youtube, Save, ExternalLink, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { Globe2, Instagram, Facebook, Youtube, Save, ExternalLink, AlertCircle, CheckCircle2, Trash2 } from 'lucide-react';
 
 const SOCIAL_LINKS = [
   { label: 'Facebook', url: 'https://www.facebook.com/magadhmahila', icon: Facebook, tone: 'bg-blue-50 text-blue-700 border-blue-200' },
@@ -125,6 +125,24 @@ const AdminEvents = () => {
       setErrorMessage(error.message || 'Upload failed.');
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  const handleDeletePost = async (id) => {
+    if (!window.confirm('Delete this social event?')) return;
+    setErrorMessage('');
+    setSuccessMessage('');
+    try {
+      const resp = await fetch(`${SOCIAL_ADMIN_API_BASE}/social-events/${id}`, {
+        method: 'DELETE',
+      });
+      if (!resp.ok && resp.status !== 204) {
+        throw new Error(`Delete failed (${resp.status})`);
+      }
+      setSuccessMessage('Social event deleted.');
+      await loadPosts();
+    } catch (err) {
+      setErrorMessage(err.message || 'Unable to delete social event.');
     }
   };
 
@@ -289,15 +307,25 @@ const AdminEvents = () => {
                         <span>{post.platform || 'General'}</span>
                       </div>
                     </div>
-                    <a
-                      href={post.social_url}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700"
-                    >
-                      <ExternalLink className="h-4 w-4" />
-                      Open
-                    </a>
+                    <div className="flex items-center gap-2">
+                      <a
+                        href={post.social_url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700"
+                      >
+                        <ExternalLink className="h-4 w-4" />
+                        Open
+                      </a>
+                      <button
+                        type="button"
+                        onClick={() => handleDeletePost(post.id)}
+                        className="inline-flex items-center gap-2 rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-sm font-semibold text-rose-700"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                        Delete
+                      </button>
+                    </div>
                   </div>
                 </div>
               ))
