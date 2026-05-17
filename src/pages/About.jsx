@@ -162,101 +162,238 @@ const About = () => {
 
       <div className="min-h-screen bg-transparent py-8 relative z-10">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Header Section */}
-          <motion.div initial={{
-          opacity: 0,
-          y: 30
-        }} animate={{
-          opacity: 1,
-          y: 0
-        }} transition={{
-          duration: 0.8
-        }} className="text-center mb-16">
-            <motion.div className="flex items-center justify-center gap-3 mb-4" whileHover={{
-            scale: 1.05
-          }} transition={{
-            type: 'spring',
-            stiffness: 300
-          }}>
-              <motion.div animate={{
-              rotate: [0, 10, -10, 0]
-            }} transition={{
-              duration: 3,
-              repeat: Infinity,
-              ease: 'easeInOut'
-            }}>
-                <BookOpen className="w-10 h-10 text-primary" />
+          {/* Hero Mission Section */}
+          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="mb-16 relative overflow-hidden rounded-3xl">
+            <motion.div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-maroon-500/10 to-transparent opacity-0" animate={{ opacity: [0.3, 0.5, 0.3] }} transition={{ duration: 5, repeat: Infinity }} />
+            
+            {/* Animated background elements */}
+            <div className="absolute top-0 right-0 w-96 h-96 bg-yellow-300/10 rounded-full blur-3xl -z-0" />
+            <div className="absolute bottom-0 left-0 w-96 h-96 bg-maroon-500/10 rounded-full blur-3xl -z-0" />
+            
+            <div className="relative z-10 bg-gradient-to-r from-primary/95 via-blue-700/90 to-maroon-600/90 px-8 py-16 md:py-28 text-center text-white shadow-2xl">
+              {/* Badge Section */}
+              <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ duration: 0.6, delay: 0.1 }} className="flex items-center justify-center gap-2 mb-8">
+                <motion.div animate={{ rotate: [0, 360], scale: [1, 1.2, 1] }} transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}>
+                  <Sparkles className="w-8 h-8 text-yellow-300" />
+                </motion.div>
+                <p className="text-sm md:text-base font-semibold uppercase tracking-widest text-yellow-200">{i18next.t("auto.est_1946_1x4mt0j")} | Excellence & Empowerment</p>
               </motion.div>
-              <motion.h1 className="text-4xl md:text-5xl font-bold text-primary" whileHover={{
-              scale: 1.02
-            }} transition={{
-              type: 'spring',
-              stiffness: 200
-            }}>
-                {t('pages.about.mainTitle')}
+
+              {/* Main Heading with enhanced styling */}
+              <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2 }} className="text-5xl md:text-6xl lg:text-7xl font-black leading-tight mb-4">
+                <span className="block text-white">{i18next.t("auto.educating_women_cb4kqh")}</span>
+                <span className="block text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 via-yellow-100 to-yellow-300 mt-3 drop-shadow-lg">Empowering Futures.</span>
               </motion.h1>
-              <motion.div animate={{
-              rotate: [0, -10, 10, 0]
-            }} transition={{
-              duration: 3,
-              repeat: Infinity,
-              ease: 'easeInOut',
-              delay: 1.5
-            }}>
-                <Sparkles className="w-10 h-10 text-maroon-500" />
+
+              {/* Divider */}
+              <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 0.8, delay: 0.3 }} className="h-1 w-24 bg-gradient-to-r from-yellow-300 to-yellow-100 mx-auto mt-6 mb-8 rounded-full" />
+
+              {/* Tagline */}
+              <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.4 }} className="text-lg md:text-2xl text-white/95 max-w-4xl mx-auto leading-relaxed font-medium mb-6">
+                A premier institution dedicated to fostering intellectual growth, leadership, and social responsibility among women across all disciplines.
+              </motion.p>
+
+              {/* Feature Pills with enhanced styling */}
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.5 }} className="mt-10 flex flex-wrap items-center justify-center gap-3 md:gap-4 mb-10">
+                {[
+                  { icon: BookOpen, text: 'Quality Education' },
+                  { icon: Heart, text: 'Holistic Development' },
+                  { icon: Star, text: 'Women Empowerment' }
+                ].map((pill, idx) => {
+                  const Icon = pill.icon;
+                  return (
+                    <motion.div 
+                      key={idx}
+                      whileHover={{ scale: 1.05, y: -2 }}
+                      transition={{ type: 'spring', stiffness: 300 }}
+                      className="flex items-center gap-2 bg-white/25 backdrop-blur-md px-5 py-3 rounded-full border-2 border-white/40 hover:bg-white/35 hover:border-yellow-300 transition-all shadow-lg"
+                    >
+                      <Icon className="w-5 h-5 text-yellow-300" />
+                      <span className="font-semibold text-sm md:text-base">{pill.text}</span>
+                    </motion.div>
+                  );
+                })}
               </motion.div>
-            </motion.div>
-            <motion.p className="text-gray-600 text-lg max-w-3xl mx-auto" initial={{
-            opacity: 0
-          }} animate={{
-            opacity: 1
-          }} transition={{
-            duration: 0.8,
-            delay: 0.2
-          }}>
-              {t('pages.about.subtitle')}
-            </motion.p>
+
+              {/* CTA Buttons */}
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.6 }} className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <Link to="/about/brief-profile">
+                  <motion.button 
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="px-8 py-3 bg-yellow-300 text-primary font-bold rounded-full hover:bg-yellow-200 transition-all shadow-lg flex items-center gap-2"
+                  >
+                    Learn More About Us
+                    <ArrowRight className="w-5 h-5" />
+                  </motion.button>
+                </Link>
+                <motion.button 
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="px-8 py-3 bg-white/20 text-white font-bold rounded-full border-2 border-white hover:bg-white/30 transition-all backdrop-blur-sm flex items-center gap-2"
+                >
+                  Explore Programs
+                  <ArrowRight className="w-5 h-5" />
+                </motion.button>
+              </motion.div>
+            </div>
           </motion.div>
 
-          {/* Quick Stats */}
-          <motion.div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-12" variants={containerVariants} initial="hidden" animate="visible">
-            {[{
-            icon: Building,
-            label: i18next.t("auto.est_1946_1x4mt0j"),
-            color: 'blue'
-          }, {
-            icon: GraduationCap,
-            label: i18next.t("auto.educating_women_cb4kqh"),
-            color: 'purple'
-          }, {
-            icon: Award,
-            label: i18next.t("auto.excellence_2ekw6r"),
-            color: 'green'
-          }, {
-            icon: Target,
-            label: i18next.t("auto.our_mission_1gebmm9"),
-            color: 'red'
-          }].map((stat, idx) => {
-            const Icon = stat.icon;
-            return <motion.div key={idx} variants={itemVariants} className={`bg-white rounded-xl p-6 shadow-lg border-l-4 border-${stat.color}-500 hover:shadow-2xl`} whileHover={{
-              scale: 1.05,
-              y: -5
-            }} transition={{
-              type: 'spring',
-              stiffness: 300
-            }}>
-                  <motion.div animate={{
-                scale: [1, 1.1, 1]
-              }} transition={{
-                duration: 2,
-                repeat: Infinity,
-                delay: idx * 0.2
-              }}>
-                    <Icon className={`w-8 h-8 text-${stat.color}-500 mb-2`} />
-                  </motion.div>
-                  <p className="font-semibold text-gray-800">{stat.label}</p>
-                </motion.div>;
-          })}
+          {/* Experience Excellence Section */}
+          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2 }} className="mb-16 rounded-3xl overflow-hidden">
+            <div className="bg-gradient-to-b from-white/98 to-slate-50/95 backdrop-blur border border-slate-200 shadow-2xl p-8 md:p-16 relative overflow-hidden">
+              {/* Decorative elements */}
+              <div className="absolute top-0 right-0 w-80 h-80 bg-primary/5 rounded-full blur-3xl -z-0" />
+              <div className="absolute bottom-0 left-0 w-80 h-80 bg-maroon-500/5 rounded-full blur-3xl -z-0" />
+              
+              {/* Section Header */}
+              <motion.div className="text-center mb-16 relative z-10" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}>
+                <motion.p 
+                  initial={{ scale: 0 }} 
+                  animate={{ scale: 1 }}
+                  className="text-primary font-bold uppercase tracking-widest text-sm mb-4 flex items-center justify-center gap-2"
+                >
+                  <Star className="w-5 h-5" />
+                  Our Pillars
+                  <Star className="w-5 h-5" />
+                </motion.p>
+                <h2 className="text-4xl md:text-6xl font-black text-gray-900 mb-6">{i18next.t("auto.excellence_2ekw6r")}</h2>
+                <motion.p 
+                  initial={{ opacity: 0 }} 
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.4 }}
+                  className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed font-medium"
+                >
+                  Experience the transformative power of education rooted in values, innovation, and inclusive excellence. Our commitment to your success defines our mission.
+                </motion.p>
+              </motion.div>
+
+              {/* Three Pillars with Enhanced Design */}
+              <motion.div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 relative z-10" variants={containerVariants} initial="hidden" animate="visible">
+                {[
+                  {
+                    icon: BookOpen,
+                    title: 'Academic Excellence',
+                    desc: 'Rigorous curriculum designed by industry experts and dedicated faculty committed to your intellectual growth',
+                    color: 'from-blue-500 to-blue-600'
+                  }, 
+                  {
+                    icon: Heart,
+                    title: 'Women Empowerment',
+                    desc: 'Creating confident, capable leaders ready to challenge norms and shape tomorrow\'s world',
+                    color: 'from-pink-500 to-rose-600'
+                  }, 
+                  {
+                    icon: Award,
+                    title: 'Holistic Growth',
+                    desc: 'Beyond textbooks—developing character, critical thinking, and social responsibility for life success',
+                    color: 'from-amber-500 to-orange-600'
+                  }
+                ].map((item, idx) => {
+                  const Icon = item.icon;
+                  return (
+                    <motion.div 
+                      key={idx} 
+                      variants={itemVariants} 
+                      className="group relative rounded-2xl overflow-hidden transition-all duration-300" 
+                      whileHover={{ y: -12, scale: 1.02 }}
+                    >
+                      {/* Card Background */}
+                      <div className="absolute inset-0 bg-gradient-to-br from-slate-50 to-slate-100 group-hover:from-white group-hover:to-slate-50 transition-all" />
+                      <div className="absolute inset-0 border-2 border-slate-200 group-hover:border-primary/50 transition-all rounded-2xl" />
+                      
+                      {/* Content */}
+                      <div className="relative p-8 h-full flex flex-col">
+                        <motion.div 
+                          animate={{ y: [0, -8, 0], rotate: [0, 2, 0] }} 
+                          transition={{ duration: 3, repeat: Infinity, delay: idx * 0.3 }} 
+                          className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${item.color} shadow-lg flex items-center justify-center mb-6 group-hover:shadow-2xl transition-all`}
+                        >
+                          <Icon className="w-8 h-8 text-white" />
+                        </motion.div>
+                        <h3 className="text-2xl font-bold text-gray-900 mb-3 group-hover:text-primary transition-colors">{item.title}</h3>
+                        <p className="text-gray-600 leading-relaxed flex-grow">{item.desc}</p>
+                        <motion.div className="mt-6 pt-4 border-t border-slate-200 group-hover:border-primary/30 transition-all">
+                          <motion.a 
+                            href="#" 
+                            whileHover={{ x: 4 }}
+                            className="text-primary font-semibold text-sm flex items-center gap-2 hover:gap-3 transition-all"
+                          >
+                            Learn more
+                            <ArrowRight className="w-4 h-4" />
+                          </motion.a>
+                        </motion.div>
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </motion.div>
+
+              {/* Divider */}
+              <motion.div 
+                initial={{ scaleX: 0 }} 
+                animate={{ scaleX: 1 }} 
+                transition={{ duration: 0.8, delay: 0.4 }}
+                className="h-1 w-16 bg-gradient-to-r from-primary to-maroon-500 mx-auto mb-12 rounded-full" 
+              />
+
+              {/* Core Stats with Enhanced Design */}
+              <motion.div className="grid grid-cols-2 md:grid-cols-4 gap-4 relative z-10" variants={containerVariants} initial="hidden" animate="visible">
+                {[
+                  {
+                    number: '78+',
+                    label: 'Years of Excellence',
+                    icon: Award,
+                    color: 'from-blue-500/10 to-blue-600/5 border-blue-200/50'
+                  }, 
+                  {
+                    number: '5000+',
+                    label: 'Empowered Women',
+                    icon: Users,
+                    color: 'from-pink-500/10 to-rose-600/5 border-pink-200/50'
+                  }, 
+                  {
+                    number: '25+',
+                    label: 'Academic Programs',
+                    icon: BookOpen,
+                    color: 'from-amber-500/10 to-orange-600/5 border-amber-200/50'
+                  }, 
+                  {
+                    number: '95%',
+                    label: 'Success Rate',
+                    icon: TrendingUp,
+                    color: 'from-green-500/10 to-emerald-600/5 border-green-200/50'
+                  }
+                ].map((stat, idx) => {
+                  const Icon = stat.icon;
+                  return (
+                    <motion.div 
+                      key={idx} 
+                      variants={itemVariants} 
+                      className={`bg-gradient-to-br ${stat.color} rounded-2xl p-6 text-center border transition-all hover:shadow-xl`} 
+                      whileHover={{ scale: 1.08, y: -4 }}
+                    >
+                      <motion.div 
+                        animate={{ scale: [1, 1.2, 1], rotate: [0, 5, 0] }} 
+                        transition={{ duration: 2, repeat: Infinity, delay: idx * 0.2 }} 
+                        className="mb-4 flex justify-center"
+                      >
+                        <Icon className="w-8 h-8 text-primary" />
+                      </motion.div>
+                      <motion.p 
+                        initial={{ opacity: 0 }} 
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.5 + idx * 0.1 }}
+                        className="text-3xl md:text-4xl font-black text-primary mb-2"
+                      >
+                        {stat.number}
+                      </motion.p>
+                      <p className="text-sm text-gray-700 font-semibold">{stat.label}</p>
+                    </motion.div>
+                  );
+                })}
+              </motion.div>
+            </div>
           </motion.div>
 
           {/* Sections Container */}
