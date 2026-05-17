@@ -15,13 +15,13 @@ import ERPPageTransition from '@/components/erp/ERPPageTransition';
 import ERPSurfaceCard from '@/components/erp/ERPSurfaceCard';
 
 const studentFeatures = [
-  'Student Registration',
-  'Login',
-  'Admission Form Submission',
+  'New Student Registration',
+  'Student Login + Renewal Access',
+  'Structured Admission Form Submission',
   'Application Status Tracking',
-  'Fee Payment',
+  'Registration and Hostel Fee Payment',
   'Hostel Allocation Status',
-  'Notifications',
+  'Receipts, Notifications, and Complaints',
 ];
 
 const ERPPortal = () => (
@@ -94,8 +94,8 @@ const ERPPortal = () => (
                     Admission, payments, and allocation in one student workspace
                   </h2>
                   <p className="mt-4 max-w-xl text-sm leading-7 text-slate-600 sm:text-base">
-                    Students can register, submit hostel admission applications, upload documents, track application
-                    progress, pay hostel fees, and check room allocation status.
+                    New students can register and submit the hostel application flow, while existing students can sign
+                    in for hostel renewal, fee payment, receipt download, complaint tracking, and allocation updates.
                   </p>
 
                   <div className="mt-6 flex flex-wrap gap-3">
@@ -132,8 +132,8 @@ const ERPPortal = () => (
 
                   <div className="mt-8">
                     <p className="text-sm text-slate-500">
-                      Open the student workspace to continue admissions, or jump to the admin control center for
-                      hostel operations.
+                      Open the student workspace for new registration or renewal, or jump to the admin control center
+                      for hostel operations, allocation, and payment verification.
                     </p>
                     <div className="mt-4 flex flex-col gap-3">
                       <motion.div whileHover={{ y: -2 }} whileTap={{ scale: 0.985 }}>

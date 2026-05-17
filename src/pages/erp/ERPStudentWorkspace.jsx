@@ -166,7 +166,9 @@ const ERPStudentWorkspace = () => {
 
   const dashboard = dashboardQuery.data;
   const summary = dashboard?.summary || {};
-  const receipts = [dashboard?.application_receipt, dashboard?.hostel_receipt].filter(Boolean);
+  const receipts = dashboard?.payment_history?.length
+    ? dashboard.payment_history
+    : [dashboard?.application_receipt, dashboard?.hostel_receipt].filter(Boolean);
   const applicationPaymentState = dashboard?.application_payment_status;
   const hostelPaymentState = dashboard?.hostel_status;
   const applicationAwaitingApproval =
@@ -446,6 +448,15 @@ const ERPStudentWorkspace = () => {
       <SectionCard theme={theme}>
         <p className="text-xs font-semibold uppercase tracking-[0.2em] text-blue-500">Receipts</p>
         <h3 className="mt-2 text-xl font-semibold">Payment history and downloads</h3>
+        <div className={cn('mt-4 rounded-[24px] border px-4 py-4 text-sm', theme === 'dark' ? 'border-slate-800 bg-slate-900/80' : 'border-slate-200 bg-slate-50/80')}>
+          <p className="font-semibold">Gateway profile</p>
+          <p className={cn('mt-2', mutedText(theme))}>
+            {(dashboard?.payment_gateway?.merchant_name || 'Configured merchant')} / {dashboard?.payment_gateway?.merchant_id || 'Merchant ID pending'} / {dashboard?.payment_gateway?.provider || 'demo'}
+          </p>
+          <p className={cn('mt-1 text-xs uppercase tracking-[0.18em]', mutedText(theme))}>
+            {dashboard?.payment_gateway?.merchant_role || 'role pending'} / {dashboard?.payment_gateway?.merchant_status || 'status pending'}
+          </p>
+        </div>
         <div className="mt-6 space-y-3">
           {receipts.length ? (
             receipts.map((receipt) => (
@@ -453,7 +464,7 @@ const ERPStudentWorkspace = () => {
                 <div>
                   <p className="font-semibold">{statusLabel(receipt.payment_type)}</p>
                   <p className={cn('mt-1 text-sm', mutedText(theme))}>
-                    {formatCurrency(receipt.amount)} / {receipt.transaction_id}
+                    {formatCurrency(receipt.amount)} / {receipt.transaction_id} / {receipt.payment_mode || 'manual'}
                   </p>
                   <p className={cn('mt-1 text-xs uppercase tracking-[0.18em]', mutedText(theme))}>
                     {formatDateTime(receipt.payment_date)}
@@ -485,7 +496,10 @@ const ERPStudentWorkspace = () => {
             ['Category', summary.category],
             ['Allotted category', dashboard?.allotted_category],
             ['Father Name', summary.father_name],
+            ['Mother Name', summary.mother_name],
             ['Preferred Hostel', dashboard?.preferred_hostel],
+            ['Room Type', summary.room_type],
+            ['Food Preference', summary.food_preference],
           ].map(([label, value]) => (
             <div key={label} className={cn('rounded-[24px] border px-4 py-4', theme === 'dark' ? 'border-slate-800 bg-slate-900/80' : 'border-slate-200 bg-slate-50/80')}>
               <p className={cn('text-xs font-semibold uppercase tracking-[0.18em]', mutedText(theme))}>{label}</p>
@@ -496,10 +510,30 @@ const ERPStudentWorkspace = () => {
       </SectionCard>
 
       <SectionCard theme={theme}>
-        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-blue-500">Timeline</p>
-        <h3 className="mt-2 text-xl font-semibold">Allocation and payment history</h3>
-        <div className="mt-6">
-          <ERPStatusTracker items={dashboard?.tracker || []} />
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-blue-500">Documents</p>
+        <h3 className="mt-2 text-xl font-semibold">Uploaded hostel records</h3>
+        <div className="mt-6 grid gap-3">
+          {[
+            ['Student Photo', summary.student_photo_url],
+            ['Aadhaar Card', summary.aadhaar_card_url],
+            ['College ID', summary.college_id_url],
+            ['Marksheet', summary.marksheet_url],
+          ].map(([label, href]) => (
+            <a
+              key={label}
+              href={href ? resolveAssetUrl(href) : '#'}
+              target={href ? '_blank' : undefined}
+              rel={href ? 'noreferrer' : undefined}
+              className={cn(
+                'flex items-center justify-between rounded-[24px] border px-4 py-4 text-sm font-semibold',
+                theme === 'dark' ? 'border-slate-800 bg-slate-900/80' : 'border-slate-200 bg-slate-50/80',
+                !href && 'pointer-events-none opacity-60'
+              )}
+            >
+              <span>{label}</span>
+              <Download className="h-4 w-4" />
+            </a>
+          ))}
         </div>
       </SectionCard>
     </div>
@@ -513,10 +547,12 @@ const ERPStudentWorkspace = () => {
         <div className="mt-6 space-y-4">
           <input className={inputClass(theme)} placeholder="Subject" value={complaintForm.subject} onChange={(event) => setComplaintForm((current) => ({ ...current, subject: event.target.value }))} />
           <select className={inputClass(theme)} value={complaintForm.category} onChange={(event) => setComplaintForm((current) => ({ ...current, category: event.target.value }))}>
-            <option value="Hostel">Hostel</option>
+            <option value="Water">Water</option>
+            <option value="Electricity">Electricity</option>
             <option value="Mess">Mess</option>
-            <option value="Room Maintenance">Room Maintenance</option>
-            <option value="Fee">Fee</option>
+            <option value="WiFi">WiFi</option>
+            <option value="Cleanliness">Cleanliness</option>
+            <option value="Security">Security</option>
           </select>
           <textarea className={cn(inputClass(theme), 'h-32 py-3')} placeholder="Describe the issue" value={complaintForm.description} onChange={(event) => setComplaintForm((current) => ({ ...current, description: event.target.value }))} />
           <ERPButton

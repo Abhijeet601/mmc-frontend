@@ -55,7 +55,7 @@ const initialReset = {
 
 const portalModules = [
   {
-    title: 'Student Authentication',
+    title: 'New Registration + Login',
     description: 'Register, sign in, and reset your password securely using verified student details.',
     icon: ShieldCheck,
   },
@@ -70,15 +70,15 @@ const portalModules = [
     icon: BellRing,
   },
   {
-    title: 'Payments & Allocation',
-    description: 'Record application fee, hostel fee, and view the assigned hostel, room, and bed details.',
+    title: 'Payments, Renewal & Allocation',
+    description: 'Pay registration or hostel fees, start renewal, and view assigned hostel, room, and bed details.',
     icon: CreditCard,
   },
 ];
 
 const authTabs = [
   { key: 'login', label: 'Student Login' },
-  { key: 'register', label: 'Register' },
+  { key: 'register', label: 'New Registration' },
   { key: 'reset', label: 'Reset Password' },
 ];
 
@@ -242,9 +242,9 @@ const ERPStudentAuth = () => {
 
               <div className="mt-5 space-y-3">
                 {[
-                  'Student authentication with registration, login, and password reset.',
-                  'Admission form with personal, academic, address, and document upload sections.',
-                  'Status tracking, fee payment, hostel allocation, and notifications from the dashboard.',
+                  'New students register here, then move to the official hostel admission form and application fee payment.',
+                  'Existing students use the same login to open profile, payment, receipt, and hostel renewal workflows.',
+                  'Status tracking, allocation, complaints, and notifications stay available from the student dashboard.',
                 ].map((item, index) => (
                   <div
                     key={item}
@@ -287,8 +287,8 @@ const ERPStudentAuth = () => {
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Access Portal</p>
             <h2 className="mt-3 text-3xl font-semibold text-slate-900">Student authentication</h2>
             <p className="mt-2 text-sm text-slate-600">
-              Use registration for new access, login for existing accounts, and password reset when credentials need
-              to be refreshed.
+              Use `New Registration` for first-time hostel applicants, `Student Login` for returning access and
+              renewal, and `Reset Password` when credentials need to be refreshed.
             </p>
 
             <div className="mt-6 grid grid-cols-1 gap-2 rounded-2xl bg-slate-100/80 p-1.5 sm:grid-cols-3">

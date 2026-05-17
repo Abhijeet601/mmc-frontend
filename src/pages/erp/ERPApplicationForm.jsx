@@ -76,6 +76,9 @@ const initialForm = {
   session: '2026-27',
   program: '',
   roll_number: '',
+  preferred_hostel: 'Vaidehi Hostel',
+  room_type: 'Shared',
+  food_preference: 'Veg',
 };
 
 const inputClass =
@@ -125,6 +128,9 @@ const requiredFields = [
   'honours_subject',
   'session',
   'program',
+  'preferred_hostel',
+  'room_type',
+  'food_preference',
 ];
 
 const formatValue = (value) => (value === null || value === undefined ? '' : String(value));
@@ -168,6 +174,14 @@ const ERPApplicationForm = () => {
   } = formMethods;
   const [photoFile, setPhotoFile] = useState(null);
   const [photoPreview, setPhotoPreview] = useState('');
+  const [aadhaarCardFile, setAadhaarCardFile] = useState(null);
+  const [collegeIdFile, setCollegeIdFile] = useState(null);
+  const [marksheetFile, setMarksheetFile] = useState(null);
+  const [existingDocuments, setExistingDocuments] = useState({
+    aadhaar_card_url: '',
+    college_id_url: '',
+    marksheet_url: '',
+  });
 
   useEffect(() => {
     if (!getStudentToken()) {
@@ -189,6 +203,11 @@ const ERPApplicationForm = () => {
         setRegistrationDob(formatValue(data.registration_date_of_birth));
         setIsEditable(Boolean(data.is_editable));
         setPhotoPreview(data?.data?.student_photo_url ? resolveAssetUrl(data.data.student_photo_url) : '');
+        setExistingDocuments({
+          aadhaar_card_url: data?.data?.aadhaar_card_url ? resolveAssetUrl(data.data.aadhaar_card_url) : '',
+          college_id_url: data?.data?.college_id_url ? resolveAssetUrl(data.data.college_id_url) : '',
+          marksheet_url: data?.data?.marksheet_url ? resolveAssetUrl(data.data.marksheet_url) : '',
+        });
     Object.entries(initialForm).forEach(([key]) => {
       const value = formatValue(data?.data?.[key]) || initialForm[key];
       setValue(key, value);
@@ -255,12 +274,17 @@ const ERPApplicationForm = () => {
       return watchedData[key] ? count + 1 : count;
     }, 0);
 
-    const photoDone = photoFile || photoPreview ? 1 : 0;
+    const uploadCount = [
+      photoFile || photoPreview,
+      aadhaarCardFile || existingDocuments.aadhaar_card_url,
+      collegeIdFile || existingDocuments.college_id_url,
+      marksheetFile || existingDocuments.marksheet_url,
+    ].filter(Boolean).length;
 
     return Math.round(
-      ((filledFields + photoDone) / (requiredFields.length + 1)) * 100
+      ((filledFields + uploadCount) / (requiredFields.length + 4)) * 100
     );
-  }, [watchedData, photoFile, photoPreview]);
+  }, [watchedData, photoFile, photoPreview, aadhaarCardFile, collegeIdFile, marksheetFile, existingDocuments]);
 
   const isLastStep = currentStep === steps.length - 1;
   const isFormComplete = completion === 100;
@@ -279,6 +303,9 @@ const ERPApplicationForm = () => {
       payload.append(key, value ?? '');
     });
     if (photoFile) payload.append('student_photo', photoFile);
+    if (aadhaarCardFile) payload.append('aadhaar_card', aadhaarCardFile);
+    if (collegeIdFile) payload.append('college_id', collegeIdFile);
+    if (marksheetFile) payload.append('marksheet', marksheetFile);
     return payload;
   };
 
@@ -689,6 +716,47 @@ const ERPApplicationForm = () => {
                 disabled={!isEditable}
               />
             </Label>
+            <Label title="Preferred Hostel" required>
+              <select
+                {...register("preferred_hostel")}
+                className={`${inputClass} ${errors.preferred_hostel ? "border-red-500" : ""}`}
+                disabled={!isEditable}
+              >
+                <option value="Vaidehi Hostel">Hostel A / Vaidehi Hostel</option>
+                <option value="Mahima Hostel">Hostel B / Mahima Hostel</option>
+              </select>
+              {errors.preferred_hostel && (
+                <p className="text-red-500 text-xs mt-1">{errors.preferred_hostel.message}</p>
+              )}
+            </Label>
+            <Label title="Room Type" required>
+              <select
+                {...register("room_type")}
+                className={`${inputClass} ${errors.room_type ? "border-red-500" : ""}`}
+                disabled={!isEditable}
+              >
+                <option value="Shared">Shared</option>
+                <option value="Standard">Standard</option>
+                <option value="Premium">Premium</option>
+              </select>
+              {errors.room_type && (
+                <p className="text-red-500 text-xs mt-1">{errors.room_type.message}</p>
+              )}
+            </Label>
+            <Label title="Food Preference" required>
+              <select
+                {...register("food_preference")}
+                className={`${inputClass} ${errors.food_preference ? "border-red-500" : ""}`}
+                disabled={!isEditable}
+              >
+                <option value="Veg">Veg</option>
+                <option value="Non-Veg">Non-Veg</option>
+                <option value="Special Diet">Special Diet</option>
+              </select>
+              {errors.food_preference && (
+                <p className="text-red-500 text-xs mt-1">{errors.food_preference.message}</p>
+              )}
+            </Label>
             <div className="md:col-span-2">
               <Label title="Student Photo" required>
                 <label className="mt-2 flex min-h-[152px] cursor-pointer flex-col items-center justify-center rounded-[28px] border border-dashed border-cyan-200 bg-cyan-50/70 px-5 py-6 text-center">
@@ -713,6 +781,60 @@ const ERPApplicationForm = () => {
                 </label>
               </Label>
             </div>
+            {[
+              {
+                title: 'Aadhaar Card',
+                accept: '.pdf,image/*',
+                file: aadhaarCardFile,
+                setter: setAadhaarCardFile,
+                href: existingDocuments.aadhaar_card_url,
+              },
+              {
+                title: 'College ID',
+                accept: '.pdf,image/*',
+                file: collegeIdFile,
+                setter: setCollegeIdFile,
+                href: existingDocuments.college_id_url,
+              },
+              {
+                title: 'Marksheet',
+                accept: '.pdf,image/*',
+                file: marksheetFile,
+                setter: setMarksheetFile,
+                href: existingDocuments.marksheet_url,
+              },
+            ].map((item) => (
+              <div key={item.title}>
+                <Label title={item.title} required>
+                  <label className="mt-2 flex min-h-[152px] cursor-pointer flex-col items-center justify-center rounded-[28px] border border-dashed border-cyan-200 bg-cyan-50/70 px-5 py-6 text-center">
+                    <ImagePlus className="h-8 w-8 text-cyan-600" />
+                    <span className="mt-3 text-sm font-medium text-slate-800">
+                      {item.file ? item.file.name : `Upload ${item.title}`}
+                    </span>
+                    <span className="mt-1 text-xs uppercase tracking-[0.16em] text-slate-400">
+                      PDF, JPG, PNG or WEBP
+                    </span>
+                    <input
+                      type="file"
+                      accept={item.accept}
+                      className="hidden"
+                      disabled={!isEditable}
+                      onChange={(event) => item.setter(event.target.files?.[0] || null)}
+                    />
+                  </label>
+                </Label>
+                {item.href && !item.file ? (
+                  <a
+                    href={item.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="mt-2 inline-flex text-xs font-semibold uppercase tracking-[0.16em] text-cyan-700 underline"
+                  >
+                    View uploaded file
+                  </a>
+                ) : null}
+              </div>
+            ))}
             {photoPreview ? (
               <div className="md:col-span-2">
                 <img
@@ -723,7 +845,7 @@ const ERPApplicationForm = () => {
               </div>
             ) : null}
             <div className="md:col-span-2 rounded-[28px] border border-slate-200 bg-slate-50/80 px-5 py-4 text-sm text-slate-600">
-              Document upload currently captures the required student photograph for the hostel admission workflow.
+              Upload the student photograph, Aadhaar card, college ID, and marksheet to complete the official hostel ERP record.
             </div>
           </div>
         );
