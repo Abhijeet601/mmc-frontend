@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import {
   ExternalLink,
-  Megaphone,
 } from 'lucide-react';
 import { getSocialEvents } from '@/services/socialEvents';
 
@@ -56,33 +55,17 @@ const SocialMediaUpdates = () => {
           transition={{ duration: 0.7 }}
           className="overflow-hidden rounded-[32px] border border-slate-200 bg-white shadow-[0_24px_60px_-36px_rgba(15,23,42,0.35)]"
         >
-          <div className="bg-[linear-gradient(135deg,#0f172a,#1d4ed8,#0f766e)] px-6 py-8 text-white md:px-8">
-            <div className="max-w-3xl">
-              <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-sky-100">
-                <Megaphone className="h-4 w-4" />
-                Social Media Updates
-              </div>
-              <h2 className="mt-4 text-3xl md:text-4xl font-black tracking-tight">
-                Follow official Magadh Mahila College channels
-              </h2>
-              <p className="mt-3 max-w-2xl text-sm md:text-base leading-7 text-sky-50/90">
-                Stay connected with verified college announcements, event coverage, admission communication,
-                hostel activities, and student life updates across our official platforms.
-              </p>
-            </div>
-          </div>
-
           <div className="px-6 py-8 md:px-8">
             {/* Official platform cards removed to simplify the Media Corner section. */}
 
             <div className="mt-8 rounded-[28px] border border-slate-200 bg-white">
-                  <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 px-5 py-4">
-                    <div>
-                      <p className="text-xs font-semibold uppercase tracking-[0.16em] text-sky-700">Live Social Posts</p>
-                      <h3 className="mt-1 text-2xl font-black text-slate-900">Media Corner</h3>
-                    </div>
-                <p className="text-sm text-slate-500">Published from the admin social media panel</p>
-              </div>
+                      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 px-5 py-6">
+                        <div>
+                          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-sky-700">Live Social Posts</p>
+                          <h3 className="mt-1 text-3xl md:text-4xl font-extrabold text-sky-800">Media Corner</h3>
+                        </div>
+                        <p className="text-sm text-slate-500">Published from the admin social media panel</p>
+                      </div>
 
               <div className="grid gap-5 p-5 md:grid-cols-2 xl:grid-cols-3">
                 {loading ? (
