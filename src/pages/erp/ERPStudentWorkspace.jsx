@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet-async';
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import {
   BellRing,
+  CircleHelp,
   Building2,
   CreditCard,
   Download,
@@ -36,11 +37,14 @@ import {
   clearStudentToken,
   getApplicationCompleted,
   getStudentDashboard,
+  getStudentComplaints,
   getStudentToken,
   payApplicationFee,
   payHostelFee,
   resolveAssetUrl,
   saveHostelPreference,
+  startHostelRenewal,
+  createStudentComplaint,
 } from '@/services/erpApi';
 
 const studentNavItems = [
@@ -49,6 +53,7 @@ const studentNavItems = [
   { to: '/erp/student/hostel-preference', label: 'Hostel Preference', caption: 'Preference and allocation', icon: MapPinned },
   { to: '/erp/student/payments', label: 'Payments', caption: 'Fees and receipts', icon: WalletCards },
   { to: '/erp/student/profile', label: 'Profile', caption: 'Personal and academic info', icon: UserCircle2 },
+  { to: '/erp/student/complaints', label: 'Complaints', caption: 'Tickets and grievance portal', icon: CircleHelp },
 ];
 
 const sectionFrame = (theme) =>
@@ -100,6 +105,7 @@ const ERPStudentWorkspace = () => {
   const [preferredHostel, setPreferredHostel] = useState('Vaidehi Hostel');
   const [applicationTxn, setApplicationTxn] = useState('');
   const [hostelTxn, setHostelTxn] = useState('');
+  const [complaintForm, setComplaintForm] = useState({ subject: '', category: 'Hostel', description: '' });
 
   const theme = siteTheme === 'dark' ? 'dark' : 'light';
   const isAuthenticated = Boolean(getStudentToken());
@@ -109,6 +115,11 @@ const ERPStudentWorkspace = () => {
   const dashboardQuery = useQuery({
     queryKey: ['erp', 'student', 'dashboard'],
     queryFn: getStudentDashboard,
+    enabled: isAuthenticated && applicationCompleted !== false,
+  });
+  const complaintsQuery = useQuery({
+    queryKey: ['erp', 'student', 'complaints'],
+    queryFn: getStudentComplaints,
     enabled: isAuthenticated && applicationCompleted !== false,
   });
 
@@ -235,12 +246,31 @@ const ERPStudentWorkspace = () => {
           ))}
         </div>
         <div className="mt-6">
-          <Link to="/erp/application-form">
-            <ERPButton>
-              <FileText className="h-4 w-4" />
-              Open Application Form
+          <div className="flex flex-wrap gap-3">
+            <Link to="/erp/application-form">
+              <ERPButton>
+                <FileText className="h-4 w-4" />
+                Open Application Form
+              </ERPButton>
+            </Link>
+            <ERPButton
+              variant="secondary"
+              disabled={!dashboard?.can_start_renewal || actionMutation.isPending}
+              onClick={() =>
+                actionMutation.mutate({
+                  request: async () => {
+                    const response = await startHostelRenewal();
+                    navigate('/erp/application-form');
+                    return response;
+                  },
+                  successTitle: 'Hostel renewal started',
+                })
+              }
+            >
+              <RefreshCw className="h-4 w-4" />
+              Start Hostel Renewal
             </ERPButton>
-          </Link>
+          </div>
         </div>
       </SectionCard>
       <SectionCard theme={theme}>
@@ -475,6 +505,66 @@ const ERPStudentWorkspace = () => {
     </div>
   );
 
+  const renderComplaints = () => (
+    <div className="grid gap-6 xl:grid-cols-[0.95fr,1.05fr]">
+      <SectionCard theme={theme}>
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-blue-500">Complaint portal</p>
+        <h3 className="mt-2 text-xl font-semibold">Raise a hostel support ticket</h3>
+        <div className="mt-6 space-y-4">
+          <input className={inputClass(theme)} placeholder="Subject" value={complaintForm.subject} onChange={(event) => setComplaintForm((current) => ({ ...current, subject: event.target.value }))} />
+          <select className={inputClass(theme)} value={complaintForm.category} onChange={(event) => setComplaintForm((current) => ({ ...current, category: event.target.value }))}>
+            <option value="Hostel">Hostel</option>
+            <option value="Mess">Mess</option>
+            <option value="Room Maintenance">Room Maintenance</option>
+            <option value="Fee">Fee</option>
+          </select>
+          <textarea className={cn(inputClass(theme), 'h-32 py-3')} placeholder="Describe the issue" value={complaintForm.description} onChange={(event) => setComplaintForm((current) => ({ ...current, description: event.target.value }))} />
+          <ERPButton
+            disabled={!complaintForm.subject.trim() || !complaintForm.description.trim() || actionMutation.isPending}
+            onClick={() =>
+              actionMutation.mutate({
+                request: async () => {
+                  const response = await createStudentComplaint(complaintForm);
+                  setComplaintForm({ subject: '', category: 'Hostel', description: '' });
+                  await queryClient.invalidateQueries({ queryKey: ['erp', 'student', 'complaints'] });
+                  return { message: `Ticket ${response.ticket_number} created successfully.` };
+                },
+                successTitle: 'Complaint submitted',
+              })
+            }
+          >
+            <CircleHelp className="h-4 w-4" />
+            Submit Complaint
+          </ERPButton>
+        </div>
+      </SectionCard>
+
+      <SectionCard theme={theme}>
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-blue-500">Ticket history</p>
+        <h3 className="mt-2 text-xl font-semibold">Student grievance log</h3>
+        <div className="mt-6 space-y-3">
+          {(complaintsQuery.data?.items || []).length ? (
+            complaintsQuery.data.items.map((item) => (
+              <div key={item.ticket_number} className={cn('rounded-[24px] border px-4 py-4', theme === 'dark' ? 'border-slate-800 bg-slate-900/80' : 'border-slate-200 bg-slate-50/80')}>
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <div>
+                    <p className="font-semibold">{item.subject}</p>
+                    <p className={cn('mt-1 text-sm', mutedText(theme))}>{item.ticket_number} / {item.category}</p>
+                  </div>
+                  <StatusBadge value={item.status} theme={theme} />
+                </div>
+                <p className={cn('mt-3 text-sm leading-6', mutedText(theme))}>{item.description}</p>
+                {item.resolution_note ? <p className="mt-3 text-sm text-emerald-700">Resolution: {item.resolution_note}</p> : null}
+              </div>
+            ))
+          ) : (
+            <p className={cn('text-sm', mutedText(theme))}>No complaint tickets submitted yet.</p>
+          )}
+        </div>
+      </SectionCard>
+    </div>
+  );
+
   const renderContent = () => {
     switch (currentNav.to) {
       case '/erp/student/dashboard':
@@ -487,6 +577,8 @@ const ERPStudentWorkspace = () => {
         return renderPayments();
       case '/erp/student/profile':
         return renderProfile();
+      case '/erp/student/complaints':
+        return renderComplaints();
       default:
         return renderDashboard();
     }

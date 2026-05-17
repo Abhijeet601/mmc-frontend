@@ -8,6 +8,7 @@ import {
   BedDouble,
   BellRing,
   BookOpenCheck,
+  CircleHelp,
   Building2,
   CheckCircle2,
   CreditCard,
@@ -65,6 +66,7 @@ import {
   getAdminDashboard,
   getAdminHostelRooms,
   getAdminPayments,
+  getAdminComplaints,
   getAdminStudentDetail,
   getAdminStudents,
   getAdminToken,
@@ -74,6 +76,7 @@ import {
   resolveAssetUrl,
   toggleShortlistStudent,
   updateAdminHostelRoom,
+  updateAdminComplaint,
   updateOldStudent,
   uploadBulkAllocation,
   uploadBulkShortlist,
@@ -88,6 +91,7 @@ const adminNavItems = [
   { to: '/erp/admin/room-allocation', label: 'Room Allocation', caption: 'Manual + live capacity', icon: BedDouble },
   { to: '/erp/admin/bulk-operations', label: 'Bulk Operations', caption: 'Excel import center', icon: Upload },
   { to: '/erp/admin/payments', label: 'Payments', caption: 'Receipts and logs', icon: WalletCards },
+  { to: '/erp/admin/complaints', label: 'Complaints', caption: 'Student grievance tickets', icon: CircleHelp },
   { to: '/erp/admin/reports', label: 'Reports', caption: 'Analytics exports', icon: FileStack },
   { to: '/erp/admin/activity-logs', label: 'Activity Logs', caption: 'Admin audit trail', icon: Activity },
   { to: '/erp/admin/settings', label: 'Settings', caption: 'Tenant controls', icon: Settings },
@@ -501,6 +505,11 @@ const ERPAdminWorkspace = () => {
     queryFn: getAdminPayments,
     enabled: isAuthenticated,
     refetchInterval: 30000,
+  });
+  const complaintsQuery = useQuery({
+    queryKey: ['erp', 'admin', 'complaints'],
+    queryFn: getAdminComplaints,
+    enabled: isAuthenticated,
   });
 
   const invalidateAdminQueries = async () => {
@@ -1322,6 +1331,47 @@ const ERPAdminWorkspace = () => {
     </div>
   );
 
+  const renderComplaints = () => (
+    <div className="space-y-6">
+      <div className="grid gap-4 md:grid-cols-3">
+        <MetricTile label="Total Tickets" value={formatNumber(complaintsQuery.data?.total || 0)} subtext="All student complaints" icon={CircleHelp} theme={theme} />
+        <MetricTile label="Open" value={formatNumber((complaintsQuery.data?.items || []).filter((item) => item.status === 'open').length)} subtext="Awaiting action" icon={BellRing} theme={theme} />
+        <MetricTile label="Resolved" value={formatNumber((complaintsQuery.data?.items || []).filter((item) => item.status === 'resolved').length)} subtext="Closed by admin" icon={CheckCircle2} theme={theme} />
+      </div>
+      <div className="space-y-3">
+        {(complaintsQuery.data?.items || []).map((item) => (
+          <SectionCard key={item.ticket_number} theme={theme}>
+            <div className="flex flex-wrap items-start justify-between gap-4">
+              <div>
+                <p className="text-sm font-semibold">{item.subject}</p>
+                <p className={cn('mt-1 text-sm', mutedText(theme))}>{item.ticket_number} / {item.category}</p>
+                <p className={cn('mt-3 text-sm leading-6', mutedText(theme))}>{item.description}</p>
+                {item.resolution_note ? <p className="mt-3 text-sm text-emerald-700">Resolution: {item.resolution_note}</p> : null}
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <StatusBadge value={item.status} theme={theme} />
+                <ERPButton
+                  variant="secondary"
+                  className="px-3 py-2 text-xs"
+                  disabled={item.status === 'resolved'}
+                  onClick={() =>
+                    actionMutation.mutate({
+                      request: () => updateAdminComplaint(item.id, { status: 'resolved', resolution_note: 'Resolved by hostel administration.' }),
+                      successMessage: 'Complaint marked as resolved.',
+                    })
+                  }
+                >
+                  Resolve
+                </ERPButton>
+              </div>
+            </div>
+          </SectionCard>
+        ))}
+        {!complaintsQuery.data?.items?.length ? <SectionCard theme={theme}><p className={mutedText(theme)}>No complaint tickets available.</p></SectionCard> : null}
+      </div>
+    </div>
+  );
+
   const renderReports = () => (
     <div className="space-y-6">
       <SectionCard theme={theme}>
@@ -1455,6 +1505,8 @@ const ERPAdminWorkspace = () => {
         return renderBulkOperations();
       case '/erp/admin/payments':
         return renderPayments();
+      case '/erp/admin/complaints':
+        return renderComplaints();
       case '/erp/admin/reports':
         return renderReports();
       case '/erp/admin/activity-logs':

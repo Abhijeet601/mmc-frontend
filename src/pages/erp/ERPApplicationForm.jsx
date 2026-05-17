@@ -145,6 +145,8 @@ const ERPApplicationForm = () => {
   const [savingDraft, setSavingDraft] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [applicationNumber, setApplicationNumber] = useState('');
+  const [applicationType, setApplicationType] = useState('new');
+  const [renewalReference, setRenewalReference] = useState('');
   const [formStatus, setFormStatus] = useState('not_started');
   const [registrationDob, setRegistrationDob] = useState('');
   const [isEditable, setIsEditable] = useState(true);
@@ -181,6 +183,8 @@ const ERPApplicationForm = () => {
         if (!active) return;
 
         setApplicationNumber(data.application_number);
+        setApplicationType(data.application_type || 'new');
+        setRenewalReference(data.renewal_reference_number || '');
         setFormStatus(data.form_status);
         setRegistrationDob(formatValue(data.registration_date_of_birth));
         setIsEditable(Boolean(data.is_editable));
@@ -264,10 +268,10 @@ const ERPApplicationForm = () => {
 
   const statusLabel = useMemo(() => {
     if (!isEditable) return 'Verified and locked';
-    if (formStatus === 'submitted') return 'Submitted and editable before verification';
-    if (formStatus === 'draft') return 'Draft saved';
-    return 'New application';
-  }, [formStatus, isEditable]);
+    if (formStatus === 'submitted') return applicationType === 'renewal' ? 'Renewal submitted and pending verification' : 'Submitted and editable before verification';
+    if (formStatus === 'draft') return applicationType === 'renewal' ? 'Renewal draft saved' : 'Draft saved';
+    return applicationType === 'renewal' ? 'Hostel renewal' : 'New application';
+  }, [applicationType, formStatus, isEditable]);
 
   const buildPayload = (data = watch()) => {
     const payload = new FormData();
@@ -740,19 +744,22 @@ const ERPApplicationForm = () => {
                 <div>
                   <p className="inline-flex items-center gap-2 rounded-full border border-cyan-200 bg-cyan-50 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-cyan-700">
                     <Sparkles className="h-3.5 w-3.5" />
-                    Hostel Application
+                    {applicationType === 'renewal' ? 'Hostel Renewal' : 'Hostel Application'}
                   </p>
                   <h1 className="erp-display mt-4 text-4xl font-bold text-slate-950">
-                    Complete the structured hostel admission form.
+                    {applicationType === 'renewal'
+                      ? 'Review and resubmit your hostel renewal form.'
+                      : 'Complete the structured hostel admission form.'}
                   </h1>
                   <p className="mt-3 max-w-2xl text-slate-600">
-                    Personal details, academic details, address information, and document upload are organized into
-                    clear steps with draft-save support before final submission.
+                    The same official hostel form is used for both new registration and renewal. Existing student data
+                    is auto-filled from the database and can be updated before submission.
                   </p>
                 </div>
                 <div className="rounded-3xl border border-white/60 bg-white/80 px-5 py-4 shadow-[0_24px_50px_-35px_rgba(15,23,42,0.45)]">
                   <p className="text-xs uppercase tracking-[0.18em] text-slate-400">Application Number</p>
                   <p className="mt-2 text-2xl font-semibold text-slate-900">{applicationNumber || '-'}</p>
+                  {renewalReference ? <p className="mt-2 text-sm font-medium text-cyan-700">Renewal Ref: {renewalReference}</p> : null}
                   <p className="mt-2 text-sm text-slate-500">{statusLabel}</p>
                 </div>
               </div>

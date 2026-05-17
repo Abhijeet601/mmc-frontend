@@ -168,6 +168,12 @@ export const getApplicationForm = () =>
     token: getStudentToken(),
   });
 
+export const startHostelRenewal = () =>
+  request('/api/application/start-renewal', {
+    method: 'POST',
+    token: getStudentToken(),
+  });
+
 export const saveApplicationDraft = (formData) =>
   request('/api/application/draft', {
     method: 'POST',
@@ -206,6 +212,18 @@ export const payApplicationFee = (payload = {}) =>
 
 export const payHostelFee = (payload = {}) =>
   request('/api/payment/hostel', {
+    method: 'POST',
+    body: payload,
+    token: getStudentToken(),
+  });
+
+export const getStudentComplaints = () =>
+  request('/api/complaints', {
+    token: getStudentToken(),
+  });
+
+export const createStudentComplaint = (payload) =>
+  request('/api/complaints', {
     method: 'POST',
     body: payload,
     token: getStudentToken(),
@@ -266,6 +284,18 @@ export const getAdminStudentDetail = (studentId) =>
 
 export const getAdminPayments = () =>
   request('/api/admin/payments', {
+    token: getAdminToken(),
+  });
+
+export const getAdminComplaints = () =>
+  request('/api/admin/complaints', {
+    token: getAdminToken(),
+  });
+
+export const updateAdminComplaint = (complaintId, payload) =>
+  request(`/api/admin/complaints/${complaintId}`, {
+    method: 'PATCH',
+    body: payload,
     token: getAdminToken(),
   });
 

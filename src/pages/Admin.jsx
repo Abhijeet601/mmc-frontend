@@ -4,6 +4,7 @@ import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { ArrowRight, Edit, Eye, EyeOff, KeyRound, LayoutDashboard, LogOut, Plus, ShieldCheck, Sparkles, Trash2, User2 } from 'lucide-react';
 import AdminNotificationForm from '@/components/AdminNotificationForm';
+import AdminEvents from '@/components/AdminEvents';
 import { addNotification, clearAdminToken, deleteNotification, getNotifications, isAdminAuthenticated, loginAdmin, PUBLISH_TO_OPTIONS, updateNotification } from '@/services/notifications';
 const Admin = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -362,6 +363,10 @@ const Admin = () => {
             </div>
             {authError && <p className="mt-4 text-sm text-rose-600">{authError}</p>}
           </div>}
+
+        <div className="mt-8">
+          <AdminEvents />
+        </div>
       </div>
     </div>;
 };

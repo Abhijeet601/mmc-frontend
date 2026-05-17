@@ -9,6 +9,7 @@ import HeroSection from '@/components/home/HeroSection';
 import QuickHighlights from '@/components/home/QuickHighlights';
 import FeaturesSection from '@/components/home/FeaturesSection';
 import NoticeAndEvents from '@/components/home/NoticeAndEvents';
+import SocialMediaUpdates from '@/components/home/SocialMediaUpdates';
 import { r2Url } from '@/lib/r2Assets';
 const Home = () => {
   const {
@@ -477,6 +478,9 @@ const Home = () => {
             <QuickHighlights />
           </div>
         </section>
+
+        {/* SOCIAL MEDIA UPDATES */}
+        <SocialMediaUpdates />
 
         {/* NOTICE & EVENTS (SCROLLING) */}
         <section className="py-0 bg-white relative">
