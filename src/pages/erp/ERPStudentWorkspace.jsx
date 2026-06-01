@@ -498,8 +498,6 @@ const ERPStudentWorkspace = () => {
             ['Father Name', summary.father_name],
             ['Mother Name', summary.mother_name],
             ['Preferred Hostel', dashboard?.preferred_hostel],
-            ['Room Type', summary.room_type],
-            ['Food Preference', summary.food_preference],
           ].map(([label, value]) => (
             <div key={label} className={cn('rounded-[24px] border px-4 py-4', theme === 'dark' ? 'border-slate-800 bg-slate-900/80' : 'border-slate-200 bg-slate-50/80')}>
               <p className={cn('text-xs font-semibold uppercase tracking-[0.18em]', mutedText(theme))}>{label}</p>

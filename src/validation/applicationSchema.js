@@ -36,6 +36,9 @@ export const documentSchema = z.object({
   honours_subject: z.string().min(1),
   session: z.string().min(1),
   preferred_hostel: z.string().min(1),
-  room_type: z.string().min(1),
-  food_preference: z.string().min(1),
 });
+
+export const applicationSchema = personalSchema
+  .merge(academicSchema)
+  .merge(addressSchema)
+  .merge(documentSchema);

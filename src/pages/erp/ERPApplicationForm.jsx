@@ -32,10 +32,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import debounce from "lodash.debounce";
 import {
-  personalSchema,
-  academicSchema,
-  addressSchema,
-  documentSchema,
+  applicationSchema,
 } from '@/validation/applicationSchema';
 
 
@@ -77,8 +74,6 @@ const initialForm = {
   program: '',
   roll_number: '',
   preferred_hostel: 'Vaidehi Hostel',
-  room_type: 'Shared',
-  food_preference: 'Veg',
 };
 
 const inputClass =
@@ -93,12 +88,71 @@ const steps = [
   { key: 'documents', title: 'Admission & Documents', icon: BookText },
 ];
 
-const stepSchemas = [
-  personalSchema,
-  academicSchema,
-  addressSchema,
-  documentSchema,
+const stepFields = [
+  [
+    'name',
+    'date_of_birth',
+    'gender',
+    'blood_group',
+    'aadhaar_number',
+    'category',
+    'religion',
+    'nationality',
+  ],
+  [
+    'program',
+    'intermediate_college_name',
+    'intermediate_board',
+    'total_marks',
+    'marks_obtained',
+    'result_type',
+    'aggregate_percentage',
+  ],
+  [
+    'father_name',
+    'mother_name',
+    'local_guardian_name',
+    'guardian_mobile_number',
+    'correspondence_address',
+  ],
+  [
+    'admission_application_id',
+    'college_name',
+    'course_name',
+    'honours_subject',
+    'session',
+    'preferred_hostel',
+  ],
 ];
+
+const requiredFieldLabels = {
+  name: 'Student Name',
+  date_of_birth: 'Date of Birth',
+  gender: 'Gender',
+  blood_group: 'Blood Group',
+  aadhaar_number: 'Aadhaar Number',
+  category: 'Category',
+  religion: 'Religion',
+  nationality: 'Nationality',
+  father_name: "Father's Name",
+  mother_name: "Mother's Name",
+  local_guardian_name: 'Local Guardian Name',
+  guardian_mobile_number: 'Guardian Mobile Number',
+  correspondence_address: 'Correspondence Address',
+  intermediate_college_name: 'Academic Institution',
+  intermediate_board: 'Board / University',
+  total_marks: 'Total Marks',
+  marks_obtained: 'Marks Obtained',
+  result_type: 'Result Type',
+  aggregate_percentage: 'Aggregate Percentage',
+  admission_application_id: 'Admission Application ID',
+  college_name: 'College Name',
+  course_name: 'Course Name',
+  honours_subject: 'Honours Subject',
+  session: 'Session',
+  program: 'Program',
+  preferred_hostel: 'Preferred Hostel',
+};
 
 
 
@@ -129,8 +183,6 @@ const requiredFields = [
   'session',
   'program',
   'preferred_hostel',
-  'room_type',
-  'food_preference',
 ];
 
 const formatValue = (value) => (value === null || value === undefined ? '' : String(value));
@@ -158,7 +210,7 @@ const ERPApplicationForm = () => {
   const [isEditable, setIsEditable] = useState(true);
   const [currentStep, setCurrentStep] = useState(0);
   const formMethods = useForm({
-    resolver: zodResolver(stepSchemas[currentStep]),
+    resolver: zodResolver(applicationSchema),
     defaultValues: initialForm,
     mode: "onChange",
   });
@@ -250,6 +302,22 @@ const ERPApplicationForm = () => {
     [watchedData.program],
   );
 
+  const handleProgramSelect = (program) => {
+    if (watchedData.program === program) return;
+
+    setValue('program', program, { shouldDirty: true, shouldValidate: true });
+    [
+      'intermediate_college_name',
+      'intermediate_board',
+      'total_marks',
+      'marks_obtained',
+      'aggregate_percentage',
+      'course_name',
+    ].forEach((field) => {
+      setValue(field, '', { shouldDirty: true, shouldValidate: true });
+    });
+  };
+
   const debouncedSave = useMemo(
     () =>
       debounce(async (data) => {
@@ -286,9 +354,26 @@ const ERPApplicationForm = () => {
     );
   }, [watchedData, photoFile, photoPreview, aadhaarCardFile, collegeIdFile, marksheetFile, existingDocuments]);
 
+  const missingRequiredItems = useMemo(() => {
+    const missingFields = requiredFields
+      .filter((key) => !watchedData[key])
+      .map((key) => requiredFieldLabels[key] || key);
+
+    const missingDocuments = [
+      [photoFile || photoPreview, 'Student Photo'],
+      [aadhaarCardFile || existingDocuments.aadhaar_card_url, 'Aadhaar Card'],
+      [collegeIdFile || existingDocuments.college_id_url, 'College ID'],
+      [marksheetFile || existingDocuments.marksheet_url, 'Marksheet'],
+    ]
+      .filter(([value]) => !value)
+      .map(([, label]) => label);
+
+    return [...missingFields, ...missingDocuments];
+  }, [watchedData, photoFile, photoPreview, aadhaarCardFile, collegeIdFile, marksheetFile, existingDocuments]);
+
   const isLastStep = currentStep === steps.length - 1;
   const isFormComplete = completion === 100;
-  const canSubmit = isLastStep && isFormComplete && isEditable && !submitting;
+  const canSubmit = isLastStep && isEditable && !submitting;
 
   const statusLabel = useMemo(() => {
     if (!isEditable) return 'Verified and locked';
@@ -354,6 +439,22 @@ const ERPApplicationForm = () => {
     }
   };
 
+  const handleFinalSubmit = async () => {
+    if (!isFormComplete) {
+      toast({
+        title: 'Complete required fields',
+        description: `Missing: ${missingRequiredItems.slice(0, 5).join(', ')}${missingRequiredItems.length > 5 ? '...' : ''}`,
+        duration: 7000,
+      });
+      return;
+    }
+
+    const isValid = await trigger();
+    if (!isValid) return;
+
+    await handleSubmit(onSubmit)();
+  };
+
 
 
   const renderStep = () => {
@@ -366,6 +467,9 @@ const ERPApplicationForm = () => {
     const marksObtainedLabel = `${qualifyingExamLabel} Marks Obtained`;
     const resultTypeLabel = `${qualifyingExamLabel} Result Type`;
     const percentageLabel = `${qualifyingExamLabel} Aggregate Percentage`;
+    const academicHelpText = isPgStudent
+      ? 'PG students should fill graduation details.'
+      : 'UG students should fill intermediate details.';
 
     switch (steps[currentStep].key) {
       case 'personal':
@@ -496,7 +600,7 @@ const ERPApplicationForm = () => {
                         type="button"
                         disabled={!isEditable}
                         aria-pressed={active}
-                        onClick={() => setValue('program', item)}
+                        onClick={() => handleProgramSelect(item)}
                         className={`rounded-[24px] border px-5 py-4 text-left transition ${
                           active
                             ? 'border-cyan-300 bg-cyan-50 text-cyan-900 shadow-[0_18px_40px_-32px_rgba(14,116,144,0.55)]'
@@ -520,6 +624,9 @@ const ERPApplicationForm = () => {
             ) : null}
             {isProgramSelected ? (
               <>
+            <div className="md:col-span-2 rounded-[28px] border border-cyan-100 bg-cyan-50/70 px-5 py-4 text-sm font-medium text-cyan-900">
+              {academicHelpText}
+            </div>
             <Label title={institutionLabel} required>
               <input
                 {...register("intermediate_college_name")}
@@ -676,9 +783,7 @@ const ERPApplicationForm = () => {
                 className={`${inputClass} ${errors.course_name ? "border-red-500" : ""}`}
                 disabled={!isEditable || !watchedData.program}
               >
-                {!watchedData.program ? (
-                  <option value="">Select UG or PG first</option>
-                ) : null}
+                <option value="">{watchedData.program ? 'Select course' : 'Select UG or PG first'}</option>
                 {selectedCourseOptions.map((item) => (
                   <option key={item} value={item}>
                     {item}
@@ -727,34 +832,6 @@ const ERPApplicationForm = () => {
               </select>
               {errors.preferred_hostel && (
                 <p className="text-red-500 text-xs mt-1">{errors.preferred_hostel.message}</p>
-              )}
-            </Label>
-            <Label title="Room Type" required>
-              <select
-                {...register("room_type")}
-                className={`${inputClass} ${errors.room_type ? "border-red-500" : ""}`}
-                disabled={!isEditable}
-              >
-                <option value="Shared">Shared</option>
-                <option value="Standard">Standard</option>
-                <option value="Premium">Premium</option>
-              </select>
-              {errors.room_type && (
-                <p className="text-red-500 text-xs mt-1">{errors.room_type.message}</p>
-              )}
-            </Label>
-            <Label title="Food Preference" required>
-              <select
-                {...register("food_preference")}
-                className={`${inputClass} ${errors.food_preference ? "border-red-500" : ""}`}
-                disabled={!isEditable}
-              >
-                <option value="Veg">Veg</option>
-                <option value="Non-Veg">Non-Veg</option>
-                <option value="Special Diet">Special Diet</option>
-              </select>
-              {errors.food_preference && (
-                <p className="text-red-500 text-xs mt-1">{errors.food_preference.message}</p>
               )}
             </Label>
             <div className="md:col-span-2">
@@ -970,9 +1047,9 @@ const ERPApplicationForm = () => {
                   <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
                     <div>
                       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
-                        {steps[currentStep].title} Details
+                        {steps[currentStep].title}
                       </p>
-                      <h2 className="mt-2 text-2xl font-semibold text-slate-900">{steps[currentStep].title} Information</h2>
+                      <h2 className="mt-2 text-2xl font-semibold text-slate-900">{steps[currentStep].title}</h2>
                     </div>
                     <div className="rounded-2xl border border-slate-200 bg-white/80 px-4 py-3 text-sm text-slate-600">
                       Registration DOB: <span className="font-semibold text-slate-900">{registrationDob || '-'}</span>
@@ -1005,7 +1082,7 @@ const ERPApplicationForm = () => {
   variant="secondary"
   disabled={currentStep === steps.length - 1}
   onClick={async () => {
-    const isValid = await trigger();
+    const isValid = await trigger(stepFields[currentStep]);
 
     if (!isValid) {
       const firstError = Object.keys(errors)[0];
@@ -1034,7 +1111,7 @@ const ERPApplicationForm = () => {
 {canSubmit && (
   <ERPButton
     disabled={submitting || savingDraft}
-    onClick={formMethods.handleSubmit(onSubmit)}
+    onClick={handleFinalSubmit}
   >
     <CheckCircle2 className="h-4 w-4" />
     {submitting ? 'Submitting...' : 'Submit Application'}
