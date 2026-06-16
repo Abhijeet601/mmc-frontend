@@ -1,573 +1,125 @@
 import React, { useState } from 'react';
-import { Helmet } from 'react-helmet-async';
-import { AnimatePresence, motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
-import {
-  ArrowRight,
-  BadgeCheck,
-  BellRing,
-  BookOpenCheck,
-  CreditCard,
-  KeyRound,
-  LockKeyhole,
-  Mail,
-  Phone,
-  RefreshCcw,
-  ShieldCheck,
-  UserRoundPlus,
-} from 'lucide-react';
-import ERPButton from '@/components/erp/ERPButton';
+import { ArrowLeft, LogIn, UserPlus } from 'lucide-react';
+
 import ERPBackdrop from '@/components/erp/ERPBackdrop';
-import ERPPageTransition from '@/components/erp/ERPPageTransition';
+import ERPButton from '@/components/erp/ERPButton';
 import ERPSurfaceCard from '@/components/erp/ERPSurfaceCard';
-import { toast } from '@/components/ui/use-toast';
-import {
-  clearStudentToken,
-  getStudentToken,
-  loginStudent,
-  registerStudent,
-  resetStudentPassword,
-} from '@/services/erpApi';
+import { loginStudent, registerStudent } from '@/services/erpApi';
 
 const inputClass =
-  'mt-2 h-12 w-full rounded-2xl border border-white/60 bg-white/90 px-4 text-sm text-slate-900 shadow-[0_18px_45px_-35px_rgba(15,23,42,0.45)] outline-none transition focus:border-cyan-300 focus:ring-4 focus:ring-cyan-100';
-
-const initialRegister = {
-  email: '',
-  date_of_birth: '',
-  mobile_number: '',
-  password: '',
-};
-
-const initialLogin = {
-  email: '',
-  dob: '',
-  password: '',
-};
-
-const initialReset = {
-  identifier: '',
-  date_of_birth: '',
-  mobile_number: '',
-  new_password: '',
-  confirm_password: '',
-};
-
-const portalModules = [
-  {
-    title: 'New Registration + Login',
-    description: 'Register, sign in, and reset your password securely using verified student details.',
-    icon: ShieldCheck,
-  },
-  {
-    title: 'Admission Form',
-    description: 'Complete hostel admission details, academic information, address data, and document upload.',
-    icon: BookOpenCheck,
-  },
-  {
-    title: 'Application Tracking',
-    description: 'Monitor verification, shortlist status, hostel allocation, and operational notifications.',
-    icon: BellRing,
-  },
-  {
-    title: 'Payments, Renewal & Allocation',
-    description: 'Pay registration or hostel fees, start renewal, and view assigned hostel, room, and bed details.',
-    icon: CreditCard,
-  },
-];
-
-const authTabs = [
-  { key: 'login', label: 'Student Login' },
-  { key: 'register', label: 'New Registration' },
-  { key: 'reset', label: 'Reset Password' },
-];
+  'h-11 w-full rounded-2xl border border-border bg-card px-4 text-sm text-foreground outline-none transition focus:border-primary/40 focus:ring-4 focus:ring-primary/15';
 
 const ERPStudentAuth = () => {
   const navigate = useNavigate();
-  const [tab, setTab] = useState('login');
-  const [registerForm, setRegisterForm] = useState(initialRegister);
-  const [loginForm, setLoginForm] = useState(initialLogin);
-  const [resetForm, setResetForm] = useState(initialReset);
-  const [registerLoading, setRegisterLoading] = useState(false);
-  const [loginLoading, setLoginLoading] = useState(false);
-  const [resetLoading, setResetLoading] = useState(false);
-  const [generatedCredentials, setGeneratedCredentials] = useState(null);
+  const [mode, setMode] = useState('login');
+  const [form, setForm] = useState({
+    name: '',
+    email: '',
+    mobile: '',
+    date_of_birth: '',
+    password: '',
+  });
+  const [status, setStatus] = useState({ type: '', message: '' });
+  const [submitting, setSubmitting] = useState(false);
 
-  const sessionNotice = Boolean(getStudentToken());
-
-  const handleRegister = async (event) => {
-    event.preventDefault();
-    setRegisterLoading(true);
-    try {
-      const data = await registerStudent({
-        ...registerForm,
-        password: registerForm.password.trim() || undefined,
-      });
-      setGeneratedCredentials(data);
-      setLoginForm({
-        email: data.email,
-        dob: registerForm.date_of_birth,
-        password: data.password,
-      });
-      setTab('login');
-      toast({
-        title: 'Registration completed',
-        description: `Application number ${data.application_number} generated successfully.`,
-      });
-    } catch (error) {
-      toast({
-        title: 'Registration failed',
-        description: error.message || 'Unable to create student account.',
-        duration: 7000,
-      });
-    } finally {
-      setRegisterLoading(false);
-    }
+  const updateField = (event) => {
+    const { name, value } = event.target;
+    setForm((current) => ({ ...current, [name]: value }));
   };
 
-  const handleLogin = async (event) => {
+  const submit = async (event) => {
     event.preventDefault();
-    setLoginLoading(true);
-    try {
-      const data = await loginStudent(loginForm);
-      toast({
-        title: 'Login successful',
-        description: `Application No. ${data.application_number} is ready.`,
-      });
-      navigate(data.redirect || '/erp/application-form');
-    } catch (error) {
-      toast({
-        title: 'Login failed',
-        description: error.message || 'Invalid credentials.',
-        duration: 7000,
-      });
-    } finally {
-      setLoginLoading(false);
-    }
-  };
+    setSubmitting(true);
+    setStatus({ type: '', message: '' });
 
-  const handleReset = async (event) => {
-    event.preventDefault();
-    if (resetForm.new_password !== resetForm.confirm_password) {
-      toast({
-        title: 'Password mismatch',
-        description: 'New password and confirmation must match.',
-        duration: 7000,
-      });
-      return;
-    }
-
-    setResetLoading(true);
     try {
-      await resetStudentPassword({
-        identifier: resetForm.identifier,
-        date_of_birth: resetForm.date_of_birth,
-        mobile_number: resetForm.mobile_number,
-        new_password: resetForm.new_password,
-      });
-      setLoginForm((prev) => ({
-        ...prev,
-        email: resetForm.identifier,
-        dob: resetForm.date_of_birth,
-        password: resetForm.new_password,
-      }));
-      setResetForm(initialReset);
-      setTab('login');
-      toast({
-        title: 'Password reset completed',
-        description: 'Use the updated password to sign in to the student portal.',
-      });
+      if (mode === 'register') {
+        await registerStudent({
+          email: form.email,
+          mobile: form.mobile,
+          dob: form.date_of_birth,
+          password: form.password,
+        });
+        navigate('/erp/application-form', { replace: true });
+      } else {
+        await loginStudent(form);
+        navigate('/erp/student/dashboard', { replace: true });
+      }
     } catch (error) {
-      toast({
-        title: 'Password reset failed',
-        description: error.message || 'Unable to reset the password.',
-        duration: 7000,
-      });
+      setStatus({ type: 'error', message: error.message || 'Unable to complete request.' });
     } finally {
-      setResetLoading(false);
+      setSubmitting(false);
     }
   };
 
   return (
-    <>
-      <Helmet>
-        <title>Student Portal | Hostel Admission &amp; Management System</title>
-      </Helmet>
+    <ERPBackdrop className="min-h-screen px-4 py-10 sm:px-6 lg:px-8">
+      <div className="mx-auto grid max-w-5xl gap-6 lg:grid-cols-[0.9fr,1.1fr] lg:items-center">
+        <div>
+          <Link to="/erp" className="inline-flex items-center gap-2 text-sm font-semibold text-primary">
+            <ArrowLeft className="h-4 w-4" />
+            ERP portal
+          </Link>
+          <h1 className="mt-6 text-4xl font-semibold tracking-tight text-foreground">Student access</h1>
+          <p className="mt-4 text-base leading-7 text-muted-foreground">
+            Login to manage your hostel admission form, fee status, and renewal requests.
+          </p>
+        </div>
 
-      <ERPBackdrop className="py-14">
-        <ERPPageTransition className="relative z-10 mx-auto grid max-w-7xl gap-6 lg:grid-cols-[1.08fr,0.92fr]">
-          <div className="space-y-6">
-            <ERPSurfaceCard className="erp-glass-panel overflow-hidden p-8">
-              <div className="inline-flex items-center gap-2 rounded-full border border-cyan-100 bg-cyan-50 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-cyan-700">
-                <ShieldCheck className="h-3.5 w-3.5" />
-                Student Portal
-              </div>
-              <h1 className="erp-display mt-5 text-4xl font-bold leading-tight text-slate-950 md:text-5xl">
-                Student workspace for hostel admission, payments, tracking, and room allocation.
-              </h1>
-              <p className="mt-4 max-w-2xl text-base text-slate-600">
-                Register securely, complete the admission form, upload required records, track every review stage,
-                complete fee payments, and monitor hostel allocation from one structured portal.
-              </p>
-
-              <div className="mt-8 grid gap-4 sm:grid-cols-2">
-                {portalModules.map((module, index) => (
-                  <motion.div
-                    key={module.title}
-                    initial={{ opacity: 0, y: 16 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.06 }}
-                    className="rounded-[1.5rem] border border-white/70 bg-white/80 p-5 shadow-[0_22px_48px_-36px_rgba(15,23,42,0.45)]"
-                  >
-                    <div className="erp-brand-soft flex h-11 w-11 items-center justify-center rounded-2xl">
-                      <module.icon className="h-5 w-5" />
-                    </div>
-                    <h2 className="mt-4 text-lg font-semibold text-slate-900">{module.title}</h2>
-                    <p className="mt-2 text-sm leading-6 text-slate-600">{module.description}</p>
-                  </motion.div>
-                ))}
-              </div>
-            </ERPSurfaceCard>
-
-            <ERPSurfaceCard className="erp-glass-panel p-7">
-              <div className="flex flex-wrap items-start justify-between gap-4">
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">System Workflow</p>
-                  <h2 className="mt-2 text-2xl font-semibold text-slate-900">Student portal modules</h2>
-                </div>
-                <Link to="/erp" className="text-sm font-semibold text-cyan-700 underline">
-                  ERP home
-                </Link>
-              </div>
-
-              <div className="mt-5 space-y-3">
-                {[
-                  'New students register here, then move to the official hostel admission form and application fee payment.',
-                  'Existing students use the same login to open profile, payment, receipt, and hostel renewal workflows.',
-                  'Status tracking, allocation, complaints, and notifications stay available from the student dashboard.',
-                ].map((item, index) => (
-                  <div
-                    key={item}
-                    className="flex items-start gap-3 rounded-2xl border border-slate-200/70 bg-white/80 px-4 py-4 text-sm text-slate-700"
-                  >
-                    <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-600 text-sm font-semibold text-white">
-                      {index + 1}
-                    </span>
-                    <span>{item}</span>
-                  </div>
-                ))}
-              </div>
-
-              {sessionNotice ? (
-                <div className="mt-6 rounded-2xl border border-emerald-200 bg-emerald-50/90 p-4 text-sm text-emerald-900">
-                  Existing student session found in this browser.
-                  <div className="mt-3 flex flex-wrap gap-3">
-                    <Link to="/erp/dashboard" className="font-semibold underline">
-                      Open dashboard
-                    </Link>
-                    <button
-                      type="button"
-                      className="font-semibold underline"
-                      onClick={() => {
-                        clearStudentToken();
-                        toast({ title: 'Student session cleared' });
-                      }}
-                    >
-                      Clear session
-                    </button>
-                  </div>
-                </div>
-              ) : null}
-            </ERPSurfaceCard>
+        <ERPSurfaceCard className="p-6 sm:p-8" hover={false}>
+          <div className="mb-6 inline-flex rounded-2xl border border-border bg-muted/40 p-1">
+            <button
+              type="button"
+              onClick={() => setMode('login')}
+              className={`rounded-xl px-4 py-2 text-sm font-semibold transition ${
+                mode === 'login' ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground'
+              }`}
+            >
+              Login
+            </button>
+            <button
+              type="button"
+              onClick={() => setMode('register')}
+              className={`rounded-xl px-4 py-2 text-sm font-semibold transition ${
+                mode === 'register' ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground'
+              }`}
+            >
+              Register
+            </button>
           </div>
 
-            <ERPSurfaceCard className="erp-glass-panel relative overflow-hidden p-6 sm:p-8" animatedBorder>
-              <div className="erp-brand-bar pointer-events-none absolute inset-x-0 top-0 h-1" />
+          <form className="space-y-4" onSubmit={submit}>
+            {mode === 'register' ? (
+              <>
+                <input className={inputClass} name="name" value={form.name} onChange={updateField} placeholder="Full name" required />
+                <input className={inputClass} name="mobile" value={form.mobile} onChange={updateField} placeholder="Mobile number" required />
+              </>
+            ) : null}
+            <input className={inputClass} name="email" type="email" value={form.email} onChange={updateField} placeholder="Email address" required />
+            <input className={inputClass} name="date_of_birth" type="date" value={form.date_of_birth} onChange={updateField} required />
+            <input className={inputClass} name="password" type="password" value={form.password} onChange={updateField} placeholder="Password" required />
 
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Access Portal</p>
-            <h2 className="mt-3 text-3xl font-semibold text-slate-900">Student authentication</h2>
-            <p className="mt-2 text-sm text-slate-600">
-              Use `New Registration` for first-time hostel applicants, `Student Login` for returning access and
-              renewal, and `Reset Password` when credentials need to be refreshed.
-            </p>
-
-            <div className="mt-6 grid grid-cols-1 gap-2 rounded-2xl bg-slate-100/80 p-1.5 sm:grid-cols-3">
-              {authTabs.map((item) => (
-                <button
-                  key={item.key}
-                  type="button"
-                  onClick={() => setTab(item.key)}
-                  className={`relative rounded-xl px-4 py-3 text-sm font-semibold transition ${
-                    tab === item.key ? 'text-slate-950' : 'text-slate-500'
-                  }`}
-                >
-                  {item.label}
-                  {tab === item.key ? (
-                    <motion.span
-                      layoutId="erp-auth-pill"
-                      className="absolute inset-0 -z-[1] rounded-xl border border-white/70 bg-white shadow-sm"
-                      transition={{ type: 'spring', stiffness: 320, damping: 28 }}
-                    />
-                  ) : null}
-                </button>
-              ))}
-            </div>
-
-            <AnimatePresence mode="wait">
-              {tab === 'login' ? (
-                <motion.form
-                  key="login"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -8 }}
-                  transition={{ duration: 0.2 }}
-                  className="mt-7 space-y-5"
-                  onSubmit={handleLogin}
-                >
-                  <label className="block text-sm font-medium text-slate-700">
-                    Email ID / Application Number
-                    <div className="relative">
-                      <Mail className="pointer-events-none absolute left-4 top-6 h-4 w-4 text-slate-400" />
-                      <input
-                        required
-                        type="text"
-                        className={`${inputClass} pl-11`}
-                        value={loginForm.email}
-                        onChange={(event) => setLoginForm((prev) => ({ ...prev, email: event.target.value }))}
-                        placeholder="Enter email or application number"
-                      />
-                    </div>
-                  </label>
-
-                  <label className="block text-sm font-medium text-slate-700">
-                    Password
-                    <div className="relative">
-                      <LockKeyhole className="pointer-events-none absolute left-4 top-6 h-4 w-4 text-slate-400" />
-                      <input
-                        required
-                        type="password"
-                        className={`${inputClass} pl-11`}
-                        value={loginForm.password}
-                        onChange={(event) => setLoginForm((prev) => ({ ...prev, password: event.target.value }))}
-                        placeholder="Enter password"
-                      />
-                    </div>
-                  </label>
-
-                  <label className="block text-sm font-medium text-slate-700">
-                    Date of Birth
-                    <span className="ml-2 text-xs font-medium uppercase tracking-[0.16em] text-slate-400">
-                      Optional verification
-                    </span>
-                    <input
-                      type="date"
-                      className={inputClass}
-                      value={loginForm.dob}
-                      onChange={(event) => setLoginForm((prev) => ({ ...prev, dob: event.target.value }))}
-                    />
-                  </label>
-
-                  <ERPButton type="submit" disabled={loginLoading} className="w-full justify-center">
-                    <KeyRound className="h-4 w-4" />
-                    {loginLoading ? 'Signing in...' : 'Open Student Dashboard'}
-                  </ERPButton>
-                </motion.form>
-              ) : null}
-
-              {tab === 'register' ? (
-                <motion.form
-                  key="register"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -8 }}
-                  transition={{ duration: 0.2 }}
-                  className="mt-7 space-y-5"
-                  onSubmit={handleRegister}
-                >
-                  <label className="block text-sm font-medium text-slate-700">
-                    Email ID
-                    <div className="relative">
-                      <Mail className="pointer-events-none absolute left-4 top-6 h-4 w-4 text-slate-400" />
-                      <input
-                        required
-                        type="email"
-                        className={`${inputClass} pl-11`}
-                        value={registerForm.email}
-                        onChange={(event) => setRegisterForm((prev) => ({ ...prev, email: event.target.value }))}
-                        placeholder="student@example.com"
-                      />
-                    </div>
-                  </label>
-
-                  <label className="block text-sm font-medium text-slate-700">
-                    Date of Birth
-                    <input
-                      required
-                      type="date"
-                      className={inputClass}
-                      value={registerForm.date_of_birth}
-                      onChange={(event) => setRegisterForm((prev) => ({ ...prev, date_of_birth: event.target.value }))}
-                    />
-                  </label>
-
-                  <label className="block text-sm font-medium text-slate-700">
-                    Mobile Number
-                    <div className="relative">
-                      <Phone className="pointer-events-none absolute left-4 top-6 h-4 w-4 text-slate-400" />
-                      <input
-                        required
-                        type="tel"
-                        className={`${inputClass} pl-11`}
-                        value={registerForm.mobile_number}
-                        onChange={(event) => setRegisterForm((prev) => ({ ...prev, mobile_number: event.target.value }))}
-                        placeholder="Enter mobile number"
-                      />
-                    </div>
-                  </label>
-
-                  <label className="block text-sm font-medium text-slate-700">
-                    Password
-                    <span className="ml-2 text-xs font-medium uppercase tracking-[0.16em] text-slate-400">Optional</span>
-                    <input
-                      type="password"
-                      className={inputClass}
-                      value={registerForm.password}
-                      onChange={(event) => setRegisterForm((prev) => ({ ...prev, password: event.target.value }))}
-                      placeholder="Leave blank for auto-generated password"
-                    />
-                  </label>
-
-                  <ERPButton type="submit" disabled={registerLoading} className="w-full justify-center">
-                    <UserRoundPlus className="h-4 w-4" />
-                    {registerLoading ? 'Creating account...' : 'Create Student Account'}
-                  </ERPButton>
-                </motion.form>
-              ) : null}
-
-              {tab === 'reset' ? (
-                <motion.form
-                  key="reset"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -8 }}
-                  transition={{ duration: 0.2 }}
-                  className="mt-7 space-y-5"
-                  onSubmit={handleReset}
-                >
-                  <label className="block text-sm font-medium text-slate-700">
-                    Email ID / Application Number
-                    <div className="relative">
-                      <Mail className="pointer-events-none absolute left-4 top-6 h-4 w-4 text-slate-400" />
-                      <input
-                        required
-                        type="text"
-                        className={`${inputClass} pl-11`}
-                        value={resetForm.identifier}
-                        onChange={(event) => setResetForm((prev) => ({ ...prev, identifier: event.target.value }))}
-                        placeholder="Enter email or application number"
-                      />
-                    </div>
-                  </label>
-
-                  <label className="block text-sm font-medium text-slate-700">
-                    Registered Mobile Number
-                    <div className="relative">
-                      <Phone className="pointer-events-none absolute left-4 top-6 h-4 w-4 text-slate-400" />
-                      <input
-                        required
-                        type="tel"
-                        className={`${inputClass} pl-11`}
-                        value={resetForm.mobile_number}
-                        onChange={(event) => setResetForm((prev) => ({ ...prev, mobile_number: event.target.value }))}
-                        placeholder="Enter registered mobile number"
-                      />
-                    </div>
-                  </label>
-
-                  <label className="block text-sm font-medium text-slate-700">
-                    Date of Birth
-                    <input
-                      required
-                      type="date"
-                      className={inputClass}
-                      value={resetForm.date_of_birth}
-                      onChange={(event) => setResetForm((prev) => ({ ...prev, date_of_birth: event.target.value }))}
-                    />
-                  </label>
-
-                  <label className="block text-sm font-medium text-slate-700">
-                    New Password
-                    <div className="relative">
-                      <RefreshCcw className="pointer-events-none absolute left-4 top-6 h-4 w-4 text-slate-400" />
-                      <input
-                        required
-                        type="password"
-                        className={`${inputClass} pl-11`}
-                        value={resetForm.new_password}
-                        onChange={(event) => setResetForm((prev) => ({ ...prev, new_password: event.target.value }))}
-                        placeholder="Enter new password"
-                      />
-                    </div>
-                  </label>
-
-                  <label className="block text-sm font-medium text-slate-700">
-                    Confirm Password
-                    <div className="relative">
-                      <LockKeyhole className="pointer-events-none absolute left-4 top-6 h-4 w-4 text-slate-400" />
-                      <input
-                        required
-                        type="password"
-                        className={`${inputClass} pl-11`}
-                        value={resetForm.confirm_password}
-                        onChange={(event) => setResetForm((prev) => ({ ...prev, confirm_password: event.target.value }))}
-                        placeholder="Re-enter new password"
-                      />
-                    </div>
-                  </label>
-
-                  <ERPButton type="submit" disabled={resetLoading} className="w-full justify-center">
-                    <RefreshCcw className="h-4 w-4" />
-                    {resetLoading ? 'Updating password...' : 'Reset Password'}
-                  </ERPButton>
-                </motion.form>
-              ) : null}
-            </AnimatePresence>
-
-            {generatedCredentials ? (
-              <motion.div
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="mt-6 rounded-3xl border border-emerald-200 bg-emerald-50/90 p-5"
+            {status.message ? (
+              <div
+                className={`rounded-2xl border px-4 py-3 text-sm ${
+                  status.type === 'success'
+                    ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
+                    : 'border-destructive/20 bg-destructive/10 text-destructive'
+                }`}
               >
-                <div className="flex items-center gap-2 text-emerald-800">
-                  <BadgeCheck className="h-5 w-5" />
-                  <p className="font-semibold">Registration completed</p>
-                </div>
-                <div className="mt-4 grid gap-3 text-sm text-emerald-950">
-                  <p>
-                    Application Number: <span className="font-semibold">{generatedCredentials.application_number}</span>
-                  </p>
-                  <p>
-                    Email: <span className="font-semibold">{generatedCredentials.email}</span>
-                  </p>
-                  <p>
-                    Password: <span className="font-semibold">{generatedCredentials.password}</span>
-                  </p>
-                </div>
-              </motion.div>
+                {status.message}
+              </div>
             ) : null}
 
-            <div className="mt-6 flex items-center justify-between gap-3 text-sm text-slate-500">
-              <span>Need to review the full process?</span>
-              <Link to="/erp" className="inline-flex items-center gap-1 font-semibold text-cyan-700">
-                Open ERP overview
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-            </div>
-          </ERPSurfaceCard>
-        </ERPPageTransition>
-      </ERPBackdrop>
-    </>
+            <ERPButton type="submit" disabled={submitting} className="w-full justify-center">
+              {mode === 'login' ? <LogIn className="h-4 w-4" /> : <UserPlus className="h-4 w-4" />}
+              {submitting ? 'Please wait' : mode === 'login' ? 'Login' : 'Create account'}
+            </ERPButton>
+          </form>
+        </ERPSurfaceCard>
+      </div>
+    </ERPBackdrop>
   );
 };
 

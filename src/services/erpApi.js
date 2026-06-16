@@ -11,7 +11,7 @@ const fallbackApiBaseUrl = (() => {
 
   try {
     const backendUrl = new URL(browserLocation.origin);
-backendUrl.port = '8001';
+    backendUrl.port = '8000';
     return backendUrl.origin;
   } catch (_) {
     return browserLocation.origin;
@@ -134,19 +134,17 @@ export const setAdminToken = (token) => localStorage.setItem(ERP_ADMIN_TOKEN_KEY
 export const clearAdminToken = () => localStorage.removeItem(ERP_ADMIN_TOKEN_KEY);
 
 export const registerStudent = (payload) =>
-  request('/api/register', {
+  request('/api/auth/register', {
     method: 'POST',
     body: payload,
   });
 
-export const loginStudent = async ({ email, dob, date_of_birth, password }) => {
-  const normalizedDob = date_of_birth || dob || undefined;
-  const data = await request('/api/login', {
+export const loginStudent = async ({ email, password }) => {
+  const data = await request('/api/auth/login', {
     method: 'POST',
     body: {
       email: (email || '').trim().toLowerCase(),
       password: String(password || ''),
-      ...(normalizedDob ? { date_of_birth: normalizedDob } : {}),
     },
   });
 
@@ -164,27 +162,26 @@ export const resetStudentPassword = (payload) =>
   });
 
 export const getApplicationForm = () =>
-  request('/api/application', {
+  request('/api/applications/me', {
     token: getStudentToken(),
   });
 
 export const startHostelRenewal = () =>
-  request('/api/application/start-renewal', {
+  request('/api/renewal/apply', {
     method: 'POST',
     token: getStudentToken(),
   });
 
-export const saveApplicationDraft = (formData) =>
-  request('/api/application/draft', {
-    method: 'POST',
-    body: formData,
+export const saveApplicationDraft = (payload) =>
+  request('/api/applications/me', {
+    method: 'PUT',
+    body: payload,
     token: getStudentToken(),
   });
 
-export const submitApplication = (formData) =>
-  request('/api/application/submit', {
+export const submitApplication = () =>
+  request('/api/applications/me/submit', {
     method: 'POST',
-    body: formData,
     token: getStudentToken(),
   }).then((data) => {
     setApplicationCompleted(true);
@@ -199,19 +196,19 @@ export const saveHostelPreference = (hostelName) =>
   });
 
 export const getStudentDashboard = () =>
-  request('/api/dashboard', {
+  request('/api/applications/me', {
     token: getStudentToken(),
   });
 
 export const payApplicationFee = (payload = {}) =>
-  request('/api/payment/application', {
+  request('/api/payments/application-fee', {
     method: 'POST',
     body: payload,
     token: getStudentToken(),
   });
 
 export const payHostelFee = (payload = {}) =>
-  request('/api/payment/hostel', {
+  request('/api/payments/hostel-fee', {
     method: 'POST',
     body: payload,
     token: getStudentToken(),
@@ -230,10 +227,10 @@ export const createStudentComplaint = (payload) =>
   });
 
 export const loginAdmin = async ({ username, email, password }) => {
-  const data = await request('/api/admin/login', {
+  const data = await request('/api/auth/admin/login', {
     method: 'POST',
     body: {
-      username: (username || email || '').trim(),
+      email: (email || username || '').trim().toLowerCase(),
       password: String(password || ''),
     },
   });

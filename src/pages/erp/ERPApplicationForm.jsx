@@ -1,1139 +1,163 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { Helmet } from 'react-helmet-async';
-import { AnimatePresence, motion } from 'framer-motion';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import {
-  ArrowLeft,
-  ArrowRight,
-  BookText,
-  CheckCircle2,
-  GraduationCap,
-  Home,
-  ImagePlus,
-  MapPinned,
-  Save,
-  Sparkles,
-  UserSquare2,
-} from 'lucide-react';
-import ERPButton from '@/components/erp/ERPButton';
+import { ArrowLeft, Save, Send } from 'lucide-react';
+
 import ERPBackdrop from '@/components/erp/ERPBackdrop';
-import ERPPageTransition from '@/components/erp/ERPPageTransition';
+import ERPButton from '@/components/erp/ERPButton';
 import ERPSurfaceCard from '@/components/erp/ERPSurfaceCard';
-import { toast } from '@/components/ui/use-toast';
-import {
-  getApplicationForm,
-  getStudentToken,
-  resolveAssetUrl,
-  saveApplicationDraft,
-  submitApplication,
-} from '@/services/erpApi';
+import { getApplicationForm, getStudentToken, saveApplicationDraft, submitApplication } from '@/services/erpApi';
 
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import debounce from "lodash.debounce";
-import {
-  applicationSchema,
-} from '@/validation/applicationSchema';
-
-
-
-const categoryOptions = ['UR', 'EWS', 'BC', 'EBC', 'SC', 'ST'];
-const religionOptions = ['Hindu', 'Muslim', 'Sikh', 'Christian', 'Other'];
-const ugCourseOptions = ['BA', 'BSc', 'BCom', 'BSW', 'BCA', 'BBA'];
-const pgCourseOptions = ['MA', 'MSc'];
-const programOptions = ['UG', 'PG'];
-const resultTypes = ['Pass', 'Appearing', 'Division', 'CGPA'];
+const inputClass =
+  'h-11 w-full rounded-2xl border border-border bg-card px-4 text-sm text-foreground outline-none transition focus:border-primary/40 focus:ring-4 focus:ring-primary/15';
+const areaClass =
+  'min-h-[96px] w-full rounded-2xl border border-border bg-card px-4 py-3 text-sm text-foreground outline-none transition focus:border-primary/40 focus:ring-4 focus:ring-primary/15';
 
 const initialForm = {
   name: '',
+  mobile: '',
   email: '',
-  mobile_number: '',
-  date_of_birth: '',
-  gender: 'Female',
-  blood_group: '',
-  aadhaar_number: '',
-  category: 'UR',
-  religion: 'Hindu',
-  nationality: 'Indian',
   father_name: '',
   mother_name: '',
-  local_guardian_name: '',
-  guardian_mobile_number: '',
+  guardian_name: '',
+  guardian_mobile: '',
+  dob: '',
+  gender: 'Female',
+  blood_group: 'O+',
+  aadhar_no: '',
+  category: 'General',
+  religion: 'Hindu',
+  nationality: 'Indian',
   correspondence_address: '',
-  intermediate_college_name: '',
-  intermediate_board: '',
-  total_marks: '',
-  marks_obtained: '',
-  result_type: 'Pass',
-  aggregate_percentage: '',
-  admission_application_id: '',
   college_name: 'Magadh Mahila College',
-  course_name: '',
+  course: 'BA',
   honours_subject: '',
-  session: '2026-27',
-  program: '',
-  roll_number: '',
-  preferred_hostel: 'Vaidehi Hostel',
+  session: '',
+  roll_no: '',
 };
-
-const inputClass =
-  'mt-2 h-11 w-full rounded-2xl border border-white/60 bg-white/90 px-4 text-sm text-slate-900 shadow-[0_18px_40px_-32px_rgba(15,23,42,0.45)] outline-none transition focus:border-cyan-300 focus:ring-4 focus:ring-cyan-100';
-
-const textareaClass = `${inputClass} h-auto min-h-[120px] py-3`;
-
-const steps = [
-  { key: 'personal', title: 'Personal Details', icon: UserSquare2 },
-  { key: 'academic', title: 'Academic Information', icon: GraduationCap },
-  { key: 'address', title: 'Address Information', icon: MapPinned },
-  { key: 'documents', title: 'Admission & Documents', icon: BookText },
-];
-
-const stepFields = [
-  [
-    'name',
-    'date_of_birth',
-    'gender',
-    'blood_group',
-    'aadhaar_number',
-    'category',
-    'religion',
-    'nationality',
-  ],
-  [
-    'program',
-    'intermediate_college_name',
-    'intermediate_board',
-    'total_marks',
-    'marks_obtained',
-    'result_type',
-    'aggregate_percentage',
-  ],
-  [
-    'father_name',
-    'mother_name',
-    'local_guardian_name',
-    'guardian_mobile_number',
-    'correspondence_address',
-  ],
-  [
-    'admission_application_id',
-    'college_name',
-    'course_name',
-    'honours_subject',
-    'session',
-    'preferred_hostel',
-  ],
-];
-
-const requiredFieldLabels = {
-  name: 'Student Name',
-  date_of_birth: 'Date of Birth',
-  gender: 'Gender',
-  blood_group: 'Blood Group',
-  aadhaar_number: 'Aadhaar Number',
-  category: 'Category',
-  religion: 'Religion',
-  nationality: 'Nationality',
-  father_name: "Father's Name",
-  mother_name: "Mother's Name",
-  local_guardian_name: 'Local Guardian Name',
-  guardian_mobile_number: 'Guardian Mobile Number',
-  correspondence_address: 'Correspondence Address',
-  intermediate_college_name: 'Academic Institution',
-  intermediate_board: 'Board / University',
-  total_marks: 'Total Marks',
-  marks_obtained: 'Marks Obtained',
-  result_type: 'Result Type',
-  aggregate_percentage: 'Aggregate Percentage',
-  admission_application_id: 'Admission Application ID',
-  college_name: 'College Name',
-  course_name: 'Course Name',
-  honours_subject: 'Honours Subject',
-  session: 'Session',
-  program: 'Program',
-  preferred_hostel: 'Preferred Hostel',
-};
-
-
-
-const requiredFields = [
-  'name',
-  'date_of_birth',
-  'gender',
-  'blood_group',
-  'aadhaar_number',
-  'category',
-  'religion',
-  'nationality',
-  'father_name',
-  'mother_name',
-  'local_guardian_name',
-  'guardian_mobile_number',
-  'correspondence_address',
-  'intermediate_college_name',
-  'intermediate_board',
-  'total_marks',
-  'marks_obtained',
-  'result_type',
-  'aggregate_percentage',
-  'admission_application_id',
-  'college_name',
-  'course_name',
-  'honours_subject',
-  'session',
-  'program',
-  'preferred_hostel',
-];
-
-const formatValue = (value) => (value === null || value === undefined ? '' : String(value));
-
-const getCourseOptions = (program) => (program === 'PG' ? pgCourseOptions : ugCourseOptions);
-
-const Label = ({ title, required = false, children }) => (
-  <label className="block text-sm font-medium text-slate-700">
-    {title}
-    {required ? <span className="ml-1 text-rose-500">*</span> : null}
-    {children}
-  </label>
-);
 
 const ERPApplicationForm = () => {
   const navigate = useNavigate();
-  const [fetching, setFetching] = useState(true);
-  const [savingDraft, setSavingDraft] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
-  const [applicationNumber, setApplicationNumber] = useState('');
-  const [applicationType, setApplicationType] = useState('new');
-  const [renewalReference, setRenewalReference] = useState('');
-  const [formStatus, setFormStatus] = useState('not_started');
-  const [registrationDob, setRegistrationDob] = useState('');
-  const [isEditable, setIsEditable] = useState(true);
-  const [currentStep, setCurrentStep] = useState(0);
-  const formMethods = useForm({
-    resolver: zodResolver(applicationSchema),
-    defaultValues: initialForm,
-    mode: "onChange",
-  });
-
-  const {
-    register,
-    handleSubmit,
-    trigger,
-    watch,
-    setValue,
-    setError,
-    formState: { errors },
-  } = formMethods;
-  const [photoFile, setPhotoFile] = useState(null);
-  const [photoPreview, setPhotoPreview] = useState('');
-  const [aadhaarCardFile, setAadhaarCardFile] = useState(null);
-  const [collegeIdFile, setCollegeIdFile] = useState(null);
-  const [marksheetFile, setMarksheetFile] = useState(null);
-  const [existingDocuments, setExistingDocuments] = useState({
-    aadhaar_card_url: '',
-    college_id_url: '',
-    marksheet_url: '',
-  });
+  const [form, setForm] = useState(initialForm);
+  const [status, setStatus] = useState({ type: '', message: '' });
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (!getStudentToken()) {
-      navigate('/erp/student', { replace: true });
-      return;
-    }
-
-    let active = true;
-    const loadForm = async () => {
-      setFetching(true);
-      try {
-        const data = await getApplicationForm();
-        if (!active) return;
-
-        setApplicationNumber(data.application_number);
-        setApplicationType(data.application_type || 'new');
-        setRenewalReference(data.renewal_reference_number || '');
-        setFormStatus(data.form_status);
-        setRegistrationDob(formatValue(data.registration_date_of_birth));
-        setIsEditable(Boolean(data.is_editable));
-        setPhotoPreview(data?.data?.student_photo_url ? resolveAssetUrl(data.data.student_photo_url) : '');
-        setExistingDocuments({
-          aadhaar_card_url: data?.data?.aadhaar_card_url ? resolveAssetUrl(data.data.aadhaar_card_url) : '',
-          college_id_url: data?.data?.college_id_url ? resolveAssetUrl(data.data.college_id_url) : '',
-          marksheet_url: data?.data?.marksheet_url ? resolveAssetUrl(data.data.marksheet_url) : '',
-        });
-    Object.entries(initialForm).forEach(([key]) => {
-      const value = formatValue(data?.data?.[key]) || initialForm[key];
-      setValue(key, value);
-    });
-    setValue('email', data.email);
-    setValue('mobile_number', data.mobile_number);
-    setValue('date_of_birth', formatValue(data?.data?.date_of_birth || data.registration_date_of_birth));
-
-      } catch (error) {
-        toast({
-          title: 'Unable to load application form',
-          description: error.message || 'Please login again.',
-          duration: 7000,
-        });
-        navigate('/erp/student', { replace: true });
-      } finally {
-        if (active) setFetching(false);
-      }
-    };
-
-    loadForm();
-    return () => {
-      active = false;
-    };
-  }, [navigate]);
-
-  const watchedData = watch();
-
-  useEffect(() => {
-    const totalMarks = Number(watchedData.total_marks);
-    const marksObtained = Number(watchedData.marks_obtained);
-    if (Number.isFinite(totalMarks) && totalMarks > 0 && Number.isFinite(marksObtained)) {
-      const percentage = ((marksObtained / totalMarks) * 100).toFixed(2);
-      setValue('aggregate_percentage', percentage);
-    }
-  }, [watchedData.total_marks, watchedData.marks_obtained, setValue]);
-
-  const selectedCourseOptions = useMemo(
-    () => (watchedData.program ? getCourseOptions(watchedData.program) : []),
-    [watchedData.program],
-  );
-
-  const handleProgramSelect = (program) => {
-    if (watchedData.program === program) return;
-
-    setValue('program', program, { shouldDirty: true, shouldValidate: true });
-    [
-      'intermediate_college_name',
-      'intermediate_board',
-      'total_marks',
-      'marks_obtained',
-      'aggregate_percentage',
-      'course_name',
-    ].forEach((field) => {
-      setValue(field, '', { shouldDirty: true, shouldValidate: true });
-    });
-  };
-
-  const debouncedSave = useMemo(
-    () =>
-      debounce(async (data) => {
-        try {
-          if (isEditable) {
-            await saveApplicationDraft(buildPayload(data));
-          }
-        } catch (e) {
-          // Silent fail for autosave
+    if (!getStudentToken()) return;
+    getApplicationForm()
+      .then((data) => {
+        if (data && typeof data === 'object') {
+          setForm((current) => ({ ...current, ...data, dob: data.dob || data.date_of_birth || current.dob }));
         }
-      }, 1000),
-    [isEditable]
-  );
+      })
+      .catch(() => {});
+  }, []);
 
-  useEffect(() => {
-    debouncedSave(watchedData);
-    return () => debouncedSave.cancel();
-  }, [watchedData, debouncedSave]);
-
-  const completion = useMemo(() => {
-    const filledFields = requiredFields.reduce((count, key) => {
-      return watchedData[key] ? count + 1 : count;
-    }, 0);
-
-    const uploadCount = [
-      photoFile || photoPreview,
-      aadhaarCardFile || existingDocuments.aadhaar_card_url,
-      collegeIdFile || existingDocuments.college_id_url,
-      marksheetFile || existingDocuments.marksheet_url,
-    ].filter(Boolean).length;
-
-    return Math.round(
-      ((filledFields + uploadCount) / (requiredFields.length + 4)) * 100
-    );
-  }, [watchedData, photoFile, photoPreview, aadhaarCardFile, collegeIdFile, marksheetFile, existingDocuments]);
-
-  const missingRequiredItems = useMemo(() => {
-    const missingFields = requiredFields
-      .filter((key) => !watchedData[key])
-      .map((key) => requiredFieldLabels[key] || key);
-
-    const missingDocuments = [
-      [photoFile || photoPreview, 'Student Photo'],
-      [aadhaarCardFile || existingDocuments.aadhaar_card_url, 'Aadhaar Card'],
-      [collegeIdFile || existingDocuments.college_id_url, 'College ID'],
-      [marksheetFile || existingDocuments.marksheet_url, 'Marksheet'],
-    ]
-      .filter(([value]) => !value)
-      .map(([, label]) => label);
-
-    return [...missingFields, ...missingDocuments];
-  }, [watchedData, photoFile, photoPreview, aadhaarCardFile, collegeIdFile, marksheetFile, existingDocuments]);
-
-  const isLastStep = currentStep === steps.length - 1;
-  const isFormComplete = completion === 100;
-  const canSubmit = isLastStep && isEditable && !submitting;
-
-  const statusLabel = useMemo(() => {
-    if (!isEditable) return 'Verified and locked';
-    if (formStatus === 'submitted') return applicationType === 'renewal' ? 'Renewal submitted and pending verification' : 'Submitted and editable before verification';
-    if (formStatus === 'draft') return applicationType === 'renewal' ? 'Renewal draft saved' : 'Draft saved';
-    return applicationType === 'renewal' ? 'Hostel renewal' : 'New application';
-  }, [applicationType, formStatus, isEditable]);
-
-  const buildPayload = (data = watch()) => {
-    const payload = new FormData();
-    Object.entries(data).forEach(([key, value]) => {
-      payload.append(key, value ?? '');
-    });
-    if (photoFile) payload.append('student_photo', photoFile);
-    if (aadhaarCardFile) payload.append('aadhaar_card', aadhaarCardFile);
-    if (collegeIdFile) payload.append('college_id', collegeIdFile);
-    if (marksheetFile) payload.append('marksheet', marksheetFile);
-    return payload;
+  const updateField = (event) => {
+    const { name, value } = event.target;
+    setForm((current) => ({ ...current, [name]: value }));
   };
 
-  const handleSaveDraft = async () => {
-    setSavingDraft(true);
-    try {
-      const data = watch();
-      await saveApplicationDraft(buildPayload(data));
-      toast({
-        title: 'Draft saved',
-        description: 'Application draft saved successfully.',
-      });
-    } catch (error) {
-      toast({
-        title: 'Draft save failed',
-        description: error.message || 'Unable to save draft.',
-        duration: 7000,
-      });
-    } finally {
-      setSavingDraft(false);
-    }
-  };
+  const buildPayload = () => ({
+    ...form,
+    inter_total_marks: Number(form.inter_total_marks || 0),
+    inter_marks_obtained: Number(form.inter_marks_obtained || 0),
+    inter_aggregate: Number(form.inter_aggregate || 0),
+  });
 
-  const onSubmit = async (data) => {
-    setSubmitting(true);
-    try {
-      const response = await submitApplication(buildPayload(data));
-      toast({
-        title: 'Application submitted',
-        description: response.message || 'Application submitted successfully.',
-      });
-      navigate('/erp/dashboard');
-    } catch (error) {
-      toast({
-        title: 'Submission failed',
-        description: error.message || 'Unable to submit application.',
-        duration: 7000,
-      });
-      if (error.errors) {
-        Object.entries(error.errors).forEach(([key, message]) => {
-          setError(key, { message });
-        });
-      }
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  const handleFinalSubmit = async () => {
-    if (!isFormComplete) {
-      toast({
-        title: 'Complete required fields',
-        description: `Missing: ${missingRequiredItems.slice(0, 5).join(', ')}${missingRequiredItems.length > 5 ? '...' : ''}`,
-        duration: 7000,
-      });
+  const handleSave = async (submit = false) => {
+    if (!getStudentToken()) {
+      navigate('/erp/student/login');
       return;
     }
 
-    const isValid = await trigger();
-    if (!isValid) return;
-
-    await handleSubmit(onSubmit)();
-  };
-
-
-
-  const renderStep = () => {
-    const isProgramSelected = Boolean(watchedData.program);
-    const isPgStudent = watchedData.program === 'PG';
-    const qualifyingExamLabel = isPgStudent ? 'Graduation' : 'Intermediate';
-    const institutionLabel = `${qualifyingExamLabel} College Name`;
-    const boardLabel = isPgStudent ? 'Graduation University' : 'Intermediate Board';
-    const totalMarksLabel = `${qualifyingExamLabel} Total Marks`;
-    const marksObtainedLabel = `${qualifyingExamLabel} Marks Obtained`;
-    const resultTypeLabel = `${qualifyingExamLabel} Result Type`;
-    const percentageLabel = `${qualifyingExamLabel} Aggregate Percentage`;
-    const academicHelpText = isPgStudent
-      ? 'PG students should fill graduation details.'
-      : 'UG students should fill intermediate details.';
-
-    switch (steps[currentStep].key) {
-      case 'personal':
-        return (
-          <div className="grid gap-4 md:grid-cols-2">
-            <Label title="Application Number">
-              <input className={inputClass} value={applicationNumber} readOnly />
-            </Label>
-            <Label title="Email ID">
-              <input className={inputClass} value={watchedData.email} readOnly />
-            </Label>
-            <Label title="Mobile Number">
-              <input className={inputClass} value={watchedData.mobile_number} readOnly />
-            </Label>
-            <Label title="Registration DOB">
-              <input className={inputClass} value={registrationDob} readOnly />
-            </Label>
-            <Label title="Student Name" required>
-              <input
-                {...register("name")}
-                className={`${inputClass} ${errors.name ? "border-red-500" : ""}`}
-                disabled={!isEditable}
-              />
-              {errors.name && (
-                <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>
-              )}
-            </Label>
-
-            <Label title="Date of Birth" required>
-              <input
-                type="date"
-                {...register("date_of_birth")}
-                className={`${inputClass} ${errors.date_of_birth ? "border-red-500" : ""}`}
-                disabled={!isEditable}
-              />
-              {errors.date_of_birth && (
-                <p className="text-red-500 text-xs mt-1">{errors.date_of_birth.message}</p>
-              )}
-            </Label>
-            <Label title="Gender" required>
-                <select
-                  {...register("gender")}
-                  className={`${inputClass} ${errors.gender ? "border-red-500" : ""}`}
-                  disabled={!isEditable}
-                >
-                  <option value="Female">Female</option>
-                  <option value="Other">Other</option>
-                </select>
-                {errors.gender && (
-                  <p className="text-red-500 text-xs mt-1">{errors.gender.message}</p>
-                )}
-              </Label>
-            <Label title="Blood Group" required>
-              <input
-                {...register("blood_group")}
-                className={`${inputClass} ${errors.blood_group ? "border-red-500" : ""}`}
-                disabled={!isEditable}
-              />
-              {errors.blood_group && (
-                <p className="text-red-500 text-xs mt-1">{errors.blood_group.message}</p>
-              )}
-            </Label>
-            <Label title="Aadhaar Number" required>
-              <input
-                {...register("aadhaar_number")}
-                className={`${inputClass} ${errors.aadhaar_number ? "border-red-500" : ""}`}
-                disabled={!isEditable}
-              />
-              {errors.aadhaar_number && (
-                <p className="text-red-500 text-xs mt-1">{errors.aadhaar_number.message}</p>
-              )}
-            </Label>
-            <Label title="Category" required>
-              <select
-                {...register("category")}
-                className={`${inputClass} ${errors.category ? "border-red-500" : ""}`}
-                disabled={!isEditable}
-              >
-                {categoryOptions.map((item) => (
-                  <option key={item} value={item}>
-                    {item}
-                  </option>
-                ))}
-              </select>
-              {errors.category && (
-                <p className="text-red-500 text-xs mt-1">{errors.category.message}</p>
-              )}
-            </Label>
-            <Label title="Religion" required>
-              <select
-                {...register("religion")}
-                className={`${inputClass} ${errors.religion ? "border-red-500" : ""}`}
-                disabled={!isEditable}
-              >
-                {religionOptions.map((item) => (
-                  <option key={item} value={item}>
-                    {item}
-                  </option>
-                ))}
-                </select>
-                {errors.religion && (
-                  <p className="text-red-500 text-xs mt-1">{errors.religion.message}</p>
-                )}
-              </Label>
-            <Label title="Nationality" required>
-              <input
-                {...register("nationality")}
-                className={`${inputClass} ${errors.nationality ? "border-red-500" : ""}`}
-                disabled={!isEditable}
-              />
-              {errors.nationality && (
-                <p className="text-red-500 text-xs mt-1">{errors.nationality.message}</p>
-              )}
-            </Label>
-          </div>
-        );
-      case 'academic':
-        return (
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="md:col-span-2">
-              <Label title="Are you a UG student or PG student?" required>
-                <div className="mt-3 grid gap-3 sm:grid-cols-2">
-                  {programOptions.map((item) => {
-                    const active = watchedData.program === item;
-                    return (
-                      <button
-                        key={item}
-                        type="button"
-                        disabled={!isEditable}
-                        aria-pressed={active}
-                        onClick={() => handleProgramSelect(item)}
-                        className={`rounded-[24px] border px-5 py-4 text-left transition ${
-                          active
-                            ? 'border-cyan-300 bg-cyan-50 text-cyan-900 shadow-[0_18px_40px_-32px_rgba(14,116,144,0.55)]'
-                            : 'border-white/60 bg-white/90 text-slate-700 shadow-[0_18px_40px_-32px_rgba(15,23,42,0.45)]'
-                        } ${!isEditable ? 'cursor-not-allowed opacity-70' : 'hover:border-cyan-200 hover:bg-cyan-50/60'}`}
-                      >
-                        <p className="text-sm font-semibold">{item}</p>
-                        <p className="mt-1 text-xs text-slate-500">
-                          {item === 'UG' ? 'Show intermediate details' : 'Show graduation details'}
-                        </p>
-                      </button>
-                    );
-                  })}
-                </div>
-              </Label>
-            </div>
-            {!isProgramSelected ? (
-              <div className="md:col-span-2 rounded-[28px] border border-dashed border-cyan-200 bg-cyan-50/70 px-6 py-8 text-center text-sm text-slate-600">
-                Select `UG` or `PG` to open the academic details form.
-              </div>
-            ) : null}
-            {isProgramSelected ? (
-              <>
-            <div className="md:col-span-2 rounded-[28px] border border-cyan-100 bg-cyan-50/70 px-5 py-4 text-sm font-medium text-cyan-900">
-              {academicHelpText}
-            </div>
-            <Label title={institutionLabel} required>
-              <input
-                {...register("intermediate_college_name")}
-                className={`${inputClass} ${errors.intermediate_college_name ? "border-red-500" : ""}`}
-                disabled={!isEditable}
-              />
-              {errors.intermediate_college_name && (
-                <p className="text-red-500 text-xs mt-1">{errors.intermediate_college_name.message}</p>
-              )}
-            </Label>
-            <Label title={boardLabel} required>
-              <input
-                {...register("intermediate_board")}
-                className={`${inputClass} ${errors.intermediate_board ? "border-red-500" : ""}`}
-                disabled={!isEditable}
-              />
-              {errors.intermediate_board && (
-                <p className="text-red-500 text-xs mt-1">{errors.intermediate_board.message}</p>
-              )}
-            </Label>
-            <Label title={totalMarksLabel} required>
-              <input
-                type="number"
-                {...register("total_marks")}
-                className={`${inputClass} ${errors.total_marks ? "border-red-500" : ""}`}
-                disabled={!isEditable}
-              />
-              {errors.total_marks && (
-                <p className="text-red-500 text-xs mt-1">{errors.total_marks.message}</p>
-              )}
-            </Label>
-            <Label title={marksObtainedLabel} required>
-              <input
-                type="number"
-                {...register("marks_obtained")}
-                className={`${inputClass} ${errors.marks_obtained ? "border-red-500" : ""}`}
-                disabled={!isEditable}
-              />
-              {errors.marks_obtained && (
-                <p className="text-red-500 text-xs mt-1">{errors.marks_obtained.message}</p>
-              )}
-            </Label>
-            <Label title={resultTypeLabel} required>
-              <select
-                {...register("result_type")}
-                className={`${inputClass} ${errors.result_type ? "border-red-500" : ""}`}
-                disabled={!isEditable}
-              >
-                {resultTypes.map((item) => (
-                  <option key={item} value={item}>
-                    {item}
-                  </option>
-                ))}
-              </select>
-              {errors.result_type && (
-                <p className="text-red-500 text-xs mt-1">{errors.result_type.message}</p>
-              )}
-            </Label>
-            <Label title={percentageLabel} required>
-              <input
-                {...register("aggregate_percentage")}
-                className={inputClass}
-                readOnly
-              />
-            </Label>
-              </>
-            ) : null}
-          </div>
-        );
-      case 'address':
-        return (
-          <div className="grid gap-4 md:grid-cols-2">
-            <Label title="Father's Name" required>
-              <input
-                {...register("father_name")}
-                className={`${inputClass} ${errors.father_name ? "border-red-500" : ""}`}
-                disabled={!isEditable}
-              />
-              {errors.father_name && (
-                <p className="text-red-500 text-xs mt-1">{errors.father_name.message}</p>
-              )}
-            </Label>
-            <Label title="Mother's Name" required>
-              <input
-                {...register("mother_name")}
-                className={`${inputClass} ${errors.mother_name ? "border-red-500" : ""}`}
-                disabled={!isEditable}
-              />
-              {errors.mother_name && (
-                <p className="text-red-500 text-xs mt-1">{errors.mother_name.message}</p>
-              )}
-            </Label>
-            <Label title="Local Guardian Name" required>
-              <input
-                {...register("local_guardian_name")}
-                className={`${inputClass} ${errors.local_guardian_name ? "border-red-500" : ""}`}
-                disabled={!isEditable}
-              />
-              {errors.local_guardian_name && (
-                <p className="text-red-500 text-xs mt-1">{errors.local_guardian_name.message}</p>
-              )}
-            </Label>
-            <Label title="Guardian Mobile Number" required>
-              <input
-                {...register("guardian_mobile_number")}
-                className={`${inputClass} ${errors.guardian_mobile_number ? "border-red-500" : ""}`}
-                disabled={!isEditable}
-              />
-              {errors.guardian_mobile_number && (
-                <p className="text-red-500 text-xs mt-1">{errors.guardian_mobile_number.message}</p>
-              )}
-            </Label>
-            <div className="md:col-span-2">
-              <Label title="Correspondence Address" required>
-                <textarea
-                  {...register("correspondence_address")}
-                  rows={5}
-                  className={`${textareaClass} ${errors.correspondence_address ? "border-red-500" : ""}`}
-                  disabled={!isEditable}
-                />
-                {errors.correspondence_address && (
-                  <p className="text-red-500 text-xs mt-1">{errors.correspondence_address.message}</p>
-                )}
-              </Label>
-            </div>
-          </div>
-        );
-      default:
-        return (
-          <div className="grid gap-4 md:grid-cols-2">
-            <Label title="Admission Application ID" required>
-              <input
-                {...register("admission_application_id")}
-                className={`${inputClass} ${errors.admission_application_id ? "border-red-500" : ""}`}
-                disabled={!isEditable}
-              />
-              {errors.admission_application_id && (
-                <p className="text-red-500 text-xs mt-1">{errors.admission_application_id.message}</p>
-              )}
-            </Label>
-            <Label title="College Name" required>
-              <input
-                {...register("college_name")}
-                className={`${inputClass} ${errors.college_name ? "border-red-500" : ""}`}
-                disabled={!isEditable}
-              />
-              {errors.college_name && (
-                <p className="text-red-500 text-xs mt-1">{errors.college_name.message}</p>
-              )}
-            </Label>
-            <Label title="Course Name" required>
-              <select
-                {...register("course_name")}
-                className={`${inputClass} ${errors.course_name ? "border-red-500" : ""}`}
-                disabled={!isEditable || !watchedData.program}
-              >
-                <option value="">{watchedData.program ? 'Select course' : 'Select UG or PG first'}</option>
-                {selectedCourseOptions.map((item) => (
-                  <option key={item} value={item}>
-                    {item}
-                  </option>
-                ))}
-              </select>
-              {errors.course_name && (
-                <p className="text-red-500 text-xs mt-1">{errors.course_name.message}</p>
-              )}
-            </Label>
-            <Label title="Honours Subject" required>
-              <input
-                {...register("honours_subject")}
-                className={`${inputClass} ${errors.honours_subject ? "border-red-500" : ""}`}
-                disabled={!isEditable}
-              />
-              {errors.honours_subject && (
-                <p className="text-red-500 text-xs mt-1">{errors.honours_subject.message}</p>
-              )}
-            </Label>
-            <Label title="Session" required>
-              <input
-                {...register("session")}
-                className={`${inputClass} ${errors.session ? "border-red-500" : ""}`}
-                disabled={!isEditable}
-              />
-              {errors.session && (
-                <p className="text-red-500 text-xs mt-1">{errors.session.message}</p>
-              )}
-            </Label>
-            <Label title="Roll Number">
-              <input
-                {...register("roll_number")}
-                className={inputClass}
-                disabled={!isEditable}
-              />
-            </Label>
-            <Label title="Preferred Hostel" required>
-              <select
-                {...register("preferred_hostel")}
-                className={`${inputClass} ${errors.preferred_hostel ? "border-red-500" : ""}`}
-                disabled={!isEditable}
-              >
-                <option value="Vaidehi Hostel">Hostel A / Vaidehi Hostel</option>
-                <option value="Mahima Hostel">Hostel B / Mahima Hostel</option>
-              </select>
-              {errors.preferred_hostel && (
-                <p className="text-red-500 text-xs mt-1">{errors.preferred_hostel.message}</p>
-              )}
-            </Label>
-            <div className="md:col-span-2">
-              <Label title="Student Photo" required>
-                <label className="mt-2 flex min-h-[152px] cursor-pointer flex-col items-center justify-center rounded-[28px] border border-dashed border-cyan-200 bg-cyan-50/70 px-5 py-6 text-center">
-                  <ImagePlus className="h-8 w-8 text-cyan-600" />
-                  <span className="mt-3 text-sm font-medium text-slate-800">
-                    {photoFile ? photoFile.name : 'Upload student photograph'}
-                  </span>
-                  <span className="mt-1 text-xs uppercase tracking-[0.16em] text-slate-400">
-                    JPG, PNG or WEBP
-                  </span>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    disabled={!isEditable}
-                    onChange={(event) => {
-                      const file = event.target.files?.[0] || null;
-                      setPhotoFile(file);
-                      if (file) setPhotoPreview(URL.createObjectURL(file));
-                    }}
-                  />
-                </label>
-              </Label>
-            </div>
-            {[
-              {
-                title: 'Aadhaar Card',
-                accept: '.pdf,image/*',
-                file: aadhaarCardFile,
-                setter: setAadhaarCardFile,
-                href: existingDocuments.aadhaar_card_url,
-              },
-              {
-                title: 'College ID',
-                accept: '.pdf,image/*',
-                file: collegeIdFile,
-                setter: setCollegeIdFile,
-                href: existingDocuments.college_id_url,
-              },
-              {
-                title: 'Marksheet',
-                accept: '.pdf,image/*',
-                file: marksheetFile,
-                setter: setMarksheetFile,
-                href: existingDocuments.marksheet_url,
-              },
-            ].map((item) => (
-              <div key={item.title}>
-                <Label title={item.title} required>
-                  <label className="mt-2 flex min-h-[152px] cursor-pointer flex-col items-center justify-center rounded-[28px] border border-dashed border-cyan-200 bg-cyan-50/70 px-5 py-6 text-center">
-                    <ImagePlus className="h-8 w-8 text-cyan-600" />
-                    <span className="mt-3 text-sm font-medium text-slate-800">
-                      {item.file ? item.file.name : `Upload ${item.title}`}
-                    </span>
-                    <span className="mt-1 text-xs uppercase tracking-[0.16em] text-slate-400">
-                      PDF, JPG, PNG or WEBP
-                    </span>
-                    <input
-                      type="file"
-                      accept={item.accept}
-                      className="hidden"
-                      disabled={!isEditable}
-                      onChange={(event) => item.setter(event.target.files?.[0] || null)}
-                    />
-                  </label>
-                </Label>
-                {item.href && !item.file ? (
-                  <a
-                    href={item.href}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="mt-2 inline-flex text-xs font-semibold uppercase tracking-[0.16em] text-cyan-700 underline"
-                  >
-                    View uploaded file
-                  </a>
-                ) : null}
-              </div>
-            ))}
-            {photoPreview ? (
-              <div className="md:col-span-2">
-                <img
-                  src={photoPreview}
-                  alt="Student preview"
-                  className="h-36 w-28 rounded-3xl object-cover shadow-[0_16px_40px_-26px_rgba(15,23,42,0.5)]"
-                />
-              </div>
-            ) : null}
-            <div className="md:col-span-2 rounded-[28px] border border-slate-200 bg-slate-50/80 px-5 py-4 text-sm text-slate-600">
-              Upload the student photograph, Aadhaar card, college ID, and marksheet to complete the official hostel ERP record.
-            </div>
-          </div>
-        );
+    setLoading(true);
+    setStatus({ type: '', message: '' });
+    try {
+      if (submit) {
+        await saveApplicationDraft(buildPayload());
+        await submitApplication();
+        setStatus({ type: 'success', message: 'Application submitted successfully.' });
+      } else {
+        await saveApplicationDraft(buildPayload());
+        setStatus({ type: 'success', message: 'Draft saved successfully.' });
+      }
+    } catch (error) {
+      setStatus({ type: 'error', message: error.message || 'Unable to save application.' });
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <>
-      <Helmet>
-        <title>Application Form | Hostel ERP</title>
-      </Helmet>
-
-      <ERPBackdrop className="py-14">
-        <ERPPageTransition className="relative z-10 mx-auto max-w-7xl space-y-6">
-          <div className="grid gap-5 lg:grid-cols-[1.1fr,0.9fr]">
-            <ERPSurfaceCard className="erp-glass-panel p-7">
-              <div className="flex flex-wrap items-start justify-between gap-4">
-                <div>
-                  <p className="inline-flex items-center gap-2 rounded-full border border-cyan-200 bg-cyan-50 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-cyan-700">
-                    <Sparkles className="h-3.5 w-3.5" />
-                    {applicationType === 'renewal' ? 'Hostel Renewal' : 'Hostel Application'}
-                  </p>
-                  <h1 className="erp-display mt-4 text-4xl font-bold text-slate-950">
-                    {applicationType === 'renewal'
-                      ? 'Review and resubmit your hostel renewal form.'
-                      : 'Complete the structured hostel admission form.'}
-                  </h1>
-                  <p className="mt-3 max-w-2xl text-slate-600">
-                    The same official hostel form is used for both new registration and renewal. Existing student data
-                    is auto-filled from the database and can be updated before submission.
-                  </p>
-                </div>
-                <div className="rounded-3xl border border-white/60 bg-white/80 px-5 py-4 shadow-[0_24px_50px_-35px_rgba(15,23,42,0.45)]">
-                  <p className="text-xs uppercase tracking-[0.18em] text-slate-400">Application Number</p>
-                  <p className="mt-2 text-2xl font-semibold text-slate-900">{applicationNumber || '-'}</p>
-                  {renewalReference ? <p className="mt-2 text-sm font-medium text-cyan-700">Renewal Ref: {renewalReference}</p> : null}
-                  <p className="mt-2 text-sm text-slate-500">{statusLabel}</p>
-                </div>
-              </div>
-            </ERPSurfaceCard>
-
-            <ERPSurfaceCard className="erp-glass-panel p-7">
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Completion</p>
-                  <p className="mt-3 text-4xl font-bold text-slate-950">{completion}%</p>
-                  <p className="mt-2 text-sm text-slate-600">
-                    All required fields and the student photograph must be present before final submission.
-                  </p>
-                </div>
-                <Link
-                  to="/erp/dashboard"
-                  className="inline-flex items-center gap-2 rounded-2xl border border-white/70 bg-white/80 px-4 py-2.5 text-sm font-semibold text-slate-700"
-                >
-                  <ArrowLeft className="h-4 w-4" />
-                  Dashboard
-                </Link>
-              </div>
-              <div className="mt-5 h-3 overflow-hidden rounded-full bg-slate-100">
-                <motion.div
-                  className="erp-brand-bar h-full rounded-full"
-                  animate={{ width: `${completion}%` }}
-                  transition={{ duration: 0.35 }}
-                />
-              </div>
-            </ERPSurfaceCard>
-          </div>
-
-          <div className="grid gap-6 lg:grid-cols-[260px,1fr]">
-            <ERPSurfaceCard className="erp-glass-panel p-5">
-              <div className="space-y-3">
-                {steps.map((step, index) => {
-                  const active = currentStep === index;
-                  const completed = currentStep > index;
-                  return (
-                    <button
-                      key={step.key}
-                      type="button"
-                      onClick={() => setCurrentStep(index)}
-                      className={`flex w-full items-center gap-3 rounded-2xl border px-4 py-4 text-left transition ${
-                        active
-                          ? 'border-cyan-200 bg-cyan-50 text-cyan-800'
-                          : completed
-                            ? 'border-emerald-200 bg-emerald-50 text-emerald-800'
-                            : 'border-slate-200 bg-white/80 text-slate-600'
-                      }`}
-                    >
-                      <span
-                        className={`inline-flex h-10 w-10 items-center justify-center rounded-2xl ${
-                          active
-                            ? 'bg-gradient-to-br from-cyan-500 to-blue-600 text-white'
-                            : completed
-                              ? 'bg-emerald-500 text-white'
-                              : 'bg-slate-100 text-slate-500'
-                        }`}
-                      >
-                        {completed ? <CheckCircle2 className="h-4 w-4" /> : <step.icon className="h-4 w-4" />}
-                      </span>
-                      <div>
-                        <p className="text-xs uppercase tracking-[0.18em] opacity-70">Step {index + 1}</p>
-                        <p className="mt-1 font-semibold">{step.title}</p>
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
-
-              {!isEditable ? (
-                <div className="mt-6 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-4 text-sm text-amber-900">
-                  This application is already verified by admin and cannot be edited further.
-                </div>
-              ) : null}
-            </ERPSurfaceCard>
-
-            <ERPSurfaceCard className="erp-glass-panel overflow-hidden p-6 sm:p-7" animatedBorder>
-              {fetching ? (
-                <div className="rounded-3xl border border-slate-200 bg-white/80 p-8 text-center text-sm text-slate-500">
-                  Loading student application...
-                </div>
-              ) : (
-                <>
-                  <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
-                    <div>
-                      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
-                        {steps[currentStep].title}
-                      </p>
-                      <h2 className="mt-2 text-2xl font-semibold text-slate-900">{steps[currentStep].title}</h2>
-                    </div>
-                    <div className="rounded-2xl border border-slate-200 bg-white/80 px-4 py-3 text-sm text-slate-600">
-                      Registration DOB: <span className="font-semibold text-slate-900">{registrationDob || '-'}</span>
-                    </div>
-                  </div>
-
-                  <AnimatePresence mode="wait">
-                    <motion.div
-                      key={steps[currentStep].key}
-                      initial={{ opacity: 0, y: 8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -6 }}
-                      transition={{ duration: 0.18 }}
-                    >
-                      {renderStep()}
-                    </motion.div>
-                  </AnimatePresence>
-
-                  <div className="mt-8 flex flex-wrap items-center justify-between gap-3">
-                    <div className="flex flex-wrap gap-3">
-                      <ERPButton
-                        variant="secondary"
-                        disabled={currentStep === 0}
-                        onClick={() => setCurrentStep((prev) => Math.max(prev - 1, 0))}
-                      >
-                        <ArrowLeft className="h-4 w-4" />
-                        Previous
-                      </ERPButton>
-                      <ERPButton
-  variant="secondary"
-  disabled={currentStep === steps.length - 1}
-  onClick={async () => {
-    const isValid = await trigger(stepFields[currentStep]);
-
-    if (!isValid) {
-      const firstError = Object.keys(errors)[0];
-      const el = document.querySelector(`[name="${firstError}"]`);
-      el?.scrollIntoView({ behavior: "smooth", block: "center" });
-      return;
-    }
-
-    setCurrentStep((prev) => prev + 1);
-  }}
->
-  Next
-</ERPButton>
-
-                    </div>
-
-                    <div className="flex flex-wrap gap-3">
-                      <ERPButton
-                        variant="secondary"
-                        disabled={savingDraft || submitting || !isEditable}
-                        onClick={handleSaveDraft}
-                      >
-                        <Save className="h-4 w-4" />
-                        {savingDraft ? 'Saving...' : 'Save Draft'}
-                      </ERPButton>
-{canSubmit && (
-  <ERPButton
-    disabled={submitting || savingDraft}
-    onClick={handleFinalSubmit}
-  >
-    <CheckCircle2 className="h-4 w-4" />
-    {submitting ? 'Submitting...' : 'Submit Application'}
-  </ERPButton>
-)}
-
-                    </div>
-                  </div>
-                </>
-              )}
-            </ERPSurfaceCard>
-          </div>
-
-          <div className="text-sm text-slate-500">
-            <Link to="/erp" className="inline-flex items-center gap-2 font-semibold text-cyan-700 underline">
-              <Home className="h-4 w-4" />
-              Back to ERP portal
+    <ERPBackdrop className="min-h-screen px-4 py-8 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-6xl">
+        <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <Link to="/erp" className="inline-flex items-center gap-2 text-sm font-semibold text-primary">
+              <ArrowLeft className="h-4 w-4" />
+              ERP portal
             </Link>
+            <h1 className="mt-4 text-3xl font-semibold tracking-tight text-foreground">Hostel application form</h1>
+            <p className="mt-2 text-sm leading-6 text-muted-foreground">Complete the required student and admission details.</p>
           </div>
-        </ERPPageTransition>
-      </ERPBackdrop>
-    </>
+          <div className="flex flex-wrap gap-2">
+            <ERPButton variant="secondary" disabled={loading} onClick={() => handleSave(false)}>
+              <Save className="h-4 w-4" />
+              Save draft
+            </ERPButton>
+            <ERPButton disabled={loading} onClick={() => handleSave(true)}>
+              <Send className="h-4 w-4" />
+              Submit
+            </ERPButton>
+          </div>
+        </div>
+
+        <ERPSurfaceCard className="p-5 sm:p-6" hover={false}>
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            <input className={inputClass} name="name" value={form.name} onChange={updateField} placeholder="Student name" />
+            <input className={inputClass} name="mobile" value={form.mobile} onChange={updateField} placeholder="Mobile" />
+            <input className={inputClass} name="email" type="email" value={form.email} onChange={updateField} placeholder="Email" />
+            <input className={inputClass} name="dob" type="date" value={form.dob} onChange={updateField} />
+            <select className={inputClass} name="gender" value={form.gender} onChange={updateField}>
+              <option>Female</option>
+              <option>Male</option>
+              <option>Other</option>
+            </select>
+            <select className={inputClass} name="blood_group" value={form.blood_group} onChange={updateField}>
+              {['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'].map((item) => (
+                <option key={item}>{item}</option>
+              ))}
+            </select>
+            <input className={inputClass} name="father_name" value={form.father_name} onChange={updateField} placeholder="Father name" />
+            <input className={inputClass} name="mother_name" value={form.mother_name} onChange={updateField} placeholder="Mother name" />
+            <input className={inputClass} name="guardian_name" value={form.guardian_name} onChange={updateField} placeholder="Guardian name" />
+            <input className={inputClass} name="guardian_mobile" value={form.guardian_mobile} onChange={updateField} placeholder="Guardian mobile" />
+            <input className={inputClass} name="aadhar_no" value={form.aadhar_no} onChange={updateField} placeholder="Aadhar number" />
+            <input className={inputClass} name="category" value={form.category} onChange={updateField} placeholder="Category" />
+            <input className={inputClass} name="religion" value={form.religion} onChange={updateField} placeholder="Religion" />
+            <input className={inputClass} name="nationality" value={form.nationality} onChange={updateField} placeholder="Nationality" />
+            <input className={inputClass} name="college_name" value={form.college_name} onChange={updateField} placeholder="College name" />
+            <input className={inputClass} name="course" value={form.course} onChange={updateField} placeholder="Course" />
+            <input className={inputClass} name="honours_subject" value={form.honours_subject} onChange={updateField} placeholder="Honours subject" />
+            <input className={inputClass} name="session" value={form.session} onChange={updateField} placeholder="Session" />
+            <input className={inputClass} name="roll_no" value={form.roll_no} onChange={updateField} placeholder="Roll number" />
+            <textarea className={`${areaClass} md:col-span-2 lg:col-span-3`} name="correspondence_address" value={form.correspondence_address} onChange={updateField} placeholder="Correspondence address" />
+          </div>
+
+          {status.message ? (
+            <div
+              className={`mt-5 rounded-2xl border px-4 py-3 text-sm ${
+                status.type === 'success'
+                  ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
+                  : 'border-destructive/20 bg-destructive/10 text-destructive'
+              }`}
+            >
+              {status.message}
+            </div>
+          ) : null}
+        </ERPSurfaceCard>
+      </div>
+    </ERPBackdrop>
   );
 };
 
