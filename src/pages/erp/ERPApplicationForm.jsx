@@ -73,12 +73,12 @@ const ERPApplicationForm = () => {
     setLoading(true);
     setStatus({ type: '', message: '' });
     try {
+      const payload = buildPayload();
       if (submit) {
-        await saveApplicationDraft(buildPayload());
-        await submitApplication();
+        await submitApplication(payload);
         setStatus({ type: 'success', message: 'Application submitted successfully.' });
       } else {
-        await saveApplicationDraft(buildPayload());
+        await saveApplicationDraft(payload);
         setStatus({ type: 'success', message: 'Draft saved successfully.' });
       }
     } catch (error) {

@@ -1,0 +1,16 @@
+
+> web-app@0.0.0 dev
+> node ./node_modules/vite/bin/vite.js --host :: --port 3000
+
+
+  [32m[1mVITE[22m v7.3.1[39m  [2mready in [0m[1m725[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m3000[22m/[39m
+  [32m➜[39m  [1mNetwork[22m: [36mhttp://172.20.10.4:[1m3000[22m/[39m
+[2m12:51:28 pm[22m [36m[1m[vite][22m[39m [32m.env changed, restarting server...[39m
+[2m12:51:28 pm[22m [36m[1m[vite][22m[39m [32m.env changed, restarting server...[39m
+[2m12:51:29 pm[22m [36m[1m[vite][22m[39m server restarted.
+[2m12:53:45 pm[22m [36m[1m[vite][22m[39m [32m.env.local changed, restarting server...[39m
+[2m12:53:45 pm[22m [36m[1m[vite][22m[39m server restarted.
+[2m12:53:45 pm[22m [36m[1m[vite][22m[39m [32mvite.config.js changed, restarting server...[39m
+[2m12:53:47 pm[22m [36m[1m[vite][22m[39m server restarted.

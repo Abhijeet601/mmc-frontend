@@ -1,25 +1,23 @@
-const API_BASE =
-  import.meta.env.VITE_ERP_API_BASE ||
-  import.meta.env.VITE_API_BASE ||
-  import.meta.env.VITE_API_BASE_URL ||
-  '';
 const browserLocation = typeof window !== 'undefined' ? window.location : null;
 const browserOrigin = browserLocation?.origin || '';
+const DEV_SERVER_PORTS = ['3000', '4173', '5173'];
+const isViteDevServer = Boolean(browserLocation?.origin && DEV_SERVER_PORTS.includes(browserLocation.port));
+const explicitErpApiBase = (import.meta.env.VITE_ERP_API_BASE || '').trim();
+const genericApiBase = (
+  import.meta.env.VITE_API_BASE ||
+  import.meta.env.VITE_API_BASE_URL ||
+  ''
+).trim();
 const fallbackApiBaseUrl = (() => {
   if (!browserLocation?.origin) return '';
-  if (!['3000', '4173', '5173'].includes(browserLocation.port)) return browserLocation.origin;
-
-  try {
-    const backendUrl = new URL(browserLocation.origin);
-    backendUrl.port = '8000';
-    return backendUrl.origin;
-  } catch (_) {
-    return browserLocation.origin;
-  }
+  if (isViteDevServer) return '';
+  return browserLocation.origin;
 })();
 
+const API_BASE = explicitErpApiBase || (isViteDevServer ? '' : genericApiBase) || fallbackApiBaseUrl;
 const rawApiBaseUrl = (API_BASE || fallbackApiBaseUrl).trim().replace(/\/+$/, '');
 const ERP_API_BASE_URL = rawApiBaseUrl.replace(/\/api$/i, '');
+const ERP_API_BASE_LABEL = ERP_API_BASE_URL || `${browserOrigin || 'current site'} /api proxy`;
 
 export const ERP_STUDENT_TOKEN_KEY = 'hostel_erp_student_token';
 export const ERP_ADMIN_TOKEN_KEY = 'hostel_erp_admin_token';
@@ -54,7 +52,7 @@ const parseError = async (response) => {
 const parseNetworkError = (error) => {
   if (error?.name === 'AbortError') return 'Request timed out. Please try again.';
   if (error instanceof TypeError) {
-    return `Unable to reach ERP API at ${ERP_API_BASE_URL}. Check VITE_ERP_API_BASE, VITE_API_BASE, and backend server status.`;
+    return `Unable to reach ERP API at ${ERP_API_BASE_LABEL}. Check VITE_ERP_API_BASE, VITE_API_BASE, and backend server status.`;
   }
   return error?.message || 'Network request failed.';
 };
@@ -103,6 +101,114 @@ const request = async (
 
 const authPayloadToken = (data) => data?.access_token || data?.token || '';
 
+const cleanString = (value) => String(value || '').trim();
+
+const compactPayload = (payload) =>
+  Object.fromEntries(
+    Object.entries(payload).filter(([, value]) => value !== undefined && value !== null && value !== '')
+  );
+
+const normalizeStudentRegistrationPayload = (payload = {}) =>
+  compactPayload({
+    email: cleanString(payload.email).toLowerCase(),
+    mobile_number: cleanString(payload.mobile_number || payload.mobile),
+    date_of_birth: payload.date_of_birth || payload.dob,
+    password: String(payload.password || ''),
+  });
+
+const normalizePasswordResetPayload = (payload = {}) =>
+  compactPayload({
+    identifier: cleanString(payload.identifier || payload.email || payload.application_number),
+    mobile_number: cleanString(payload.mobile_number || payload.mobile),
+    date_of_birth: payload.date_of_birth || payload.dob,
+    new_password: String(payload.new_password || payload.password || ''),
+  });
+
+const formatDateInput = (value) => {
+  if (!value) return '';
+  return String(value).slice(0, 10);
+};
+
+const normalizeApplicationForm = (payload = {}) => {
+  const data = payload?.data && typeof payload.data === 'object' ? payload.data : payload;
+  const dateOfBirth = data.date_of_birth || data.dob || payload.registration_date_of_birth || '';
+  const mobileNumber = data.mobile_number || data.mobile || payload.mobile_number || '';
+  const aadhaarNumber = data.aadhaar_number || data.aadhar_number || data.aadhar_no || '';
+  const guardianName = data.local_guardian_name || data.guardian_name || '';
+  const guardianMobile = data.guardian_mobile_number || data.guardian_mobile || '';
+  const courseName = data.course_name || data.course || '';
+  const rollNumber = data.roll_number || data.roll_no || '';
+  const totalMarks = data.total_marks ?? data.inter_total_marks ?? '';
+  const marksObtained = data.marks_obtained ?? data.inter_marks_obtained ?? '';
+  const aggregatePercentage = data.aggregate_percentage ?? data.inter_aggregate ?? '';
+
+  return {
+    ...payload,
+    ...data,
+    mobile: mobileNumber,
+    mobile_number: mobileNumber,
+    dob: formatDateInput(dateOfBirth),
+    date_of_birth: formatDateInput(dateOfBirth),
+    aadhar_no: aadhaarNumber,
+    aadhaar_number: aadhaarNumber,
+    guardian_name: guardianName,
+    local_guardian_name: guardianName,
+    guardian_mobile: guardianMobile,
+    guardian_mobile_number: guardianMobile,
+    course: courseName,
+    course_name: courseName,
+    roll_no: rollNumber,
+    roll_number: rollNumber,
+    inter_total_marks: totalMarks,
+    total_marks: totalMarks,
+    inter_marks_obtained: marksObtained,
+    marks_obtained: marksObtained,
+    inter_aggregate: aggregatePercentage,
+    aggregate_percentage: aggregatePercentage,
+  };
+};
+
+const normalizeDashboard = (data = {}) => ({
+  ...data,
+  name: data.name || data.student_name || '',
+  application_no: data.application_no || data.application_number || '',
+  payment_status: data.payment_status || data.application_payment_status || 'pending',
+  hostel_name: data.hostel_name || data.allocated_hostel || data.preferred_hostel || '',
+});
+
+const toApplicationFormData = (payload = {}) => {
+  if (payload instanceof FormData) return payload;
+
+  const normalized = {
+    ...payload,
+    mobile_number: payload.mobile_number || payload.mobile,
+    date_of_birth: payload.date_of_birth || payload.dob,
+    aadhaar_number: payload.aadhaar_number || payload.aadhar_number || payload.aadhar_no,
+    local_guardian_name: payload.local_guardian_name || payload.guardian_name,
+    guardian_mobile_number: payload.guardian_mobile_number || payload.guardian_mobile,
+    course_name: payload.course_name || payload.course,
+    roll_number: payload.roll_number || payload.roll_no,
+    total_marks: payload.total_marks ?? payload.inter_total_marks,
+    marks_obtained: payload.marks_obtained ?? payload.inter_marks_obtained,
+    aggregate_percentage: payload.aggregate_percentage ?? payload.inter_aggregate,
+  };
+
+  const formData = new FormData();
+  Object.entries(normalized).forEach(([key, value]) => {
+    if (value === undefined || value === null || value === '') return;
+    formData.append(key, value instanceof Blob ? value : String(value));
+  });
+  return formData;
+};
+
+const storeStudentSession = (data) => {
+  const token = authPayloadToken(data);
+  if (!token) throw new Error('Login response did not include access token.');
+  setStudentToken(token);
+  setApplicationCompleted(Boolean(data?.application_completed));
+  return data;
+};
+
 const triggerDownload = (blob, filename) => {
   const url = window.URL.createObjectURL(blob);
   const link = document.createElement('a');
@@ -133,38 +239,54 @@ export const getAdminToken = () => localStorage.getItem(ERP_ADMIN_TOKEN_KEY) || 
 export const setAdminToken = (token) => localStorage.setItem(ERP_ADMIN_TOKEN_KEY, token);
 export const clearAdminToken = () => localStorage.removeItem(ERP_ADMIN_TOKEN_KEY);
 
-export const registerStudent = (payload) =>
-  request('/api/auth/register', {
+export const registerStudent = async (payload) => {
+  const registrationPayload = normalizeStudentRegistrationPayload(payload);
+  const registration = await request('/api/auth/register', {
     method: 'POST',
-    body: payload,
+    body: registrationPayload,
   });
+
+  const loginPassword = registrationPayload.password || registration?.password;
+  if (!loginPassword) return registration;
+
+  try {
+    const session = await request('/api/auth/login', {
+      method: 'POST',
+      body: {
+        email: registrationPayload.email,
+        password: loginPassword,
+      },
+    });
+    return { ...registration, ...storeStudentSession(session), registration };
+  } catch (error) {
+    throw new Error(
+      `${registration?.message || 'Registration completed successfully.'} Please login with your email and password.`
+    );
+  }
+};
 
 export const loginStudent = async ({ email, password }) => {
   const data = await request('/api/auth/login', {
     method: 'POST',
-    body: {
+    body: compactPayload({
       email: (email || '').trim().toLowerCase(),
       password: String(password || ''),
-    },
+    }),
   });
 
-  const token = authPayloadToken(data);
-  if (!token) throw new Error('Login response did not include access token.');
-  setStudentToken(token);
-  setApplicationCompleted(Boolean(data?.application_completed));
-  return data;
+  return storeStudentSession(data);
 };
 
 export const resetStudentPassword = (payload) =>
-  request('/api/reset-password', {
+  request('/api/auth/reset-password', {
     method: 'POST',
-    body: payload,
+    body: normalizePasswordResetPayload(payload),
   });
 
 export const getApplicationForm = () =>
   request('/api/applications/me', {
     token: getStudentToken(),
-  });
+  }).then(normalizeApplicationForm);
 
 export const startHostelRenewal = () =>
   request('/api/renewal/apply', {
@@ -175,11 +297,11 @@ export const startHostelRenewal = () =>
 export const saveApplicationDraft = (payload) =>
   request('/api/applications/me', {
     method: 'PUT',
-    body: payload,
+    body: toApplicationFormData(payload),
     token: getStudentToken(),
   });
 
-export const submitApplication = () =>
+export const submitApplication = (payload = {}) =>
   request('/api/applications/me/submit', {
     method: 'POST',
     token: getStudentToken(),
@@ -198,7 +320,7 @@ export const saveHostelPreference = (hostelName) =>
 export const getStudentDashboard = () =>
   request('/api/applications/me', {
     token: getStudentToken(),
-  });
+  }).then(normalizeDashboard);
 
 export const payApplicationFee = (payload = {}) =>
   request('/api/payments/application-fee', {
@@ -226,11 +348,11 @@ export const createStudentComplaint = (payload) =>
     token: getStudentToken(),
   });
 
-export const loginAdmin = async ({ username, email, password }) => {
+export const loginAdmin = async ({ email, password }) => {
   const data = await request('/api/auth/admin/login', {
     method: 'POST',
     body: {
-      email: (email || username || '').trim().toLowerCase(),
+      email: (email || '').trim().toLowerCase(),
       password: String(password || ''),
     },
   });

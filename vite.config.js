@@ -2,6 +2,8 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { fileURLToPath, URL } from 'node:url'
 
+const railwayBackendUrl = 'https://mmc-backend-production-1fa6.up.railway.app'
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
@@ -10,11 +12,11 @@ export default defineConfig({
     host: '::',
     proxy: {
       '/api': {
-        target: process.env.VITE_ERP_DEV_PROXY_TARGET || 'http://127.0.0.1:8000',
+        target: process.env.VITE_ERP_DEV_PROXY_TARGET || railwayBackendUrl,
         changeOrigin: true,
       },
       '/uploads': {
-        target: process.env.VITE_ERP_DEV_PROXY_TARGET || 'http://127.0.0.1:8000',
+        target: process.env.VITE_ERP_DEV_PROXY_TARGET || railwayBackendUrl,
         changeOrigin: true,
       },
     },
