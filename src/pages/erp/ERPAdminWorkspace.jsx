@@ -56,6 +56,7 @@ const ERPAdminLogin = () => {
     <div className="mx-auto flex min-h-screen max-w-md items-center px-4 py-10">
       <ERPSurfaceCard className="w-full p-6 sm:p-8" hover={false}>
         <h1 className="text-2xl font-semibold text-foreground">Admin login</h1>
+        <p className="mt-2 text-sm text-muted-foreground">Use your admin username or admin email, depending on the connected backend.</p>
         <form className="mt-6 space-y-4" onSubmit={submit}>
           <input className={inputClass} type="text" autoComplete="username" value={form.username} onChange={(event) => setForm((current) => ({ ...current, username: event.target.value }))} placeholder="Admin username or email" required />
           <input className={inputClass} type="password" autoComplete="current-password" value={form.password} onChange={(event) => setForm((current) => ({ ...current, password: event.target.value }))} placeholder="Password" required />

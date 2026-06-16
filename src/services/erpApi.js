@@ -14,10 +14,14 @@ const fallbackApiBaseUrl = (() => {
   return browserLocation.origin;
 })();
 
-const API_BASE = explicitErpApiBase || (isViteDevServer ? '' : genericApiBase) || fallbackApiBaseUrl;
+const API_BASE = isViteDevServer ? '' : explicitErpApiBase || genericApiBase || fallbackApiBaseUrl;
 const rawApiBaseUrl = (API_BASE || fallbackApiBaseUrl).trim().replace(/\/+$/, '');
 const ERP_API_BASE_URL = rawApiBaseUrl.replace(/\/api$/i, '');
 const ERP_API_BASE_LABEL = ERP_API_BASE_URL || `${browserOrigin || 'current site'} /api proxy`;
+const REFERENCE_HOSTEL_ERP_HOSTS = ['web-production-bc50a.up.railway.app'];
+const isReferenceHostelErpApi = REFERENCE_HOSTEL_ERP_HOSTS.some((host) =>
+  ERP_API_BASE_URL.toLowerCase().includes(host)
+);
 
 export const ERP_STUDENT_TOKEN_KEY = 'hostel_erp_student_token';
 export const ERP_ADMIN_TOKEN_KEY = 'hostel_erp_admin_token';
@@ -371,20 +375,32 @@ export const createStudentComplaint = (payload) =>
 export const loginAdmin = async ({ email, username, password }) => {
   const identifier = (username || email || '').trim();
   const passwordValue = String(password || '');
-  const attempts = [
-    {
-      path: '/api/admin/login',
-      body: { username: identifier, password: passwordValue },
-    },
-    {
-      path: '/api/auth/admin/login',
-      body: { email: identifier, password: passwordValue },
-    },
-    {
-      path: '/api/auth/admins/login',
-      body: { email: identifier, password: passwordValue },
-    },
-  ];
+  const isEmailIdentifier = identifier.includes('@');
+  const referenceEmail = isEmailIdentifier ? identifier : identifier.toLowerCase() === 'admin' ? 'admin@mmcollege.edu' : identifier;
+  const attempts = isReferenceHostelErpApi
+    ? [
+        {
+          path: '/api/auth/admin/login',
+          body: { email: referenceEmail, password: passwordValue },
+        },
+      ]
+    : isEmailIdentifier
+      ? [
+          {
+            path: '/api/auth/admin/login',
+            body: { email: identifier, password: passwordValue },
+          },
+          {
+            path: '/api/admin/login',
+            body: { username: identifier, password: passwordValue },
+          },
+        ]
+      : [
+          {
+            path: '/api/admin/login',
+            body: { username: identifier, password: passwordValue },
+          },
+        ];
 
   let lastError;
   let data;
