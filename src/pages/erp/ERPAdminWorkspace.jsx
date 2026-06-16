@@ -34,7 +34,7 @@ const navItems = [
 
 const ERPAdminLogin = () => {
   const navigate = useNavigate();
-  const [form, setForm] = useState({ email: '', password: '' });
+  const [form, setForm] = useState({ username: '', password: '' });
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
@@ -57,7 +57,7 @@ const ERPAdminLogin = () => {
       <ERPSurfaceCard className="w-full p-6 sm:p-8" hover={false}>
         <h1 className="text-2xl font-semibold text-foreground">Admin login</h1>
         <form className="mt-6 space-y-4" onSubmit={submit}>
-          <input className={inputClass} type="email" value={form.email} onChange={(event) => setForm((current) => ({ ...current, email: event.target.value }))} placeholder="Admin email" required />
+          <input className={inputClass} type="text" value={form.username} onChange={(event) => setForm((current) => ({ ...current, username: event.target.value }))} placeholder="Admin username" required />
           <input className={inputClass} type="password" value={form.password} onChange={(event) => setForm((current) => ({ ...current, password: event.target.value }))} placeholder="Password" required />
           {error ? <div className="rounded-2xl border border-destructive/20 bg-destructive/10 p-3 text-sm text-destructive">{error}</div> : null}
           <ERPButton type="submit" disabled={submitting} className="w-full justify-center">

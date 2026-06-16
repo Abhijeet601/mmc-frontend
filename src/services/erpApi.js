@@ -102,6 +102,10 @@ const request = async (
 const authPayloadToken = (data) => data?.access_token || data?.token || '';
 
 const cleanString = (value) => String(value || '').trim();
+const normalizeLoginIdentifier = (value) => {
+  const identifier = cleanString(value);
+  return identifier.includes('@') ? identifier.toLowerCase() : identifier;
+};
 
 const compactPayload = (payload) =>
   Object.fromEntries(
@@ -241,7 +245,7 @@ export const clearAdminToken = () => localStorage.removeItem(ERP_ADMIN_TOKEN_KEY
 
 export const registerStudent = async (payload) => {
   const registrationPayload = normalizeStudentRegistrationPayload(payload);
-  const registration = await request('/api/auth/register', {
+  const registration = await request('/api/register', {
     method: 'POST',
     body: registrationPayload,
   });
@@ -250,11 +254,12 @@ export const registerStudent = async (payload) => {
   if (!loginPassword) return registration;
 
   try {
-    const session = await request('/api/auth/login', {
+    const session = await request('/api/login', {
       method: 'POST',
       body: {
-        email: registrationPayload.email,
+        email: normalizeLoginIdentifier(registrationPayload.email),
         password: loginPassword,
+        date_of_birth: registrationPayload.date_of_birth,
       },
     });
     return { ...registration, ...storeStudentSession(session), registration };
@@ -265,12 +270,14 @@ export const registerStudent = async (payload) => {
   }
 };
 
-export const loginStudent = async ({ email, password }) => {
-  const data = await request('/api/auth/login', {
+export const loginStudent = async ({ email, password, date_of_birth, dob }) => {
+  const loginDateOfBirth = date_of_birth || dob;
+  const data = await request('/api/login', {
     method: 'POST',
     body: compactPayload({
-      email: (email || '').trim().toLowerCase(),
+      email: normalizeLoginIdentifier(email),
       password: String(password || ''),
+      ...(loginDateOfBirth ? { date_of_birth: loginDateOfBirth } : {}),
     }),
   });
 
@@ -278,32 +285,33 @@ export const loginStudent = async ({ email, password }) => {
 };
 
 export const resetStudentPassword = (payload) =>
-  request('/api/auth/reset-password', {
+  request('/api/reset-password', {
     method: 'POST',
     body: normalizePasswordResetPayload(payload),
   });
 
 export const getApplicationForm = () =>
-  request('/api/applications/me', {
+  request('/api/application', {
     token: getStudentToken(),
   }).then(normalizeApplicationForm);
 
 export const startHostelRenewal = () =>
-  request('/api/renewal/apply', {
+  request('/api/application/start-renewal', {
     method: 'POST',
     token: getStudentToken(),
   });
 
 export const saveApplicationDraft = (payload) =>
-  request('/api/applications/me', {
-    method: 'PUT',
+  request('/api/application/draft', {
+    method: 'POST',
     body: toApplicationFormData(payload),
     token: getStudentToken(),
   });
 
 export const submitApplication = (payload = {}) =>
-  request('/api/applications/me/submit', {
+  request('/api/application/submit', {
     method: 'POST',
+    body: toApplicationFormData(payload),
     token: getStudentToken(),
   }).then((data) => {
     setApplicationCompleted(true);
@@ -318,19 +326,19 @@ export const saveHostelPreference = (hostelName) =>
   });
 
 export const getStudentDashboard = () =>
-  request('/api/applications/me', {
+  request('/api/dashboard', {
     token: getStudentToken(),
   }).then(normalizeDashboard);
 
 export const payApplicationFee = (payload = {}) =>
-  request('/api/payments/application-fee', {
+  request('/api/payment/application', {
     method: 'POST',
     body: payload,
     token: getStudentToken(),
   });
 
 export const payHostelFee = (payload = {}) =>
-  request('/api/payments/hostel-fee', {
+  request('/api/payment/hostel', {
     method: 'POST',
     body: payload,
     token: getStudentToken(),
@@ -348,11 +356,11 @@ export const createStudentComplaint = (payload) =>
     token: getStudentToken(),
   });
 
-export const loginAdmin = async ({ email, password }) => {
-  const data = await request('/api/auth/admin/login', {
+export const loginAdmin = async ({ email, username, password }) => {
+  const data = await request('/api/admin/login', {
     method: 'POST',
     body: {
-      email: (email || '').trim().toLowerCase(),
+      username: (username || email || '').trim(),
       password: String(password || ''),
     },
   });

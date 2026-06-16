@@ -96,8 +96,18 @@ const ERPStudentAuth = () => {
                 <input className={inputClass} name="mobile" value={form.mobile} onChange={updateField} placeholder="Mobile number" required />
               </>
             ) : null}
-            <input className={inputClass} name="email" type="email" value={form.email} onChange={updateField} placeholder="Email address" required />
-            <input className={inputClass} name="date_of_birth" type="date" value={form.date_of_birth} onChange={updateField} required />
+            <input
+              className={inputClass}
+              name="email"
+              type={mode === 'register' ? 'email' : 'text'}
+              value={form.email}
+              onChange={updateField}
+              placeholder={mode === 'register' ? 'Email address' : 'Email or application number'}
+              required
+            />
+            {mode === 'register' ? (
+              <input className={inputClass} name="date_of_birth" type="date" value={form.date_of_birth} onChange={updateField} required />
+            ) : null}
             <input className={inputClass} name="password" type="password" value={form.password} onChange={updateField} placeholder="Password" required />
 
             {status.message ? (
