@@ -57,8 +57,8 @@ const ERPAdminLogin = () => {
       <ERPSurfaceCard className="w-full p-6 sm:p-8" hover={false}>
         <h1 className="text-2xl font-semibold text-foreground">Admin login</h1>
         <form className="mt-6 space-y-4" onSubmit={submit}>
-          <input className={inputClass} type="text" value={form.username} onChange={(event) => setForm((current) => ({ ...current, username: event.target.value }))} placeholder="Admin username" required />
-          <input className={inputClass} type="password" value={form.password} onChange={(event) => setForm((current) => ({ ...current, password: event.target.value }))} placeholder="Password" required />
+          <input className={inputClass} type="text" autoComplete="username" value={form.username} onChange={(event) => setForm((current) => ({ ...current, username: event.target.value }))} placeholder="Admin username or email" required />
+          <input className={inputClass} type="password" autoComplete="current-password" value={form.password} onChange={(event) => setForm((current) => ({ ...current, password: event.target.value }))} placeholder="Password" required />
           {error ? <div className="rounded-2xl border border-destructive/20 bg-destructive/10 p-3 text-sm text-destructive">{error}</div> : null}
           <ERPButton type="submit" disabled={submitting} className="w-full justify-center">
             {submitting ? 'Signing in' : 'Login'}

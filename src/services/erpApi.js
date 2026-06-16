@@ -57,6 +57,15 @@ const parseNetworkError = (error) => {
   return error?.message || 'Network request failed.';
 };
 
+class ApiRequestError extends Error {
+  constructor(message, { status, url } = {}) {
+    super(message);
+    this.name = 'ApiRequestError';
+    this.status = status;
+    this.url = url;
+  }
+}
+
 const request = async (
   path,
   { method = 'GET', body, token, headers = {}, responseType = 'json' } = {}
@@ -86,7 +95,10 @@ const request = async (
   }
 
   if (!response.ok) {
-    throw new Error(await parseError(response));
+    throw new ApiRequestError(await parseError(response), {
+      status: response.status,
+      url: requestUrl,
+    });
   }
 
   if (responseType === 'blob') return response.blob();
@@ -357,13 +369,41 @@ export const createStudentComplaint = (payload) =>
   });
 
 export const loginAdmin = async ({ email, username, password }) => {
-  const data = await request('/api/admin/login', {
-    method: 'POST',
-    body: {
-      username: (username || email || '').trim(),
-      password: String(password || ''),
+  const identifier = (username || email || '').trim();
+  const passwordValue = String(password || '');
+  const attempts = [
+    {
+      path: '/api/admin/login',
+      body: { username: identifier, password: passwordValue },
     },
-  });
+    {
+      path: '/api/auth/admin/login',
+      body: { email: identifier, password: passwordValue },
+    },
+    {
+      path: '/api/auth/admins/login',
+      body: { email: identifier, password: passwordValue },
+    },
+  ];
+
+  let lastError;
+  let data;
+  for (const attempt of attempts) {
+    try {
+      data = await request(attempt.path, {
+        method: 'POST',
+        body: attempt.body,
+      });
+      break;
+    } catch (error) {
+      lastError = error;
+      if (![404, 405, 422].includes(error?.status)) {
+        throw error;
+      }
+    }
+  }
+
+  if (!data) throw lastError || new Error('Admin login failed.');
   const token = authPayloadToken(data);
   if (!token) throw new Error('Login response did not include access token.');
   setAdminToken(token);
