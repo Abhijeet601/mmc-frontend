@@ -1,4 +1,4 @@
-const MMC_API_BASE = 'http://127.0.0.1:8000';
+const MMC_API_BASE = 'https://hostel-erp-backend-production.up.railway.app';
 
 function mmcApi(path, options) {
   return fetch(MMC_API_BASE + path, options || {}).then(function(res) {
