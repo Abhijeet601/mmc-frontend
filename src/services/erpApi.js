@@ -751,6 +751,14 @@ export const bulkUploadOldStudents = (file, options = {}) =>
 export const resolveAssetUrl = (relativeOrAbsolutePath) => {
   if (!relativeOrAbsolutePath) return '';
   if (/^https?:\/\//i.test(relativeOrAbsolutePath)) return relativeOrAbsolutePath;
+  const fileBaseUrl = (import.meta.env.VITE_FILE_BASE_URL || '').trim().replace(/\/+$/, '');
   const path = relativeOrAbsolutePath.startsWith('/') ? relativeOrAbsolutePath : `/${relativeOrAbsolutePath}`;
+  if (fileBaseUrl) return `${fileBaseUrl}${path}`;
   return `${ERP_API_BASE_URL}${path}`;
+};
+
+export const resolveReceiptUrl = (receipt) => {
+  if (!receipt) return '';
+  if (receipt.pdf_url && /^https?:\/\//i.test(receipt.pdf_url)) return receipt.pdf_url;
+  return resolveAssetUrl(receipt.pdf_url || `/receipts/${receipt.id}/download`);
 };

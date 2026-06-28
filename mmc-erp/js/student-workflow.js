@@ -11,7 +11,7 @@ function mmcNormalizeWorkflowStatus(status){
 }
 
 function mmcReceiptDownloadUrl(receipt){
-  return MMC_API_BASE + (receipt.pdf_url || ('/receipts/' + receipt.id + '/download'));
+  return mmcReceiptUrl(receipt);
 }
 
 function mmcLatestByCreatedAt(items){
