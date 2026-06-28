@@ -5,6 +5,7 @@ import { ArrowRight, Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useTranslation } from 'react-i18next';
+import { ERP_PORTAL_ENTRY_URL } from '@/lib/erpPortal';
 const HERO_VIDEO_SRC = 'https://pub-c7047204b6824b4ea67be147e7ebb0ac.r2.dev/public/images/MMC720p.mp4';
 const HeroSection = () => {
   const {
@@ -118,7 +119,7 @@ const HeroSection = () => {
 
           <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }} className="w-full sm:w-auto">
             <Button asChild size="lg" className="group h-12 w-full min-w-[220px] bg-primary text-white shadow-2xl hover:bg-primary/90">
-              <Link to="/erp">ERP Portal</Link>
+              <a href={ERP_PORTAL_ENTRY_URL} target="_blank" rel="noopener noreferrer">ERP Portal</a>
             </Button>
           </motion.div>
         </motion.div>

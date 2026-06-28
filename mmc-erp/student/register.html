@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Registration — Magadh Mahila College ERP Portal</title>
+<link rel="icon" href="../Magadh_Mahila_College.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="stylesheet" href="../css/theme.css">
+<link rel="stylesheet" href="../css/components.css">
+</head>
+<body>
+
+<div id="mmcPageLoader" class="mmc-page-loader"><div class="mmc-spinner"></div><span>Loading registration form…</span></div>
+
+<div class="mmc-auth-wrap">
+  <div class="mmc-auth-illustration">
+    <div class="position-relative" style="z-index:1;max-width:460px;">
+      <div class="mmc-seal lg mb-4 mmc-float"><img src="../Magadh_Mahila_College.png" alt="Magadh Mahila College logo"></div>
+      <p class="mmc-eyebrow" style="color:var(--mmc-brass);">New Student Registration</p>
+      <h1 class="text-white fw-800 mb-3" style="font-size:32px;line-height:1.3;">Begin your hostel admission journey.</h1>
+      <p style="color:#c3cbe0;font-size:14.5px;">Create your secure student account in under 2 minutes. You'll receive a unique Student ID to track your application, merit result and room allotment.</p>
+      <div class="mmc-timeline mt-5">
+        <div class="mmc-timeline-item done"><div class="mmc-timeline-dot"></div><div class="mmc-timeline-title text-white">Create account</div><div class="mmc-timeline-desc" style="color:#a9b3cc;">Email, mobile &amp; password</div></div>
+        <div class="mmc-timeline-item active"><div class="mmc-timeline-dot"></div><div class="mmc-timeline-title text-white">Student ID generated</div><div class="mmc-timeline-desc" style="color:#a9b3cc;">Use it for all future logins</div></div>
+        <div class="mmc-timeline-item"><div class="mmc-timeline-dot"></div><div class="mmc-timeline-title text-white">Fill hostel application</div><div class="mmc-timeline-desc" style="color:#a9b3cc;">Personal, academic &amp; documents</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mmc-auth-form-side">
+    <div class="mmc-auth-card mmc-slide-up" style="max-width:480px;" data-wizard>
+
+      <div class="text-center mb-4">
+        <h4 class="fw-700 mb-1" style="color:var(--mmc-navy);">Create Student Account</h4>
+      <p class="mmc-eyebrow mb-0">Magadh Mahila College ERP Portal</p>
+      </div>
+
+      <ul class="mmc-stepper">
+        <li class="mmc-step active" data-step="1"><div class="mmc-step-circle">1</div><div class="mmc-step-label">Account Details</div></li>
+        <li class="mmc-step" data-step="2"><div class="mmc-step-circle">2</div><div class="mmc-step-label">Success</div></li>
+      </ul>
+      <div class="mmc-progressbar-thin mb-4"><div style="width:50%"></div></div>
+
+      <div class="mmc-card mmc-card-body">
+
+        <!-- STEP 1 -->
+        <div class="mmc-wizard-panel" data-step="1">
+          <div class="mb-3">
+            <label class="form-label">Full Name</label>
+            <input type="text" class="form-control" id="rname" placeholder="Student full name" required minlength="2">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Email Address</label>
+            <input type="email" class="form-control" id="remail" placeholder="you@example.com" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Mobile Number</label>
+            <div class="input-group">
+              <span class="input-group-text">+91</span>
+              <input type="tel" class="form-control" id="rmobile" placeholder="10-digit mobile number" pattern="[0-9]{10}" required>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Date of Birth</label>
+            <input type="date" class="form-control" id="rdob" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Password</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="fa-solid fa-lock"></i></span>
+              <input type="password" class="form-control" id="rpwd" placeholder="At least 8 characters" required minlength="8">
+              <button class="btn btn-ghost" type="button" data-toggle-password="#rpwd"><i class="fa-regular fa-eye"></i></button>
+            </div>
+          </div>
+          <div class="mb-4">
+            <label class="form-label">Confirm Password</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="fa-solid fa-lock"></i></span>
+              <input type="password" class="form-control" id="rcpwd" placeholder="Re-enter password" required minlength="8">
+              <button class="btn btn-ghost" type="button" data-toggle-password="#rcpwd"><i class="fa-regular fa-eye"></i></button>
+            </div>
+          </div>
+          <div class="form-check mb-4">
+            <input class="form-check-input" type="checkbox" id="agreeTerms" required>
+            <label class="form-check-label fs-13 text-secondary" for="agreeTerms">I agree to the hostel rules &amp; <a href="#">terms of admission</a></label>
+          </div>
+          <button class="btn btn-maroon btn-lg w-100" id="registerBtn" type="button">Create Account <i class="fa-solid fa-arrow-right ms-1"></i></button>
+        </div>
+
+        <!-- STEP 2 -->
+        <div class="mmc-wizard-panel text-center py-3" data-step="2" style="display:none;">
+          <svg class="mmc-success-check mx-auto mb-3" viewBox="0 0 90 90"><circle cx="45" cy="45" r="40"/><path d="M27 46 L40 59 L64 31"/></svg>
+          <h6 class="fw-700 mb-1" style="color:var(--mmc-navy);">Registration Successful!</h6>
+          <p class="fs-13 text-secondary mb-3">Your student account has been created in MySQL. Use this ID, email or mobile for login.</p>
+          <div class="mmc-chip justify-content-center mx-auto mb-4" style="max-width:fit-content;font-size:14px;padding:10px 18px;">
+            <i class="fa-solid fa-id-badge text-maroon"></i> <strong id="genStudentId"></strong>
+          </div>
+          <a href="login.html" class="btn btn-maroon btn-lg w-100">Proceed to Login</a>
+        </div>
+
+      </div>
+      <p class="text-center fs-13 text-secondary mt-4 mb-0">Already registered? <a href="login.html" class="fw-600">Login here</a></p>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../js/common.js"></script>
+<script src="../js/api.js"></script>
+<script>
+  var registerWizard = mmcInitWizard('[data-wizard]', {
+    onChange: function(step){
+      document.querySelector('.mmc-progressbar-thin > div').style.width = (step/2*100) + '%';
+    }
+  });
+
+  document.getElementById('registerBtn').addEventListener('click', function(){
+    var panel = document.querySelector('.mmc-wizard-panel[data-step="1"]');
+    var requiredFields = panel.querySelectorAll('[required]');
+    for(var i = 0; i < requiredFields.length; i++){
+      if(!requiredFields[i].checkValidity()){
+        requiredFields[i].reportValidity();
+        return;
+      }
+    }
+    if(document.getElementById('rpwd').value !== document.getElementById('rcpwd').value){
+      mmcToast('Password mismatch', 'Confirm password must match password.', 'warning');
+      return;
+    }
+
+    var btn = this;
+    var original = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<span class="mmc-spinner sm" style="border-color:rgba(255,255,255,.35);border-top-color:#fff;display:inline-block;vertical-align:middle;margin-right:8px;"></span> Creating account...';
+    mmcApi('/students/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: document.getElementById('rname').value.trim(),
+        email: document.getElementById('remail').value.trim(),
+        mobile: document.getElementById('rmobile').value.trim(),
+        date_of_birth: document.getElementById('rdob').value,
+        password: document.getElementById('rpwd').value
+      })
+    })
+      .then(function(student){
+        document.getElementById('genStudentId').textContent = student.student_code;
+        registerWizard.goTo(2);
+      })
+      .catch(function(err){
+        mmcToast('Registration failed', err.message, 'danger');
+      })
+      .finally(function(){
+        btn.disabled = false;
+        btn.innerHTML = original;
+      });
+  });
+</script>
+</body>
+</html>

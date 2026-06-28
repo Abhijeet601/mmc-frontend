@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Merit Result — Magadh Mahila College ERP Portal</title>
+<link rel="icon" href="../Magadh_Mahila_College.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="stylesheet" href="../css/theme.css">
+<link rel="stylesheet" href="../css/components.css">
+</head>
+<body>
+
+<div id="mmcPageLoader" class="mmc-page-loader"><div class="mmc-spinner"></div><span>Fetching your result…</span></div>
+<div class="mmc-sidebar-backdrop"></div>
+
+<div class="mmc-app">
+  <aside class="mmc-sidebar">
+    <div class="mmc-sidebar-brand"><div class="mmc-seal md"><img src="../Magadh_Mahila_College.png" alt="Magadh Mahila College logo"></div><div class="mmc-sidebar-brand-text"><strong>Magadh Mahila College</strong><small>ERP PORTAL · STUDENT</small></div></div>
+    <nav class="mmc-sidebar-nav">
+      <div class="mmc-sidebar-section">Main</div>
+      <a href="dashboard.html" class="mmc-sidebar-link"><i class="fa-solid fa-grid-2"></i><span>Dashboard</span></a>
+      <div class="mmc-sidebar-section">Admission</div>
+      <a href="application-form.html" class="mmc-sidebar-link"><i class="fa-solid fa-file-pen"></i><span>Hostel Application</span></a>
+      <a href="application-preview.html" class="mmc-sidebar-link"><i class="fa-solid fa-eye"></i><span>Application Preview</span></a>
+      <a href="merit-result.html" class="mmc-sidebar-link active"><i class="fa-solid fa-ranking-star"></i><span>Merit Result</span></a>
+      <div class="mmc-sidebar-section">Payments</div>
+      <a href="fee-payment.html" class="mmc-sidebar-link"><i class="fa-solid fa-credit-card"></i><span>Registration Fee</span></a>
+      <a href="hostel-fee-payment.html" class="mmc-sidebar-link"><i class="fa-solid fa-money-bill-wave"></i><span>Hostel Fee</span></a>
+      <a href="receipt.html" class="mmc-sidebar-link"><i class="fa-solid fa-receipt"></i><span>Receipts</span></a>
+      <div class="mmc-sidebar-section">Hostel</div>
+      <a href="room-allotment.html" class="mmc-sidebar-link"><i class="fa-solid fa-bed"></i><span>Room Allotment</span></a>
+      <a href="renewal.html" class="mmc-sidebar-link"><i class="fa-solid fa-rotate"></i><span>Renewal</span></a>
+      <div class="mmc-sidebar-section">Account</div>
+      <a href="profile.html" class="mmc-sidebar-link"><i class="fa-solid fa-user"></i><span>My Profile</span></a>
+      <a href="login.html" class="mmc-sidebar-link"><i class="fa-solid fa-arrow-right-from-bracket"></i><span>Logout</span></a>
+    </nav>
+    <div class="mmc-sidebar-foot"><div class="mmc-help-card"><i class="fa-solid fa-headset mb-2 text-brass"></i><div class="fw-600 text-white mb-1" style="font-size:12.5px;">Need help?</div>Contact the hostel office for assistance.</div></div>
+  </aside>
+
+  <div class="mmc-main">
+    <header class="mmc-topbar">
+      <div class="mmc-topbar-left">
+        <button class="mmc-sidebar-toggle js-sidebar-toggle"><i class="fa-solid fa-bars"></i></button>
+        <div class="mmc-search d-none d-md-block"><i class="fa-solid fa-magnifying-glass"></i><input type="text" class="form-control" placeholder="Search..."></div>
+      </div>
+      <div class="mmc-topbar-right">
+        <div class="dropdown"><button class="mmc-icon-btn" data-bs-toggle="dropdown"><i class="fa-regular fa-bell"></i><span class="mmc-dot" id="mmcNotifBadge"></span></button>
+          <div class="dropdown-menu dropdown-menu-end p-0 shadow-lg" style="width:340px;border-radius:14px;overflow:hidden;"><div class="px-3 py-2 border-bottom fw-600 fs-13" style="color:var(--mmc-navy);">Notifications</div><div id="mmcNotifList" style="max-height:340px;overflow-y:auto;"></div></div>
+        </div>
+        <div class="dropdown"><div class="mmc-profile-trigger" data-bs-toggle="dropdown"><div class="mmc-avatar">ST</div><div class="mmc-profile-meta"><strong>Student</strong><small>Student ID</small></div></div>
+          <ul class="dropdown-menu dropdown-menu-end shadow-lg" style="border-radius:12px;"><li><a class="dropdown-item" href="profile.html">My Profile</a></li><li><a class="dropdown-item" href="login.html">Logout</a></li></ul>
+        </div>
+      </div>
+    </header>
+
+    <main class="mmc-page">
+      <div class="mmc-breadcrumb"><a href="dashboard.html">Dashboard</a><span class="sep">/</span>Merit Result</div>
+      <div class="mmc-page-head mb-4">
+        <div><div class="mmc-page-title">Hostel Merit Result</div><div class="mmc-page-sub">Session 2026 – 2027 · Provisional Merit List published on 02 Jun 2026</div></div>
+        <button class="btn btn-ghost" onclick="window.print()"><i class="fa-solid fa-print me-1"></i> Print Result</button>
+      </div>
+
+      <!-- STATUS BANNER -->
+      <div class="mmc-card mb-4 mmc-reveal" style="background:linear-gradient(120deg, var(--mmc-success-bg), #fff);border-color:#b9ecc9;">
+        <div class="mmc-card-body d-flex flex-wrap justify-content-between align-items-center gap-3">
+          <div class="d-flex align-items-center gap-3">
+            <div class="mmc-stat-icon mmc-icon-success" style="width:60px;height:60px;font-size:24px;"><i class="fa-solid fa-circle-check"></i></div>
+            <div>
+              <span class="mmc-pill success mb-1"><i class="fa-solid fa-circle"></i> PENDING</span>
+              <h5 class="fw-700 mb-0" style="color:var(--mmc-navy);">Merit result is not available yet.</h5>
+            </div>
+          </div>
+          <a href="hostel-fee-payment.html" class="btn btn-maroon btn-lg flex-shrink-0">Pay Hostel Fee Now</a>
+        </div>
+      </div>
+
+      <div class="row g-3 mb-4">
+        <div class="col-sm-4">
+          <div class="mmc-stat-card mmc-slide-up mmc-delay-1">
+            <div class="mmc-stat-icon mmc-icon-brass"><i class="fa-solid fa-ranking-star"></i></div>
+            <div><div class="mmc-stat-value">-</div><div class="mmc-stat-label">Your Merit Rank</div></div>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="mmc-stat-card mmc-slide-up mmc-delay-2">
+            <div class="mmc-stat-icon mmc-icon-navy"><i class="fa-solid fa-building"></i></div>
+            <div><div class="mmc-stat-value" style="font-size:18px;">-</div><div class="mmc-stat-label">Hostel Assigned</div></div>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="mmc-stat-card mmc-slide-up mmc-delay-3">
+            <div class="mmc-stat-icon mmc-icon-maroon"><i class="fa-solid fa-tags"></i></div>
+            <div><div class="mmc-stat-value">-</div><div class="mmc-stat-label">Applied / Allotted Category</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row g-3">
+        <div class="col-lg-7">
+          <div class="mmc-card mmc-reveal">
+            <div class="mmc-card-head"><h6>Result Details</h6></div>
+            <div class="mmc-card-body row g-2">
+              <div class="col-md-6"><div class="mmc-kv"><span class="k">Application No.</span><span class="v">-</span></div></div>
+              <div class="col-md-6"><div class="mmc-kv"><span class="k">Student Name</span><span class="v">Student</span></div></div>
+              <div class="col-md-6"><div class="mmc-kv"><span class="k">Course</span><span class="v">-</span></div></div>
+              <div class="col-md-6"><div class="mmc-kv"><span class="k">Intermediate %</span><span class="v">-</span></div></div>
+              <div class="col-md-6"><div class="mmc-kv"><span class="k">Applied Category</span><span class="v">-</span></div></div>
+              <div class="col-md-6"><div class="mmc-kv"><span class="k">Allotted Category</span><span class="v">-</span></div></div>
+              <div class="col-md-6"><div class="mmc-kv"><span class="k">Hostel Assigned</span><span class="v">-</span></div></div>
+              <div class="col-md-6"><div class="mmc-kv"><span class="k">Result Status</span><span class="v"><span class="mmc-pill success"><i class="fa-solid fa-circle"></i> PENDING</span></span></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-5">
+          <div class="mmc-ticket mmc-reveal">
+            <div class="mmc-ticket-head">
+              <div class="d-flex justify-content-between align-items-start">
+                <div><p class="fs-11 mb-1" style="color:var(--mmc-brass);">ADMISSION LETTER</p><h6 class="text-white fw-700 mb-0">Hostel Seat Confirmation</h6></div>
+                <div class="mmc-seal md"><img src="../Magadh_Mahila_College.png" alt="Magadh Mahila College logo"></div>
+              </div>
+            </div>
+            <div class="mmc-ticket-perforation"></div>
+            <div class="mmc-ticket-body">
+              <p class="fs-13 text-secondary">Admission letter details will appear after a real allotment is published.</p>
+              <div class="mmc-kv"><span class="k">Issued On</span><span class="v">-</span></div>
+              <div class="mmc-kv"><span class="k">Valid Until</span><span class="v">-</span></div>
+              <button class="btn btn-maroon w-100 mt-3" onclick="mmcToast('Document unavailable','No admission letter has been generated yet.','warning')"><i class="fa-solid fa-download me-1"></i> Download Admission Letter</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../js/common.js"></script>
+</body>
+</html>

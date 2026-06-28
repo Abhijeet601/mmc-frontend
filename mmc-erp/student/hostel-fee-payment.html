@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hostel Fee Payment — Magadh Mahila College ERP Portal</title>
+<link rel="icon" href="../Magadh_Mahila_College.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="stylesheet" href="../css/theme.css">
+<link rel="stylesheet" href="../css/components.css">
+<style>
+  .mmc-pay-method{ border:1.5px solid var(--mmc-border); border-radius:12px; padding:14px 16px; cursor:pointer; display:flex; align-items:center; gap:12px; transition:all .2s ease; }
+  .mmc-pay-method:hover{ border-color:var(--mmc-maroon-light); }
+  .mmc-pay-method.PENDING{ border-color:var(--mmc-maroon); background:var(--mmc-maroon-50); }
+  .mmc-pay-method i{ font-size:18px; color:var(--mmc-navy); width:26px; text-align:center; }
+  .mmc-demo-note{ background:var(--mmc-warning-bg); border:1px solid #fbdfa3; border-radius:12px; color:#92400e; }
+</style>
+</head>
+<body>
+
+<div id="mmcPageLoader" class="mmc-page-loader"><div class="mmc-spinner"></div><span>Loading fee details…</span></div>
+<div class="mmc-sidebar-backdrop"></div>
+
+<div class="mmc-app">
+  <aside class="mmc-sidebar">
+    <div class="mmc-sidebar-brand"><div class="mmc-seal md"><img src="../Magadh_Mahila_College.png" alt="Magadh Mahila College logo"></div><div class="mmc-sidebar-brand-text"><strong>Magadh Mahila College</strong><small>ERP PORTAL · STUDENT</small></div></div>
+    <nav class="mmc-sidebar-nav">
+      <div class="mmc-sidebar-section">Main</div>
+      <a href="dashboard.html" class="mmc-sidebar-link"><i class="fa-solid fa-grid-2"></i><span>Dashboard</span></a>
+      <div class="mmc-sidebar-section">Admission</div>
+      <a href="application-form.html" class="mmc-sidebar-link"><i class="fa-solid fa-file-pen"></i><span>Hostel Application</span></a>
+      <a href="application-preview.html" class="mmc-sidebar-link"><i class="fa-solid fa-eye"></i><span>Application Preview</span></a>
+      <a href="merit-result.html" class="mmc-sidebar-link"><i class="fa-solid fa-ranking-star"></i><span>Merit Result</span></a>
+      <div class="mmc-sidebar-section">Payments</div>
+      <a href="fee-payment.html" class="mmc-sidebar-link"><i class="fa-solid fa-credit-card"></i><span>Registration Fee</span></a>
+      <a href="hostel-fee-payment.html" class="mmc-sidebar-link active"><i class="fa-solid fa-money-bill-wave"></i><span>Hostel Fee</span></a>
+      <a href="receipt.html" class="mmc-sidebar-link"><i class="fa-solid fa-receipt"></i><span>Receipts</span></a>
+      <div class="mmc-sidebar-section">Hostel</div>
+      <a href="room-allotment.html" class="mmc-sidebar-link"><i class="fa-solid fa-bed"></i><span>Room Allotment</span></a>
+      <a href="renewal.html" class="mmc-sidebar-link"><i class="fa-solid fa-rotate"></i><span>Renewal</span></a>
+      <div class="mmc-sidebar-section">Account</div>
+      <a href="profile.html" class="mmc-sidebar-link"><i class="fa-solid fa-user"></i><span>My Profile</span></a>
+      <a href="login.html" class="mmc-sidebar-link"><i class="fa-solid fa-arrow-right-from-bracket"></i><span>Logout</span></a>
+    </nav>
+    <div class="mmc-sidebar-foot"><div class="mmc-help-card"><i class="fa-solid fa-headset mb-2 text-brass"></i><div class="fw-600 text-white mb-1" style="font-size:12.5px;">Need help?</div>Contact the hostel office for assistance.</div></div>
+  </aside>
+
+  <div class="mmc-main">
+    <header class="mmc-topbar">
+      <div class="mmc-topbar-left">
+        <button class="mmc-sidebar-toggle js-sidebar-toggle"><i class="fa-solid fa-bars"></i></button>
+        <div class="mmc-search d-none d-md-block"><i class="fa-solid fa-magnifying-glass"></i><input type="text" class="form-control" placeholder="Search..."></div>
+      </div>
+      <div class="mmc-topbar-right">
+        <div class="dropdown"><button class="mmc-icon-btn" data-bs-toggle="dropdown"><i class="fa-regular fa-bell"></i><span class="mmc-dot" id="mmcNotifBadge"></span></button>
+          <div class="dropdown-menu dropdown-menu-end p-0 shadow-lg" style="width:340px;border-radius:14px;overflow:hidden;"><div class="px-3 py-2 border-bottom fw-600 fs-13" style="color:var(--mmc-navy);">Notifications</div><div id="mmcNotifList" style="max-height:340px;overflow-y:auto;"></div></div>
+        </div>
+        <div class="dropdown"><div class="mmc-profile-trigger" data-bs-toggle="dropdown"><div class="mmc-avatar">ST</div><div class="mmc-profile-meta"><strong>Student</strong><small>Student ID</small></div></div>
+          <ul class="dropdown-menu dropdown-menu-end shadow-lg" style="border-radius:12px;"><li><a class="dropdown-item" href="profile.html">My Profile</a></li><li><a class="dropdown-item" href="login.html">Logout</a></li></ul>
+        </div>
+      </div>
+    </header>
+
+    <main class="mmc-page">
+      <div class="mmc-breadcrumb"><a href="dashboard.html">Dashboard</a><span class="sep">/</span>Hostel Fee Payment</div>
+      <div class="mmc-page-head mb-4">
+        <div><div class="mmc-page-title">Hostel Fee Payment</div><div class="mmc-page-sub">Pay your annual hostel fee to confirm your room allotment.</div></div>
+      </div>
+
+      <div class="alert d-flex align-items-center gap-2 mb-4" style="background:var(--mmc-warning-bg);border:1px solid #fbdfa3;border-radius:12px;color:#b45309;">
+        <i class="fa-solid fa-triangle-exclamation fs-5"></i>
+        <div class="fs-13"><strong>Pay before 30 Jun 2026</strong> to confirm your seat at -. Unpaid seats will be offered to waitlisted candidates.</div>
+      </div>
+
+      <div class="row g-4">
+        <div class="col-lg-5">
+          <div class="mmc-ticket mmc-reveal">
+            <div class="mmc-ticket-head">
+              <div class="d-flex justify-content-between align-items-start">
+                <div><p class="fs-11 mb-1" style="color:var(--mmc-brass);">FEE SUMMARY</p><h6 class="text-white fw-700 mb-0">Annual Hostel Fee — 2026/27</h6></div>
+                <div class="mmc-seal md"><img src="../Magadh_Mahila_College.png" alt="Magadh Mahila College logo"></div>
+              </div>
+            </div>
+            <div class="mmc-ticket-perforation"></div>
+            <div class="mmc-ticket-body">
+              <div class="mmc-kv"><span class="k">Application Number</span><span class="v" id="demoAppNo">-</span></div>
+              <div class="mmc-kv"><span class="k">Student Name</span><span class="v" id="demoStudentName">Student</span></div>
+              <div class="mmc-kv"><span class="k">Hostel Assigned</span><span class="v" id="demoHostelName">-</span></div>
+              <hr class="my-3">
+              <p class="mmc-eyebrow mb-2">Fee Breakdown</p>
+              <div class="mmc-kv"><span class="k">Hostel Fee</span><span class="v" id="demoHostelFee">-</span></div>
+              <hr class="my-3">
+              <div class="d-flex justify-content-between align-items-center">
+                <span class="fw-600 text-secondary">Total Amount Payable</span>
+                <span class="fw-700 fs-3 text-maroon" id="demoHostelTotal">-</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-7">
+          <div class="mmc-card mmc-card-body mmc-reveal">
+            <p class="mmc-eyebrow mb-3">Select Payment Method</p>
+            <div class="row g-2 mb-4">
+              <div class="col-sm-6"><div class="mmc-pay-method" data-pay-mode="UPI" onclick="mmcSelectPay(this)"><i class="fa-solid fa-qrcode"></i><div><div class="fw-600 fs-13">UPI</div><div class="fs-12 text-secondary">GPay, PhonePe, Paytm</div></div></div></div>
+              <div class="col-sm-6"><div class="mmc-pay-method PENDING" data-pay-mode="Net Banking" onclick="mmcSelectPay(this)"><i class="fa-solid fa-building-columns"></i><div><div class="fw-600 fs-13">Net Banking</div><div class="fs-12 text-secondary">All major banks</div></div></div></div>
+              <div class="col-sm-6"><div class="mmc-pay-method" data-pay-mode="Card" onclick="mmcSelectPay(this)"><i class="fa-solid fa-credit-card"></i><div><div class="fw-600 fs-13">Debit / Credit Card</div><div class="fs-12 text-secondary">Visa, Mastercard, RuPay</div></div></div></div>
+              <div class="col-sm-6"><div class="mmc-pay-method" data-pay-mode="Part Payment" onclick="mmcSelectPay(this)"><i class="fa-solid fa-layer-group"></i><div><div class="fw-600 fs-13">Part Payment</div><div class="fs-12 text-secondary">Pay in 2 installments</div></div></div></div>
+            </div>
+
+            <label class="form-label">Select Bank</label>
+            <select class="form-select mb-4">
+              <option>State Bank of India</option>
+              <option>Punjab National Bank</option>
+              <option>Bank of Baroda</option>
+              <option>HDFC Bank</option>
+              <option>ICICI Bank</option>
+            </select>
+
+            <div class="form-check mb-4">
+              <input class="form-check-input" type="checkbox" id="payTerms" required>
+              <label class="form-check-label fs-13 text-secondary" for="payTerms">I have read and accept the <a href="#">hostel fee &amp; refund policy</a>.</label>
+            </div>
+
+            <button class="btn btn-maroon btn-lg w-100" id="payNowBtn"><i class="fa-solid fa-flask me-1"></i> Demo Pay Hostel Fee &amp; Generate Receipt</button>
+            <div class="alert mmc-demo-note py-2 fs-12 mt-3 mb-0"><i class="fa-solid fa-flask me-1"></i> Demo payment only. It creates a test hostel-fee transaction and official receipt in this ERP; no real money is charged.</div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../js/common.js"></script>
+<script src="../js/api.js"></script>
+<script src="../js/student-workflow.js"></script>
+<script>
+  function mmcSelectPay(el){
+    document.querySelectorAll('.mmc-pay-method').forEach(function(c){ c.classList.remove('PENDING'); });
+    el.classList.add('PENDING');
+    selectedHostelPayMode = el.dataset.payMode || 'Demo Payment';
+  }
+  var demoHostelApplication = null;
+  var demoHostelAmount = 0;
+  var selectedHostelPayMode = 'Net Banking';
+  function updateHostelPayButton(){
+    document.getElementById('payNowBtn').innerHTML = '<i class="fa-solid fa-flask me-1"></i> Demo Pay ' + (demoHostelAmount ? mmcCurrency(demoHostelAmount) : 'Hostel Fee') + ' &amp; Generate Receipt';
+  }
+  document.getElementById('payNowBtn').addEventListener('click', function(){
+    if(!document.getElementById('payTerms').checked){ mmcToast('Accept Policy', 'Please accept the fee & refund policy to continue.', 'warning'); return; }
+    var btn = this;
+    btn.disabled = true;
+    btn.innerHTML = '<span class="mmc-spinner sm" style="border-color:rgba(255,255,255,.35);border-top-color:#fff;display:inline-block;vertical-align:middle;margin-right:8px;"></span> Processing payment…';
+    var student = mmcCurrentStudent();
+    if(!student || !demoHostelApplication || !demoHostelAmount){
+      mmcToast('Hostel allocation required', 'A shortlisted application and Mahima or Vaidehi hostel allocation are required.', 'warning');
+      btn.disabled = false;
+      updateHostelPayButton();
+      return;
+    }
+    mmcApi('/payments/hostel/success', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({ student_id:student.id, application_id:demoHostelApplication.id, transaction_no:'DEMO-HOSTEL-' + Date.now(), payment_type:'Hostel Admission Fee', amount:demoHostelAmount, mode:selectedHostelPayMode + ' Demo Payment', status:'Success', paid_at:new Date().toISOString() })
+    }).then(function(receipt){
+      sessionStorage.setItem('mmc_last_hostel_receipt', JSON.stringify(receipt));
+      mmcToast('Demo payment successful', 'Official hostel admission receipt generated.', 'success');
+      setTimeout(function(){ window.open(MMC_API_BASE + receipt.pdf_url, '_blank'); window.location.href='receipt.html'; }, 700);
+    }).catch(function(error){
+      mmcToast('Demo payment failed', error.message, 'danger');
+      btn.disabled = false;
+      updateHostelPayButton();
+    });
+  });
+  (function loadHostelPayment(){
+    var student=mmcCurrentStudent(); if(!student) return;
+    mmcLoadStudentWorkflow().then(function(workflow){
+      mmcApplyStudentNavigation(workflow);
+      if(mmcGuardStudentWorkflow('hostel-fee', workflow)) return null;
+      return Promise.all([mmcApi('/applications?student_id=' + student.id), mmcApi('/hostels')]);
+    }).then(function(results){
+      if(!results) return;
+      demoHostelApplication=results[0][0] || null; if(!demoHostelApplication) return;
+      var hostel=results[1].find(function(item){ return Number(item.id) === Number(demoHostelApplication.hostel_id); });
+      document.getElementById('demoAppNo').textContent=demoHostelApplication.application_no;
+      document.getElementById('demoStudentName').textContent=student.name;
+      if(!hostel) return;
+      demoHostelAmount=Number(hostel.fee || 0) || (hostel.name.toLowerCase().indexOf('mahima') !== -1 ? 12000 : hostel.name.toLowerCase().indexOf('vaidehi') !== -1 ? 10000 : 0);
+      document.getElementById('demoHostelName').textContent=hostel.name;
+      document.getElementById('demoHostelFee').textContent=mmcCurrency(demoHostelAmount);
+      document.getElementById('demoHostelTotal').textContent=mmcCurrency(demoHostelAmount);
+      updateHostelPayButton();
+    }).catch(function(error){ mmcToast('Hostel details not loaded', error.message, 'warning'); });
+  }());
+</script>
+</body>
+</html>

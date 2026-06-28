@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Management — Magadh Mahila College ERP Portal</title>
+<link rel="icon" href="../Magadh_Mahila_College.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
+<link rel="stylesheet" href="../css/theme.css">
+<link rel="stylesheet" href="../css/components.css">
+<style>
+  .dt-buttons{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom: 12px; }
+  .dt-button{ border:1px solid var(--mmc-border) !important; background:#fff !important; color:var(--mmc-navy) !important; border-radius:8px !important; font-size:12.5px !important; padding:7px 13px !important; }
+  .dt-button:hover{ background: var(--mmc-maroon-50) !important; color: var(--mmc-maroon) !important; }
+</style>
+</head>
+<body>
+
+<div id="mmcPageLoader" class="mmc-page-loader"><div class="mmc-spinner"></div><span>Loading student records…</span></div>
+<div class="mmc-sidebar-backdrop"></div>
+
+<div class="mmc-app">
+  <aside class="mmc-sidebar">
+    <div class="mmc-sidebar-brand"><div class="mmc-seal md"><img src="../Magadh_Mahila_College.png" alt="Magadh Mahila College logo"></div><div class="mmc-sidebar-brand-text"><strong>Magadh Mahila College</strong><small>ERP PORTAL · ADMIN</small></div></div>
+    <nav class="mmc-sidebar-nav">
+      <div class="mmc-sidebar-section">Overview</div>
+      <a href="dashboard.html" class="mmc-sidebar-link"><i class="fa-solid fa-grid-2"></i><span>Dashboard</span></a>
+      <div class="mmc-sidebar-section">Admissions</div>
+      <a href="students.html" class="mmc-sidebar-link active"><i class="fa-solid fa-users"></i><span>Student Management</span></a>
+      <a href="merit-management.html" class="mmc-sidebar-link"><i class="fa-solid fa-ranking-star"></i><span>Merit Management</span></a>
+      <div class="mmc-sidebar-section">Hostel Operations</div>
+      <a href="room-management.html" class="mmc-sidebar-link"><i class="fa-solid fa-bed"></i><span>Room Management</span></a>
+      <a href="hostel-management.html" class="mmc-sidebar-link"><i class="fa-solid fa-building"></i><span>Hostel Management</span></a>
+      <div class="mmc-sidebar-section">Insights</div>
+      <a href="reports.html" class="mmc-sidebar-link"><i class="fa-solid fa-chart-line"></i><span>Reports</span></a>
+      <a href="notifications.html" class="mmc-sidebar-link"><i class="fa-solid fa-bell"></i><span>Notifications</span></a>
+      <div class="mmc-sidebar-section">System</div>
+      <a href="settings.html" class="mmc-sidebar-link"><i class="fa-solid fa-gear"></i><span>Settings</span></a>
+      <a href="../student/login.html" class="mmc-sidebar-link"><i class="fa-solid fa-arrow-right-from-bracket"></i><span>Logout</span></a>
+    </nav>
+    <div class="mmc-sidebar-foot"><div class="mmc-help-card"><i class="fa-solid fa-circle-info mb-2 text-brass"></i><div class="fw-600 text-white mb-1" style="font-size:12.5px;">Session 2026–27</div>Admission window closes 30 Jun 2026</div></div>
+  </aside>
+
+  <div class="mmc-main">
+    <header class="mmc-topbar">
+      <div class="mmc-topbar-left">
+        <button class="mmc-sidebar-toggle js-sidebar-toggle"><i class="fa-solid fa-bars"></i></button>
+        <div class="mmc-search d-none d-md-block"><i class="fa-solid fa-magnifying-glass"></i><input type="text" class="form-control" placeholder="Search students, applications..."></div>
+      </div>
+      <div class="mmc-topbar-right">
+        <div class="dropdown"><button class="mmc-icon-btn" data-bs-toggle="dropdown"><i class="fa-regular fa-bell"></i><span class="mmc-dot" id="mmcNotifBadge"></span></button>
+          <div class="dropdown-menu dropdown-menu-end p-0 shadow-lg" style="width:340px;border-radius:14px;overflow:hidden;"><div class="px-3 py-2 border-bottom fw-600 fs-13" style="color:var(--mmc-navy);">Notifications</div><div id="mmcNotifList" style="max-height:340px;overflow-y:auto;"></div></div>
+        </div>
+        <div class="dropdown"><div class="mmc-profile-trigger" data-bs-toggle="dropdown"><div class="mmc-avatar">AD</div><div class="mmc-profile-meta"><strong>Admin User</strong><small>Hostel Superintendent</small></div></div>
+          <ul class="dropdown-menu dropdown-menu-end shadow-lg" style="border-radius:12px;"><li><a class="dropdown-item" href="settings.html">Account Settings</a></li><li><a class="dropdown-item" href="../student/login.html">Logout</a></li></ul>
+        </div>
+      </div>
+    </header>
+
+    <main class="mmc-page">
+      <div class="mmc-breadcrumb"><a href="dashboard.html">Dashboard</a><span class="sep">/</span>Student Management</div>
+      <div class="mmc-page-head mb-3">
+        <div><div class="mmc-page-title">Student Management</div><div class="mmc-page-sub">View, verify and manage all hostel applications.</div></div>
+        <div class="d-flex gap-2">
+          <button class="btn btn-ghost" data-bs-toggle="collapse" data-bs-target="#filterPanel"><i class="fa-solid fa-sliders me-1"></i> Advanced Filters</button>
+          <button class="btn btn-maroon" data-bs-toggle="modal" data-bs-target="#addStudentModal"><i class="fa-solid fa-plus me-1"></i> Add Student</button>
+        </div>
+      </div>
+
+      <div class="collapse mb-3" id="filterPanel">
+        <div class="mmc-card mmc-card-body">
+          <div class="row g-3">
+            <div class="col-md-3"><label class="form-label">Course</label><select class="form-select"><option>All Courses</option><option>B.A.</option><option>B.Sc.</option><option>B.Com.</option><option>B.Sc. (Hons.)</option></select></div>
+            <div class="col-md-3"><label class="form-label">Category</label><select class="form-select"><option>All Categories</option><option value="UR">UR - Unreserved</option><option value="EWS">EWS - Economically Weaker Section</option><option value="BC">BC - Backward Class</option><option value="EBC">EBC - Extremely Backward Class</option><option value="SC">SC - Scheduled Caste</option><option value="ST">ST - Scheduled Tribe</option></select></div>
+            <div class="col-md-3"><label class="form-label">Hostel</label><select class="form-select"><option>All Hostels</option><option>Mahima Hostel</option><option>Vaidehi Hostel</option></select></div>
+            <div class="col-md-3"><label class="form-label">Session</label><select class="form-select"><option>2026 – 2027</option><option>2025 – 2026</option></select></div>
+            <div class="col-md-3"><label class="form-label">Status</label><select class="form-select"><option>All Status</option><option>Selected</option><option>Waitlisted</option><option>Pending</option><option>Rejected</option></select></div>
+            <div class="col-md-3"><label class="form-label">Applied Category</label><select class="form-select"><option>Any</option><option value="UR">UR - Unreserved</option><option value="EWS">EWS - Economically Weaker Section</option><option value="BC">BC - Backward Class</option><option value="EBC">EBC - Extremely Backward Class</option><option value="SC">SC - Scheduled Caste</option><option value="ST">ST - Scheduled Tribe</option></select></div>
+            <div class="col-md-3"><label class="form-label">Allotted Category</label><select class="form-select"><option>Any</option><option value="UR">UR - Unreserved</option><option value="EWS">EWS - Economically Weaker Section</option><option value="BC">BC - Backward Class</option><option value="EBC">EBC - Extremely Backward Class</option><option value="SC">SC - Scheduled Caste</option><option value="ST">ST - Scheduled Tribe</option></select></div>
+            <div class="col-md-3"><label class="form-label">Date Applied</label><input type="date" class="form-control"></div>
+          </div>
+          <div class="d-flex justify-content-end gap-2 mt-3">
+            <button class="btn btn-ghost">Reset</button>
+            <button class="btn btn-maroon" onclick="mmcToast('Filters Applied','Showing matching applications.','success')">Apply Filters</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="mmc-card mmc-table-card mmc-reveal">
+        <div class="mmc-card-body">
+          <table id="studentsTable" class="table mmc-table-card" style="width:100%;">
+            <thead>
+              <tr>
+                <th>Application No</th><th>Admission ID</th><th>Student Name</th><th>Mobile</th><th>Course</th><th>%</th>
+                <th>Applied Cat.</th><th>Allotted Cat.</th><th>Status</th><th>Hostel</th><th>Room</th><th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="studentsBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- VIEW MODAL -->
+<div class="modal fade" id="viewStudentModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header"><h6 class="mb-0 fw-700" style="color:var(--mmc-navy);">Application Details</h6><button class="btn-close" data-bs-dismiss="modal"></button></div>
+      <div class="modal-body row g-2" id="viewStudentBody"></div>
+      <div class="modal-footer"><button class="btn btn-ghost" data-bs-dismiss="modal">Close</button><button class="btn btn-maroon"><i class="fa-solid fa-download me-1"></i> Download Application</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT MODAL -->
+<div class="modal fade" id="editStudentModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header"><h6 class="mb-0 fw-700" style="color:var(--mmc-navy);">Edit Application Status</h6><button class="btn-close" data-bs-dismiss="modal"></button></div>
+      <div class="modal-body">
+        <label class="form-label">Application Status</label>
+        <select class="form-select mb-3" id="editStatusSelect"><option>Selected</option><option>Waitlisted</option><option>Pending</option><option>Rejected</option></select>
+        <label class="form-label">Allotted Category</label>
+        <select class="form-select mb-3" id="editAllottedSelect"><option value="UR">UR - Unreserved</option><option value="EWS">EWS - Economically Weaker Section</option><option value="BC">BC - Backward Class</option><option value="EBC">EBC - Extremely Backward Class</option><option value="SC">SC - Scheduled Caste</option><option value="ST">ST - Scheduled Tribe</option><option value="">-</option></select>
+        <label class="form-label">Allotted Hostel</label>
+        <select class="form-select mb-3" id="editHostelSelect"><option value="">No hostel allotted</option></select>
+        <label class="form-label">Allotted Room</label>
+        <select class="form-select" id="editRoomSelect"><option value="">No room allotted</option></select>
+      </div>
+      <div class="modal-footer"><button class="btn btn-ghost" data-bs-dismiss="modal">Cancel</button><button class="btn btn-maroon" id="saveEditBtn">Save Changes</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ACCOUNT MODAL -->
+<div class="modal fade" id="studentAccountModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header"><h6 class="mb-0 fw-700" style="color:var(--mmc-navy);">Manage Student ID</h6><button class="btn-close" data-bs-dismiss="modal"></button></div>
+      <div class="modal-body">
+        <input type="hidden" id="accountStudentId">
+        <div class="row g-3">
+          <div class="col-md-6"><label class="form-label">Student ID *</label><input type="text" class="form-control" id="accountStudentCode" required></div>
+          <div class="col-md-6"><label class="form-label">Mobile *</label><input type="tel" class="form-control" id="accountMobile" maxlength="10" required></div>
+          <div class="col-12"><label class="form-label">Student Name *</label><input type="text" class="form-control" id="accountName" required></div>
+          <div class="col-12"><label class="form-label">Email *</label><input type="email" class="form-control" id="accountEmail" required></div>
+          <div class="col-md-6"><label class="form-label">Course</label><input type="text" class="form-control" id="accountCourse"></div>
+          <div class="col-md-6"><label class="form-label">Session</label><input type="text" class="form-control" id="accountSession"></div>
+          <div class="col-12"><label class="form-label">New Password</label><input type="password" class="form-control" id="accountPassword" minlength="8" placeholder="Leave blank to keep existing password"></div>
+        </div>
+      </div>
+      <div class="modal-footer"><button class="btn btn-ghost" data-bs-dismiss="modal">Cancel</button><button class="btn btn-maroon" id="saveStudentAccountBtn">Save Account</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ADD MODAL -->
+<div class="modal fade" id="addStudentModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header"><h6 class="mb-0 fw-700" style="color:var(--mmc-navy);">Add Student Application</h6><button class="btn-close" data-bs-dismiss="modal"></button></div>
+      <div class="modal-body">
+        <div class="row g-3">
+          <div class="col-md-12"><label class="form-label">Student Name</label><input type="text" class="form-control" placeholder="Full name"></div>
+          <div class="col-md-6"><label class="form-label">Mobile</label><input type="tel" class="form-control" placeholder="10-digit number"></div>
+          <div class="col-md-6"><label class="form-label">Course</label><input type="text" class="form-control" placeholder="Course name"></div>
+          <div class="col-md-6"><label class="form-label">Applied Category</label><select class="form-select"><option value="UR">UR - Unreserved</option><option value="EWS">EWS - Economically Weaker Section</option><option value="BC">BC - Backward Class</option><option value="EBC">EBC - Extremely Backward Class</option><option value="SC">SC - Scheduled Caste</option><option value="ST">ST - Scheduled Tribe</option></select></div>
+          <div class="col-md-6"><label class="form-label">Percentage</label><input type="number" class="form-control" placeholder="Percentage"></div>
+        </div>
+      </div>
+      <div class="modal-footer"><button class="btn btn-ghost" data-bs-dismiss="modal">Cancel</button><button class="btn btn-maroon" data-bs-dismiss="modal" onclick="mmcToast('Student not added','Student creation is not connected from this modal yet.','warning')">Add Student</button></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../js/common.js"></script>
+<script src="../js/api.js"></script>
+<script>
+  var statusPill = { Approved:'success', Shortlisted:'info', Selected:'success', Waitlisted:'warning', Pending:'navy', Rejected:'danger' };
+
+  var applications = [];
+  var students = [];
+  var hostels = [];
+  var rooms = [];
+
+  var table = $('#studentsTable').DataTable({
+    pageLength: 8,
+    lengthMenu: [5,8,10,25,50],
+    language: { search: '', searchPlaceholder: 'Search records...' },
+    dom: "<'row mb-2'<'col-sm-6'B><'col-sm-6 text-end'f>><'table-responsive't><'row mt-2'<'col-sm-6'l><'col-sm-6'i><'col-sm-12'p>>",
+    buttons: ['copy', 'csv', 'excel', 'pdf', 'print']
+  });
+
+  function mmcFindByAppNo(appNo){
+    return applications.find(function(a){ return a.appNo === appNo; });
+  }
+
+  function escapeHtml(value){
+    return String(value == null ? '' : value).replace(/[&<>"']/g, function(ch){
+      return ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' })[ch];
+    });
+  }
+
+  function byIdMap(items){
+    return items.reduce(function(map, item){ map[item.id] = item; return map; }, {});
+  }
+
+  function normalizeStatus(status){
+    status = status || 'Pending';
+    return status.charAt(0).toUpperCase() + status.slice(1);
+  }
+
+  function applicationRow(app, index){
+    return [
+      '<span class="fw-600">' + escapeHtml(app.appNo) + '</span>',
+      escapeHtml(app.admissionId || '-'),
+      escapeHtml(app.name || '-'),
+      escapeHtml(app.mobile || '-'),
+      escapeHtml(app.course || '-'),
+      app.percentage ? escapeHtml(app.percentage) + '%' : '-',
+      '<span class="mmc-pill muted">' + escapeHtml(app.appliedCat || '-') + '</span>',
+      '<span class="mmc-pill muted">' + escapeHtml(app.allottedCat || '-') + '</span>',
+      '<span class="mmc-pill ' + (statusPill[app.status] || 'muted') + '"><i class="fa-solid fa-circle"></i> ' + escapeHtml(app.status) + '</span>',
+      escapeHtml(app.hostel || '-'),
+      escapeHtml(app.room || '-'),
+      '<button class="btn btn-sm btn-ghost" onclick="mmcViewStudent(' + index + ')"><i class="fa-solid fa-eye"></i></button>' +
+      '<button class="btn btn-sm btn-ghost" onclick="mmcEditStudent(' + index + ')"><i class="fa-solid fa-pen"></i></button>' +
+      '<button class="btn btn-sm btn-ghost" onclick="mmcManageStudentAccount(' + index + ')" title="Manage student ID"><i class="fa-solid fa-id-card"></i></button>' +
+      '<button class="btn btn-sm btn-ghost text-danger" onclick="mmcDeleteStudent(' + index + ')"><i class="fa-solid fa-trash"></i></button>'
+    ];
+  }
+
+  function renderTable(){
+    table.clear();
+    applications.forEach(function(app, index){
+      var row = table.row.add(applicationRow(app, index)).node();
+      row.setAttribute('data-appno', app.appNo);
+    });
+    table.draw(false);
+  }
+
+  function loadApplications(){
+    table.clear().draw();
+    document.getElementById('studentsBody').innerHTML = '<tr><td colspan="12" class="text-center text-secondary py-3">Loading applications...</td></tr>';
+    Promise.all([mmcApi('/applications'), mmcApi('/students?limit=1000'), mmcApi('/hostels'), mmcApi('/rooms')])
+      .then(function(results){
+        var rawApplications = results[0] || [];
+        students = results[1] || [];
+        hostels = results[2] || [];
+        rooms = results[3] || [];
+        var studentMap = byIdMap(students);
+        var hostelMap = byIdMap(hostels);
+        var roomMap = byIdMap(rooms);
+        applications = rawApplications.map(function(app){
+          var student = studentMap[app.student_id] || {};
+          var hostel = app.hostel_id ? hostelMap[app.hostel_id] : null;
+          var room = app.room_id ? roomMap[app.room_id] : null;
+          return {
+            id: app.id,
+            appNo: app.application_no,
+            admissionId: app.admission_id,
+            name: student.name || 'Student #' + app.student_id,
+            studentId: student.id || app.student_id,
+            studentCode: student.student_code || '',
+            email: student.email || '',
+            mobile: student.mobile || '-',
+            course: app.course || student.course || '-',
+            session: student.session || app.session || '',
+            percentage: app.percentage,
+            appliedCat: app.applied_category,
+            allottedCat: app.allotted_category || '-',
+            status: normalizeStatus(app.status),
+            hostel: hostel ? hostel.name : '-',
+            room: room ? room.room_number : '-',
+            studentRaw: student,
+            raw: app
+          };
+        });
+        renderTable();
+      })
+      .catch(function(error){
+        table.clear().draw();
+        document.getElementById('studentsBody').innerHTML = '<tr><td colspan="12" class="text-center text-secondary py-3">Unable to load applications.</td></tr>';
+        mmcToast('Applications not loaded', error.message, 'warning');
+      });
+  }
+
+  function renderHostelRoomOptions(app){
+    var hostelSelect = document.getElementById('editHostelSelect');
+    var roomSelect = document.getElementById('editRoomSelect');
+    var selectedHostelId = app.raw.hostel_id || '';
+    hostelSelect.innerHTML = '<option value="">No hostel allotted</option>' + hostels.map(function(hostel){
+      return '<option value="' + hostel.id + '"' + (Number(selectedHostelId) === Number(hostel.id) ? ' selected' : '') + '>' + escapeHtml(hostel.name) + '</option>';
+    }).join('');
+
+    function updateRooms(){
+      var hostelId = hostelSelect.value;
+      var selectedRoomId = app.raw.room_id || '';
+      var filteredRooms = rooms.filter(function(room){
+        return Number(room.hostel_id) === Number(hostelId) && (room.status === 'available' || Number(room.id) === Number(selectedRoomId));
+      });
+      roomSelect.innerHTML = '<option value="">No room allotted</option>' + filteredRooms.map(function(room){
+        return '<option value="' + room.id + '"' + (Number(selectedRoomId) === Number(room.id) ? ' selected' : '') + '>' + escapeHtml(room.room_number) + ' - ' + escapeHtml(room.status) + '</option>';
+      }).join('');
+    }
+    hostelSelect.onchange = function(){
+      app.raw.room_id = null;
+      updateRooms();
+    };
+    updateRooms();
+  }
+
+  function mmcViewStudent(i){
+    var a = applications[i];
+    if(!a) return;
+    document.getElementById('viewStudentBody').innerHTML = [
+      ['Application No', a.appNo], ['Admission ID', a.admissionId], ['Student Name', a.name], ['Mobile', a.mobile],
+      ['Course', a.course], ['Percentage', a.percentage + '%'], ['Applied Category', a.appliedCat], ['Allotted Category', a.allottedCat],
+      ['Status', a.status], ['Hostel Name', a.hostel || '-'], ['Room Number', a.room || '-']
+    ].map(function(r){ return '<div class="col-md-6"><div class="mmc-kv"><span class="k">' + r[0] + '</span><span class="v">' + r[1] + '</span></div></div>'; }).join('');
+    new bootstrap.Modal(document.getElementById('viewStudentModal')).show();
+  }
+
+  var editingAppNo = null;
+  function mmcEditStudent(i){
+    var a = applications[i];
+    if(!a) return;
+    editingAppNo = a.appNo;
+    document.getElementById('editStatusSelect').value = a.status;
+    document.getElementById('editAllottedSelect').value = a.allottedCat === '-' ? '' : a.allottedCat;
+    renderHostelRoomOptions(a);
+    new bootstrap.Modal(document.getElementById('editStudentModal')).show();
+  }
+
+  function mmcManageStudentAccount(i){
+    var a = applications[i];
+    if(!a || !a.studentId){
+      mmcToast('Student unavailable', 'This application is not linked to a student account.', 'warning');
+      return;
+    }
+    document.getElementById('accountStudentId').value = a.studentId;
+    document.getElementById('accountStudentCode').value = a.studentCode || '';
+    document.getElementById('accountName').value = a.name === 'Student #' + a.studentId ? '' : a.name;
+    document.getElementById('accountEmail').value = a.email || '';
+    document.getElementById('accountMobile').value = a.mobile === '-' ? '' : a.mobile;
+    document.getElementById('accountCourse').value = a.studentRaw.course || a.course || '';
+    document.getElementById('accountSession').value = a.session || '';
+    document.getElementById('accountPassword').value = '';
+    new bootstrap.Modal(document.getElementById('studentAccountModal')).show();
+  }
+
+  document.getElementById('accountMobile').addEventListener('input', function(){
+    this.value = this.value.replace(/\D/g, '').slice(0, 10);
+  });
+
+  document.getElementById('saveStudentAccountBtn').addEventListener('click', function(){
+    var studentId = document.getElementById('accountStudentId').value;
+    if(!studentId) return;
+    var button = this;
+    var originalContent = button.innerHTML;
+    var password = document.getElementById('accountPassword').value;
+    var payload = {
+      student_code: document.getElementById('accountStudentCode').value.trim(),
+      name: document.getElementById('accountName').value.trim(),
+      email: document.getElementById('accountEmail').value.trim(),
+      mobile: document.getElementById('accountMobile').value.trim(),
+      course: document.getElementById('accountCourse').value.trim() || null,
+      session: document.getElementById('accountSession').value.trim() || null
+    };
+    button.disabled = true;
+    button.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Saving...';
+    mmcApi('/students/' + studentId, {
+      method:'PATCH',
+      headers:{ 'Content-Type':'application/json' },
+      body:JSON.stringify(payload)
+    })
+      .then(function(){
+        if(!password) return null;
+        return mmcApi('/students/' + studentId + '/password', {
+          method:'PATCH',
+          headers:{ 'Content-Type':'application/json' },
+          body:JSON.stringify({ password: password })
+        });
+      })
+      .then(function(){
+        var modal = bootstrap.Modal.getInstance(document.getElementById('studentAccountModal'));
+        if(modal) modal.hide();
+        mmcToast('Student account saved', password ? 'Student ID details and password have been updated.' : 'Student ID details have been updated.', 'success');
+        return loadApplications();
+      })
+      .catch(function(error){
+        mmcToast('Student account not saved', error.message || 'Unable to update student account.', 'danger');
+      })
+      .finally(function(){
+        button.disabled = false;
+        button.innerHTML = originalContent;
+      });
+  });
+  document.getElementById('saveEditBtn').addEventListener('click', function(){
+    var a = mmcFindByAppNo(editingAppNo);
+    if(!a) return;
+    var button = this;
+    var originalContent = button.innerHTML;
+    var payload = {
+      status: document.getElementById('editStatusSelect').value,
+      allotted_category: document.getElementById('editAllottedSelect').value || null,
+      hostel_id: document.getElementById('editHostelSelect').value ? Number(document.getElementById('editHostelSelect').value) : null,
+      room_id: document.getElementById('editRoomSelect').value ? Number(document.getElementById('editRoomSelect').value) : null
+    };
+    button.disabled = true;
+    button.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Saving...';
+    mmcApi('/applications/' + a.id + '/status', {
+      method:'PATCH',
+      headers:{ 'Content-Type':'application/json' },
+      body:JSON.stringify(payload)
+    })
+      .then(function(){
+        var modal = bootstrap.Modal.getInstance(document.getElementById('editStudentModal'));
+        if(modal) modal.hide();
+        mmcToast('Application updated', 'Student status and allotment are now visible in the student portal.', 'success');
+        return loadApplications();
+      })
+      .catch(function(error){
+        mmcToast('Application not saved', error.message || 'Unable to save application.', 'danger');
+      })
+      .finally(function(){
+        button.disabled = false;
+        button.innerHTML = originalContent;
+      });
+  });
+
+  function mmcDeleteStudent(i){
+    var a = applications[i];
+    if(!a) return;
+    mmcConfirm('Delete Application?', 'This will permanently remove ' + a.name + "'s application (" + a.appNo + ').', function(){
+      table.row('tr[data-appno="' + a.appNo + '"]').remove().draw(false);
+      mmcToast('Application not deleted', 'Deletion is only local until backend delete is connected.', 'warning');
+    });
+  }
+
+  loadApplications();
+</script>
+</body>
+</html>

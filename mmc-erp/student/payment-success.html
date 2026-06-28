@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Payment Status — Magadh Mahila College ERP Portal</title>
+<link rel="icon" href="../Magadh_Mahila_College.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="stylesheet" href="../css/theme.css">
+<link rel="stylesheet" href="../css/components.css">
+<style>
+  body{ background: var(--mmc-bg); min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px; }
+  .mmc-success-ring{ width:108px;height:108px;border-radius:50%;background:var(--mmc-success-bg);display:flex;align-items:center;justify-content:center;margin:0 auto 18px;animation:mmcPulseRing 2s infinite; }
+</style>
+</head>
+<body>
+
+<div class="mmc-card mmc-pop-in" style="max-width:480px;width:100%;position:relative;z-index:1;">
+  <div class="mmc-card-body text-center py-5">
+    <div class="mmc-success-ring">
+      <svg class="mmc-success-check" viewBox="0 0 90 90" style="width:64px;height:64px;"><circle cx="45" cy="45" r="40"/><path d="M27 46 L40 59 L64 31"/></svg>
+    </div>
+    <p class="mmc-eyebrow mb-1">Payment Status</p>
+    <h4 class="fw-700 mb-2" style="color:var(--mmc-navy);">No confirmed payment found</h4>
+    <p class="fs-13 text-secondary mb-4" id="typeDisplay">Payment gateway confirmation is not connected yet.</p>
+
+    <div class="mmc-card mb-4" style="background:var(--mmc-bg);box-shadow:none;">
+      <div class="mmc-card-body py-3">
+        <div class="mmc-kv"><span class="k">Transaction ID</span><span class="v" id="txnDisplay">-</span></div>
+        <div class="mmc-kv"><span class="k">Student Name</span><span class="v">Student</span></div>
+        <div class="mmc-kv"><span class="k">Date &amp; Time</span><span class="v" id="dateDisplay"></span></div>
+        <div class="mmc-kv"><span class="k">Payment Mode</span><span class="v">-</span></div>
+      </div>
+    </div>
+
+    <div class="d-flex gap-2">
+      <a href="receipt.html" class="btn btn-outline-maroon w-100"><i class="fa-solid fa-download me-1"></i> Receipt</a>
+      <a href="dashboard.html" class="btn btn-maroon w-100"><i class="fa-solid fa-grid-2 me-1"></i> Dashboard</a>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../js/common.js"></script>
+<script>
+  document.getElementById('txnDisplay').textContent = '-';
+  document.getElementById('dateDisplay').textContent = '-';
+</script>
+</body>
+</html>

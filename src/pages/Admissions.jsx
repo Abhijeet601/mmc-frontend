@@ -4,11 +4,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { FileText, UserCheck, CreditCard, CheckCircle, Calendar, Mail, Sparkles, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { openErpPortalInNewTab } from '@/lib/erpPortal';
 
 const Admissions = () => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
 
   const admissionSteps = [
     {
@@ -61,7 +60,7 @@ const Admissions = () => {
   ];
 
   const handleApplyClick = () => {
-    navigate('/erp/student');
+    openErpPortalInNewTab();
   };
 
   return (

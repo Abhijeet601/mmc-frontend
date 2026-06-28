@@ -1,0 +1,176 @@
+/* ===================================================================
+   MAGADH MAHILA COLLEGE — HOSTEL ADMISSION & MANAGEMENT ERP
+   theme.css — Design tokens, base resets, typography, animations
+   =================================================================== */
+
+:root{
+  /* ---- Brand palette ---- */
+  --mmc-maroon:        #800000;
+  --mmc-maroon-dark:   #5c0000;
+  --mmc-maroon-light:  #a3324a;
+  --mmc-maroon-50:     #fbecec;
+  --mmc-navy:          #0A1F44;
+  --mmc-navy-dark:     #061330;
+  --mmc-navy-light:    #16315e;
+  --mmc-navy-50:       #eef1f7;
+
+  /* ---- Signature accent (used sparingly: seals, ranks, official marks) ---- */
+  --mmc-brass:         #C9A227;
+  --mmc-brass-dark:    #9c7e1a;
+
+  /* ---- Surfaces ---- */
+  --mmc-bg:            #F8FAFC;
+  --mmc-card:          #FFFFFF;
+  --mmc-border:        #E6E9F0;
+  --mmc-ink:           #1B1F2A;
+  --mmc-ink-soft:      #5B6478;
+  --mmc-ink-faint:     #9AA3B5;
+
+  /* ---- Status ---- */
+  --mmc-success:       #22C55E;
+  --mmc-success-bg:    #E9FAEF;
+  --mmc-warning:       #F59E0B;
+  --mmc-warning-bg:    #FEF6E7;
+  --mmc-danger:        #EF4444;
+  --mmc-danger-bg:     #FDECEC;
+  --mmc-info:          #0EA5E9;
+  --mmc-info-bg:       #E8F7FD;
+
+  /* ---- Layout ---- */
+  --mmc-sidebar-w:      268px;
+  --mmc-sidebar-w-collapsed: 84px;
+  --mmc-topbar-h:       72px;
+  --mmc-radius-sm:      8px;
+  --mmc-radius:         14px;
+  --mmc-radius-lg:      20px;
+  --mmc-shadow-sm:      0 2px 8px rgba(10, 31, 68, 0.06);
+  --mmc-shadow:         0 8px 24px rgba(10, 31, 68, 0.08);
+  --mmc-shadow-lg:      0 16px 40px rgba(10, 31, 68, 0.14);
+
+  /* ---- Type ---- */
+  --mmc-font: 'Poppins', system-ui, -apple-system, sans-serif;
+}
+
+*{ box-sizing: border-box; }
+
+html{ scroll-behavior: smooth; }
+
+body{
+  font-family: var(--mmc-font);
+  background: var(--mmc-bg);
+  color: var(--mmc-ink);
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,h2,h3,h4,h5,h6{
+  font-family: var(--mmc-font);
+  font-weight: 700;
+  color: var(--mmc-navy);
+  letter-spacing: -0.01em;
+}
+
+a{ color: var(--mmc-maroon); text-decoration: none; }
+a:hover{ color: var(--mmc-maroon-dark); }
+
+::selection{ background: var(--mmc-maroon-light); color: #fff; }
+
+/* ---- Scrollbar ---- */
+::-webkit-scrollbar{ width: 8px; height: 8px; }
+::-webkit-scrollbar-track{ background: transparent; }
+::-webkit-scrollbar-thumb{ background: #cfd5e3; border-radius: 8px; }
+::-webkit-scrollbar-thumb:hover{ background: var(--mmc-maroon-light); }
+
+/* ---- Focus visibility (accessibility) ---- */
+a:focus-visible, button:focus-visible, input:focus-visible,
+select:focus-visible, textarea:focus-visible, .form-control:focus-visible{
+  outline: 2px solid var(--mmc-maroon);
+  outline-offset: 2px;
+}
+.form-control:focus, .form-select:focus{
+  border-color: var(--mmc-maroon-light);
+  box-shadow: 0 0 0 0.2rem rgba(128,0,0,0.12);
+}
+
+/* ---- Eyebrow / official label style (used on form section headers, not decoration) ---- */
+.mmc-eyebrow{
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--mmc-maroon);
+}
+.mmc-eyebrow.navy{ color: var(--mmc-navy); }
+.mmc-eyebrow.muted{ color: var(--mmc-ink-faint); }
+
+/* ---- Utility text ---- */
+.text-maroon{ color: var(--mmc-maroon) !important; }
+.text-navy{ color: var(--mmc-navy) !important; }
+.text-brass{ color: var(--mmc-brass-dark) !important; }
+.bg-maroon{ background: var(--mmc-maroon) !important; }
+.bg-navy{ background: var(--mmc-navy) !important; }
+.fw-600{ font-weight: 600; }
+.fs-13{ font-size: 13px; }
+.fs-12{ font-size: 12px; }
+
+/* ===================== ANIMATIONS ===================== */
+@keyframes mmcFadeIn{ from{ opacity:0; } to{ opacity:1; } }
+@keyframes mmcSlideUp{ from{ opacity:0; transform: translateY(18px); } to{ opacity:1; transform: translateY(0); } }
+@keyframes mmcSlideDown{ from{ opacity:0; transform: translateY(-10px); } to{ opacity:1; transform: translateY(0); } }
+@keyframes mmcPopIn{ from{ opacity:0; transform: scale(.92); } to{ opacity:1; transform: scale(1); } }
+@keyframes mmcShimmer{ 0%{ background-position: -480px 0; } 100%{ background-position: 480px 0; } }
+@keyframes mmcSpin{ to{ transform: rotate(360deg); } }
+@keyframes mmcPulseRing{ 0%{ box-shadow: 0 0 0 0 rgba(34,197,94,.35); } 100%{ box-shadow: 0 0 0 10px rgba(34,197,94,0); } }
+@keyframes mmcCheckDraw{ from{ stroke-dashoffset: 48; } to{ stroke-dashoffset: 0; } }
+@keyframes mmcFloat{ 0%,100%{ transform: translateY(0); } 50%{ transform: translateY(-8px); } }
+
+.mmc-fade-in{ animation: mmcFadeIn .5s ease both; }
+.mmc-slide-up{ animation: mmcSlideUp .55s cubic-bezier(.2,.8,.2,1) both; }
+.mmc-slide-down{ animation: mmcSlideDown .4s ease both; }
+.mmc-pop-in{ animation: mmcPopIn .35s cubic-bezier(.2,.8,.2,1) both; }
+.mmc-float{ animation: mmcFloat 5s ease-in-out infinite; }
+
+.mmc-delay-1{ animation-delay: .06s; }
+.mmc-delay-2{ animation-delay: .12s; }
+.mmc-delay-3{ animation-delay: .18s; }
+.mmc-delay-4{ animation-delay: .24s; }
+.mmc-delay-5{ animation-delay: .30s; }
+.mmc-delay-6{ animation-delay: .36s; }
+
+@media (prefers-reduced-motion: reduce){
+  *{ animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }
+}
+
+/* ---- Reveal-on-scroll hook (toggled via common.js IntersectionObserver) ---- */
+.mmc-reveal{ opacity: 0; transform: translateY(16px); transition: opacity .55s cubic-bezier(.2,.8,.2,1), transform .55s cubic-bezier(.2,.8,.2,1); }
+.mmc-reveal.is-visible{ opacity: 1; transform: translateY(0); }
+
+/* ---- Skeleton loading ---- */
+.mmc-skeleton{
+  background: linear-gradient(90deg, #eef1f6 25%, #f7f9fc 37%, #eef1f6 63%);
+  background-size: 960px 100%;
+  animation: mmcShimmer 1.4s linear infinite;
+  border-radius: 8px;
+}
+
+/* ---- Page loader / spinner ---- */
+.mmc-spinner{
+  width: 42px; height: 42px;
+  border-radius: 50%;
+  border: 4px solid var(--mmc-maroon-50);
+  border-top-color: var(--mmc-maroon);
+  animation: mmcSpin .8s linear infinite;
+}
+.mmc-spinner.sm{ width: 18px; height: 18px; border-width: 3px; }
+.mmc-page-loader{
+  position: fixed; inset: 0; z-index: 2000;
+  display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 14px;
+  background: var(--mmc-bg);
+  transition: opacity .4s ease, visibility .4s ease;
+}
+.mmc-page-loader.is-hidden{ opacity: 0; visibility: hidden; pointer-events: none; }
+.mmc-page-loader span{ font-size: 13px; color: var(--mmc-ink-soft); font-weight: 600; letter-spacing: .04em; }
+
+/* ---- Generic scroll reveal stagger helper ---- */
+.mmc-stagger > *{ opacity: 0; transform: translateY(14px); }

@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Room Management — Magadh Mahila College ERP Portal</title>
+<link rel="icon" href="../Magadh_Mahila_College.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="stylesheet" href="../css/theme.css">
+<link rel="stylesheet" href="../css/components.css">
+<style>
+  .mmc-hostel-tab{ padding:9px 18px; border-radius:10px; border:1.5px solid var(--mmc-border); background:#fff; font-weight:600; font-size:13.5px; color:var(--mmc-ink-soft); cursor:pointer; }
+  .mmc-hostel-tab.active{ border-color:var(--mmc-maroon); background:var(--mmc-maroon-50); color:var(--mmc-maroon); }
+  .mmc-floor-tab{ padding:8px 15px; border-radius:8px; border:1px solid var(--mmc-border); background:#fff; font-weight:600; font-size:12.5px; color:var(--mmc-ink-soft); cursor:pointer; }
+  .mmc-floor-tab:hover{ border-color:var(--mmc-maroon-light); color:var(--mmc-maroon); }
+  .mmc-floor-tab.active{ border-color:var(--mmc-maroon); background:var(--mmc-maroon); color:#fff; }
+  .mmc-floor-label{ font-size:12px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--mmc-ink-faint); margin: 18px 0 10px; }
+</style>
+</head>
+<body>
+
+<div id="mmcPageLoader" class="mmc-page-loader"><div class="mmc-spinner"></div><span>Loading room layout…</span></div>
+<div class="mmc-sidebar-backdrop"></div>
+
+<div class="mmc-app">
+  <aside class="mmc-sidebar">
+    <div class="mmc-sidebar-brand"><div class="mmc-seal md"><img src="../Magadh_Mahila_College.png" alt="Magadh Mahila College logo"></div><div class="mmc-sidebar-brand-text"><strong>Magadh Mahila College</strong><small>ERP PORTAL · ADMIN</small></div></div>
+    <nav class="mmc-sidebar-nav">
+      <div class="mmc-sidebar-section">Overview</div>
+      <a href="dashboard.html" class="mmc-sidebar-link"><i class="fa-solid fa-grid-2"></i><span>Dashboard</span></a>
+      <div class="mmc-sidebar-section">Admissions</div>
+      <a href="students.html" class="mmc-sidebar-link"><i class="fa-solid fa-users"></i><span>Student Management</span></a>
+      <a href="merit-management.html" class="mmc-sidebar-link"><i class="fa-solid fa-ranking-star"></i><span>Merit Management</span></a>
+      <div class="mmc-sidebar-section">Hostel Operations</div>
+      <a href="room-management.html" class="mmc-sidebar-link active"><i class="fa-solid fa-bed"></i><span>Room Management</span></a>
+      <a href="hostel-management.html" class="mmc-sidebar-link"><i class="fa-solid fa-building"></i><span>Hostel Management</span></a>
+      <div class="mmc-sidebar-section">Insights</div>
+      <a href="reports.html" class="mmc-sidebar-link"><i class="fa-solid fa-chart-line"></i><span>Reports</span></a>
+      <a href="notifications.html" class="mmc-sidebar-link"><i class="fa-solid fa-bell"></i><span>Notifications</span></a>
+      <div class="mmc-sidebar-section">System</div>
+      <a href="settings.html" class="mmc-sidebar-link"><i class="fa-solid fa-gear"></i><span>Settings</span></a>
+      <a href="../student/login.html" class="mmc-sidebar-link"><i class="fa-solid fa-arrow-right-from-bracket"></i><span>Logout</span></a>
+    </nav>
+    <div class="mmc-sidebar-foot"><div class="mmc-help-card"><i class="fa-solid fa-circle-info mb-2 text-brass"></i><div class="fw-600 text-white mb-1" style="font-size:12.5px;">Session 2026–27</div>Admission window closes 30 Jun 2026</div></div>
+  </aside>
+
+  <div class="mmc-main">
+    <header class="mmc-topbar">
+      <div class="mmc-topbar-left">
+        <button class="mmc-sidebar-toggle js-sidebar-toggle"><i class="fa-solid fa-bars"></i></button>
+        <div class="mmc-search d-none d-md-block"><i class="fa-solid fa-magnifying-glass"></i><input type="text" class="form-control" placeholder="Search room number..."></div>
+      </div>
+      <div class="mmc-topbar-right">
+        <div class="dropdown"><button class="mmc-icon-btn" data-bs-toggle="dropdown"><i class="fa-regular fa-bell"></i><span class="mmc-dot" id="mmcNotifBadge"></span></button>
+          <div class="dropdown-menu dropdown-menu-end p-0 shadow-lg" style="width:340px;border-radius:14px;overflow:hidden;"><div class="px-3 py-2 border-bottom fw-600 fs-13" style="color:var(--mmc-navy);">Notifications</div><div id="mmcNotifList" style="max-height:340px;overflow-y:auto;"></div></div>
+        </div>
+        <div class="dropdown"><div class="mmc-profile-trigger" data-bs-toggle="dropdown"><div class="mmc-avatar">AD</div><div class="mmc-profile-meta"><strong>Admin User</strong><small>Hostel Superintendent</small></div></div>
+          <ul class="dropdown-menu dropdown-menu-end shadow-lg" style="border-radius:12px;"><li><a class="dropdown-item" href="settings.html">Account Settings</a></li><li><a class="dropdown-item" href="../student/login.html">Logout</a></li></ul>
+        </div>
+      </div>
+    </header>
+
+    <main class="mmc-page">
+      <div class="mmc-breadcrumb"><a href="dashboard.html">Dashboard</a><span class="sep">/</span>Room Management</div>
+      <div class="mmc-page-head mb-3">
+        <div><div class="mmc-page-title">Room Management</div><div class="mmc-page-sub">Visual hostel-wise room layout. Click any room to manage allocation.</div></div>
+        <button class="btn btn-maroon" data-bs-toggle="modal" data-bs-target="#editRoomModal" onclick="mmcPrepRoomModal('new')"><i class="fa-solid fa-plus me-1"></i> Add Room</button>
+      </div>
+
+      <div class="d-flex gap-2 mb-3 flex-wrap" id="hostelTabs">
+        <div class="mmc-hostel-tab active">Loading hostels...</div>
+      </div>
+
+      <div class="mb-3">
+        <div class="mmc-floor-label mt-0 mb-2">Select Floor</div>
+        <div class="d-flex gap-2 flex-wrap" id="floorTabs">
+          <button type="button" class="mmc-floor-tab active">Loading floors...</button>
+        </div>
+      </div>
+
+      <div class="row g-3 mb-3">
+        <div class="col-sm-6 col-lg-3"><div class="mmc-stat-card mmc-slide-up mmc-delay-1"><div class="mmc-stat-icon mmc-icon-navy"><i class="fa-solid fa-door-closed"></i></div><div><div class="mmc-stat-value" id="statTotal">0</div><div class="mmc-stat-label">Total Rooms</div></div></div></div>
+        <div class="col-sm-6 col-lg-3"><div class="mmc-stat-card mmc-slide-up mmc-delay-2"><div class="mmc-stat-icon mmc-icon-success"><i class="fa-solid fa-door-open"></i></div><div><div class="mmc-stat-value" id="statAvail">0</div><div class="mmc-stat-label">Available</div></div></div></div>
+        <div class="col-sm-6 col-lg-3"><div class="mmc-stat-card mmc-slide-up mmc-delay-3"><div class="mmc-stat-icon mmc-icon-danger"><i class="fa-solid fa-user-group"></i></div><div><div class="mmc-stat-value" id="statOcc">0</div><div class="mmc-stat-label">Occupied</div></div></div></div>
+        <div class="col-sm-6 col-lg-3"><div class="mmc-stat-card mmc-slide-up mmc-delay-4"><div class="mmc-stat-icon mmc-icon-warning"><i class="fa-solid fa-screwdriver-wrench"></i></div><div><div class="mmc-stat-value" id="statMaint">0</div><div class="mmc-stat-label">Reserved / Maintenance</div></div></div></div>
+      </div>
+
+      <div class="mmc-card mmc-reveal">
+        <div class="mmc-card-body">
+          <div class="mmc-legend mb-2">
+            <span><i style="background:var(--mmc-success);"></i> Available</span>
+            <span><i style="background:var(--mmc-danger);"></i> Occupied</span>
+            <span><i style="background:var(--mmc-warning);"></i> Reserved</span>
+            <span><i style="background:#8a93a6;"></i> Maintenance</span>
+          </div>
+          <div id="roomGridWrap"></div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- ROOM ACTION MODAL -->
+<div class="modal fade" id="roomActionModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header"><h6 class="mb-0 fw-700" style="color:var(--mmc-navy);">Room <span id="raRoomNo"></span></h6><button class="btn-close" data-bs-dismiss="modal"></button></div>
+      <div class="modal-body">
+        <div class="row g-2 mb-3">
+          <div class="col-6"><div class="mmc-kv"><span class="k">Floor</span><span class="v" id="raFloor"></span></div></div>
+          <div class="col-6"><div class="mmc-kv"><span class="k">Building</span><span class="v" id="raBuilding"></span></div></div>
+          <div class="col-6"><div class="mmc-kv"><span class="k">Capacity</span><span class="v" id="raBeds"></span></div></div>
+          <div class="col-6"><div class="mmc-kv"><span class="k">Status</span><span class="v" id="raStatus"></span></div></div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Room Availability</label>
+          <select class="form-select" id="raStatusSelect">
+            <option value="available">Available</option>
+            <option value="reserved">Reserved / Not Available</option>
+            <option value="maintenance">Maintenance / Not Available</option>
+            <option value="occupied">Occupied</option>
+          </select>
+        </div>
+        <div id="raAllocateBlock" style="display:none;">
+          <label class="form-label">Allocate to Student</label>
+          <select class="form-select mb-2" id="raStudentSelect">
+            <option> — Pending — General</option>
+            <option> - Pending - BC</option>
+            <option> - Waitlisted - EBC</option>
+          </select>
+        </div>
+        <div id="raTransferBlock" style="display:none;">
+          <label class="form-label">Current Occupant</label>
+          <input type="text" class="form-control mb-2" value="" readonly>
+          <label class="form-label">Transfer To Room</label>
+          <select class="form-select" id="raTransferSelect"><option>No available rooms loaded</option></select>
+        </div>
+      </div>
+      <div class="modal-footer" id="raFooter"></div>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT/ADD ROOM MODAL -->
+<div class="modal fade" id="editRoomModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header"><h6 class="mb-0 fw-700" style="color:var(--mmc-navy);">Add / Edit Room</h6><button class="btn-close" data-bs-dismiss="modal"></button></div>
+      <div class="modal-body">
+        <div class="row g-3">
+          <div class="col-md-6"><label class="form-label">Room Number</label><input type="text" class="form-control" placeholder="Room number"></div>
+          <div class="col-md-6"><label class="form-label">Floor</label><input type="number" class="form-control" placeholder="Floor number"></div>
+          <div class="col-md-6"><label class="form-label">Building</label><select class="form-select"><option>A-Block</option><option>B-Block</option></select></div>
+          <div class="col-md-6"><label class="form-label">Capacity (Beds)</label><input type="number" class="form-control" value=""></div>
+        </div>
+      </div>
+      <div class="modal-footer"><button class="btn btn-ghost" data-bs-dismiss="modal">Cancel</button><button class="btn btn-maroon" data-bs-dismiss="modal" onclick="mmcToast('Room not saved','Room persistence is not connected yet.','warning')">Save Room</button></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../js/common.js"></script>
+<script>
+  var currentHostel = 'Mahima Hostel';
+  var rooms = [];
+
+  function mmcSwitchHostel(el, hostel){
+    document.querySelectorAll('.mmc-hostel-tab').forEach(function(t){ t.classList.remove('active'); });
+    el.classList.add('active');
+    currentHostel = hostel;
+    renderGrid();
+  }
+
+  function renderGrid(){
+    var counts = { available:0, occupied:0, reserved:0, maintenance:0 };
+    rooms.forEach(function(r){ counts[r.status]++; });
+    document.getElementById('statTotal').textContent = rooms.length;
+    document.getElementById('statAvail').textContent = counts.available;
+    document.getElementById('statOcc').textContent = counts.occupied;
+    document.getElementById('statMaint').textContent = counts.reserved + counts.maintenance;
+
+    var byFloor = {};
+    rooms.forEach(function(r){ (byFloor[r.floor] = byFloor[r.floor] || []).push(r); });
+
+    var html = '';
+    Object.keys(byFloor).sort().forEach(function(floor){
+      html += '<div class="mmc-floor-label">Floor ' + floor + ' — ' + byFloor[floor][0].building + '</div><div class="row g-2">';
+      byFloor[floor].forEach(function(r){
+        html += '<div class="col-6 col-sm-4 col-md-3 col-lg-2"><div class="mmc-room-card ' + r.status + '" onclick="mmcOpenRoom(' + r.room + ')">' +
+          '<div class="room-dot"></div><div class="room-no">' + r.room + '</div><div class="room-meta">' + r.beds + ' beds · ' + r.status + '</div></div></div>';
+      });
+      html += '</div>';
+    });
+    document.getElementById('roomGridWrap').innerHTML = html || '<div class="py-4 text-center fs-13 text-secondary">No rooms have been added yet.</div>';
+  }
+  renderGrid();
+
+  function mmcOpenRoom(roomNo){
+    var r = rooms.find(function(x){ return x.room === roomNo; });
+    if(!r) return;
+    document.getElementById('raRoomNo').textContent = r.room;
+    document.getElementById('raFloor').textContent = r.floor;
+    document.getElementById('raBuilding').textContent = r.building;
+    document.getElementById('raBeds').textContent = r.beds + ' beds';
+    document.getElementById('raStatus').innerHTML = '<span class="mmc-pill ' + (r.status==='available'?'success':r.status==='occupied'?'danger':r.status==='reserved'?'warning':'muted') + '"><i class="fa-solid fa-circle"></i> ' + r.status + '</span>';
+
+    document.getElementById('raAllocateBlock').style.display = (r.status === 'available') ? 'block' : 'none';
+    document.getElementById('raTransferBlock').style.display = (r.status === 'occupied') ? 'block' : 'none';
+
+    var footer = document.getElementById('raFooter');
+    if(r.status === 'available'){
+      footer.innerHTML = '<button class="btn btn-ghost" data-bs-dismiss="modal">Cancel</button><button class="btn btn-maroon" data-bs-dismiss="modal" onclick="mmcToast(\'Room not allocated\',\'Room allocation is not connected yet.\',\'warning\')"><i class="fa-solid fa-check me-1"></i> Allocate Room</button>';
+    } else if(r.status === 'occupied'){
+      footer.innerHTML = '<button class="btn btn-ghost" data-bs-dismiss="modal">Close</button>' +
+        '<button class="btn btn-outline-maroon" data-bs-dismiss="modal" onclick="mmcConfirm(\'Cancel Allocation?\',\'Allocation cancellation is not connected yet.\', function(){ mmcToast(\'Allocation not cancelled\',\'Room allocation persistence is not connected yet.\',\'warning\'); })">Cancel Allocation</button>' +
+        '<button class="btn btn-maroon" data-bs-dismiss="modal" onclick="mmcToast(\'Room not transferred\',\'Room transfer is not connected yet.\',\'warning\')"><i class="fa-solid fa-right-left me-1"></i> Transfer Room</button>';
+    } else {
+      footer.innerHTML = '<button class="btn btn-ghost" data-bs-dismiss="modal">Close</button><button class="btn btn-maroon" data-bs-dismiss="modal" onclick="mmcToast(\'Room not updated\',\'Room status updates are not connected yet.\',\'warning\')">Mark as Available</button>';
+    }
+    new bootstrap.Modal(document.getElementById('roomActionModal')).show();
+  }
+
+  function mmcPrepRoomModal(){}
+</script>
+<script src="../js/api.js"></script>
+<script>
+  var hostels = [];
+  var currentHostelId = null;
+  var currentFloor = 1;
+  var rooms = [];
+
+  function escapeHtml(value){
+    return String(value == null ? '' : value).replace(/[&<>"']/g, function(ch){
+      return ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' })[ch];
+    });
+  }
+
+  function roomSortValue(roomNumber){
+    var match = String(roomNumber || '').match(/^(\d+)([A-Za-z]*)$/);
+    if(!match) return { number: 0, suffix: String(roomNumber || '') };
+    return { number: parseInt(match[1], 10), suffix: match[2] || '' };
+  }
+
+  function sortRooms(a, b){
+    var af = roomFloor(a);
+    var bf = roomFloor(b);
+    if(af !== bf) return af - bf;
+    var ar = roomSortValue(a.room_number);
+    var br = roomSortValue(b.room_number);
+    if(ar.number !== br.number) return ar.number - br.number;
+    return ar.suffix.localeCompare(br.suffix);
+  }
+
+  function statusClass(status){
+    return status === 'available' ? 'success' : status === 'occupied' ? 'danger' : status === 'reserved' ? 'warning' : 'muted';
+  }
+
+  function statusApplyButton(roomId){
+    return '<button class="btn btn-maroon" type="button" onclick="mmcUpdateRoomStatus(' + Number(roomId) + ')"><i class="fa-solid fa-check me-1"></i> Apply Status</button>';
+  }
+
+  function hostelRooms(){
+    return rooms.filter(function(r){ return Number(r.hostel_id) === Number(currentHostelId); }).sort(sortRooms);
+  }
+
+  function currentHostelRooms(){
+    return hostelRooms().filter(function(r){ return roomBelongsToFloor(r, currentFloor); });
+  }
+
+  function selectedHostel(){
+    return hostels.find(function(h){ return Number(h.id) === Number(currentHostelId); }) || null;
+  }
+
+  function isVaidehiHostel(){
+    var hostel = selectedHostel();
+    return hostel && String(hostel.name || '').toLowerCase().indexOf('vaidehi') !== -1;
+  }
+
+  function floorTabsForCurrentHostel(){
+    if(isVaidehiHostel()){
+      return [{ floor: 1, label: 'Vaidehi Rooms', range: '1A-53C' }];
+    }
+    var result = [];
+    for(var floor = 1; floor <= 7; floor++){
+      result.push({ floor: floor, label: floorNameFromNumber(floor), range: floor + '01A-' + floor + '24C' });
+    }
+    return result;
+  }
+
+  function floorName(floor){
+    var match = floorTabsForCurrentHostel().find(function(item){ return item.floor === Number(floor); });
+    return match ? match.label : 'Floor ' + floor;
+  }
+
+  function floorRange(floor){
+    var match = floorTabsForCurrentHostel().find(function(item){ return item.floor === Number(floor); });
+    return match ? match.range : '';
+  }
+
+  function floorNameFromNumber(floor){
+    floor = Number(floor);
+    var mod100 = floor % 100;
+    var suffix = (mod100 >= 11 && mod100 <= 13) ? 'th' : floor % 10 === 1 ? 'st' : floor % 10 === 2 ? 'nd' : floor % 10 === 3 ? 'rd' : 'th';
+    return floor + suffix + ' Floor';
+  }
+
+  function roomFloor(room){
+    var digits = String(room.room_number || '').match(/\d+/);
+    if(digits && digits[0].length >= 3){
+      return Math.floor(parseInt(digits[0], 10) / 100);
+    }
+    return Number(room.floor || 0);
+  }
+
+  function roomBelongsToFloor(room, floor){
+    return roomFloor(room) === Number(floor);
+  }
+
+  function renderFloorTabs(){
+    var floorTabs = floorTabsForCurrentHostel();
+    if(!floorTabs.some(function(item){ return item.floor === Number(currentFloor); })) currentFloor = floorTabs[0].floor;
+    document.getElementById('floorTabs').innerHTML = floorTabs.map(function(item){
+      var roomCount = hostelRooms().filter(function(room){ return roomBelongsToFloor(room, item.floor); }).length;
+      return '<button type="button" class="mmc-floor-tab ' + (Number(currentFloor) === item.floor ? 'active' : '') + '" data-floor="' + item.floor + '">' + item.label + ' <span class="opacity-75">(' + roomCount + ')</span></button>';
+    }).join('');
+  }
+
+  document.getElementById('floorTabs').addEventListener('click', function(event){
+    var tab = event.target.closest('[data-floor]');
+    if(!tab) return;
+    currentFloor = Number(tab.dataset.floor);
+    renderFloorTabs();
+    renderGrid();
+  });
+
+  function renderHostelTabs(){
+    var tabs = document.getElementById('hostelTabs');
+    if(!hostels.length){
+      tabs.innerHTML = '<div class="mmc-hostel-tab active">No hostels found</div>';
+      return;
+    }
+
+    tabs.innerHTML = hostels.map(function(h){
+      return '<div class="mmc-hostel-tab ' + (Number(h.id) === Number(currentHostelId) ? 'active' : '') + '" onclick="mmcSwitchHostel(this,' + h.id + ')">' + escapeHtml(h.name) + '</div>';
+    }).join('');
+  }
+
+  mmcSwitchHostel = function(el, hostelId){
+    document.querySelectorAll('.mmc-hostel-tab').forEach(function(t){ t.classList.remove('active'); });
+    el.classList.add('active');
+    currentHostelId = hostelId;
+    currentFloor = floorTabsForCurrentHostel()[0].floor;
+    renderFloorTabs();
+    renderGrid();
+  };
+
+  renderGrid = function(){
+    var visibleRooms = currentHostelRooms();
+    var counts = { available:0, occupied:0, reserved:0, maintenance:0 };
+    visibleRooms.forEach(function(r){
+      if(counts[r.status] == null) counts[r.status] = 0;
+      counts[r.status]++;
+    });
+
+    document.getElementById('statTotal').textContent = visibleRooms.length;
+    document.getElementById('statAvail').textContent = counts.available;
+    document.getElementById('statOcc').textContent = counts.occupied;
+    document.getElementById('statMaint').textContent = counts.reserved + counts.maintenance;
+
+    var html = '<div class="mmc-floor-label">' + escapeHtml(floorName(currentFloor)) + (floorRange(currentFloor) ? ' - Rooms ' + escapeHtml(floorRange(currentFloor)) : '') + '</div><div class="row g-2">';
+    visibleRooms.forEach(function(r){
+        html += '<div class="col-6 col-sm-4 col-md-3 col-lg-2"><div class="mmc-room-card ' + escapeHtml(r.status) + '" onclick="mmcOpenRoom(' + r.id + ')">' +
+          '<div class="room-dot"></div><div class="room-no">' + escapeHtml(r.room_number) + '</div><div class="room-meta">' + Number(r.beds || 0) + ' bed' + (Number(r.beds || 0) === 1 ? '' : 's') + ' - ' + escapeHtml(r.status) + '</div></div></div>';
+    });
+    html += '</div>';
+    document.getElementById('roomGridWrap').innerHTML = visibleRooms.length ? html : '<div class="py-4 text-center fs-13 text-secondary">No rooms found on ' + escapeHtml(floorName(currentFloor)) + '.</div>';
+  };
+
+  mmcOpenRoom = function(roomId){
+    var r = rooms.find(function(x){ return Number(x.id) === Number(roomId); });
+    if(!r) return;
+    document.getElementById('raRoomNo').textContent = r.room_number;
+    document.getElementById('raFloor').textContent = r.floor;
+    document.getElementById('raBuilding').textContent = r.building || '-';
+    document.getElementById('raBeds').textContent = Number(r.beds || 0) + ' bed' + (Number(r.beds || 0) === 1 ? '' : 's');
+    document.getElementById('raStatus').innerHTML = '<span class="mmc-pill ' + statusClass(r.status) + '"><i class="fa-solid fa-circle"></i> ' + escapeHtml(r.status) + '</span>';
+    document.getElementById('raStatusSelect').value = r.status || 'available';
+
+    document.getElementById('raAllocateBlock').style.display = (r.status === 'available') ? 'block' : 'none';
+    document.getElementById('raTransferBlock').style.display = (r.status === 'occupied') ? 'block' : 'none';
+
+    var footer = document.getElementById('raFooter');
+    if(r.status === 'available'){
+      footer.innerHTML = '<button class="btn btn-ghost" data-bs-dismiss="modal">Cancel</button><button class="btn btn-outline-maroon" data-bs-dismiss="modal" onclick="mmcToast(\'Room not allocated\',\'Room allocation is not connected yet.\',\'warning\')"><i class="fa-solid fa-user-plus me-1"></i> Allocate Room</button>' + statusApplyButton(r.id);
+    } else if(r.status === 'occupied'){
+      footer.innerHTML = '<button class="btn btn-ghost" data-bs-dismiss="modal">Close</button>' +
+        '<button class="btn btn-outline-maroon" data-bs-dismiss="modal" onclick="mmcConfirm(\'Cancel Allocation?\',\'Allocation cancellation is not connected yet.\', function(){ mmcToast(\'Allocation not cancelled\',\'Room allocation persistence is not connected yet.\',\'warning\'); })">Cancel Allocation</button>' +
+        '<button class="btn btn-outline-maroon" data-bs-dismiss="modal" onclick="mmcToast(\'Room not transferred\',\'Room transfer is not connected yet.\',\'warning\')"><i class="fa-solid fa-right-left me-1"></i> Transfer Room</button>' + statusApplyButton(r.id);
+    } else {
+      footer.innerHTML = '<button class="btn btn-ghost" data-bs-dismiss="modal">Close</button>' + statusApplyButton(r.id);
+    }
+    new bootstrap.Modal(document.getElementById('roomActionModal')).show();
+  };
+
+  function mmcUpdateRoomStatus(roomId){
+    var statusSelect = document.getElementById('raStatusSelect');
+    var nextStatus = statusSelect.value;
+    var button = document.querySelector('#raFooter button[onclick="mmcUpdateRoomStatus(' + Number(roomId) + ')"]');
+    var originalContent = button ? button.innerHTML : '';
+    if(button){
+      button.disabled = true;
+      button.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Applying...';
+    }
+    mmcApi('/rooms/' + Number(roomId), {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: nextStatus })
+    })
+      .then(function(updatedRoom){
+        rooms = rooms.map(function(room){ return Number(room.id) === Number(updatedRoom.id) ? updatedRoom : room; });
+        renderFloorTabs();
+        renderGrid();
+        document.getElementById('raStatus').innerHTML = '<span class="mmc-pill ' + statusClass(updatedRoom.status) + '"><i class="fa-solid fa-circle"></i> ' + escapeHtml(updatedRoom.status) + '</span>';
+        document.getElementById('raAllocateBlock').style.display = (updatedRoom.status === 'available') ? 'block' : 'none';
+        document.getElementById('raTransferBlock').style.display = (updatedRoom.status === 'occupied') ? 'block' : 'none';
+        var modal = bootstrap.Modal.getInstance(document.getElementById('roomActionModal'));
+        if(modal) modal.hide();
+        mmcToast('Room status updated', 'Room ' + updatedRoom.room_number + ' is now ' + updatedRoom.status + '.', 'success');
+      })
+      .catch(function(err){
+        mmcToast('Status not updated', err.message || 'Unable to update room status.', 'danger');
+      })
+      .finally(function(){
+        if(button){
+          button.disabled = false;
+          button.innerHTML = originalContent;
+        }
+      });
+  }
+
+  function loadRooms(){
+    document.getElementById('roomGridWrap').innerHTML = '<div class="py-4 text-center fs-13 text-secondary">Loading rooms...</div>';
+    Promise.all([mmcApi('/hostels'), mmcApi('/rooms')])
+      .then(function(results){
+        hostels = results[0] || [];
+        rooms = results[1] || [];
+        if(!currentHostelId && hostels.length) currentHostelId = hostels[0].id;
+        currentFloor = floorTabsForCurrentHostel()[0].floor;
+        renderHostelTabs();
+        renderFloorTabs();
+        renderGrid();
+      })
+      .catch(function(err){
+        document.getElementById('roomGridWrap').innerHTML = '<div class="py-4 text-center fs-13 text-secondary">Unable to load rooms. Start the backend API and try again.</div>';
+        mmcToast('Rooms not loaded', err.message, 'warning');
+      });
+  }
+
+  loadRooms();
+</script>
+</body>
+</html>

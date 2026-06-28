@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Merit Management — Magadh Mahila College ERP Portal</title>
+<link rel="icon" href="../Magadh_Mahila_College.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
+<link rel="stylesheet" href="../css/theme.css">
+<link rel="stylesheet" href="../css/components.css">
+<style>
+  .dt-buttons{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom: 12px; }
+  .dt-button{ border:1px solid var(--mmc-border) !important; background:#fff !important; color:var(--mmc-navy) !important; border-radius:8px !important; font-size:12.5px !important; padding:7px 13px !important; }
+  .dt-button:hover{ background: var(--mmc-maroon-50) !important; color: var(--mmc-maroon) !important; }
+  .mmc-rank-badge{ width:30px;height:30px;border-radius:8px;background:var(--mmc-navy-50);color:var(--mmc-navy);display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:12.5px;}
+  .mmc-rank-badge.top{ background:linear-gradient(135deg,#e7c75a,var(--mmc-brass));color:#3a2c06; }
+</style>
+</head>
+<body>
+
+<div id="mmcPageLoader" class="mmc-page-loader"><div class="mmc-spinner"></div><span>Loading merit data…</span></div>
+<div class="mmc-sidebar-backdrop"></div>
+
+<div class="mmc-app">
+  <aside class="mmc-sidebar">
+    <div class="mmc-sidebar-brand"><div class="mmc-seal md"><img src="../Magadh_Mahila_College.png" alt="Magadh Mahila College logo"></div><div class="mmc-sidebar-brand-text"><strong>Magadh Mahila College</strong><small>ERP PORTAL · ADMIN</small></div></div>
+    <nav class="mmc-sidebar-nav">
+      <div class="mmc-sidebar-section">Overview</div>
+      <a href="dashboard.html" class="mmc-sidebar-link"><i class="fa-solid fa-grid-2"></i><span>Dashboard</span></a>
+      <div class="mmc-sidebar-section">Admissions</div>
+      <a href="students.html" class="mmc-sidebar-link"><i class="fa-solid fa-users"></i><span>Student Management</span></a>
+      <a href="merit-management.html" class="mmc-sidebar-link active"><i class="fa-solid fa-ranking-star"></i><span>Merit Management</span></a>
+      <div class="mmc-sidebar-section">Hostel Operations</div>
+      <a href="room-management.html" class="mmc-sidebar-link"><i class="fa-solid fa-bed"></i><span>Room Management</span></a>
+      <a href="hostel-management.html" class="mmc-sidebar-link"><i class="fa-solid fa-building"></i><span>Hostel Management</span></a>
+      <div class="mmc-sidebar-section">Insights</div>
+      <a href="reports.html" class="mmc-sidebar-link"><i class="fa-solid fa-chart-line"></i><span>Reports</span></a>
+      <a href="notifications.html" class="mmc-sidebar-link"><i class="fa-solid fa-bell"></i><span>Notifications</span></a>
+      <div class="mmc-sidebar-section">System</div>
+      <a href="settings.html" class="mmc-sidebar-link"><i class="fa-solid fa-gear"></i><span>Settings</span></a>
+      <a href="../student/login.html" class="mmc-sidebar-link"><i class="fa-solid fa-arrow-right-from-bracket"></i><span>Logout</span></a>
+    </nav>
+    <div class="mmc-sidebar-foot"><div class="mmc-help-card"><i class="fa-solid fa-circle-info mb-2 text-brass"></i><div class="fw-600 text-white mb-1" style="font-size:12.5px;">Session 2026–27</div>Admission window closes 30 Jun 2026</div></div>
+  </aside>
+
+  <div class="mmc-main">
+    <header class="mmc-topbar">
+      <div class="mmc-topbar-left">
+        <button class="mmc-sidebar-toggle js-sidebar-toggle"><i class="fa-solid fa-bars"></i></button>
+        <div class="mmc-search d-none d-md-block"><i class="fa-solid fa-magnifying-glass"></i><input type="text" class="form-control" placeholder="Search rank, name..."></div>
+      </div>
+      <div class="mmc-topbar-right">
+        <div class="dropdown"><button class="mmc-icon-btn" data-bs-toggle="dropdown"><i class="fa-regular fa-bell"></i><span class="mmc-dot" id="mmcNotifBadge"></span></button>
+          <div class="dropdown-menu dropdown-menu-end p-0 shadow-lg" style="width:340px;border-radius:14px;overflow:hidden;"><div class="px-3 py-2 border-bottom fw-600 fs-13" style="color:var(--mmc-navy);">Notifications</div><div id="mmcNotifList" style="max-height:340px;overflow-y:auto;"></div></div>
+        </div>
+        <div class="dropdown"><div class="mmc-profile-trigger" data-bs-toggle="dropdown"><div class="mmc-avatar">AD</div><div class="mmc-profile-meta"><strong>Admin User</strong><small>Hostel Superintendent</small></div></div>
+          <ul class="dropdown-menu dropdown-menu-end shadow-lg" style="border-radius:12px;"><li><a class="dropdown-item" href="settings.html">Account Settings</a></li><li><a class="dropdown-item" href="../student/login.html">Logout</a></li></ul>
+        </div>
+      </div>
+    </header>
+
+    <main class="mmc-page">
+      <div class="mmc-breadcrumb"><a href="dashboard.html">Dashboard</a><span class="sep">/</span>Merit Management</div>
+      <div class="mmc-page-head mb-3">
+        <div><div class="mmc-page-title">Merit Management</div><div class="mmc-page-sub">Generate, review and publish the hostel admission merit list.</div></div>
+        <div class="d-flex gap-2 flex-wrap">
+          <button class="btn btn-ghost" onclick="mmcToast('Template unavailable','Merit template generation is not connected yet.','warning')"><i class="fa-solid fa-file-arrow-down me-1"></i> Download Template</button>
+          <button class="btn btn-ghost" data-bs-toggle="modal" data-bs-target="#bulkImportModal"><i class="fa-solid fa-cloud-arrow-up me-1"></i> Upload Merit Sheet</button>
+          <button class="btn btn-outline-maroon" data-bs-toggle="modal" data-bs-target="#generateMeritModal"><i class="fa-solid fa-wand-magic-sparkles me-1"></i> Generate Merit</button>
+          <button class="btn btn-maroon" onclick="mmcConfirm('Publish Merit List?','Publishing is not connected to the backend yet.', function(){ mmcToast('Merit list not published','Backend publishing and notifications are not connected yet.','warning'); }, 'navy')"><i class="fa-solid fa-bullhorn me-1"></i> Publish Merit List</button>
+        </div>
+      </div>
+
+      <div class="row g-3 mb-3">
+        <div class="col-sm-4">
+          <div class="mmc-stat-card mmc-slide-up mmc-delay-1"><div class="mmc-stat-icon mmc-icon-navy"><i class="fa-solid fa-list-ol"></i></div><div><div class="mmc-stat-value"><span class="mmc-counter" data-target="0">0</span></div><div class="mmc-stat-label">Total Ranked Students</div></div></div>
+        </div>
+        <div class="col-sm-4">
+          <div class="mmc-stat-card mmc-slide-up mmc-delay-2"><div class="mmc-stat-icon mmc-icon-warning"><i class="fa-solid fa-clock-rotate-left"></i></div><div><div class="mmc-stat-value">Draft</div><div class="mmc-stat-label">Publication Status</div></div></div>
+        </div>
+        <div class="col-sm-4">
+          <div class="mmc-stat-card mmc-slide-up mmc-delay-3"><div class="mmc-stat-icon mmc-icon-success"><i class="fa-solid fa-calendar-check"></i></div><div><div class="mmc-stat-value">-</div><div class="mmc-stat-label">Last Generated</div></div></div>
+        </div>
+      </div>
+
+      <div class="mmc-card mmc-table-card mmc-reveal">
+        <div class="mmc-card-body">
+          <div class="row g-2 mb-3">
+            <div class="col-md-3"><select class="form-select"><option>All Categories</option><option value="UR">UR - Unreserved</option><option value="EWS">EWS - Economically Weaker Section</option><option value="BC">BC - Backward Class</option><option value="EBC">EBC - Extremely Backward Class</option><option value="SC">SC - Scheduled Caste</option><option value="ST">ST - Scheduled Tribe</option></select></div>
+            <div class="col-md-3"><select class="form-select"><option>All Hostels</option><option>Mahima Hostel</option><option>Vaidehi Hostel</option></select></div>
+            <div class="col-md-3"><select class="form-select"><option>All Status</option><option>Selected</option><option>Waitlisted</option></select></div>
+          </div>
+          <table id="meritTable" class="table mmc-table-card" style="width:100%;">
+            <thead><tr><th>Rank</th><th>Name</th><th>Percentage</th><th>Applied Cat.</th><th>Allotted Cat.</th><th>Hostel</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="meritBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- GENERATE MERIT WIZARD MODAL -->
+<div class="modal fade" id="generateMeritModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header"><h6 class="mb-0 fw-700" style="color:var(--mmc-navy);">Merit Generation Wizard</h6><button class="btn-close" data-bs-dismiss="modal"></button></div>
+      <div class="modal-body" data-wizard>
+        <ul class="mmc-stepper mb-3">
+          <li class="mmc-step active" data-step="1"><div class="mmc-step-circle">1</div><div class="mmc-step-label">Criteria</div></li>
+          <li class="mmc-step" data-step="2"><div class="mmc-step-circle">2</div><div class="mmc-step-label">Preview</div></li>
+          <li class="mmc-step" data-step="3"><div class="mmc-step-circle">3</div><div class="mmc-step-label">Done</div></li>
+        </ul>
+
+        <div class="mmc-wizard-panel" data-step="1">
+          <div class="row g-3">
+            <div class="col-md-6"><label class="form-label">Rank By</label><select class="form-select"><option>Intermediate Percentage</option><option>Entrance Score</option><option>Combined Weighted Score</option></select></div>
+            <div class="col-md-6"><label class="form-label">Session</label><select class="form-select"><option>2026 – 2027</option></select></div>
+            <div class="col-md-6"><label class="form-label">Apply Category Reservation</label><select class="form-select"><option>Yes — As per govt. norms</option><option>No</option></select></div>
+            <div class="col-md-6"><label class="form-label">Total Seats Available</label><input type="number" class="form-control" value=""></div>
+          </div>
+          <div class="d-flex justify-content-end mt-4"><button class="btn btn-maroon" data-wizard-next>Preview Merit List <i class="fa-solid fa-arrow-right ms-1"></i></button></div>
+        </div>
+
+        <div class="mmc-wizard-panel" data-step="2" style="display:none;">
+          <p class="fs-13 text-secondary mb-2">Preview of top-ranked candidates based on selected criteria:</p>
+          <div class="table-responsive" style="max-height:280px;">
+            <table class="table mmc-table-card mb-0">
+              <thead><tr><th>Rank</th><th>Name</th><th>%</th><th>Category</th><th>Hostel</th></tr></thead>
+              <tbody id="genPreviewBody"></tbody>
+            </table>
+          </div>
+          <div class="d-flex justify-content-between mt-4">
+            <button class="btn btn-ghost" data-wizard-prev><i class="fa-solid fa-arrow-left me-1"></i> Back</button>
+            <button class="btn btn-maroon" data-wizard-next>Confirm &amp; Generate <i class="fa-solid fa-check ms-1"></i></button>
+          </div>
+        </div>
+
+        <div class="mmc-wizard-panel text-center py-3" data-step="3" style="display:none;">
+          <svg class="mmc-success-check mx-auto mb-3" viewBox="0 0 90 90"><circle cx="45" cy="45" r="40"/><path d="M27 46 L40 59 L64 31"/></svg>
+          <h6 class="fw-700 mb-1" style="color:var(--mmc-navy);">Merit List Generated</h6>
+          <p class="fs-13 text-secondary mb-4">No students are ranked yet. Upload or connect application data before publishing.</p>
+          <button class="btn btn-maroon" data-bs-dismiss="modal">Done</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BULK IMPORT MODAL -->
+<div class="modal fade" id="bulkImportModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header"><h6 class="mb-0 fw-700" style="color:var(--mmc-navy);">Upload Merit Sheet</h6><button class="btn-close" data-bs-dismiss="modal"></button></div>
+      <div class="modal-body">
+        <div class="mmc-dropzone mb-3" id="bulkZone"><i class="fa-solid fa-file-excel"></i><div class="fw-600 fs-13">Click or drag your Excel/CSV file here</div><div class="hint">.xlsx or .csv, max 5MB — use the provided template</div></div>
+        <input type="file" id="bulkInput" class="d-none" accept=".xlsx,.csv">
+        <div id="bulkChips"></div>
+
+        <div id="bulkPreviewBlock" style="display:none;">
+          <div class="mmc-divider-label">Preview (first 4 records)</div>
+          <div class="table-responsive mb-3">
+            <table class="table mmc-table-card mb-0">
+              <thead><tr><th>Rank</th><th>Name</th><th>%</th><th>Category</th><th>Status</th></tr></thead>
+              <tbody><tr><td colspan="5" class="text-center text-secondary py-3">No preview records available.</td></tr></tbody>
+            </table>
+          </div>
+          <div class="alert mmc-pill warning d-inline-flex"><i class="fa-solid fa-triangle-exclamation me-1"></i> 1 row has a validation error and will be skipped on import.</div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" data-bs-dismiss="modal">Cancel</button>
+        <button class="btn btn-maroon" id="confirmImportBtn"><i class="fa-solid fa-cloud-arrow-up me-1"></i> Import Valid Records</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../js/common.js"></script>
+<script>
+  var statusPill = { Selected:'success', Waitlisted:'warning' };
+
+  function renderMeritRow(m){
+    return '<tr><td><span class="mmc-rank-badge ' + (m.rank<=3?'top':'') + '">#' + m.rank + '</span></td><td>' + m.name + '</td><td>' + m.percentage + '%</td>' +
+      '<td><span class="mmc-pill muted">' + m.appliedCat + '</span></td><td><span class="mmc-pill muted">' + m.allottedCat + '</span></td><td>' + m.hostel + '</td>' +
+      '<td><span class="mmc-pill ' + (statusPill[m.status]||'muted') + '"><i class="fa-solid fa-circle"></i> ' + m.status + '</span></td>' +
+      '<td><button class="btn btn-sm btn-ghost"><i class="fa-solid fa-pen"></i></button><button class="btn btn-sm btn-ghost text-danger"><i class="fa-solid fa-trash"></i></button></td></tr>';
+  }
+  var meritList = [];
+  document.getElementById('meritBody').innerHTML = meritList.map(renderMeritRow).join('');
+  document.getElementById('genPreviewBody').innerHTML = meritList.slice(0,5).map(function(m){
+    return '<tr><td>#' + m.rank + '</td><td>' + m.name + '</td><td>' + m.percentage + '%</td><td>' + m.appliedCat + '</td><td>' + m.hostel + '</td></tr>';
+  }).join('') || '<tr><td colspan="5" class="text-center text-secondary py-3">No merit records available.</td></tr>';
+
+  $('#meritTable').DataTable({
+    pageLength: 8, lengthMenu:[5,8,10,25,50],
+    language: { search:'', searchPlaceholder:'Search by name or rank...' },
+    dom: "<'row mb-2'<'col-sm-6'B><'col-sm-6 text-end'f>><'table-responsive't><'row mt-2'<'col-sm-6'l><'col-sm-6'i><'col-sm-12'p>>",
+    buttons: ['copy','csv','excel','pdf','print']
+  });
+
+  mmcInitWizard('[data-wizard]');
+
+  mmcInitDropzone('#bulkZone','#bulkInput','#bulkChips');
+  document.getElementById('bulkInput').addEventListener('change', function(){
+    if(this.files.length) document.getElementById('bulkPreviewBlock').style.display = 'block';
+  });
+  document.getElementById('confirmImportBtn').addEventListener('click', function(){
+    bootstrap.Modal.getInstance(document.getElementById('bulkImportModal')).hide();
+    mmcToast('Import not completed', 'Merit import is not connected yet.', 'warning');
+  });
+</script>
+</body>
+</html>
