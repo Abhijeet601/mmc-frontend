@@ -176,7 +176,7 @@
 .mmc-seal{
   display: inline-flex; align-items: center; justify-content: center;
   border-radius: 50%;
-  background: #fff url("../Magadh_Mahila_College.png") center / contain no-repeat;
+  background: #fff url("https://pub-56b2773adb554e88a3d5fbc74f0167bc.r2.dev/branding/Magadh_Mahila_College.png") center / contain no-repeat;
   color: transparent; box-shadow: 0 2px 8px rgba(10,31,68,.16);
   font-weight: 700;
   overflow: hidden;

@@ -4,11 +4,18 @@ const MMC_R2_PUBLIC_URL = 'https://pub-56b2773adb554e88a3d5fbc74f0167bc.r2.dev';
 function mmcApi(path, options) {
   return fetch(MMC_API_BASE + path, options || {}).then(function(res) {
     if (!res.ok) {
-      return res.json().then(function(data) {
+      return res.json().catch(function() {
+        throw new Error('Server returned status ' + res.status);
+      }).then(function(data) {
         throw new Error(data.detail || 'API request failed.');
       });
     }
     return res.json();
+  }).catch(function(err) {
+    if (err.message === 'Failed to fetch' || err.message.includes('NetworkError') || err.message.includes('CORS')) {
+      throw new Error('Server is unreachable. The backend at ' + MMC_API_BASE + ' may be sleeping or down. Please try again in a moment.');
+    }
+    throw err;
   });
 }
 
