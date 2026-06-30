@@ -67,17 +67,21 @@
     var original = btn.innerHTML;
     btn.disabled = true;
     btn.innerHTML = '<span class="mmc-spinner sm" style="border-color:rgba(255,255,255,.35);border-top-color:#fff;display:inline-block;vertical-align:middle;margin-right:8px;"></span> Signing in...';
-    mmcApi('/auth/login', {
+    mmcApi('/admin/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        identifier: document.getElementById('adminIdentifier').value.trim(),
-        password: document.getElementById('adminPwd').value,
-        role: 'admin'
-      })
+      body: {
+        username: document.getElementById('adminIdentifier').value.trim(),
+        password: document.getElementById('adminPwd').value
+      }
     })
       .then(function(data){
-        sessionStorage.setItem('mmc_admin_user', JSON.stringify(data.user));
+        sessionStorage.setItem('mmc_admin_user', JSON.stringify({
+          id: data.id,
+          username: data.username || document.getElementById('adminIdentifier').value.trim(),
+          access_token: data.access_token,
+          role: 'admin'
+        }));
         window.location.href = 'dashboard.html';
       })
       .catch(function(err){

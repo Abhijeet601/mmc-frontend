@@ -1,36 +1,116 @@
-const MMC_API_BASE = 'https://hostel-erp-backend-production.up.railway.app';
+const MMC_DEFAULT_API_BASE = 'https://mmc-backend-production-1fa6.up.railway.app';
+const MMC_API_BASE = (
+  window.MMC_API_BASE ||
+  localStorage.getItem('mmc_api_base') ||
+  MMC_DEFAULT_API_BASE
+).replace(/\/+$/, '');
 const MMC_R2_PUBLIC_URL = 'https://pub-56b2773adb554e88a3d5fbc74f0167bc.r2.dev';
+const MMC_REQUEST_TIMEOUT_MS = 30000;
+
+function mmcApiPath(path) {
+  return path.indexOf('/api/') === 0 ? path : '/api' + (path.charAt(0) === '/' ? path : '/' + path);
+}
+
+function mmcParseErrorBody(text, status) {
+  if (!text) return 'Request failed with status ' + status + '.';
+  try {
+    var data = JSON.parse(text);
+    if (typeof data.detail === 'string') return data.detail;
+    if (Array.isArray(data.detail)) {
+      return data.detail.map(function(item) { return item.msg || item; }).filter(Boolean).join(', ');
+    }
+    if (typeof data.message === 'string') return data.message;
+  } catch (error) {
+    return text;
+  }
+  return 'Request failed with status ' + status + '.';
+}
+
+function mmcReadJsonResponse(xhr, path) {
+  var contentType = xhr.getResponseHeader('content-type') || '';
+  if (xhr.status === 204) return null;
+  if (contentType.toLowerCase().indexOf('application/json') === -1) {
+    throw new Error('The ERP API returned an unexpected response for ' + path + '. Please verify the API base URL.');
+  }
+  return xhr.responseText ? JSON.parse(xhr.responseText) : null;
+}
+
+function mmcStoredSession(kind) {
+  try {
+    return JSON.parse(sessionStorage.getItem(kind === 'admin' ? 'mmc_admin_user' : 'mmc_student_user') || 'null');
+  } catch (error) {
+    return null;
+  }
+}
+
+function mmcAuthTokenForPath(path) {
+  var adminSession = mmcStoredSession('admin');
+  var studentSession = mmcStoredSession('student');
+  if (path.indexOf('/api/admin/') === 0 || path.indexOf('/api/activity-logs') === 0) {
+    return adminSession && adminSession.access_token;
+  }
+  return (studentSession && studentSession.access_token) || (adminSession && adminSession.access_token) || '';
+}
 
 function mmcApi(path, options) {
-  return fetch(MMC_API_BASE + path, options || {}).then(function(res) {
-    if (!res.ok) {
-      return res.json().catch(function() {
-        throw new Error('Server returned status ' + res.status);
-      }).then(function(data) {
-        throw new Error(data.detail || 'API request failed.');
-      });
+  options = options || {};
+  var apiPath = mmcApiPath(path);
+  var url = MMC_API_BASE + apiPath;
+  var method = options.method || 'GET';
+  var body = options.body;
+  var headers = Object.assign({}, options.headers || {});
+  var isFormData = body instanceof FormData;
+  var token = options.token || mmcAuthTokenForPath(apiPath);
+
+  if (token) headers.Authorization = 'Bearer ' + token;
+  if (body && !isFormData && !headers['Content-Type']) headers['Content-Type'] = 'application/json';
+
+  return new Promise(function(resolve, reject) {
+    var xhr = new XMLHttpRequest();
+    var completed = false;
+    var timeoutId = setTimeout(function() {
+      if (completed) return;
+      xhr.abort();
+      reject(new Error('Request timed out after 30 seconds. Please check your connection and try again.'));
+    }, MMC_REQUEST_TIMEOUT_MS);
+
+    xhr.open(method, url, true);
+    Object.keys(headers).forEach(function(key) { xhr.setRequestHeader(key, headers[key]); });
+    if (xhr.upload && typeof options.onUploadProgress === 'function') {
+      xhr.upload.onprogress = function(event) {
+        if (event.lengthComputable) options.onUploadProgress(Math.round((event.loaded / event.total) * 100));
+      };
     }
-    return res.json();
-  }).catch(function(err) {
-    if (err.message === 'Failed to fetch' || err.message.includes('NetworkError') || err.message.includes('CORS')) {
-      throw new Error('Server is unreachable. The backend at ' + MMC_API_BASE + ' may be sleeping or down. Please try again in a moment.');
-    }
-    throw err;
+    xhr.onload = function() {
+      completed = true;
+      clearTimeout(timeoutId);
+      if (xhr.status < 200 || xhr.status >= 300) {
+        reject(new Error(mmcParseErrorBody(xhr.responseText, xhr.status)));
+        return;
+      }
+      try {
+        resolve(mmcReadJsonResponse(xhr, apiPath));
+      } catch (error) {
+        reject(error);
+      }
+    };
+    xhr.onerror = function() {
+      completed = true;
+      clearTimeout(timeoutId);
+      reject(new Error('Unable to reach the ERP API at ' + MMC_API_BASE + '. Please check the backend service and network connection.'));
+    };
+    xhr.onabort = function() {
+      if (completed) return;
+      completed = true;
+      clearTimeout(timeoutId);
+      reject(new Error('The request was cancelled before the server responded.'));
+    };
+    xhr.send(body ? (isFormData || typeof body === 'string' ? body : JSON.stringify(body)) : null);
   });
 }
 
-function mmcApiUpload(path, formData) {
-  return fetch(MMC_API_BASE + path, {
-    method: 'POST',
-    body: formData
-  }).then(function(res) {
-    if (!res.ok) {
-      return res.json().then(function(data) {
-        throw new Error(data.detail || 'Upload failed.');
-      });
-    }
-    return res.json();
-  });
+function mmcApiUpload(path, formData, onUploadProgress) {
+  return mmcApi(path, { method: 'POST', body: formData, onUploadProgress: onUploadProgress });
 }
 
 function mmcFileUrl(pathOrUrl) {
@@ -45,19 +125,11 @@ function mmcReceiptUrl(receipt) {
 }
 
 function mmcCurrentStudent() {
-  try {
-    return JSON.parse(sessionStorage.getItem('mmc_student_user') || 'null');
-  } catch (err) {
-    return null;
-  }
+  return mmcStoredSession('student');
 }
 
 function mmcCurrentAdmin() {
-  try {
-    return JSON.parse(sessionStorage.getItem('mmc_admin_user') || 'null');
-  } catch (err) {
-    return null;
-  }
+  return mmcStoredSession('admin');
 }
 
 function mmcInitialsFromName(name) {

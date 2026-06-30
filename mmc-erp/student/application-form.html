@@ -128,7 +128,7 @@
             </div>
             <div id="existingUploadBlock" style="display:none;">
               <label class="form-label">Upload Previous Year's Receipt</label>
-              <div class="mmc-dropzone" id="prevReceiptZone"><i class="fa-solid fa-cloud-arrow-up"></i><div class="fw-600 fs-13">Click or drag file to upload</div><div class="hint">PDF, JPG, JPEG or PNG, 200-250 KB</div></div>
+              <div class="mmc-dropzone" id="prevReceiptZone"><i class="fa-solid fa-cloud-arrow-up"></i><div class="fw-600 fs-13">Click or drag file to upload</div><div class="hint">PDF, JPG, JPEG or PNG, max 250 KB</div></div>
               <input type="file" id="prevReceiptInput" class="d-none" accept=".pdf,.jpg,.jpeg,.png">
               <div id="prevReceiptChips"></div><div id="prevReceiptStatus" class="upload-status"></div>
             </div>
@@ -229,27 +229,27 @@
             <div class="row g-3">
               <div class="col-md-6">
                 <label class="form-label">Passport Size Photograph *</label>
-                <div class="mmc-dropzone" id="zone1"><i class="fa-solid fa-image"></i><div class="fw-600 fs-13">Click or drag photo</div><div class="hint">JPG, JPEG or PNG, 200-250 KB</div></div>
+                <div class="mmc-dropzone" id="zone1"><i class="fa-solid fa-image"></i><div class="fw-600 fs-13">Click or drag photo</div><div class="hint">JPG, JPEG or PNG, max 250 KB</div></div>
                 <input type="file" id="input1" class="d-none" accept=".jpg,.jpeg,.png" required><div id="chips1"></div><div id="status1" class="upload-status"></div><img id="photoPreview" class="upload-preview d-none" alt="Photograph preview">
               </div>
               <div class="col-md-6">
                 <label class="form-label">Aadhar Card *</label>
-                <div class="mmc-dropzone" id="zone2"><i class="fa-solid fa-id-card"></i><div class="fw-600 fs-13">Click or drag file</div><div class="hint">PDF, JPG, JPEG or PNG, 200-250 KB</div></div>
+                <div class="mmc-dropzone" id="zone2"><i class="fa-solid fa-id-card"></i><div class="fw-600 fs-13">Click or drag file</div><div class="hint">PDF, JPG, JPEG or PNG, max 250 KB</div></div>
                 <input type="file" id="input2" class="d-none" accept=".pdf,.jpg,.jpeg,.png" required><div id="chips2"></div><div id="status2" class="upload-status"></div>
               </div>
               <div class="col-md-6">
                 <label class="form-label">Admission Receipt *</label>
-                <div class="mmc-dropzone" id="zone3"><i class="fa-solid fa-file-invoice"></i><div class="fw-600 fs-13">Click or drag file</div><div class="hint">PDF, JPG, JPEG or PNG, 200-250 KB</div></div>
+                <div class="mmc-dropzone" id="zone3"><i class="fa-solid fa-file-invoice"></i><div class="fw-600 fs-13">Click or drag file</div><div class="hint">PDF, JPG, JPEG or PNG, max 250 KB</div></div>
                 <input type="file" id="input3" class="d-none" accept=".pdf,.jpg,.jpeg,.png" required><div id="chips3"></div><div id="status3" class="upload-status"></div>
               </div>
               <div class="col-md-6" id="incomeDocument" hidden>
                 <label class="form-label">Income Certificate *</label>
-                <div class="mmc-dropzone" id="zone4"><i class="fa-solid fa-file-contract"></i><div class="fw-600 fs-13">Click or drag file</div><div class="hint">PDF, JPG, JPEG or PNG, 200-250 KB</div></div>
+                <div class="mmc-dropzone" id="zone4"><i class="fa-solid fa-file-contract"></i><div class="fw-600 fs-13">Click or drag file</div><div class="hint">PDF, JPG, JPEG or PNG, max 250 KB</div></div>
                 <input type="file" id="input4" class="d-none" accept=".pdf,.jpg,.jpeg,.png"><div id="chips4"></div><div id="status4" class="upload-status"></div>
               </div>
               <div class="col-md-6" id="casteDocument" hidden>
                 <label class="form-label">Caste Certificate *</label>
-                <div class="mmc-dropzone" id="zone5"><i class="fa-solid fa-stamp"></i><div class="fw-600 fs-13">Click or drag file</div><div class="hint">PDF, JPG, JPEG or PNG, 200-250 KB</div></div>
+                <div class="mmc-dropzone" id="zone5"><i class="fa-solid fa-stamp"></i><div class="fw-600 fs-13">Click or drag file</div><div class="hint">PDF, JPG, JPEG or PNG, max 250 KB</div></div>
                 <input type="file" id="input5" class="d-none" accept=".pdf,.jpg,.jpeg,.png"><div id="chips5"></div><div id="status5" class="upload-status"></div>
               </div>
             </div>
@@ -313,8 +313,6 @@
     }
     return workflow;
   }).catch(function(){});
-  // Accept the displayed 200-250 KB range from both decimal and binary file-size tools.
-  var MIN_BYTES = 200 * 1000;
   var MAX_BYTES = 250 * 1024;
   var CATEGORY_NAMES = { UR:'Unreserved', BC:'Backward Class', EBC:'Extremely Backward Class', EWS:'Economically Weaker Section', SC:'Scheduled Caste', ST:'Scheduled Tribe' };
   var COURSE_OPTIONS = { UG:['BA','BSc','BCom','BBA','BCA','Other'], PG:['MA','MSc','MCom','MBA','MCA','Other'] };
@@ -390,7 +388,7 @@
     var validExtension = isPhoto ? /\.(jpe?g|png)$/i.test(file.name) : /\.(pdf|jpe?g|png)$/i.test(file.name);
     var message = '';
     if(!validExtension) message = isPhoto ? 'Photo must be JPG, JPEG or PNG.' : 'Document must be PDF, JPG, JPEG or PNG.';
-    else if(file.size < MIN_BYTES || file.size > MAX_BYTES) message = isPhoto ? 'Photo size must be between 200 KB and 250 KB.' : 'Document size must be between 200 KB and 250 KB.';
+    else if(file.size > MAX_BYTES) message = isPhoto ? 'Photo must be 250 KB or smaller.' : 'Document must be 250 KB or smaller.';
     if(message){
       input.value = '';
       input.setCustomValidity(message);
@@ -403,7 +401,7 @@
     filesValid[input.id] = true;
     var icon = file.type === 'application/pdf' ? 'fa-file-pdf' : 'fa-file-image';
     chips.innerHTML = '<div class="mmc-upload-chip"><i class="fa-solid ' + icon + '"></i><span>' + file.name.replace(/[<>]/g,'') + '</span><span class="text-body-tertiary ms-1">(' + (file.size / 1024).toFixed(1) + ' KB)</span></div>';
-    status.innerHTML = '<span class="text-success"><i class="fa-solid fa-circle-check me-1"></i>Upload ready</span>';
+    status.innerHTML = '<span class="text-success"><i class="fa-solid fa-circle-check me-1"></i>Selected and ready to upload</span><div class="progress mt-1" style="height:6px;"><div class="progress-bar bg-success" style="width:100%"></div></div>';
     if(isPhoto){
       var reader = new FileReader();
       reader.onload = function(event){ byId('photoPreview').src = event.target.result; byId('photoPreview').classList.remove('d-none'); };
@@ -424,15 +422,15 @@
   byId('prevReceiptZone').addEventListener('click', function(){ byId('prevReceiptInput').click(); });
   byId('prevReceiptInput').addEventListener('change', function(){
     var file = this.files[0];
-    var valid = file && /\.(pdf|jpe?g|png)$/i.test(file.name) && file.size >= MIN_BYTES && file.size <= MAX_BYTES;
+    var valid = file && /\.(pdf|jpe?g|png)$/i.test(file.name) && file.size <= MAX_BYTES;
     byId('prevReceiptChips').innerHTML = '';
     if(!file) return;
     if(!valid){
       this.value = '';
-      byId('prevReceiptStatus').innerHTML = '<span class="text-danger"><i class="fa-solid fa-circle-xmark me-1"></i>Document must be PDF, JPG, JPEG or PNG and between 200 KB and 250 KB.</span>';
+      byId('prevReceiptStatus').innerHTML = '<span class="text-danger"><i class="fa-solid fa-circle-xmark me-1"></i>Document must be PDF, JPG, JPEG or PNG and 250 KB or smaller.</span>';
       return;
     }
-    byId('prevReceiptStatus').innerHTML = '<span class="text-success"><i class="fa-solid fa-circle-check me-1"></i>Upload ready (' + (file.size / 1024).toFixed(1) + ' KB)</span>';
+    byId('prevReceiptStatus').innerHTML = '<span class="text-success"><i class="fa-solid fa-circle-check me-1"></i>Selected and ready to upload (' + (file.size / 1024).toFixed(1) + ' KB)</span><div class="progress mt-1" style="height:6px;"><div class="progress-bar bg-success" style="width:100%"></div></div>';
   });
 
   ['pMobile','pAadhar','fGuardianMobile'].forEach(function(id){
@@ -553,42 +551,60 @@
       name: byId('pName').value.trim(),
       gender: byId('pGender').value,
       date_of_birth: byId('pDob').value || null,
-      mobile: byId('pMobile').value.trim(),
+      mobile_number: byId('pMobile').value.trim(),
       email: byId('pEmail').value.trim(),
       category: byId('pCategory').value || null,
       application_type: selectedApplicationType(),
       admission_level: byId('admissionLevel').value || null,
-      admission_id: byId('acAdmId').value.trim() || null,
+      admission_application_id: byId('acAdmId').value.trim() || null,
       college_name: byId('currentCollege').value.trim() || null,
-      course: byId('acCourse').value || null,
+      course_name: byId('acCourse').value || null,
       session: byId('acSession').value.trim() || null,
       father_name: byId('fFather').value.trim() || null,
       mother_name: byId('fMother').value.trim() || null,
-      guardian_name: byId('fGuardian').value.trim() || null,
-      guardian_mobile: byId('fGuardianMobile').value.trim() || null,
-      permanent_address: byId('aPermanent').value.trim() || null,
+      local_guardian_name: byId('fGuardian').value.trim() || null,
+      guardian_mobile_number: byId('fGuardianMobile').value.trim() || null,
       correspondence_address: byId('aCorrespondence').value.trim() || null,
       blood_group: byId('pBlood').value || null,
-      aadhar_number: byId('pAadhar').value.trim() || null,
+      aadhaar_number: byId('pAadhar').value.trim() || null,
       religion: byId('pReligion').value.trim() || null,
       nationality: byId('pNationality').value.trim() || null,
-      student_photo_data: byId('photoPreview').getAttribute('src') || null,
-      intermediate_college: byId('acCollege').value.trim() || null,
-      board: byId('acBoard').value.trim() || null,
-      previous_course: byId('previousCourse').value.trim() || null,
+      intermediate_college_name: byId('acCollege').value.trim() || null,
+      intermediate_board: byId('acBoard').value.trim() || null,
       result_type: byId('resultType').value || null,
       marks_obtained: byId('acMarks').value ? Number(byId('acMarks').value) : null,
       total_marks: byId('acTotal').value ? Number(byId('acTotal').value) : null,
-      percentage: byId('acPercent').value ? Number(byId('acPercent').value.replace('%','')) : null,
+      aggregate_percentage: byId('acPercent').value ? Number(byId('acPercent').value.replace('%','')) : null,
       roll_number: byId('acRoll').value.trim() || null,
-      subject: byId('acSubject').value.trim() || null,
-      applied_category: byId('pCategory').value || null
+      honours_subject: byId('acSubject').value.trim() || null,
+      program: byId('admissionLevel').value || null
     };
+  }
+
+  function buildApplicationFormData(){
+    var formData = new FormData();
+    var payload = collectApplicationPayload();
+    Object.keys(payload).forEach(function(key){
+      if(payload[key] !== null && payload[key] !== undefined && payload[key] !== '') formData.append(key, payload[key]);
+    });
+    if(byId('input1').files[0]) formData.append('student_photo', byId('input1').files[0]);
+    if(byId('input2').files[0]) formData.append('aadhaar_card', byId('input2').files[0]);
+    if(byId('input3').files[0]){
+      formData.append('college_id', byId('input3').files[0]);
+      formData.append('marksheet', byId('input3').files[0]);
+    }
+    return formData;
   }
 
   function setValue(id, value){
     if(value == null) return;
     byId(id).value = value;
+  }
+  function pick(source){
+    for(var i = 1; i < arguments.length; i++){
+      if(source && source[arguments[i]] != null && source[arguments[i]] !== '') return source[arguments[i]];
+    }
+    return null;
   }
 
   function fillDraft(application, student){
@@ -603,26 +619,26 @@
     if(application){
       var typeCard = document.querySelector('[data-application-type="' + (application.application_type || 'new') + '"]');
       if(typeCard) setApplicationType(typeCard);
-      setValue('admissionLevel', application.admission_level);
+      setValue('admissionLevel', pick(application, 'admission_level', 'program'));
       updateAdmission();
-      setValue('acAdmId', application.admission_id);
+      setValue('acAdmId', pick(application, 'admission_id', 'admission_application_id'));
       setValue('currentCollege', application.college_name);
-      setValue('acCourse', application.course);
-      setValue('acSubject', application.subject);
+      setValue('acCourse', pick(application, 'course', 'course_name'));
+      setValue('acSubject', pick(application, 'subject', 'honours_subject'));
       setValue('acSession', application.session);
       setValue('acRoll', application.roll_number);
       setValue('fFather', application.father_name);
       setValue('fMother', application.mother_name);
-      setValue('fGuardian', application.guardian_name);
-      setValue('fGuardianMobile', application.guardian_mobile);
+      setValue('fGuardian', pick(application, 'guardian_name', 'local_guardian_name'));
+      setValue('fGuardianMobile', pick(application, 'guardian_mobile', 'guardian_mobile_number'));
       setValue('aPermanent', application.permanent_address);
       setValue('aCorrespondence', application.correspondence_address);
       setValue('pBlood', application.blood_group);
-      setValue('pAadhar', application.aadhar_number);
+      setValue('pAadhar', pick(application, 'aadhar_number', 'aadhaar_number'));
       setValue('pReligion', application.religion);
       setValue('pNationality', application.nationality);
-      setValue('acCollege', application.intermediate_college);
-      setValue('acBoard', application.board);
+      setValue('acCollege', pick(application, 'intermediate_college', 'intermediate_college_name'));
+      setValue('acBoard', pick(application, 'board', 'intermediate_board'));
       setValue('previousCourse', application.previous_course);
       setValue('resultType', application.result_type);
       setValue('acTotal', application.total_marks);
@@ -680,15 +696,14 @@
   function saveCurrentStep(step, button){
     if(formLocked) return Promise.resolve(false);
     var student = currentStudent || mmcCurrentStudent();
-    if(!student || !student.id){
+    if(!student || !student.access_token){
       mmcToast('Login required', 'Please sign in with your student account before saving.', 'warning');
       return Promise.resolve(false);
     }
     setSaving(button, true);
-    return mmcApi('/applications/draft', {
+    return mmcApi('/application/draft', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ student_id: student.id, current_step: step, data: collectApplicationPayload() })
+      body: buildApplicationFormData()
     }).then(function(application){
       draftApplication = application;
       formDirty = false;
@@ -696,12 +711,6 @@
       mmcToast('Draft Saved Successfully', 'Your application progress has been saved.', 'success');
       return true;
     }).catch(function(error){
-      if(isEndpointMissing(error)){
-        saveLocalDraft(step);
-        formDirty = false;
-        mmcToast('Draft Saved Successfully', 'Your progress has been saved in this browser until the backend draft API is deployed.', 'success');
-        return true;
-      }
       mmcToast('Draft save failed', error.message || 'Unable to save this step.', 'danger');
       return false;
     }).finally(function(){
@@ -753,50 +762,21 @@
     if(!document.getElementById('declareCorrect').checked){ mmcToast('Declaration required', 'Please confirm the declaration checkbox to submit.', 'warning'); return; }
     mmcConfirm('Submit Application?', 'Once submitted, you will not be able to edit your application details.', function(){
       var student = mmcCurrentStudent();
-      if(!student || !student.id){
+      if(!student || !student.access_token){
         mmcToast('Login required', 'Please sign in with your student account before submitting.', 'warning');
         return;
       }
       var submitButton = byId('submitAppBtn');
       var originalContent = submitButton.innerHTML;
-      var payload = collectApplicationPayload();
       submitButton.disabled = true;
       submitButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Submitting...';
-      var draftPromise = draftApplication && draftApplication.id ? Promise.resolve(draftApplication) : mmcApi('/applications/draft', {
+      mmcApi('/application/submit', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ student_id: student.id, current_step: 8, data: payload })
-      }).catch(function(error){
-        if(isEndpointMissing(error)){
-          return null;
+        body: buildApplicationFormData(),
+        onUploadProgress: function(percent){
+          submitButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Uploading ' + percent + '%';
         }
-        throw error;
-      });
-      draftPromise
-        .then(function(application){
-          if(!application){
-            return mmcApi('/applications', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(buildLegacySubmitPayload(student))
-            });
-          }
-          draftApplication = application;
-          return mmcApi('/applications/' + application.id + '/submit', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ student_id: student.id, current_step: 8, data: payload })
-          }).catch(function(error){
-            if(isEndpointMissing(error)){
-              return mmcApi('/applications', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(buildLegacySubmitPayload(student))
-              });
-            }
-            throw error;
-          });
-        })
+      })
         .then(function(application){
           formDirty = false;
           localStorage.removeItem(localDraftKey());
@@ -811,7 +791,7 @@
             application: application
           }));
           submitButton.innerHTML = '<i class="fa-solid fa-circle-check me-1"></i> Application Submitted';
-          mmcToast('Application submitted', 'Application number: ' + application.application_no, 'success');
+          mmcToast('Application submitted', application.message || 'Your hostel application has been submitted.', 'success');
           setTimeout(function(){ window.location.href = 'application-preview.html'; }, 1200);
         })
         .catch(function(error){

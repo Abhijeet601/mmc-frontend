@@ -72,7 +72,7 @@
         <div class="col-sm-6 col-lg-3">
           <div class="mmc-stat-card mmc-slide-up mmc-delay-1">
             <div class="mmc-stat-icon mmc-icon-navy"><i class="fa-solid fa-file-lines"></i></div>
-            <div><div class="mmc-stat-value"><span class="mmc-counter" data-target="0">0</span></div><div class="mmc-stat-label">Total Applications</div></div>
+            <div><div class="mmc-stat-value"><span class="mmc-counter" data-target="0">0</span></div><div class="mmc-stat-label">Total Students</div></div>
           </div>
         </div>
         <div class="col-sm-6 col-lg-3">
@@ -84,7 +84,7 @@
         <div class="col-sm-6 col-lg-3">
           <div class="mmc-stat-card mmc-slide-up mmc-delay-3">
             <div class="mmc-stat-icon mmc-icon-warning"><i class="fa-solid fa-hourglass-half"></i></div>
-            <div><div class="mmc-stat-value"><span class="mmc-counter" data-target="0">0</span></div><div class="mmc-stat-label">Pending Students</div></div>
+            <div><div class="mmc-stat-value"><span class="mmc-counter" data-target="0">0</span></div><div class="mmc-stat-label">Pending Applications</div></div>
           </div>
         </div>
         <div class="col-sm-6 col-lg-3">
@@ -99,19 +99,19 @@
         <div class="col-sm-6 col-lg-4">
           <div class="mmc-stat-card mmc-slide-up mmc-delay-1">
             <div class="mmc-stat-icon mmc-icon-brass"><i class="fa-solid fa-indian-rupee-sign"></i></div>
-            <div><div class="mmc-stat-value">₹<span class="mmc-counter" data-target="0">0</span></div><div class="mmc-stat-label">Revenue Collected (Session)</div></div>
+            <div><div class="mmc-stat-value">Rs <span class="mmc-counter" data-target="0">0</span></div><div class="mmc-stat-label">Fee Collection</div></div>
           </div>
         </div>
         <div class="col-sm-6 col-lg-4">
           <div class="mmc-stat-card mmc-slide-up mmc-delay-2">
             <div class="mmc-stat-icon mmc-icon-navy"><i class="fa-solid fa-door-closed"></i></div>
-            <div><div class="mmc-stat-value"><span class="mmc-counter" data-target="0">0</span></div><div class="mmc-stat-label">Occupied Rooms</div></div>
+            <div><div class="mmc-stat-value"><span class="mmc-counter" data-target="0">0</span></div><div class="mmc-stat-label">Hostel Occupancy</div></div>
           </div>
         </div>
         <div class="col-sm-6 col-lg-4">
           <div class="mmc-stat-card mmc-slide-up mmc-delay-3">
             <div class="mmc-stat-icon mmc-icon-success"><i class="fa-solid fa-door-open"></i></div>
-            <div><div class="mmc-stat-value"><span class="mmc-counter" data-target="0">0</span></div><div class="mmc-stat-label">Vacant Rooms</div></div>
+            <div><div class="mmc-stat-value"><span class="mmc-counter" data-target="0">0</span></div><div class="mmc-stat-label">Available Rooms</div></div>
           </div>
         </div>
       </div>
@@ -195,19 +195,19 @@
 <script>
   mmcChartDefaults();
 
-  new Chart(document.getElementById('catChart'), {
+  var catChart = new Chart(document.getElementById('catChart'), {
     type: 'doughnut',
     data: { labels: ['UR - Unreserved','EWS - Economically Weaker Section','BC - Backward Class','EBC - Extremely Backward Class','SC - Scheduled Caste','ST - Scheduled Tribe'], datasets:[{ data: [0,0,0,0,0,0], backgroundColor:['#800000','#0A1F44','#C9A227','#22C55E','#0EA5E9','#F59E0B'], borderWidth:2, borderColor:'#fff' }] },
     options: { plugins:{ legend:{ position:'bottom' } }, cutout:'62%' }
   });
 
-  new Chart(document.getElementById('courseChart'), {
+  var courseChart = new Chart(document.getElementById('courseChart'), {
     type: 'bar',
     data: { labels: ['B.A.','B.Sc.','B.Com.','B.Sc. (Hons.)','B.A. (Hons.)'], datasets:[{ label:'Applications', data: [0,0,0,0,0], backgroundColor:'#800000', borderRadius:6, maxBarThickness:46 }] },
     options: { plugins:{ legend:{ display:false } }, scales:{ y:{ grid:{ color:'#eef0f5' } }, x:{ grid:{ display:false } } } }
   });
 
-  new Chart(document.getElementById('revenueChart'), {
+  var revenueChart = new Chart(document.getElementById('revenueChart'), {
     type: 'line',
     data: { labels: ['Jan','Feb','Mar','Apr','May','Jun'], datasets:[
       { label:'Registration Fee', data: [0,0,0,0,0,0], borderColor:'#0EA5E9', backgroundColor:'rgba(14,165,233,.12)', tension:.4, fill:true },
@@ -216,7 +216,7 @@
     options: { plugins:{ legend:{ position:'bottom' } }, scales:{ y:{ grid:{ color:'#eef0f5' } }, x:{ grid:{ display:false } } } }
   });
 
-  new Chart(document.getElementById('occChart'), {
+  var occChart = new Chart(document.getElementById('occChart'), {
     type: 'doughnut',
     data: { labels:['Occupied','Vacant'], datasets:[{ data:[0,0], backgroundColor:['#800000','#dde3f0'], borderWidth:2, borderColor:'#fff' }] },
     options: { plugins:{ legend:{ position:'bottom', labels:{ boxWidth:8, font:{ size:11 } } } }, cutout:'58%' }
@@ -234,9 +234,6 @@
   function normalizeStatus(status){
     status = status || 'Pending';
     return status.charAt(0).toUpperCase() + status.slice(1);
-  }
-  function byIdMap(items){
-    return items.reduce(function(map, item){ map[item.id] = item; return map; }, {});
   }
   function statusPill(status){
     var normalized = normalizeStatus(status);
@@ -263,9 +260,9 @@
       return;
     }
     body.innerHTML = dashboardApplications.slice(0, 8).map(function(app, index){
-      var canAct = ['Pending','Waitlisted','Selected'].indexOf(app.status) !== -1;
+      var canAct = ['Pending','Submitted','Draft'].indexOf(app.status) !== -1;
       return '<tr>' +
-        '<td><span class="fw-600" style="color:var(--mmc-navy);">' + escapeHtml(app.application_no) + '</span><div class="fs-12 text-secondary">' + escapeHtml(app.admission_id || '-') + '</div></td>' +
+        '<td><span class="fw-600" style="color:var(--mmc-navy);">' + escapeHtml(app.application_no) + '</span><div class="fs-12 text-secondary">' + escapeHtml(app.application_number || '-') + '</div></td>' +
         '<td>' + escapeHtml(app.student_name || '-') + '</td>' +
         '<td>' + escapeHtml(app.course || '-') + '</td>' +
         '<td><span class="mmc-pill muted">' + escapeHtml(app.applied_category || '-') + '</span></td>' +
@@ -287,22 +284,38 @@
     updateCounter(2, counts.Pending || 0);
     updateCounter(3, counts.Rejected || 0);
   }
-  function loadDashboardMetrics(){
-    return mmcApi('/admin/dashboard-metrics').then(function(metrics){
-      var settings = metrics.settings || {};
-      setText('dashAdmissionStart', formatDate(settings.admission_start_date));
-      setText('dashAdmissionEnd', formatDate(settings.admission_end_date));
-      setText('dashPaymentStart', formatDate(settings.payment_start_date));
-      setText('dashPaymentEnd', formatDate(settings.payment_end_date));
-      setText('dashAdmissionCountdown', metrics.countdown_to_admission_closing);
-      setText('dashPaymentCountdown', metrics.countdown_to_payment_closing);
-      setText('dashDraftCount', Number(metrics.total_draft_applications || 0).toLocaleString('en-IN'));
-      setText('dashSubmittedCount', Number(metrics.total_submitted_applications || 0).toLocaleString('en-IN'));
-      updateCounter(1, metrics.total_approved_applications || 0);
-      updateCounter(3, metrics.total_rejected_applications || 0);
-    }).catch(function(error){
-      mmcToast('Dashboard settings not loaded', error.message || 'Unable to load admission dates.', 'warning');
-    });
+  function updateChart(chart, rows, emptyLabel){
+    var labels = (rows || []).map(function(row){ return row.label; });
+    var values = (rows || []).map(function(row){ return row.value; });
+    chart.data.labels = labels.length ? labels : [emptyLabel];
+    chart.data.datasets[0].data = values.length ? values : [0];
+    chart.update();
+  }
+  function renderMetrics(metrics){
+    var totalRevenue = Number(metrics.application_revenue || 0) + Number(metrics.hostel_revenue || 0);
+    updateCounter(0, dashboardStudents.length);
+    updateCounter(1, metrics.verified_students || 0);
+    updateCounter(2, metrics.pending_applications || 0);
+    updateCounter(3, 0);
+    updateCounter(4, totalRevenue);
+    updateCounter(5, metrics.occupied_beds || 0);
+    updateCounter(6, metrics.available_beds || 0);
+    setText('dashDraftCount', dashboardApplications.filter(function(app){ return app.status === 'Draft'; }).length.toLocaleString('en-IN'));
+    setText('dashSubmittedCount', Number(metrics.total_applications || 0).toLocaleString('en-IN'));
+    setText('dashAdmissionStart', 'Configured externally');
+    setText('dashAdmissionEnd', 'Configured externally');
+    setText('dashPaymentStart', 'Configured externally');
+    setText('dashPaymentEnd', 'Configured externally');
+    setText('dashAdmissionCountdown', '-');
+    setText('dashPaymentCountdown', '-');
+    updateChart(catChart, metrics.by_category, 'No categories');
+    updateChart(courseChart, metrics.by_course, 'No courses');
+    revenueChart.data.datasets[0].data = [metrics.application_revenue || 0];
+    revenueChart.data.datasets[1].data = [metrics.hostel_revenue || 0];
+    revenueChart.data.labels = ['Current'];
+    revenueChart.update();
+    occChart.data.datasets[0].data = [metrics.occupied_beds || 0, metrics.available_beds || 0];
+    occChart.update();
   }
   function mmcDashboardSetStatus(index, status, button){
     var app = dashboardApplications[index];
@@ -310,21 +323,14 @@
     var originalContent = button.innerHTML;
     button.disabled = true;
     button.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Saving';
-    mmcApi('/applications/' + app.id + '/status', {
+    var endpoint = status === 'Shortlisted' ? '/admin/students/' + app.id + '/shortlist' : '/admin/students/' + app.id + '/verify';
+    var payload = status === 'Shortlisted' ? { shortlisted: true } : { verified: true };
+    mmcApi(endpoint, {
       method:'PATCH',
-      headers:{ 'Content-Type':'application/json' },
-      body:JSON.stringify({
-        status:status,
-        allotted_category:app.allotted_category || app.applied_category || null,
-        hostel_id:app.hostel_id || null,
-        room_id:app.room_id || null
-      })
+      body: payload
     })
       .then(function(updated){
-        app.status = normalizeStatus(updated.status);
-        app.allotted_category = updated.allotted_category;
-        app.hostel_id = updated.hostel_id;
-        app.room_id = updated.room_id;
+        app.status = status === 'Shortlisted' ? 'Shortlisted' : 'Verified';
         renderDashboardApplications();
         refreshDashboardCounts();
         mmcToast('Application ' + status.toLowerCase(), app.application_no + ' has been updated.', 'success');
@@ -336,18 +342,24 @@
       });
   }
   function loadDashboardApplications(){
-    Promise.all([mmcApi('/applications'), mmcApi('/students?limit=1000')])
+    Promise.all([mmcApi('/admin/dashboard'), mmcApi('/admin/students?limit=1000')])
       .then(function(results){
-        var studentMap = byIdMap(results[1] || []);
-        dashboardStudents = results[1] || [];
-        dashboardApplications = (results[0] || []).map(function(app){
-          var student = studentMap[app.student_id] || {};
-          app.student_name = student.name || 'Student #' + app.student_id;
-          app.status = normalizeStatus(app.status);
-          return app;
+        var metrics = results[0] || {};
+        dashboardStudents = (results[1] && results[1].items) || [];
+        dashboardApplications = dashboardStudents.map(function(student){
+          return {
+            id: student.id,
+            application_no: student.application_number,
+            application_number: student.application_number,
+            student_name: student.name || student.email,
+            course: student.course_name,
+            applied_category: student.category,
+            status: normalizeStatus(student.verification_status === 'verified' ? 'Verified' : student.form_status),
+            allotted_category: student.allotted_category
+          };
         });
         renderDashboardApplications();
-        refreshDashboardCounts();
+        renderMetrics(metrics);
       })
       .catch(function(error){
         document.getElementById('dashboardApplicationsBody').innerHTML = '<tr><td colspan="6" class="text-center text-secondary py-3">Unable to load applications.</td></tr>';
@@ -356,7 +368,6 @@
   }
 
   loadDashboardApplications();
-  loadDashboardMetrics();
 </script>
 </body>
 </html>

@@ -136,19 +136,18 @@
     var original = btn.innerHTML;
     btn.disabled = true;
     btn.innerHTML = '<span class="mmc-spinner sm" style="border-color:rgba(255,255,255,.35);border-top-color:#fff;display:inline-block;vertical-align:middle;margin-right:8px;"></span> Creating account...';
-    mmcApi('/students/register', {
+    mmcApi('/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        name: document.getElementById('rname').value.trim(),
+      body: {
         email: document.getElementById('remail').value.trim(),
-        mobile: document.getElementById('rmobile').value.trim(),
+        mobile_number: document.getElementById('rmobile').value.trim(),
         date_of_birth: document.getElementById('rdob').value,
         password: document.getElementById('rpwd').value
-      })
+      }
     })
       .then(function(student){
-        document.getElementById('genStudentId').textContent = student.student_code;
+        document.getElementById('genStudentId').textContent = student.application_number;
         registerWizard.goTo(2);
       })
       .catch(function(err){
