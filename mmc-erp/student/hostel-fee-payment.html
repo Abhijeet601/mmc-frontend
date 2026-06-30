@@ -162,13 +162,13 @@
       updateHostelPayButton();
       return;
     }
-    mmcApi('/payments/hostel/success', {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({ student_id:student.id, application_id:demoHostelApplication.id, transaction_no:'DEMO-HOSTEL-' + Date.now(), payment_type:'Hostel Admission Fee', amount:demoHostelAmount, mode:selectedHostelPayMode + ' Demo Payment', status:'Success', paid_at:new Date().toISOString() })
-    }).then(function(receipt){
-      sessionStorage.setItem('mmc_last_hostel_receipt', JSON.stringify(receipt));
+    mmcApi('/payment/hostel', {
+      method:'POST',
+      body:{ transaction_id:'DEMO-HOSTEL-' + Date.now() }
+    }).then(function(payment){
+      sessionStorage.setItem('mmc_last_hostel_receipt', JSON.stringify(payment));
       mmcToast('Demo payment successful', 'Official hostel admission receipt generated.', 'success');
-      setTimeout(function(){ window.open(MMC_API_BASE + receipt.pdf_url, '_blank'); window.location.href='receipt.html'; }, 700);
+      setTimeout(function(){ if(payment.receipt_url) window.open(mmcFileUrl(payment.receipt_url), '_blank'); window.location.href='receipt.html'; }, 700);
     }).catch(function(error){
       mmcToast('Demo payment failed', error.message, 'danger');
       btn.disabled = false;
@@ -180,16 +180,15 @@
     mmcLoadStudentWorkflow().then(function(workflow){
       mmcApplyStudentNavigation(workflow);
       if(mmcGuardStudentWorkflow('hostel-fee', workflow)) return null;
-      return Promise.all([mmcApi('/applications?student_id=' + student.id), mmcApi('/hostels')]);
-    }).then(function(results){
-      if(!results) return;
-      demoHostelApplication=results[0][0] || null; if(!demoHostelApplication) return;
-      var hostel=results[1].find(function(item){ return Number(item.id) === Number(demoHostelApplication.hostel_id); });
-      document.getElementById('demoAppNo').textContent=demoHostelApplication.application_no;
+      return mmcApi('/dashboard');
+    }).then(function(dashboard){
+      if(!dashboard) return;
+      demoHostelApplication=dashboard; if(!demoHostelApplication.allocated_hostel) return;
+      var hostelName = demoHostelApplication.allocated_hostel;
+      document.getElementById('demoAppNo').textContent=demoHostelApplication.application_number;
       document.getElementById('demoStudentName').textContent=student.name;
-      if(!hostel) return;
-      demoHostelAmount=Number(hostel.fee || 0) || (hostel.name.toLowerCase().indexOf('mahima') !== -1 ? 12000 : hostel.name.toLowerCase().indexOf('vaidehi') !== -1 ? 10000 : 0);
-      document.getElementById('demoHostelName').textContent=hostel.name;
+      demoHostelAmount=Number(demoHostelApplication.hostel_fee_amount || 0) || (hostelName.toLowerCase().indexOf('mahima') !== -1 ? 12000 : hostelName.toLowerCase().indexOf('vaidehi') !== -1 ? 10000 : 0);
+      document.getElementById('demoHostelName').textContent=hostelName;
       document.getElementById('demoHostelFee').textContent=mmcCurrency(demoHostelAmount);
       document.getElementById('demoHostelTotal').textContent=mmcCurrency(demoHostelAmount);
       updateHostelPayButton();

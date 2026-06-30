@@ -235,26 +235,15 @@
     if(!student){ mmcToast('Login required', 'Sign in with your student account first.', 'warning'); return; }
     button.disabled = true;
     button.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Generating receipt...';
-    mmcApi('/applications?student_id=' + student.id).then(function(applications){
-      var application = applications[0];
-      if(!application) throw new Error('Submit a hostel application before making a demo payment.');
-      return mmcApi('/payments/registration/success', {
+    mmcApi('/application').then(function(application){
+      if(!application || application.form_status !== 'submitted') throw new Error('Submit a hostel application before making a demo payment.');
+      return mmcApi('/payment/application', {
         method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({
-          student_id:student.id,
-          application_id:application.id,
-          transaction_no:'DEMO-REG-' + Date.now(),
-          payment_type:'Registration Fee',
-          amount:application.application_type === 'existing' ? 100 : 1000,
-          mode:'Demo Payment',
-          status:'Success',
-          paid_at:new Date().toISOString()
-        })
+        body:{ transaction_id:'DEMO-REG-' + Date.now() }
       });
-    }).then(function(receipt){
+    }).then(function(payment){
       mmcToast('Demo payment successful', 'Your official receipt has been generated.', 'success');
-      window.open(MMC_API_BASE + receipt.pdf_url, '_blank');
+      if(payment.receipt_url) window.open(mmcFileUrl(payment.receipt_url), '_blank');
       setTimeout(function(){ window.location.href='receipt.html'; }, 700);
     }).catch(function(error){
       button.disabled = false;

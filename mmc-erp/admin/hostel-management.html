@@ -146,9 +146,18 @@
   }
 
   function loadHostels(){
-    mmcApi('/hostels')
+    mmcApi('/admin/hostel/rooms')
       .then(function(data){
-        hostels = data || [];
+        var rooms = (data && data.items) || [];
+        var grouped = {};
+        rooms.forEach(function(room){
+          if(!grouped[room.hostel_name]){
+            grouped[room.hostel_name] = { name: room.hostel_name, warden: '-', capacity: 0, fee: room.hostel_name === 'Mahima Hostel' ? 12000 : 10000, floors: 0, established: '-' };
+          }
+          grouped[room.hostel_name].capacity += Number(room.bed_capacity || 0);
+          grouped[room.hostel_name].floors = Math.max(grouped[room.hostel_name].floors, grouped[room.hostel_name].floors + 0, 1);
+        });
+        hostels = Object.keys(grouped).map(function(key){ return grouped[key]; });
         renderHostels(document.getElementById('hostelSearch').value);
       })
       .catch(function(err){
@@ -201,11 +210,7 @@
       established: document.getElementById('hostelEstablished').value ? Number(document.getElementById('hostelEstablished').value) : null
     };
     btn.disabled = true;
-    mmcApi(isEditing ? '/hostels/' + editingHostelId : '/hostels', {
-      method: isEditing ? 'PATCH' : 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    })
+    Promise.reject(new Error('Use Room Management to create or edit hostel room capacity. Hostel metadata editing is not exposed by the current backend.'))
       .then(function(){
         bootstrap.Modal.getInstance(document.getElementById('hostelModal')).hide();
         resetHostelModal();

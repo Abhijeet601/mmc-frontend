@@ -455,11 +455,7 @@
     var groupedRoom = currentHostelRooms().find(function(room){ return Number(room.id) === Number(roomId); });
     var ids = groupedRoom && groupedRoom.grouped_room_ids ? groupedRoom.grouped_room_ids : [Number(roomId)];
     Promise.all(ids.map(function(id){
-      return mmcApi('/rooms/' + Number(id), {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: nextStatus })
-      });
+      return Promise.reject(new Error('Room status updates must be done through room capacity/activity fields in the current backend.'));
     }))
       .then(function(updatedRooms){
         rooms = rooms.map(function(room){
@@ -489,10 +485,19 @@
 
   function loadRooms(){
     document.getElementById('roomGridWrap').innerHTML = '<div class="py-4 text-center fs-13 text-secondary">Loading rooms...</div>';
-    Promise.all([mmcApi('/hostels'), mmcApi('/rooms')])
+    mmcApi('/admin/hostel/rooms')
       .then(function(results){
-        hostels = results[0] || [];
-        rooms = results[1] || [];
+        var apiRooms = (results && results.items) || [];
+        var hostelNames = Array.from(new Set(apiRooms.map(function(room){ return room.hostel_name; }).filter(Boolean)));
+        hostels = hostelNames.map(function(name){ return { id: name, name: name }; });
+        rooms = apiRooms.map(function(room){
+          return Object.assign({}, room, {
+            hostel_id: room.hostel_name,
+            floor: room.block_name,
+            beds: room.bed_capacity,
+            status: room.available_beds > 0 ? 'available' : 'occupied'
+          });
+        });
         if(!currentHostelId && hostels.length) currentHostelId = hostels[0].id;
         currentFloor = floorTabsForCurrentHostel()[0].floor;
         renderHostelTabs();

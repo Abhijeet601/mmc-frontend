@@ -48,12 +48,14 @@
   function adminEscape(value){
     return String(value == null ? '' : value).replace(/[&<>"']/g, function(character){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[character]; });
   }
-  function adminReceiptType(type){ return type === 'hostel_admission' ? 'Hostel Admission Fee' : 'Registration Fee'; }
+  function adminReceiptType(type){ return type === 'hostel' ? 'Hostel Admission Fee' : 'Registration Fee'; }
   function loadAdminReceipts(){
-    mmcApi('/receipts').then(function(receipts){
+    mmcApi('/admin/payments').then(function(response){
+      var receipts = (response && response.items) || [];
       document.getElementById('adminReceiptRows').innerHTML = receipts.length ? receipts.map(function(receipt){
-        var url = MMC_API_BASE + (receipt.pdf_url || '/receipts/' + receipt.id + '/download');
-        return '<tr><td class="fw-600">' + adminEscape(receipt.receipt_number) + '</td><td>' + adminEscape(receipt.application_number || '-') + '</td><td>' + adminEscape(adminReceiptType(receipt.receipt_type)) + '</td><td>' + adminEscape(receipt.transaction_id || '-') + '</td><td>' + mmcCurrency(receipt.amount) + '</td><td>' + new Date(receipt.generated_at).toLocaleString('en-IN') + '</td><td class="d-flex gap-1 flex-wrap"><a class="btn btn-sm btn-outline-navy" target="_blank" href="' + url + '">View</a><a class="btn btn-sm btn-maroon" href="' + url + '" download>Download</a><button class="btn btn-sm btn-ghost" data-super-admin-only onclick="regenerateReceipt(' + receipt.id + ')">Regenerate</button></td></tr>';
+        var url = receipt.receipt_url ? mmcFileUrl(receipt.receipt_url) : '';
+        var actions = url ? '<a class="btn btn-sm btn-outline-navy" target="_blank" href="' + url + '">View</a><a class="btn btn-sm btn-maroon" href="' + url + '" download>Download</a>' : '<span class="text-secondary fs-12">Receipt pending</span>';
+        return '<tr><td class="fw-600">' + adminEscape(receipt.id) + '</td><td>' + adminEscape(receipt.application_number || '-') + '</td><td>' + adminEscape(adminReceiptType(receipt.payment_type)) + '</td><td>' + adminEscape(receipt.transaction_id || '-') + '</td><td>' + mmcCurrency(receipt.amount) + '</td><td>' + new Date(receipt.payment_date).toLocaleString('en-IN') + '</td><td class="d-flex gap-1 flex-wrap">' + actions + '</td></tr>';
       }).join('') : '<tr><td colspan="7" class="text-center text-secondary py-4">No receipts available.</td></tr>';
       mmcApplyAdminPermissions(document.getElementById('adminReceiptRows'));
     }).catch(function(error){
@@ -62,7 +64,7 @@
     });
   }
   function regenerateReceipt(receiptId){
-    mmcApi('/receipts/' + receiptId + '/regenerate', { method:'POST' }).then(function(){ mmcToast('Receipt regenerated', 'The official PDF has been updated.', 'success'); loadAdminReceipts(); }).catch(function(error){ mmcToast('Regeneration failed', error.message, 'danger'); });
+    mmcToast('Regeneration unavailable', 'The current backend regenerates receipts during payment approval.', 'warning');
   }
   loadAdminReceipts();
 </script>
