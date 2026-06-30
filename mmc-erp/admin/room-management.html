@@ -246,6 +246,42 @@
     return { number: parseInt(match[1], 10), suffix: match[2] || '' };
   }
 
+  function baseRoomNumber(roomNumber){
+    var value = String(roomNumber || '');
+    var match = value.match(/^(\d+)[A-C]$/i);
+    return match ? match[1] : value;
+  }
+
+  function aggregateRoomStatus(group){
+    if(group.some(function(room){ return room.status === 'maintenance'; })) return 'maintenance';
+    if(group.every(function(room){ return room.status === 'occupied'; })) return 'occupied';
+    if(group.some(function(room){ return room.status === 'reserved'; })) return 'reserved';
+    return 'available';
+  }
+
+  function groupedRooms(items){
+    var map = {};
+    items.forEach(function(room){
+      var key = room.hostel_id + '|' + roomFloor(room) + '|' + baseRoomNumber(room.room_number);
+      if(!map[key]) map[key] = [];
+      map[key].push(room);
+    });
+    return Object.keys(map).map(function(key){
+      var group = map[key].sort(sortRooms);
+      var first = group[0];
+      var baseNumber = baseRoomNumber(first.room_number);
+      var totalBeds = group.length > 1 ? group.length : Number(first.beds || 1);
+      return Object.assign({}, first, {
+        room_number: baseNumber,
+        display_room_number: baseNumber,
+        bed_numbers: group.map(function(room){ return room.room_number; }),
+        beds: totalBeds,
+        status: aggregateRoomStatus(group),
+        grouped_room_ids: group.map(function(room){ return room.id; })
+      });
+    }).sort(sortRooms);
+  }
+
   function sortRooms(a, b){
     var af = roomFloor(a);
     var bf = roomFloor(b);
@@ -265,7 +301,7 @@
   }
 
   function hostelRooms(){
-    return rooms.filter(function(r){ return Number(r.hostel_id) === Number(currentHostelId); }).sort(sortRooms);
+    return groupedRooms(rooms.filter(function(r){ return Number(r.hostel_id) === Number(currentHostelId); }));
   }
 
   function currentHostelRooms(){
@@ -283,11 +319,11 @@
 
   function floorTabsForCurrentHostel(){
     if(isVaidehiHostel()){
-      return [{ floor: 1, label: 'Vaidehi Rooms', range: '1A-53C' }];
+      return [{ floor: 1, label: 'Vaidehi Rooms', range: '1-53' }];
     }
     var result = [];
     for(var floor = 1; floor <= 7; floor++){
-      result.push({ floor: floor, label: floorNameFromNumber(floor), range: floor + '01A-' + floor + '24C' });
+      result.push({ floor: floor, label: floorNameFromNumber(floor), range: floor + '01-' + floor + '24' });
     }
     return result;
   }
@@ -382,12 +418,12 @@
   };
 
   mmcOpenRoom = function(roomId){
-    var r = rooms.find(function(x){ return Number(x.id) === Number(roomId); });
+    var r = currentHostelRooms().find(function(x){ return Number(x.id) === Number(roomId); });
     if(!r) return;
-    document.getElementById('raRoomNo').textContent = r.room_number;
+    document.getElementById('raRoomNo').textContent = r.display_room_number || r.room_number;
     document.getElementById('raFloor').textContent = r.floor;
     document.getElementById('raBuilding').textContent = r.building || '-';
-    document.getElementById('raBeds').textContent = Number(r.beds || 0) + ' bed' + (Number(r.beds || 0) === 1 ? '' : 's');
+    document.getElementById('raBeds').textContent = Number(r.beds || 0) + ' bed' + (Number(r.beds || 0) === 1 ? '' : 's') + (r.bed_numbers && r.bed_numbers.length > 1 ? ' (' + r.bed_numbers.join(', ') + ')' : '');
     document.getElementById('raStatus').innerHTML = '<span class="mmc-pill ' + statusClass(r.status) + '"><i class="fa-solid fa-circle"></i> ' + escapeHtml(r.status) + '</span>';
     document.getElementById('raStatusSelect').value = r.status || 'available';
 
@@ -416,13 +452,21 @@
       button.disabled = true;
       button.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Applying...';
     }
-    mmcApi('/rooms/' + Number(roomId), {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ status: nextStatus })
-    })
-      .then(function(updatedRoom){
-        rooms = rooms.map(function(room){ return Number(room.id) === Number(updatedRoom.id) ? updatedRoom : room; });
+    var groupedRoom = currentHostelRooms().find(function(room){ return Number(room.id) === Number(roomId); });
+    var ids = groupedRoom && groupedRoom.grouped_room_ids ? groupedRoom.grouped_room_ids : [Number(roomId)];
+    Promise.all(ids.map(function(id){
+      return mmcApi('/rooms/' + Number(id), {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: nextStatus })
+      });
+    }))
+      .then(function(updatedRooms){
+        rooms = rooms.map(function(room){
+          var updated = updatedRooms.find(function(item){ return Number(item.id) === Number(room.id); });
+          return updated || room;
+        });
+        var updatedRoom = groupedRoom ? Object.assign({}, groupedRoom, { status: nextStatus }) : updatedRooms[0];
         renderFloorTabs();
         renderGrid();
         document.getElementById('raStatus').innerHTML = '<span class="mmc-pill ' + statusClass(updatedRoom.status) + '"><i class="fa-solid fa-circle"></i> ' + escapeHtml(updatedRoom.status) + '</span>';
