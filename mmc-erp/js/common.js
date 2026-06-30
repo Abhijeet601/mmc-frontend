@@ -316,8 +316,18 @@ function mmcInitWizard(rootSel, opts){
       var valid = true;
       requiredFields.forEach(function(f){ if(!f.checkValidity()){ f.reportValidity(); valid = false; } });
       if(!valid) return;
-      if(current < panels.length){ current++; render(); }
-      else if(typeof opts.onFinish === 'function'){ opts.onFinish(); }
+      var proceed = function(){
+        if(current < panels.length){ current++; render(); }
+        else if(typeof opts.onFinish === 'function'){ opts.onFinish(); }
+      };
+      if(typeof opts.onBeforeNext === 'function'){
+        nextBtn.disabled = true;
+        Promise.resolve(opts.onBeforeNext(current, activePanel, nextBtn))
+          .then(function(allowed){ if(allowed !== false) proceed(); })
+          .finally(function(){ nextBtn.disabled = false; });
+      } else {
+        proceed();
+      }
     }
     if(prevBtn && current > 1){ current--; render(); }
   });

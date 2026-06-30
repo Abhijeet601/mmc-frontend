@@ -290,11 +290,28 @@
 <script>
   (function(){
   'use strict';
-  mmcLoadStudentWorkflow().then(function(workflow){
+  var currentStudent = mmcCurrentStudent();
+  var draftApplication = null;
+  var admissionSettings = null;
+  var formLocked = false;
+  var formDirty = false;
+  var workflowPromise = mmcLoadStudentWorkflow().then(function(workflow){
     mmcApplyStudentNavigation(workflow);
-    if(workflow && workflow.application){
+    admissionSettings = workflow && workflow.settings ? workflow.settings : null;
+    if(workflow && workflow.application && !workflow.draft){
       mmcWorkflowRedirect('You have already completed this step.');
     }
+    if(workflow && workflow.draft){
+      draftApplication = workflow.application;
+    }
+    if(!workflow || !workflow.draft){
+      if(admissionSettings && admissionSettings.admission_state !== 'open'){
+        formLocked = true;
+        document.querySelectorAll('[data-wizard-next], #saveDraftBtn, #submitAppBtn').forEach(function(button){ button.disabled = true; });
+        mmcToast('Admission unavailable', admissionSettings.admission_message || 'Hostel Admission is currently unavailable.', 'info');
+      }
+    }
+    return workflow;
   }).catch(function(){});
   // Accept the displayed 200-250 KB range from both decimal and binary file-size tools.
   var MIN_BYTES = 200 * 1000;
@@ -517,14 +534,220 @@
     byId('previewBody').innerHTML = html;
   }
 
+  function selectedApplicationType(){
+    var selectedType = document.querySelector('.mmc-type-card.selected');
+    return selectedType ? selectedType.dataset.applicationType : 'new';
+  }
+
+  function localDraftKey(){
+    var student = currentStudent || mmcCurrentStudent() || {};
+    return 'mmc_hostel_application_draft_' + (student.id || 'guest');
+  }
+
+  function isEndpointMissing(error){
+    return error && /not found|status 404/i.test(error.message || '');
+  }
+
+  function collectApplicationPayload(){
+    return {
+      name: byId('pName').value.trim(),
+      gender: byId('pGender').value,
+      date_of_birth: byId('pDob').value || null,
+      mobile: byId('pMobile').value.trim(),
+      email: byId('pEmail').value.trim(),
+      category: byId('pCategory').value || null,
+      application_type: selectedApplicationType(),
+      admission_level: byId('admissionLevel').value || null,
+      admission_id: byId('acAdmId').value.trim() || null,
+      college_name: byId('currentCollege').value.trim() || null,
+      course: byId('acCourse').value || null,
+      session: byId('acSession').value.trim() || null,
+      father_name: byId('fFather').value.trim() || null,
+      mother_name: byId('fMother').value.trim() || null,
+      guardian_name: byId('fGuardian').value.trim() || null,
+      guardian_mobile: byId('fGuardianMobile').value.trim() || null,
+      permanent_address: byId('aPermanent').value.trim() || null,
+      correspondence_address: byId('aCorrespondence').value.trim() || null,
+      blood_group: byId('pBlood').value || null,
+      aadhar_number: byId('pAadhar').value.trim() || null,
+      religion: byId('pReligion').value.trim() || null,
+      nationality: byId('pNationality').value.trim() || null,
+      student_photo_data: byId('photoPreview').getAttribute('src') || null,
+      intermediate_college: byId('acCollege').value.trim() || null,
+      board: byId('acBoard').value.trim() || null,
+      previous_course: byId('previousCourse').value.trim() || null,
+      result_type: byId('resultType').value || null,
+      marks_obtained: byId('acMarks').value ? Number(byId('acMarks').value) : null,
+      total_marks: byId('acTotal').value ? Number(byId('acTotal').value) : null,
+      percentage: byId('acPercent').value ? Number(byId('acPercent').value.replace('%','')) : null,
+      roll_number: byId('acRoll').value.trim() || null,
+      subject: byId('acSubject').value.trim() || null,
+      applied_category: byId('pCategory').value || null
+    };
+  }
+
+  function setValue(id, value){
+    if(value == null) return;
+    byId(id).value = value;
+  }
+
+  function fillDraft(application, student){
+    student = student || currentStudent || {};
+    if(!application && !student) return;
+    setValue('pName', student.name);
+    setValue('pGender', student.gender);
+    setValue('pDob', student.date_of_birth);
+    setValue('pMobile', student.mobile);
+    setValue('pEmail', student.email);
+    setValue('pCategory', application && application.applied_category ? application.applied_category : student.category);
+    if(application){
+      var typeCard = document.querySelector('[data-application-type="' + (application.application_type || 'new') + '"]');
+      if(typeCard) setApplicationType(typeCard);
+      setValue('admissionLevel', application.admission_level);
+      updateAdmission();
+      setValue('acAdmId', application.admission_id);
+      setValue('currentCollege', application.college_name);
+      setValue('acCourse', application.course);
+      setValue('acSubject', application.subject);
+      setValue('acSession', application.session);
+      setValue('acRoll', application.roll_number);
+      setValue('fFather', application.father_name);
+      setValue('fMother', application.mother_name);
+      setValue('fGuardian', application.guardian_name);
+      setValue('fGuardianMobile', application.guardian_mobile);
+      setValue('aPermanent', application.permanent_address);
+      setValue('aCorrespondence', application.correspondence_address);
+      setValue('pBlood', application.blood_group);
+      setValue('pAadhar', application.aadhar_number);
+      setValue('pReligion', application.religion);
+      setValue('pNationality', application.nationality);
+      setValue('acCollege', application.intermediate_college);
+      setValue('acBoard', application.board);
+      setValue('previousCourse', application.previous_course);
+      setValue('resultType', application.result_type);
+      setValue('acTotal', application.total_marks);
+      setValue('acMarks', application.marks_obtained);
+      calculatePercentage();
+      if(application.student_photo_data){
+        byId('photoPreview').src = application.student_photo_data;
+        byId('photoPreview').classList.remove('d-none');
+      }
+    }
+    updateDocuments();
+  }
+
+  function saveLocalDraft(step){
+    localStorage.setItem(localDraftKey(), JSON.stringify({
+      current_step: step,
+      data: collectApplicationPayload(),
+      saved_at: new Date().toISOString()
+    }));
+  }
+
+  function loadLocalDraft(){
+    try {
+      return JSON.parse(localStorage.getItem(localDraftKey()) || 'null');
+    } catch(error){
+      return null;
+    }
+  }
+
+  function buildLegacySubmitPayload(student){
+    var payload = collectApplicationPayload();
+    payload.application_no = 'MMC-HST-' + new Date().getFullYear() + '-' + student.id + '-' + Date.now().toString().slice(-6);
+    payload.student_id = student.id;
+    delete payload.name;
+    delete payload.email;
+    delete payload.mobile;
+    delete payload.gender;
+    delete payload.date_of_birth;
+    delete payload.category;
+    return payload;
+  }
+
+  function setSaving(button, saving){
+    if(!button) return;
+    if(saving){
+      button.dataset.originalHtml = button.innerHTML;
+      button.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Saving...';
+      button.disabled = true;
+    } else {
+      button.innerHTML = button.dataset.originalHtml || button.innerHTML;
+      button.disabled = false;
+    }
+  }
+
+  function saveCurrentStep(step, button){
+    if(formLocked) return Promise.resolve(false);
+    var student = currentStudent || mmcCurrentStudent();
+    if(!student || !student.id){
+      mmcToast('Login required', 'Please sign in with your student account before saving.', 'warning');
+      return Promise.resolve(false);
+    }
+    setSaving(button, true);
+    return mmcApi('/applications/draft', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ student_id: student.id, current_step: step, data: collectApplicationPayload() })
+    }).then(function(application){
+      draftApplication = application;
+      formDirty = false;
+      localStorage.removeItem(localDraftKey());
+      mmcToast('Draft Saved Successfully', 'Your application progress has been saved.', 'success');
+      return true;
+    }).catch(function(error){
+      if(isEndpointMissing(error)){
+        saveLocalDraft(step);
+        formDirty = false;
+        mmcToast('Draft Saved Successfully', 'Your progress has been saved in this browser until the backend draft API is deployed.', 'success');
+        return true;
+      }
+      mmcToast('Draft save failed', error.message || 'Unable to save this step.', 'danger');
+      return false;
+    }).finally(function(){
+      setSaving(button, false);
+    });
+  }
+
   var wiz = mmcInitWizard('[data-wizard]', {
+    onBeforeNext: function(step, panel, button){
+      return saveCurrentStep(step, button);
+    },
     onChange: function(step){
       document.querySelector('.mmc-progressbar-thin > div').style.width = (step/8*100) + '%';
+      document.querySelector('.mmc-page-sub').textContent = 'Step ' + step + ' of 8. Complete each section to submit your hostel admission application.';
       if(step === 8) buildPreview();
     }
   });
 
-  document.getElementById('saveDraftBtn').addEventListener('click', function(){ mmcToast('Draft not saved', 'Draft storage is not connected yet.', 'warning'); });
+  document.querySelectorAll('input, select, textarea').forEach(function(field){
+    field.addEventListener('input', function(){ formDirty = true; });
+    field.addEventListener('change', function(){ formDirty = true; });
+  });
+  window.addEventListener('beforeunload', function(event){
+    if(formDirty){
+      event.preventDefault();
+      event.returnValue = '';
+    }
+  });
+
+  workflowPromise.then(function(workflow){
+    var student = workflow && workflow.student ? workflow.student : currentStudent;
+    var localDraft = loadLocalDraft();
+    if(!draftApplication && localDraft && localDraft.data){
+      draftApplication = Object.assign({ current_step: localDraft.current_step || 1 }, localDraft.data);
+    }
+    fillDraft(draftApplication, student);
+    if(draftApplication && draftApplication.current_step && wiz){
+      wiz.goTo(Math.max(1, Math.min(Number(draftApplication.current_step || 1), 8)));
+      mmcToast('Draft resumed', 'Your saved hostel application has been restored.', 'info');
+    }
+    formDirty = false;
+  });
+
+  document.getElementById('saveDraftBtn').addEventListener('click', function(){
+    saveCurrentStep(wiz ? wiz.current() : 1, this);
+  });
 
   document.getElementById('submitAppBtn').addEventListener('click', function(){
     if(!document.getElementById('declareCorrect').checked){ mmcToast('Declaration required', 'Please confirm the declaration checkbox to submit.', 'warning'); return; }
@@ -536,47 +759,47 @@
       }
       var submitButton = byId('submitAppBtn');
       var originalContent = submitButton.innerHTML;
-      var selectedType = document.querySelector('.mmc-type-card.selected');
-      var applicationNumber = 'MMC-HST-' + new Date().getFullYear() + '-' + student.id + '-' + Date.now().toString().slice(-6);
-      var payload = {
-        application_no: applicationNumber,
-        student_id: student.id,
-        application_type: selectedType ? selectedType.dataset.applicationType : 'new',
-        admission_level: byId('admissionLevel').value,
-        admission_id: byId('acAdmId').value.trim(),
-        college_name: byId('currentCollege').value.trim(),
-        course: byId('acCourse').value,
-        session: byId('acSession').value.trim(),
-        father_name: byId('fFather').value.trim(),
-        mother_name: byId('fMother').value.trim(),
-        guardian_name: byId('fGuardian').value.trim() || null,
-        guardian_mobile: byId('fGuardianMobile').value.trim() || null,
-        permanent_address: byId('aPermanent').value.trim(),
-        correspondence_address: byId('aCorrespondence').value.trim(),
-        blood_group: byId('pBlood').value,
-        aadhar_number: byId('pAadhar').value,
-        religion: byId('pReligion').value.trim() || null,
-        nationality: byId('pNationality').value.trim() || null,
-        student_photo_data: byId('photoPreview').getAttribute('src') || null,
-        intermediate_college: byId('acCollege').value.trim(),
-        board: byId('acBoard').value.trim(),
-        previous_course: byId('previousCourse').value.trim(),
-        result_type: byId('resultType').value,
-        marks_obtained: Number(byId('acMarks').value),
-        total_marks: Number(byId('acTotal').value),
-        percentage: Number(byId('acPercent').value.replace('%','')),
-        roll_number: byId('acRoll').value.trim(),
-        subject: byId('acSubject').value.trim(),
-        applied_category: byId('pCategory').value
-      };
+      var payload = collectApplicationPayload();
       submitButton.disabled = true;
       submitButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Submitting...';
-      mmcApi('/applications', {
+      var draftPromise = draftApplication && draftApplication.id ? Promise.resolve(draftApplication) : mmcApi('/applications/draft', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      })
+        body: JSON.stringify({ student_id: student.id, current_step: 8, data: payload })
+      }).catch(function(error){
+        if(isEndpointMissing(error)){
+          return null;
+        }
+        throw error;
+      });
+      draftPromise
         .then(function(application){
+          if(!application){
+            return mmcApi('/applications', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(buildLegacySubmitPayload(student))
+            });
+          }
+          draftApplication = application;
+          return mmcApi('/applications/' + application.id + '/submit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ student_id: student.id, current_step: 8, data: payload })
+          }).catch(function(error){
+            if(isEndpointMissing(error)){
+              return mmcApi('/applications', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(buildLegacySubmitPayload(student))
+              });
+            }
+            throw error;
+          });
+        })
+        .then(function(application){
+          formDirty = false;
+          localStorage.removeItem(localDraftKey());
           sessionStorage.setItem('mmc_last_application', JSON.stringify(application));
           sessionStorage.setItem('mmc_last_application_preview', JSON.stringify({
             applicant_name: byId('pName').value.trim(), gender: byId('pGender').value,
