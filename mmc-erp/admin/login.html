@@ -71,15 +71,17 @@
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: {
-        username: document.getElementById('adminIdentifier').value.trim(),
-        password: document.getElementById('adminPwd').value
+        identifier: document.getElementById('adminIdentifier').value.trim(),
+        password: document.getElementById('adminPwd').value,
+        role: 'admin'
       }
     })
       .then(function(data){
+        var user = data.user || data;
         sessionStorage.setItem('mmc_admin_user', JSON.stringify({
-          id: data.id,
-          username: data.username || document.getElementById('adminIdentifier').value.trim(),
-          access_token: data.access_token,
+          id: user.id,
+          username: user.username || document.getElementById('adminIdentifier').value.trim(),
+          access_token: '',
           role: 'admin'
         }));
         window.location.href = 'dashboard.html';

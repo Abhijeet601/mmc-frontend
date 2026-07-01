@@ -1,14 +1,18 @@
-const MMC_DEFAULT_API_BASE = 'https://mmc-backend-production-1fa6.up.railway.app';
+const MMC_DEFAULT_API_BASE = 'https://hostel-erp-backend-production.up.railway.app';
 const MMC_API_BASE = (
   window.MMC_API_BASE ||
   localStorage.getItem('mmc_api_base') ||
   MMC_DEFAULT_API_BASE
-).replace(/\/+$/, '');
+).replace(/\/+$, '');
 const MMC_R2_PUBLIC_URL = 'https://pub-56b2773adb554e88a3d5fbc74f0167bc.r2.dev';
 const MMC_REQUEST_TIMEOUT_MS = 30000;
 
 function mmcApiPath(path) {
-  return path.indexOf('/api/') === 0 ? path : '/api' + (path.charAt(0) === '/' ? path : '/' + path);
+  var normalized = path.charAt(0) === '/' ? path : '/' + path;
+  if (normalized === '/login' || normalized === '/admin/login') {
+    return '/auth/login';
+  }
+  return normalized;
 }
 
 function mmcParseErrorBody(text, status) {
@@ -46,7 +50,7 @@ function mmcStoredSession(kind) {
 function mmcAuthTokenForPath(path) {
   var adminSession = mmcStoredSession('admin');
   var studentSession = mmcStoredSession('student');
-  if (path.indexOf('/api/admin/') === 0 || path.indexOf('/api/activity-logs') === 0) {
+  if (path.indexOf('/api/admin/') === 0 || path.indexOf('/admin/') === 0 || path.indexOf('/api/activity-logs') === 0) {
     return adminSession && adminSession.access_token;
   }
   return (studentSession && studentSession.access_token) || (adminSession && adminSession.access_token) || '';

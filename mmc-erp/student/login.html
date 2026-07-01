@@ -117,20 +117,22 @@
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: {
-        email: document.getElementById('loginIdentifier').value.trim(),
-        password: document.getElementById('loginPwd').value
+        identifier: document.getElementById('loginIdentifier').value.trim(),
+        password: document.getElementById('loginPwd').value,
+        role: 'student'
       }
     })
       .then(function(data){
+        var user = data.user || data;
         sessionStorage.setItem('mmc_student_user', JSON.stringify({
-          id: data.student_id,
-          access_token: data.access_token,
-          application_number: data.application_number,
-          name: data.student_name || 'Student',
+          id: user.id,
+          access_token: '',
+          application_number: user.application_number || '',
+          name: user.full_name || user.name || 'Student',
           email: document.getElementById('loginIdentifier').value.trim(),
-          application_completed: data.application_completed
+          application_completed: !!user.application_completed
         }));
-        window.location.href = data.application_completed ? 'dashboard.html' : 'application-form.html';
+        window.location.href = user.application_completed ? 'dashboard.html' : 'application-form.html';
       })
       .catch(function(err){
         mmcToast('Login failed', err.message, 'danger');
