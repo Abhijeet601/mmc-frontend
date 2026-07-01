@@ -71,7 +71,7 @@
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: {
-        identifier: document.getElementById('adminIdentifier').value.trim(),
+        identifier: mmcNormalizeLoginIdentifier(document.getElementById('adminIdentifier').value),
         password: document.getElementById('adminPwd').value,
         role: 'admin'
       }

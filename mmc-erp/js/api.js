@@ -17,6 +17,15 @@ const MMC_API_BASE = _trimTrailingSlashes(
 const MMC_R2_PUBLIC_URL = 'https://pub-56b2773adb554e88a3d5fbc74f0167bc.r2.dev';
 const MMC_REQUEST_TIMEOUT_MS = 30000;
 
+function mmcNormalizeLoginIdentifier(value) {
+  var raw = String(value || '').trim();
+  if (!raw) return '';
+  if (raw.indexOf('@') !== -1) return raw.toLowerCase();
+  var digits = raw.replace(/\D/g, '');
+  if (digits.length >= 10) return digits.slice(-10);
+  return raw;
+}
+
 function mmcApiPath(path) {
   var normalized = path.charAt(0) === '/' ? path : '/' + path;
   if (normalized === '/login') return '/login';
@@ -28,7 +37,7 @@ function mmcNormalizeLoginResponse(path, data, fallbackIdentifier) {
   if (!data || (path !== '/login' && path !== '/api/admin/login' && path !== '/api/login')) return data;
   var user = data.user || data;
   if (!data.access_token && !data.token && user.id) {
-    if (data.role === 'admin' || path.indexOf('admin') !== -1) {
+    if (data.role === 'admin' || data.role === 'super_admin' || path.indexOf('admin') !== -1) {
       data.access_token = 'mmc-admin-' + user.id;
     } else {
       data.access_token = 'mmc-student-' + user.id;
@@ -47,8 +56,17 @@ function mmcNormalizeLoginResponse(path, data, fallbackIdentifier) {
 
 function mmcAuthLoginFallback(path, options) {
   var compatPath = mmcApiPath(path);
+  var body = Object.assign({}, options.body || {});
+  if (body.identifier) body.identifier = mmcNormalizeLoginIdentifier(body.identifier);
+  if (body.email) body.email = mmcNormalizeLoginIdentifier(body.email);
+  if (body.username) body.username = String(body.username || '').trim();
+  options = Object.assign({}, options, { body: body });
   return mmcApiRequest(compatPath, options).catch(function(error) {
     if (path === '/login' || path === '/admin/login') {
+      var message = String(error && error.message || '');
+      if (/invalid|credential|password|unauthorized/i.test(message) && !/unable to reach|timed out|unexpected response/i.test(message)) {
+        throw error;
+      }
       var legacyBody = Object.assign({}, options.body || {});
       if (!legacyBody.identifier) {
         legacyBody.identifier = legacyBody.email || legacyBody.username || '';

@@ -117,7 +117,7 @@
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: {
-        identifier: document.getElementById('loginIdentifier').value.trim(),
+        identifier: mmcNormalizeLoginIdentifier(document.getElementById('loginIdentifier').value),
         password: document.getElementById('loginPwd').value,
         role: 'student'
       }
