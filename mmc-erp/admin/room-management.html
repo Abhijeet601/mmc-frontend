@@ -301,7 +301,7 @@
   }
 
   function hostelRooms(){
-    return groupedRooms(rooms.filter(function(r){ return Number(r.hostel_id) === Number(currentHostelId); }));
+    return groupedRooms(rooms.filter(function(r){ return String(r.hostel_id) === String(currentHostelId); }));
   }
 
   function currentHostelRooms(){
@@ -309,7 +309,7 @@
   }
 
   function selectedHostel(){
-    return hostels.find(function(h){ return Number(h.id) === Number(currentHostelId); }) || null;
+    return hostels.find(function(h){ return String(h.id) === String(currentHostelId); }) || null;
   }
 
   function isVaidehiHostel(){
@@ -382,7 +382,7 @@
     }
 
     tabs.innerHTML = hostels.map(function(h){
-      return '<div class="mmc-hostel-tab ' + (Number(h.id) === Number(currentHostelId) ? 'active' : '') + '" onclick="mmcSwitchHostel(this,' + h.id + ')">' + escapeHtml(h.name) + '</div>';
+      return '<div class="mmc-hostel-tab ' + (String(h.id) === String(currentHostelId) ? 'active' : '') + '" onclick="mmcSwitchHostel(this,\'' + escapeHtml(h.id) + '\')">' + escapeHtml(h.name) + '</div>';
     }).join('');
   }
 

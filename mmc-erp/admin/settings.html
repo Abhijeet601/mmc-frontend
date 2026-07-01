@@ -57,7 +57,7 @@
       setDateValue('admissionEndDate', settings.admission_end_date);
       setDateValue('paymentStartDate', settings.payment_start_date);
       setDateValue('paymentEndDate', settings.payment_end_date);
-      document.getElementById('settingsStatus').textContent = 'Admission: ' + settings.admission_state + ' · Payment: ' + settings.payment_state;
+      document.getElementById('settingsStatus').textContent = 'Settings are stored locally until the backend settings API is enabled.';
     }).catch(function(error){
       document.getElementById('settingsStatus').textContent = 'Unable to load settings.';
       mmcToast('Settings not loaded', error.message, 'danger');
