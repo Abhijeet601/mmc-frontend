@@ -1,8 +1,17 @@
 const MMC_DEFAULT_API_BASE = 'https://hostel-erp-backend-production.up.railway.app';
 function _trimTrailingSlashes(s){ while(s && s.endsWith('/')) s = s.slice(0, -1); return s; }
+function _mmcStoredApiBase(){
+  var stored = localStorage.getItem('mmc_api_base');
+  if (!stored) return '';
+  stored = _trimTrailingSlashes(stored);
+  var trusted = stored === MMC_DEFAULT_API_BASE || /^https?:\/\/(localhost|127\.0\.0\.1)(:[0-9]+)?$/i.test(stored);
+  if (trusted) return stored;
+  localStorage.removeItem('mmc_api_base');
+  return '';
+}
 const MMC_API_BASE = _trimTrailingSlashes(
   window.MMC_API_BASE ||
-  localStorage.getItem('mmc_api_base') ||
+  _mmcStoredApiBase() ||
   MMC_DEFAULT_API_BASE
 );
 const MMC_R2_PUBLIC_URL = 'https://pub-56b2773adb554e88a3d5fbc74f0167bc.r2.dev';
