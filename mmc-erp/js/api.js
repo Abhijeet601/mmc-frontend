@@ -19,10 +19,46 @@ const MMC_REQUEST_TIMEOUT_MS = 30000;
 
 function mmcApiPath(path) {
   var normalized = path.charAt(0) === '/' ? path : '/' + path;
-  if (normalized === '/login' || normalized === '/admin/login') {
-    return '/auth/login';
-  }
+  if (normalized === '/login') return '/login';
+  if (normalized === '/admin/login') return '/api/admin/login';
   return normalized;
+}
+
+function mmcNormalizeLoginResponse(path, data, fallbackIdentifier) {
+  if (!data || (path !== '/login' && path !== '/api/admin/login' && path !== '/api/login')) return data;
+  var user = data.user || data;
+  if (!data.access_token && !data.token && user.id) {
+    if (data.role === 'admin' || path.indexOf('admin') !== -1) {
+      data.access_token = 'mmc-admin-' + user.id;
+    } else {
+      data.access_token = 'mmc-student-' + user.id;
+    }
+  }
+  if (!data.application_number && user.student_code) {
+    data.application_number = user.student_code;
+    user.application_number = user.student_code;
+  }
+  if (!user.full_name && user.name) user.full_name = user.name;
+  if (!data.application_completed && user.application_completed == null) {
+    data.application_completed = false;
+  }
+  return data;
+}
+
+function mmcAuthLoginFallback(path, options) {
+  var compatPath = mmcApiPath(path);
+  return mmcApiRequest(compatPath, options).catch(function(error) {
+    if (path === '/login' || path === '/admin/login') {
+      var legacyBody = Object.assign({}, options.body || {});
+      if (!legacyBody.identifier) {
+        legacyBody.identifier = legacyBody.email || legacyBody.username || '';
+      }
+      if (path === '/admin/login' && !legacyBody.role) legacyBody.role = 'admin';
+      if (path === '/login' && !legacyBody.role) legacyBody.role = 'student';
+      return mmcApiRequest('/auth/login', Object.assign({}, options, { body: legacyBody }));
+    }
+    throw error;
+  });
 }
 
 function mmcParseErrorBody(text, status) {
@@ -66,9 +102,36 @@ function mmcAuthTokenForPath(path) {
   return (studentSession && studentSession.access_token) || (adminSession && adminSession.access_token) || '';
 }
 
-function mmcApi(path, options) {
+function mmcStoreStudentSession(data, fallbackIdentifier) {
+  var user = data.user || data;
+  var token = data.access_token || data.token || user.access_token || user.token || '';
+  if (!token && user.id) token = 'mmc-student-' + user.id;
+  sessionStorage.setItem('mmc_student_user', JSON.stringify({
+    id: user.id,
+    access_token: token,
+    application_number: user.application_number || user.student_code || data.application_number || '',
+    name: user.full_name || user.name || 'Student',
+    email: user.email || fallbackIdentifier || '',
+    mobile: user.mobile || user.mobile_number || '',
+    date_of_birth: user.date_of_birth || null,
+    application_completed: !!(data.application_completed || user.application_completed)
+  }));
+}
+
+function mmcStoreAdminSession(data, fallbackIdentifier) {
+  var user = data.user || data;
+  var token = data.access_token || data.token || user.access_token || user.token || '';
+  if (!token && user.id) token = 'mmc-admin-' + user.id;
+  sessionStorage.setItem('mmc_admin_user', JSON.stringify({
+    id: user.id,
+    username: user.username || fallbackIdentifier || '',
+    access_token: token,
+    role: user.role || data.role || 'admin'
+  }));
+}
+
+function mmcApiRequest(apiPath, options) {
   options = options || {};
-  var apiPath = mmcApiPath(path);
   var url = MMC_API_BASE + apiPath;
   var method = options.method || 'GET';
   var body = options.body;
@@ -120,6 +183,17 @@ function mmcApi(path, options) {
       reject(new Error('The request was cancelled before the server responded.'));
     };
     xhr.send(body ? (isFormData || typeof body === 'string' ? body : JSON.stringify(body)) : null);
+  });
+}
+
+function mmcApi(path, options) {
+  options = options || {};
+  var apiPath = mmcApiPath(path);
+  var request = (path === '/login' || path === '/admin/login')
+    ? mmcAuthLoginFallback(path, options)
+    : mmcApiRequest(apiPath, options);
+  return request.then(function(data) {
+    return mmcNormalizeLoginResponse(apiPath, data);
   });
 }
 

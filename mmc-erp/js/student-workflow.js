@@ -65,7 +65,7 @@ function mmcBuildStudentWorkflow(data){
 
 function mmcLoadStudentWorkflow(){
   var student = mmcCurrentStudent();
-  if(!student || !student.access_token) return Promise.resolve(null);
+  if(!student || (!student.access_token && !student.id)) return Promise.resolve(null);
   function optionalApi(path, fallback){
     return mmcApi(path).catch(function(){ return fallback; });
   }

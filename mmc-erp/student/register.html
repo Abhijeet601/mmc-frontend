@@ -140,6 +140,7 @@
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: {
+        name: document.getElementById('rname').value.trim(),
         email: document.getElementById('remail').value.trim(),
         mobile_number: document.getElementById('rmobile').value.trim(),
         date_of_birth: document.getElementById('rdob').value,
@@ -147,7 +148,7 @@
       }
     })
       .then(function(student){
-        document.getElementById('genStudentId').textContent = student.application_number;
+        document.getElementById('genStudentId').textContent = student.application_number || student.student_code || '-';
         registerWizard.goTo(2);
       })
       .catch(function(err){

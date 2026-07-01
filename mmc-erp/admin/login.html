@@ -77,13 +77,7 @@
       }
     })
       .then(function(data){
-        var user = data.user || data;
-        sessionStorage.setItem('mmc_admin_user', JSON.stringify({
-          id: user.id,
-          username: user.username || document.getElementById('adminIdentifier').value.trim(),
-          access_token: '',
-          role: user.role || data.role || 'admin'
-        }));
+        mmcStoreAdminSession(data, document.getElementById('adminIdentifier').value.trim());
         window.location.href = 'dashboard.html';
       })
       .catch(function(err){

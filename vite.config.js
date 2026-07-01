@@ -4,7 +4,7 @@ import { fileURLToPath, URL } from 'node:url'
 import { cpSync, existsSync, readFileSync, statSync } from 'node:fs'
 import { extname, join, normalize } from 'node:path'
 
-const railwayBackendUrl = 'https://mmc-backend-production-1fa6.up.railway.app'
+const railwayBackendUrl = 'https://hostel-erp-backend-production.up.railway.app'
 const erpStaticDir = fileURLToPath(new URL('./mmc-erp', import.meta.url))
 
 const mimeTypes = {

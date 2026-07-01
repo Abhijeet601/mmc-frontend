@@ -124,15 +124,8 @@
     })
       .then(function(data){
         var user = data.user || data;
-        sessionStorage.setItem('mmc_student_user', JSON.stringify({
-          id: user.id,
-          access_token: '',
-          application_number: user.application_number || '',
-          name: user.full_name || user.name || 'Student',
-          email: document.getElementById('loginIdentifier').value.trim(),
-          application_completed: !!user.application_completed
-        }));
-        window.location.href = user.application_completed ? 'dashboard.html' : 'application-form.html';
+        mmcStoreStudentSession(data, document.getElementById('loginIdentifier').value.trim());
+        window.location.href = (data.application_completed || user.application_completed) ? 'dashboard.html' : 'application-form.html';
       })
       .catch(function(err){
         mmcToast('Login failed', err.message, 'danger');
