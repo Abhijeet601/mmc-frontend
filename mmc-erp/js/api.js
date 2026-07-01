@@ -1,9 +1,10 @@
 const MMC_DEFAULT_API_BASE = 'https://hostel-erp-backend-production.up.railway.app';
-const MMC_API_BASE = (
+function _trimTrailingSlashes(s){ while(s && s.endsWith('/')) s = s.slice(0, -1); return s; }
+const MMC_API_BASE = _trimTrailingSlashes(
   window.MMC_API_BASE ||
   localStorage.getItem('mmc_api_base') ||
   MMC_DEFAULT_API_BASE
-).replace(/\/+$, '');
+);
 const MMC_R2_PUBLIC_URL = 'https://pub-56b2773adb554e88a3d5fbc74f0167bc.r2.dev';
 const MMC_REQUEST_TIMEOUT_MS = 30000;
 
