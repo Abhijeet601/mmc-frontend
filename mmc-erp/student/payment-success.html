@@ -24,20 +24,20 @@
       <svg class="mmc-success-check" viewBox="0 0 90 90" style="width:64px;height:64px;"><circle cx="45" cy="45" r="40"/><path d="M27 46 L40 59 L64 31"/></svg>
     </div>
     <p class="mmc-eyebrow mb-1">Payment Status</p>
-    <h4 class="fw-700 mb-2" style="color:var(--mmc-navy);">No confirmed payment found</h4>
-    <p class="fs-13 text-secondary mb-4" id="typeDisplay">Payment gateway confirmation is not connected yet.</p>
+    <h4 class="fw-700 mb-2" id="statusTitle" style="color:var(--mmc-navy);">Verifying payment</h4>
+    <p class="fs-13 text-secondary mb-4" id="typeDisplay">Confirming the transaction with the payment server.</p>
 
     <div class="mmc-card mb-4" style="background:var(--mmc-bg);box-shadow:none;">
       <div class="mmc-card-body py-3">
         <div class="mmc-kv"><span class="k">Transaction ID</span><span class="v" id="txnDisplay">-</span></div>
-        <div class="mmc-kv"><span class="k">Student Name</span><span class="v">Student</span></div>
+        <div class="mmc-kv"><span class="k">Amount</span><span class="v" id="amountDisplay">-</span></div>
         <div class="mmc-kv"><span class="k">Date &amp; Time</span><span class="v" id="dateDisplay"></span></div>
-        <div class="mmc-kv"><span class="k">Payment Mode</span><span class="v">-</span></div>
+        <div class="mmc-kv"><span class="k">Payment Mode</span><span class="v" id="modeDisplay">-</span></div>
       </div>
     </div>
 
     <div class="d-flex gap-2">
-      <a href="receipt.html" class="btn btn-outline-maroon w-100"><i class="fa-solid fa-download me-1"></i> Receipt</a>
+      <a href="receipt.html" id="receiptLink" class="btn btn-outline-maroon w-100 disabled" aria-disabled="true"><i class="fa-solid fa-download me-1"></i> Receipt</a>
       <a href="dashboard.html" class="btn btn-maroon w-100"><i class="fa-solid fa-grid-2 me-1"></i> Dashboard</a>
     </div>
   </div>
@@ -45,9 +45,32 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="../js/common.js"></script>
+<script src="../js/api.js"></script>
 <script>
-  document.getElementById('txnDisplay').textContent = '-';
-  document.getElementById('dateDisplay').textContent = '-';
+  (async function verifyPayment(){
+    var orderId = new URLSearchParams(window.location.search).get('order_id');
+    if(!orderId){ window.location.replace('payment-failed.html?reason=missing_order'); return; }
+    try{
+      var payment = await mmcApi('/api/payment/status/' + encodeURIComponent(orderId));
+      if(payment.status === 'cancelled'){ window.location.replace('payment-cancelled.html?order_id=' + encodeURIComponent(orderId)); return; }
+      if(payment.status !== 'success'){ window.location.replace('payment-failed.html?order_id=' + encodeURIComponent(orderId)); return; }
+      document.getElementById('statusTitle').textContent = 'Payment Successful';
+      document.getElementById('typeDisplay').textContent = 'CCAvenue has verified your payment. Your official receipt is ready.';
+      document.getElementById('txnDisplay').textContent = payment.tracking_id || payment.order_id;
+      document.getElementById('dateDisplay').textContent = new Date().toLocaleString('en-IN');
+      document.getElementById('modeDisplay').textContent = payment.payment_mode || 'CCAvenue';
+      document.getElementById('amountDisplay').textContent = mmcCurrency(payment.amount);
+      if(payment.receipt_url){
+        var receipt = document.getElementById('receiptLink');
+        receipt.href = MMC_API_BASE + payment.receipt_url;
+        receipt.classList.remove('disabled');
+        receipt.removeAttribute('aria-disabled');
+      }
+    } catch(error){
+      document.getElementById('statusTitle').textContent = 'Verification unavailable';
+      document.getElementById('typeDisplay').textContent = error.message;
+    }
+  }());
 </script>
 </body>
 </html>

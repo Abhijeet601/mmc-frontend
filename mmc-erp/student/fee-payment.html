@@ -19,7 +19,6 @@
   .mmc-fee-option{ border:1.5px solid var(--mmc-border); border-radius:12px; padding:14px 16px; cursor:pointer; transition:all .2s ease; height:100%; }
   .mmc-fee-option:hover{ border-color:var(--mmc-maroon-light); }
   .mmc-fee-option.selected{ border-color:var(--mmc-maroon); background:var(--mmc-maroon-50); }
-  .mmc-demo-note{ background:var(--mmc-warning-bg); border:1px solid #fbdfa3; border-radius:12px; color:#92400e; }
 </style>
 </head>
 <body>
@@ -92,7 +91,7 @@
               <div class="mmc-kv"><span class="k">Student Name</span><span class="v" id="regStudentName">Student</span></div>
               <div class="mmc-kv"><span class="k">Course</span><span class="v" id="regCourse">-</span></div>
               <div class="mmc-kv"><span class="k">Session</span><span class="v" id="regSession">2026 - 2027</span></div>
-              <div class="mmc-kv"><span class="k">Fee Type</span><span class="v" id="feeTypeText">New Student Registration Fee</span></div>
+              <div class="mmc-kv"><span class="k">Registration Type</span><span class="v" id="feeTypeText">New Student Registration Fee</span></div>
               <hr class="my-3">
               <div class="d-flex justify-content-between align-items-center">
                 <span class="fw-600 text-secondary">Amount Payable</span>
@@ -130,7 +129,10 @@
                 <div class="mmc-pay-method selected" data-pay-mode="UPI" onclick="mmcSelectPay(this)"><i class="fa-solid fa-qrcode"></i><div><div class="fw-600 fs-13">UPI</div><div class="fs-12 text-secondary">GPay, PhonePe, Paytm</div></div></div>
               </div>
               <div class="col-sm-6">
-                <div class="mmc-pay-method" data-pay-mode="Card" onclick="mmcSelectPay(this)"><i class="fa-solid fa-credit-card"></i><div><div class="fw-600 fs-13">Debit / Credit Card</div><div class="fs-12 text-secondary">Visa, Mastercard, RuPay</div></div></div>
+                <div class="mmc-pay-method" data-pay-mode="Debit Card" onclick="mmcSelectPay(this)"><i class="fa-solid fa-credit-card"></i><div><div class="fw-600 fs-13">Debit Card</div><div class="fs-12 text-secondary">Visa, Mastercard, RuPay</div></div></div>
+              </div>
+              <div class="col-sm-6">
+                <div class="mmc-pay-method" data-pay-mode="Credit Card" onclick="mmcSelectPay(this)"><i class="fa-regular fa-credit-card"></i><div><div class="fw-600 fs-13">Credit Card</div><div class="fs-12 text-secondary">Visa, Mastercard, RuPay</div></div></div>
               </div>
               <div class="col-sm-6">
                 <div class="mmc-pay-method" data-pay-mode="Net Banking" onclick="mmcSelectPay(this)"><i class="fa-solid fa-building-columns"></i><div><div class="fw-600 fs-13">Net Banking</div><div class="fs-12 text-secondary">All major banks</div></div></div>
@@ -140,19 +142,13 @@
               </div>
             </div>
 
-            <div id="payFieldsUpi">
-              <label class="form-label">UPI ID</label>
-              <input type="text" class="form-control mb-2" placeholder="yourname@upi" value="">
-              <p class="fs-12 text-secondary">A payment request will be sent to your UPI app for approval.</p>
-            </div>
-
             <div class="form-check mt-3 mb-4">
               <input class="form-check-input" type="checkbox" id="payTerms" required>
               <label class="form-check-label fs-13 text-secondary" for="payTerms">I agree that the registration fee is <strong>non-refundable</strong> and accept the <a href="#">terms of payment</a>.</label>
             </div>
 
-            <button class="btn btn-maroon btn-lg w-100" id="payNowBtn"><i class="fa-solid fa-flask me-1"></i> Demo Pay ₹1,000 &amp; Generate Receipt</button>
-            <div class="alert mmc-demo-note py-2 fs-12 mt-3 mb-0"><i class="fa-solid fa-flask me-1"></i> Demo payment only. It creates a test transaction and official receipt in this ERP; no real money is charged.</div>
+            <div class="alert alert-danger py-2 fs-12 d-none" id="paymentError" role="alert"></div>
+            <button type="button" class="btn btn-maroon btn-lg w-100" id="payNowBtn"><i class="fa-solid fa-lock me-1"></i> Pay Securely via CCAvenue</button>
           </div>
         </div>
       </div>
@@ -168,13 +164,51 @@
   function mmcSelectPay(el){
     document.querySelectorAll('.mmc-pay-method').forEach(function(c){ c.classList.remove('selected'); });
     el.classList.add('selected');
-    selectedPayMode = el.dataset.payMode || 'Demo Payment';
+    selectedPayMode = el.dataset.payMode || 'UPI';
   }
   var selectedFee = { type:'Registration Fee', amount:1000 };
   var selectedPayMode = 'UPI';
   var activeApplication = null;
+  var payNowBtn = document.getElementById('payNowBtn');
+  var paymentError = document.getElementById('paymentError');
+
   function updatePayButton(){
-    document.getElementById('payNowBtn').innerHTML = '<i class="fa-solid fa-flask me-1"></i> Demo Pay ' + mmcCurrency(selectedFee.amount) + ' &amp; Generate Receipt';
+    payNowBtn.innerHTML = '<i class="fa-solid fa-lock me-1"></i> Pay Securely via CCAvenue';
+  }
+  function showPaymentError(message){
+    paymentError.textContent = message || 'Unable to initiate payment. Please try again.';
+    paymentError.classList.remove('d-none');
+  }
+  function clearPaymentError(){
+    paymentError.textContent = '';
+    paymentError.classList.add('d-none');
+  }
+  function buildGatewayForm(gateway){
+    if(!gateway || !gateway.gateway_url || !gateway.encRequest || !gateway.access_code){
+      throw new Error('Payment gateway response is incomplete. Please contact the hostel office.');
+    }
+    var oldForm = document.getElementById('ccavenueForm');
+    if(oldForm) oldForm.remove();
+    var form = document.createElement('form');
+    form.id = 'ccavenueForm';
+    form.method = 'POST';
+    form.action = gateway.gateway_url;
+    form.style.display = 'none';
+
+    var encRequest = document.createElement('input');
+    encRequest.type = 'hidden';
+    encRequest.name = 'encRequest';
+    encRequest.value = gateway.encRequest;
+
+    var accessCode = document.createElement('input');
+    accessCode.type = 'hidden';
+    accessCode.name = 'access_code';
+    accessCode.value = gateway.access_code;
+
+    form.appendChild(encRequest);
+    form.appendChild(accessCode);
+    document.body.appendChild(form);
+    return form;
   }
   function mmcSelectFeeType(el){
     document.querySelectorAll('.mmc-fee-option').forEach(function(c){ c.classList.remove('selected'); });
@@ -189,40 +223,53 @@
     document.getElementById('feeAmountText').textContent = amount;
     updatePayButton();
   }
-  document.getElementById('payNowBtn').addEventListener('click', function(){
-    if(!document.getElementById('payTerms').checked){ mmcToast('Accept Terms', 'Please accept the payment terms to continue.', 'warning'); return; }
-    var btn = this;
-    btn.disabled = true;
-    btn.innerHTML = '<span class="mmc-spinner sm" style="border-color:rgba(255,255,255,.35);border-top-color:#fff;display:inline-block;vertical-align:middle;margin-right:8px;"></span> Processing payment…';
-    var student = mmcCurrentStudent();
-    if(!student || !activeApplication){
-      mmcToast('Application required', 'Sign in and submit a hostel application before making a demo payment.', 'warning');
-      btn.disabled = false;
-      updatePayButton();
+  payNowBtn.addEventListener('click', async function(){
+    clearPaymentError();
+    if(!document.getElementById('payTerms').checked){
+      showPaymentError('Please accept the payment terms to continue.');
+      mmcToast('Accept Terms', 'Please accept the payment terms to continue.', 'warning');
       return;
     }
-    mmcApi('/payments/registration/success', {
-      method:'POST',
-      headers:{ 'Content-Type':'application/json' },
-      body:JSON.stringify({
-        student_id:student.id,
-        application_id:activeApplication.id,
-        transaction_no:'DEMO-REG-' + Date.now(),
-        payment_type:selectedFee.type,
-        amount:selectedFee.amount,
-        mode:selectedPayMode + ' Demo Payment',
-        status:'Success',
-        paid_at:new Date().toISOString()
-      })
-    }).then(function(receipt){
-      sessionStorage.setItem('mmc_last_registration_receipt', JSON.stringify(receipt));
-      mmcToast('Demo payment successful', 'Official registration receipt generated.', 'success');
-      setTimeout(function(){ window.open(MMC_API_BASE + receipt.pdf_url, '_blank'); window.location.href = 'receipt.html'; }, 700);
-    }).catch(function(error){
-      mmcToast('Demo payment failed', error.message, 'danger');
-      btn.disabled = false;
+    var student = mmcCurrentStudent();
+    if(!student || !student.id){
+      showPaymentError('Student session is missing. Please sign in again before making payment.');
+      mmcToast('Login required', 'Please sign in with your student account before making payment.', 'warning');
+      return;
+    }
+    if(!activeApplication || !activeApplication.id){
+      showPaymentError('Application is missing. Submit a hostel application before making payment.');
+      mmcToast('Application required', 'Submit a hostel application before making payment.', 'warning');
+      return;
+    }
+    if(!selectedFee || !selectedFee.amount || selectedFee.amount <= 0){
+      showPaymentError('Payment amount is invalid. Please refresh the page and try again.');
+      mmcToast('Invalid amount', 'Payment amount is invalid.', 'warning');
+      return;
+    }
+
+    payNowBtn.disabled = true;
+    payNowBtn.innerHTML = '<span class="mmc-spinner sm" style="border-color:rgba(255,255,255,.35);border-top-color:#fff;display:inline-block;vertical-align:middle;margin-right:8px;"></span> Redirecting to CCAvenue...';
+
+    try {
+      var gateway = await mmcApi('/api/payment/initiate', {
+        method:'POST',
+        headers:{ 'Content-Type':'application/json' },
+        body:JSON.stringify({
+          student_id:student.id,
+          application_id:activeApplication.id,
+          payment_type:selectedFee.type,
+          amount:selectedFee.amount
+        })
+      });
+      var form = buildGatewayForm(gateway);
+      form.submit();
+    } catch(error) {
+      var message = error && error.message ? error.message : 'Unable to initiate payment. Please try again.';
+      showPaymentError(message);
+      mmcToast('Payment not initiated', message, 'danger');
+      payNowBtn.disabled = false;
       updatePayButton();
-    });
+    }
   });
 
   (function loadApplication(){

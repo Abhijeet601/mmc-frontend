@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Payment Failed - Magadh Mahila College ERP Portal</title>
+<link rel="icon" href="https://pub-56b2773adb554e88a3d5fbc74f0167bc.r2.dev/branding/Magadh_Mahila_College.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="stylesheet" href="../css/theme.css">
+<link rel="stylesheet" href="../css/components.css">
+<style>body{background:var(--mmc-bg);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}.mmc-status-ring{width:108px;height:108px;border-radius:50%;background:var(--mmc-danger-bg);display:flex;align-items:center;justify-content:center;margin:0 auto 18px}.mmc-status-ring i{font-size:46px;color:var(--mmc-danger)}</style>
+</head>
+<body>
+<div class="mmc-card mmc-pop-in" style="max-width:480px;width:100%;position:relative;z-index:1;"><div class="mmc-card-body text-center py-5">
+  <div class="mmc-status-ring"><i class="fa-solid fa-xmark"></i></div><p class="mmc-eyebrow mb-1">Payment Status</p>
+  <h4 class="fw-700 mb-2" style="color:var(--mmc-navy);">Payment Not Completed</h4>
+  <p class="fs-13 text-secondary mb-4" id="statusMessage">CCAvenue did not confirm this payment. No receipt has been generated.</p>
+  <div class="mmc-card mb-4" style="background:var(--mmc-bg);box-shadow:none;"><div class="mmc-card-body py-3"><div class="mmc-kv"><span class="k">Order ID</span><span class="v" id="orderDisplay">-</span></div><div class="mmc-kv"><span class="k">Status</span><span class="v" id="gatewayStatus">Failed</span></div></div></div>
+  <div class="d-flex gap-2"><a href="fee-payment.html" class="btn btn-outline-maroon w-100"><i class="fa-solid fa-rotate-right me-1"></i> Try Again</a><a href="dashboard.html" class="btn btn-maroon w-100"><i class="fa-solid fa-grid-2 me-1"></i> Dashboard</a></div>
+</div></div>
+<script src="../js/api.js"></script><script>(async function(){var id=new URLSearchParams(location.search).get('order_id');document.getElementById('orderDisplay').textContent=id||'-';if(!id)return;try{var p=await mmcApi('/api/payment/status/'+encodeURIComponent(id));document.getElementById('gatewayStatus').textContent=p.payment_status||p.status||'Failed';}catch(e){document.getElementById('statusMessage').textContent='Payment status could not be loaded. Check your dashboard before trying again.';}}());</script>
+</body>
+</html>

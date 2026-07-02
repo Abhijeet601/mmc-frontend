@@ -1,6 +1,3 @@
-var MMC_PAYMENT_GATEWAY_ENABLED = false;
-var MMC_PAYMENT_DISABLED_MESSAGE = 'Payment gateway integration is currently disabled. This feature will be enabled in a future update.';
-
 function mmcIsPaidStatus(status){
   return ['paid', 'success', 'completed'].indexOf(String(status || '').toLowerCase()) !== -1;
 }
@@ -50,8 +47,8 @@ function mmcBuildStudentWorkflow(data){
     receipts: receipts,
     registrationReceipt: registrationReceipt,
     hostelReceipt: hostelReceipt,
-    registrationPaid: MMC_PAYMENT_GATEWAY_ENABLED && Boolean(registrationReceipt || registrationPayment),
-    hostelPaid: MMC_PAYMENT_GATEWAY_ENABLED && Boolean(hostelReceipt || hostelPayment),
+    registrationPaid: Boolean(registrationReceipt || registrationPayment),
+    hostelPaid: Boolean(hostelReceipt || hostelPayment),
     shortlisted: shortlisted,
     roomAllotted: Boolean(application && application.hostel_id && application.room_id && application.bed),
     status: status,
@@ -106,7 +103,7 @@ function mmcApplyStudentNavigation(workflow){
   }
   setVisible('application-form.html', !workflow.application || workflow.draft);
   setVisible('fee-payment.html', Boolean(workflow.application && !workflow.draft && !workflow.registrationPaid));
-  setVisible('hostel-fee-payment.html', Boolean(MMC_PAYMENT_GATEWAY_ENABLED && workflow.registrationPaid && workflow.shortlisted && !workflow.hostelPaid));
+  setVisible('hostel-fee-payment.html', Boolean(workflow.registrationPaid && workflow.shortlisted && !workflow.hostelPaid));
   setVisible('room-allotment.html', Boolean(workflow.hostelPaid || workflow.roomAllotted));
 }
 
@@ -139,10 +136,6 @@ function mmcGuardStudentWorkflow(pageName, workflow){
   }
   if(pageName === 'registration-fee' && workflow.registrationPaid){
     mmcWorkflowRedirect('You have already completed this step.');
-    return true;
-  }
-  if(pageName === 'hostel-fee' && !MMC_PAYMENT_GATEWAY_ENABLED){
-    mmcWorkflowRedirect('Hostel Fee Payment is currently disabled. This feature will be activated after the online payment gateway is integrated and the student is shortlisted.');
     return true;
   }
   if(pageName === 'hostel-fee' && !mmcPaymentIsOpen(workflow.settings)){

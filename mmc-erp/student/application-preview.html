@@ -136,8 +136,7 @@
             <div class="mmc-kv"><span class="k">Submitted On</span><span class="v">-</span></div>
             <div class="mmc-kv"><span class="k">Applied Category</span><span class="v">-</span></div>
             <div class="mmc-kv"><span class="k">Course</span><span class="v">-</span></div>
-            <button type="button" class="btn btn-maroon w-100 mt-3" id="demoPayReceiptBtn"><i class="fa-solid fa-flask me-1"></i> Demo Pay &amp; View Receipt</button>
-            <a href="fee-payment.html" class="btn btn-ghost w-100 mt-2">Open Payment Page</a>
+            <a href="fee-payment.html" class="btn btn-maroon w-100 mt-3"><i class="fa-solid fa-lock me-1"></i> Open Payment Page</a>
           </div>
           <div class="mmc-card mmc-reveal mmc-card-body">
             <p class="mmc-eyebrow mb-2">What happens next?</p>
@@ -161,7 +160,7 @@
   mmcLoadStudentWorkflow().then(function(workflow){
     mmcApplyStudentNavigation(workflow);
     if(workflow && workflow.registrationPaid){
-      document.querySelectorAll('a[href="fee-payment.html"], #demoPayReceiptBtn').forEach(function(el){ el.style.display = 'none'; });
+      document.querySelectorAll('a[href="fee-payment.html"]').forEach(function(el){ el.style.display = 'none'; });
     }
     if(workflow && workflow.application){
       var app = workflow.application;
@@ -228,40 +227,6 @@
     var applicationNumber = document.querySelector('.col-lg-4 .text-maroon');
     if(applicationNumber) applicationNumber.textContent = app.application_no;
   }());
-
-  document.getElementById('demoPayReceiptBtn').addEventListener('click', function(){
-    var button = this;
-    var student = mmcCurrentStudent();
-    if(!student){ mmcToast('Login required', 'Sign in with your student account first.', 'warning'); return; }
-    button.disabled = true;
-    button.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Generating receipt...';
-    mmcApi('/applications?student_id=' + student.id).then(function(applications){
-      var application = applications[0];
-      if(!application) throw new Error('Submit a hostel application before making a demo payment.');
-      return mmcApi('/payments/registration/success', {
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({
-          student_id:student.id,
-          application_id:application.id,
-          transaction_no:'DEMO-REG-' + Date.now(),
-          payment_type:'Registration Fee',
-          amount:application.application_type === 'existing' ? 100 : 1000,
-          mode:'Demo Payment',
-          status:'Success',
-          paid_at:new Date().toISOString()
-        })
-      });
-    }).then(function(receipt){
-      mmcToast('Demo payment successful', 'Your official receipt has been generated.', 'success');
-      window.open(MMC_API_BASE + receipt.pdf_url, '_blank');
-      setTimeout(function(){ window.location.href='receipt.html'; }, 700);
-    }).catch(function(error){
-      button.disabled = false;
-      button.innerHTML = '<i class="fa-solid fa-flask me-1"></i> Demo Pay &amp; View Receipt';
-      mmcToast('Demo payment failed', error.message, 'danger');
-    });
-  });
 </script>
 </body>
 </html>
