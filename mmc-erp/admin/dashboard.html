@@ -336,7 +336,7 @@
         <div class="col-sm-6 col-xl-3"><div class="mmc-premium-stat mmc-reveal" style="--stat-color:#d4af37;"><div class="mmc-stat-top"><div class="mmc-stat-orb"><i class="fa-solid fa-indian-rupee-sign"></i></div><span class="mmc-stat-trend"><i class="fa-solid fa-shield-halved"></i> Verified</span></div><div class="mmc-stat-number">INR <span class="mmc-counter" data-stat="revenue" data-target="0">0</span></div><div class="mmc-stat-title">Revenue Collected</div></div></div>
         <div class="col-sm-6 col-xl-3"><div class="mmc-premium-stat mmc-reveal" style="--stat-color:#0a1f44;"><div class="mmc-stat-top"><div class="mmc-stat-orb"><i class="fa-solid fa-door-closed"></i></div><span class="mmc-stat-trend"><i class="fa-solid fa-bed"></i> Rooms</span></div><div class="mmc-stat-number"><span class="mmc-counter" data-stat="occupied" data-target="0">0</span></div><div class="mmc-stat-title">Occupied Rooms</div></div></div>
         <div class="col-sm-6 col-xl-3"><div class="mmc-premium-stat mmc-reveal" style="--stat-color:#22c55e;"><div class="mmc-stat-top"><div class="mmc-stat-orb"><i class="fa-solid fa-door-open"></i></div><span class="mmc-stat-trend"><i class="fa-solid fa-key"></i> Vacant</span></div><div class="mmc-stat-number"><span class="mmc-counter" data-stat="vacant" data-target="0">0</span></div><div class="mmc-stat-title">Vacant Rooms</div></div></div>
-        <div class="col-sm-6 col-xl-3"><div class="mmc-premium-stat mmc-reveal" style="--stat-color:#0ea5e9;"><div class="mmc-stat-top"><div class="mmc-stat-orb"><i class="fa-solid fa-chart-simple"></i></div><span class="mmc-stat-trend"><i class="fa-solid fa-percent"></i> Capacity</span></div><div class="mmc-stat-number"><span class="mmc-counter" data-target="0">0</span>%</div><div class="mmc-stat-title">Hostel Occupancy</div></div></div>
+        <div class="col-sm-6 col-xl-3"><div class="mmc-premium-stat mmc-reveal" style="--stat-color:#0ea5e9;"><div class="mmc-stat-top"><div class="mmc-stat-orb"><i class="fa-solid fa-chart-simple"></i></div><span class="mmc-stat-trend"><i class="fa-solid fa-percent"></i> Capacity</span></div><div class="mmc-stat-number"><span class="mmc-counter" data-stat="occupancy" data-target="0">0</span>%</div><div class="mmc-stat-title">Hostel Occupancy</div></div></div>
       </section>
 
       <section class="mb-4">
@@ -402,6 +402,7 @@
   var dashboardPayments = [];
   var dashboardRooms = [];
   var dashboardHostels = [];
+  var dashboardMetrics = null;
   var dashboardStatusPill = { Draft:'muted', Submitted:'info', Verified:'navy', Approved:'success', Shortlisted:'info', Selected:'success', Waitlisted:'warning', Pending:'navy', Rejected:'danger' };
   var charts = {};
 
@@ -422,8 +423,9 @@
     return (name || 'Student').split(' ').filter(Boolean).slice(0,2).map(function(part){ return part.charAt(0).toUpperCase(); }).join('') || 'ST';
   }
   function normalizeStatus(status){
-    status = status || 'Pending';
-    return status.charAt(0).toUpperCase() + status.slice(1);
+    var raw = String(status || 'Pending').replace(/_/g, ' ').trim();
+    if(!raw) raw = 'Pending';
+    return raw.split(/\s+/).map(function(part){ return part.charAt(0).toUpperCase() + part.slice(1).toLowerCase(); }).join(' ');
   }
   function normalizeRegistrationType(type){
     var value = String(type || 'new').toLowerCase();
@@ -432,10 +434,12 @@
   function normalizePaymentStatus(app){
     var appPayment = String(app.application_payment_status || app.payment_status || '').toLowerCase();
     var hostelStatus = String(app.hostel_status || '').toLowerCase();
-    if(appPayment === 'paid' && hostelStatus === 'paid') return 'Paid';
+    var combined = String(app.payment_status || '').toLowerCase();
+    if(combined === 'refunded') return 'Refunded';
+    if(combined === 'failed' || appPayment === 'failed' || hostelStatus === 'payment_failed') return 'Failed';
+    if(combined === 'partially_paid') return 'Partially Paid';
+    if(combined === 'success' || combined === 'paid' || appPayment === 'paid') return 'Paid';
     if(appPayment === 'paid' && hostelStatus && hostelStatus !== 'paid' && hostelStatus !== 'not_available') return 'Partially Paid';
-    if(appPayment === 'paid') return 'Paid';
-    if(appPayment === 'failed' || hostelStatus === 'payment_failed') return 'Failed';
     return 'Pending';
   }
   function paymentBadge(status){
@@ -497,17 +501,45 @@
     });
     return { labels:labels, values:values };
   }
+  function monthlyRevenue(payments){
+    var labels = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    var applicationValues = new Array(12).fill(0);
+    var hostelValues = new Array(12).fill(0);
+    payments.forEach(function(payment){
+      var date = payment.payment_date ? new Date(payment.payment_date) : null;
+      if(!date || Number.isNaN(date.getTime())) return;
+      var bucket = paymentTypeKey(payment) === 'hostel' ? hostelValues : applicationValues;
+      bucket[date.getMonth()] += number(payment.amount);
+    });
+    return { labels:labels, applicationValues:applicationValues, hostelValues:hostelValues };
+  }
   function chartDataFromCounter(counter){
     var labels = Object.keys(counter);
     return { labels:labels.length ? labels : ['No Data'], values:labels.length ? labels.map(function(key){ return counter[key]; }) : [0] };
   }
+  function chartDataFromMetricList(items){
+    var labels = (items || []).map(function(item){ return item.label || 'Unassigned'; });
+    var values = (items || []).map(function(item){ return number(item.value); });
+    return { labels:labels.length ? labels : ['No Data'], values:values.length ? values : [0] };
+  }
+  function paymentTypeKey(payment){
+    var value = String(payment.payment_type || payment.type || '').toLowerCase();
+    if(value.indexOf('hostel') !== -1) return 'hostel';
+    return 'application';
+  }
+  function paidPayments(){
+    return dashboardPayments.filter(function(payment){
+      var status = String(payment.status || payment.payment_status || '').toLowerCase();
+      return ['success','paid','completed'].indexOf(status) !== -1;
+    });
+  }
   function refreshCharts(){
-    var categoryData = chartDataFromCounter(countBy(dashboardApplications, function(app){ return app.applied_category || app.category; }));
+    var categoryData = dashboardMetrics && dashboardMetrics.by_category ? chartDataFromMetricList(dashboardMetrics.by_category) : chartDataFromCounter(countBy(dashboardApplications, function(app){ return app.applied_category || app.category; }));
     charts.category.data.labels = categoryData.labels;
     charts.category.data.datasets[0].data = categoryData.values;
     charts.category.update();
 
-    var courseData = chartDataFromCounter(countBy(dashboardApplications, function(app){ return app.course || app.course_name; }));
+    var courseData = dashboardMetrics && dashboardMetrics.by_course ? chartDataFromMetricList(dashboardMetrics.by_course) : chartDataFromCounter(countBy(dashboardApplications, function(app){ return app.course || app.course_name; }));
     charts.course.data.labels = courseData.labels;
     charts.course.data.datasets[0].data = courseData.values;
     charts.course.update();
@@ -517,8 +549,10 @@
     charts.admissions.data.datasets[0].data = monthData.values;
     charts.admissions.update();
 
-    var occupiedBeds = dashboardRooms.reduce(function(total, room){ return total + number(room.occupied_beds || room.occupied || 0); }, 0);
-    var totalBeds = dashboardRooms.reduce(function(total, room){ return total + number(room.bed_capacity || room.total_beds || 0); }, 0);
+    var occupiedBeds = dashboardMetrics ? number(dashboardMetrics.occupied_beds) : dashboardRooms.reduce(function(total, room){ return total + number(room.occupied_beds || room.occupied || 0); }, 0);
+    var availableBeds = dashboardMetrics ? number(dashboardMetrics.available_beds) : dashboardRooms.reduce(function(total, room){ return total + number(room.available_beds || Math.max(number(room.bed_capacity || room.total_beds || 0) - number(room.occupied_beds || room.occupied || 0), 0)); }, 0);
+    var totalBeds = occupiedBeds + availableBeds;
+    if(!totalBeds) totalBeds = dashboardRooms.reduce(function(total, room){ return total + number(room.bed_capacity || room.total_beds || 0); }, 0);
     if(!totalBeds) totalBeds = dashboardApplications.filter(function(app){ return app.hostel_id || app.room_id || app.allocated_hostel; }).length || 1;
     var vacantBeds = Math.max(totalBeds - occupiedBeds, 0);
     var occupancy = Math.round((occupiedBeds / Math.max(totalBeds, 1)) * 100);
@@ -527,20 +561,27 @@
     document.getElementById('occupancyText').textContent = occupancy + '%';
     setCounter('[data-stat="occupancy"]', occupancy, '', '%');
 
-    var applicationRevenue = dashboardPayments.filter(function(p){ return p.payment_type === 'application'; }).reduce(function(total, p){ return total + number(p.amount); }, 0);
-    var hostelRevenue = dashboardPayments.filter(function(p){ return p.payment_type === 'hostel'; }).reduce(function(total, p){ return total + number(p.amount); }, 0);
-    charts.revenue.data.datasets[0].data = [0, applicationRevenue * .2, applicationRevenue * .4, applicationRevenue * .62, applicationRevenue * .82, applicationRevenue];
-    charts.revenue.data.datasets[1].data = [0, hostelRevenue * .12, hostelRevenue * .25, hostelRevenue * .48, hostelRevenue * .74, hostelRevenue];
+    var successfulPayments = paidPayments();
+    var applicationRevenue = dashboardMetrics ? number(dashboardMetrics.application_revenue) : successfulPayments.filter(function(p){ return paymentTypeKey(p) === 'application'; }).reduce(function(total, p){ return total + number(p.amount); }, 0);
+    var hostelRevenue = dashboardMetrics ? number(dashboardMetrics.hostel_revenue) : successfulPayments.filter(function(p){ return paymentTypeKey(p) === 'hostel'; }).reduce(function(total, p){ return total + number(p.amount); }, 0);
+    var revenueData = monthlyRevenue(successfulPayments);
+    if(!successfulPayments.length && dashboardMetrics){
+      revenueData.applicationValues[new Date().getMonth()] = applicationRevenue;
+      revenueData.hostelValues[new Date().getMonth()] = hostelRevenue;
+    }
+    charts.revenue.data.labels = revenueData.labels;
+    charts.revenue.data.datasets[0].data = revenueData.applicationValues;
+    charts.revenue.data.datasets[1].data = revenueData.hostelValues;
     charts.revenue.update();
   }
   function refreshStats(){
     var statusCounts = countBy(dashboardApplications, function(app){ return normalizeStatus(app.status); });
-    var totalRevenue = dashboardPayments.reduce(function(total, payment){ return total + number(payment.amount); }, 0);
+    var totalRevenue = dashboardMetrics ? number(dashboardMetrics.application_revenue) + number(dashboardMetrics.hostel_revenue) : paidPayments().reduce(function(total, payment){ return total + number(payment.amount); }, 0);
     var occupiedRooms = dashboardRooms.filter(function(room){ return number(room.occupied_beds || room.occupied || 0) > 0; }).length;
-    var vacantRooms = dashboardRooms.filter(function(room){ return Math.max(number(room.bed_capacity || room.total_beds || 0) - number(room.occupied_beds || room.occupied || 0), 0) > 0; }).length;
-    setCounter('[data-stat="total"]', dashboardApplications.length);
-    setCounter('[data-stat="approved"]', number(statusCounts.Approved) + number(statusCounts.Selected) + number(statusCounts.Shortlisted));
-    setCounter('[data-stat="pending"]', number(statusCounts.Pending) + number(statusCounts.Submitted));
+    var vacantRooms = dashboardRooms.filter(function(room){ return number(room.available_beds || Math.max(number(room.bed_capacity || room.total_beds || 0) - number(room.occupied_beds || room.occupied || 0), 0)) > 0; }).length;
+    setCounter('[data-stat="total"]', dashboardMetrics ? number(dashboardMetrics.total_applications) : dashboardApplications.length);
+    setCounter('[data-stat="approved"]', dashboardMetrics ? number(dashboardMetrics.shortlisted_students || dashboardMetrics.verified_students) : number(statusCounts.Approved) + number(statusCounts.Selected) + number(statusCounts.Shortlisted));
+    setCounter('[data-stat="pending"]', dashboardMetrics ? number(dashboardMetrics.pending_applications) : number(statusCounts.Pending) + number(statusCounts.Submitted) + number(statusCounts.ApplicationSubmitted));
     setCounter('[data-stat="rejected"]', number(statusCounts.Rejected));
     setCounter('[data-stat="revenue"]', totalRevenue, '');
     setCounter('[data-stat="occupied"]', occupiedRooms);
@@ -553,15 +594,16 @@
       return;
     }
     body.innerHTML = dashboardApplications.slice(0, 8).map(function(app, index){
-      var canAct = ['Pending','Waitlisted','Selected','Submitted'].indexOf(normalizeStatus(app.status)) !== -1;
-      var room = app.room_number || app.room || app.bed || '-';
+      var status = normalizeStatus(app.status || app.application_status || app.form_status);
+      var canAct = ['Pending','Waitlisted','Selected','Submitted','Application Submitted'].indexOf(status) !== -1 || app.shortlist_status === 'pending';
+      var room = app.room_number || app.room || app.bed_number || app.bed || '-';
       return '<tr>' +
-        '<td><div class="mmc-student-cell"><div class="mmc-student-photo">' + escapeHtml(initials(app.student_name)) + '</div><div><div class="fw-700 text-navy">' + escapeHtml(app.student_name || '-') + '</div><div class="fs-12 text-secondary">' + escapeHtml(app.application_no || app.application_number || '-') + '</div></div></div></td>' +
+        '<td><div class="mmc-student-cell"><div class="mmc-student-photo">' + escapeHtml(initials(app.student_name || app.name)) + '</div><div><div class="fw-700 text-navy">' + escapeHtml(app.student_name || app.name || '-') + '</div><div class="fs-12 text-secondary">' + escapeHtml(app.application_no || app.application_number || '-') + '</div></div></div></td>' +
         '<td>' + escapeHtml(app.course || app.course_name || '-') + '</td>' +
         '<td>' + escapeHtml(normalizeRegistrationType(app.application_type)) + '</td>' +
         '<td>' + paymentBadge(normalizePaymentStatus(app)) + '</td>' +
         '<td>' + escapeHtml(room) + '</td>' +
-        '<td>' + escapeHtml(formatDateTime(app.submitted_at || app.created_at)) + '</td>' +
+        '<td>' + escapeHtml(formatDateTime(app.submitted_at || app.application_submitted_at || app.created_at)) + '</td>' +
         '<td class="text-end"><div class="mmc-dashboard-actions">' +
           '<button class="btn btn-sm btn-outline-maroon mmc-ripple" onclick="mmcDashboardSetStatus(' + index + ', \'Shortlisted\', this)"' + (canAct ? '' : ' disabled') + '><i class="fa-solid fa-list-check me-1"></i> Shortlist</button>' +
           '<button class="btn btn-sm btn-maroon mmc-ripple" onclick="mmcDashboardSetStatus(' + index + ', \'Approved\', this)"' + (canAct ? '' : ' disabled') + '><i class="fa-solid fa-check me-1"></i> Approve</button>' +
@@ -592,9 +634,9 @@
     });
     charts.revenue = new Chart(document.getElementById('revenueChart'), {
       type:'line',
-      data:{ labels:['Jan','Feb','Mar','Apr','May','Jun'], datasets:[
-        { label:'Registration', data:[0,0,0,0,0,0], borderColor:'#D4AF37', backgroundColor:'rgba(212,175,55,.18)', tension:.42, fill:true, pointRadius:2 },
-        { label:'Hostel', data:[0,0,0,0,0,0], borderColor:'#800000', backgroundColor:'rgba(128,0,0,.12)', tension:.42, fill:true, pointRadius:2 }
+      data:{ labels:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'], datasets:[
+        { label:'Registration', data:new Array(12).fill(0), borderColor:'#D4AF37', backgroundColor:'rgba(212,175,55,.18)', tension:.42, fill:true, pointRadius:2 },
+        { label:'Hostel', data:new Array(12).fill(0), borderColor:'#800000', backgroundColor:'rgba(128,0,0,.12)', tension:.42, fill:true, pointRadius:2 }
       ]},
       options:{ plugins:{ legend:{ position:'bottom', labels:{ usePointStyle:true, boxWidth:8 } } }, scales:{ y:{ grid:{ color:'#eef0f5' } }, x:{ grid:{ display:false } } } }
     });
@@ -605,32 +647,46 @@
     refreshCharts();
   }
   function loadDashboardData(){
-    Promise.all([
-      optionalApi('/applications', []),
-      optionalApi('/students?limit=1000', []),
-      optionalApi('/rooms', []),
-      optionalApi('/hostels', []),
-      optionalApi('/api/admin/payments', { items:[] }, { headers:adminAuthHeaders() }),
-      optionalApi('/admin/dashboard-metrics', null)
+    var authOptions = { headers:adminAuthHeaders() };
+    return Promise.all([
+      optionalApi('/api/admin/dashboard', null, authOptions),
+      optionalApi('/api/admin/students?limit=500', { items:[] }, authOptions),
+      optionalApi('/api/admin/hostel/rooms?limit=500', { items:[] }, authOptions),
+      optionalApi('/api/admin/payments', { items:[] }, authOptions)
     ]).then(function(results){
-      var apps = results[0] || [];
-      var studentMap = byIdMap(results[1] || []);
-      dashboardStudents = results[1] || [];
-      dashboardRooms = results[2] || [];
-      dashboardHostels = results[3] || [];
-      dashboardPayments = (results[4] && results[4].items) || [];
-      dashboardApplications = apps.map(function(app){
-        var student = studentMap[app.student_id] || {};
-        app.student_name = student.name || app.name || 'Student #' + app.student_id;
-        app.status = normalizeStatus(app.status || app.form_status);
-        app.application_payment_status = app.application_payment_status || app.payment_status;
-        return app;
-      });
-      var metrics = results[5];
-      if(metrics){
-        dashboardPayments.push({ payment_type:'application', amount:metrics.application_revenue || 0 });
-        dashboardPayments.push({ payment_type:'hostel', amount:metrics.hostel_revenue || 0 });
-      }
+      dashboardMetrics = results[0] || null;
+      dashboardStudents = (results[1] && results[1].items) || [];
+      dashboardRooms = (results[2] && results[2].items) || [];
+      dashboardPayments = (results[3] && results[3].items) || [];
+      dashboardHostels = chartDataFromMetricList(dashboardMetrics && dashboardMetrics.by_hostel ? dashboardMetrics.by_hostel : []).labels;
+      dashboardApplications = dashboardStudents
+        .filter(function(student){ return student.form_status !== 'not_started'; })
+        .map(function(student){
+          return {
+            id: student.id,
+            student_id: student.id,
+            application_no: student.application_number,
+            application_number: student.application_number,
+            student_name: student.name || 'Student #' + student.id,
+            course_name: student.course_name,
+            course: student.course_name,
+            category: student.category,
+            application_type: student.application_type || 'new',
+            status: normalizeStatus(student.application_status || student.form_status),
+            form_status: student.form_status,
+            verification_status: student.verification_status,
+            application_payment_status: student.application_payment_status,
+            payment_status: student.payment_status,
+            shortlist_status: student.shortlist_status,
+            hostel_status: student.hostel_status,
+            room_number: student.room_number,
+            bed_number: student.bed_number,
+            allocated_hostel: student.allocated_hostel,
+            submitted_at: student.application_submitted_at,
+            created_at: student.application_submitted_at
+          };
+        })
+        .sort(function(a, b){ return new Date(b.submitted_at || 0) - new Date(a.submitted_at || 0); });
       hydrateDashboard();
     }).catch(function(error){
       document.getElementById('dashboardApplicationsBody').innerHTML = '<tr><td colspan="7" class="text-center text-danger py-4">Unable to load dashboard data.</td></tr>';
@@ -639,26 +695,21 @@
   }
   function mmcDashboardSetStatus(index, status, button){
     var app = dashboardApplications[index];
-    if(!app || !app.id) return;
+    if(!app || !app.student_id) return;
     var originalContent = button.innerHTML;
     button.disabled = true;
     button.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Saving';
-    mmcApi('/applications/' + app.id + '/status', {
+    var path = status === 'Approved' ? '/api/admin/students/' + app.student_id + '/verify' : '/api/admin/students/' + app.student_id + '/shortlist';
+    var payload = status === 'Approved' ? { verified:true } : { shortlisted:true };
+    mmcApi(path, {
       method:'PATCH',
-      headers:{ 'Content-Type':'application/json' },
-      body:JSON.stringify({
-        status:status,
-        allotted_category:app.allotted_category || app.applied_category || null,
-        hostel_id:app.hostel_id || null,
-        room_id:app.room_id || null
-      })
+      headers:Object.assign({ 'Content-Type':'application/json' }, adminAuthHeaders()),
+      body:JSON.stringify(payload)
     })
-      .then(function(updated){
-        app.status = normalizeStatus(updated.status || status);
-        app.allotted_category = updated.allotted_category;
-        app.hostel_id = updated.hostel_id;
-        app.room_id = updated.room_id;
-        hydrateDashboard();
+      .then(function(){
+        return loadDashboardData();
+      })
+      .then(function(){
         mmcToast('Application ' + status.toLowerCase(), (app.application_no || 'Application') + ' has been updated.', 'success');
       })
       .catch(function(error){
