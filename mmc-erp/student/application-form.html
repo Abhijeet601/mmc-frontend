@@ -545,7 +545,7 @@
   }
 
   function isEndpointMissing(error){
-    return error && /not found|status 404/i.test(error.message || '');
+    return error && /not found|status 404|failed to fetch|networkerror|load failed|cors|sleeping|down|unreachable/i.test(error.message || '');
   }
 
   function collectApplicationPayload(){
@@ -699,7 +699,7 @@
       if(isEndpointMissing(error)){
         saveLocalDraft(step);
         formDirty = false;
-        mmcToast('Draft Saved Successfully', 'Your progress has been saved in this browser until the backend draft API is deployed.', 'success');
+        mmcToast('Draft saved locally', 'Your progress was saved in this browser because the backend could not be reached.', 'success');
         return true;
       }
       mmcToast('Draft save failed', error.message || 'Unable to save this step.', 'danger');
