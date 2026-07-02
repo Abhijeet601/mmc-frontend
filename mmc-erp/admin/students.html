@@ -133,7 +133,10 @@
         <label class="form-label">Allotted Hostel</label>
         <select class="form-select mb-3" id="editHostelSelect"><option value="">No hostel allotted</option></select>
         <label class="form-label">Allotted Room</label>
-        <select class="form-select" id="editRoomSelect"><option value="">No room allotted</option></select>
+        <select class="form-select mb-3" id="editRoomSelect"><option value="">No room allotted</option></select>
+        <label class="form-label">Bed Number</label>
+        <select class="form-select" id="editBedSelect"><option value="">No bed allotted</option></select>
+        <div class="form-text mt-2" id="editAllocationHint">Choose a room to view available bed numbers.</div>
       </div>
       <div class="modal-footer"><button class="btn btn-ghost" data-bs-dismiss="modal">Cancel</button><button class="btn btn-maroon" id="saveEditBtn">Save Changes</button></div>
     </div>
@@ -334,24 +337,63 @@
     if(!app.id) return;
     var hostelSelect = document.getElementById('editHostelSelect');
     var roomSelect = document.getElementById('editRoomSelect');
+    var bedSelect = document.getElementById('editBedSelect');
+    var allocationHint = document.getElementById('editAllocationHint');
     var selectedHostelId = app.raw.hostel_id || '';
+    var selectedRoomId = app.raw.room_id || '';
+    var selectedBed = app.raw.bed || '';
     hostelSelect.innerHTML = '<option value="">No hostel allotted</option>' + hostels.map(function(hostel){
       return '<option value="' + hostel.id + '"' + (Number(selectedHostelId) === Number(hostel.id) ? ' selected' : '') + '>' + escapeHtml(hostel.name) + '</option>';
     }).join('');
 
+    function renderBedOptions(roomId){
+      bedSelect.innerHTML = '<option value="">No bed allotted</option>';
+      if(!roomId){
+        allocationHint.textContent = 'Choose a room to view available bed numbers.';
+        return;
+      }
+      allocationHint.textContent = 'Loading bed availability...';
+      mmcApi('/rooms/' + roomId + '/beds')
+        .then(function(data){
+          var availableBeds = data.available_bed_numbers || [];
+          var options = availableBeds.map(function(bed){
+            return '<option value="' + bed + '"' + (String(selectedBed) === String(bed) ? ' selected' : '') + '>' + escapeHtml('Bed ' + bed) + '</option>';
+          });
+          if(!options.length){
+            bedSelect.innerHTML = '<option value="">No bed available</option>';
+            allocationHint.textContent = 'This room is fully occupied.';
+            return;
+          }
+          bedSelect.innerHTML = '<option value="">No bed allotted</option>' + options.join('');
+          allocationHint.textContent = 'Available beds: ' + availableBeds.join(', ');
+        })
+        .catch(function(){
+          bedSelect.innerHTML = '<option value="">No bed allotted</option>';
+          allocationHint.textContent = 'Unable to load bed inventory for this room.';
+        });
+    }
+
     function updateRooms(){
       var hostelId = hostelSelect.value;
-      var selectedRoomId = app.raw.room_id || '';
       var filteredRooms = rooms.filter(function(room){
         return Number(room.hostel_id) === Number(hostelId) && (room.status === 'available' || Number(room.id) === Number(selectedRoomId));
       });
       roomSelect.innerHTML = '<option value="">No room allotted</option>' + filteredRooms.map(function(room){
-        return '<option value="' + room.id + '"' + (Number(selectedRoomId) === Number(room.id) ? ' selected' : '') + '>' + escapeHtml(room.room_number) + ' - ' + escapeHtml(room.status) + '</option>';
+        var selected = Number(selectedRoomId) === Number(room.id) ? ' selected' : '';
+        return '<option value="' + room.id + '"' + selected + '>' + escapeHtml(room.room_number) + ' - ' + escapeHtml(room.status) + '</option>';
       }).join('');
+      var currentRoomId = roomSelect.value || '';
+      renderBedOptions(currentRoomId);
     }
     hostelSelect.onchange = function(){
-      app.raw.room_id = null;
+      selectedRoomId = '';
+      selectedBed = '';
       updateRooms();
+    };
+    roomSelect.onchange = function(){
+      selectedRoomId = roomSelect.value || '';
+      selectedBed = '';
+      renderBedOptions(selectedRoomId);
     };
     updateRooms();
   }
@@ -455,7 +497,9 @@
       status: document.getElementById('editStatusSelect').value,
       allotted_category: document.getElementById('editAllottedSelect').value || null,
       hostel_id: document.getElementById('editHostelSelect').value ? Number(document.getElementById('editHostelSelect').value) : null,
-      room_id: document.getElementById('editRoomSelect').value ? Number(document.getElementById('editRoomSelect').value) : null
+      room_id: document.getElementById('editRoomSelect').value ? Number(document.getElementById('editRoomSelect').value) : null,
+      bed: document.getElementById('editBedSelect').value || null,
+      allocation_status: document.getElementById('editBedSelect').value ? 'allocated' : (a.raw && a.raw.allocation_status ? a.raw.allocation_status : 'pending')
     };
     button.disabled = true;
     button.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Saving...';

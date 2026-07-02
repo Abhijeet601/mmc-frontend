@@ -134,6 +134,12 @@
 <script src="../js/api.js"></script>
 <script src="../js/student-workflow.js"></script>
 <script>
+  function escapeHtml(value){
+    return String(value == null ? '' : value).replace(/[&<>"']/g, function(ch){
+      return ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' })[ch];
+    });
+  }
+
   function setKv(label, value){
     document.querySelectorAll('.mmc-kv').forEach(function(item){
       var key = item.querySelector('.k');
@@ -151,16 +157,18 @@
       document.querySelector('.mmc-page-sub').textContent = workflow.hostelPaid ? 'Hostel fee paid. Waiting for admin room allotment.' : 'Room details will appear after hostel fee payment and admin allotment.';
       return;
     }
+    var bedLabel = workflow.bed ? 'Bed ' + workflow.bed : '-';
+    var roomLabel = (room.room_number || '-') + (workflow.bed ? workflow.bed : '');
     document.querySelector('.mmc-page-sub').textContent = 'Your hostel room has been allotted.';
     document.querySelectorAll('.mmc-stat-value')[0].textContent = room.room_number || '-';
-    document.querySelectorAll('.mmc-stat-value')[1].textContent = 'Bed 1';
+    document.querySelectorAll('.mmc-stat-value')[1].textContent = bedLabel;
     document.querySelectorAll('.mmc-stat-value')[2].textContent = room.floor || '-';
     document.querySelectorAll('.mmc-stat-value')[3].textContent = hostel ? hostel.name : '-';
     document.querySelectorAll('.mmc-stat-label')[3].textContent = 'Hostel';
     setKv('Hostel', hostel ? hostel.name : '-');
-    setKv('Room / Bed', (room.room_number || '-') + ' / Bed 1');
+    setKv('Room / Bed', roomLabel + ' / ' + bedLabel);
     document.getElementById('floorMap').innerHTML =
-      '<div class="col-6 col-sm-4 col-md-3"><div class="mmc-room-card mine"><div class="room-dot"></div><div class="room-no">' + (room.room_number || '-') + '</div><div class="room-meta">Floor ' + (room.floor || '-') + ' - Bed 1</div></div></div>';
+      '<div class="col-6 col-sm-4 col-md-3"><div class="mmc-room-card mine"><div class="room-dot"></div><div class="room-no">' + escapeHtml(roomLabel) + '</div><div class="room-meta">Floor ' + (room.floor || '-') + ' - ' + escapeHtml(bedLabel) + '</div></div></div>';
   }
   mmcLoadStudentWorkflow().then(renderRoomAllotment).catch(function(error){
     document.getElementById('floorMap').innerHTML = '<div class="col-12 text-center text-secondary py-3 fs-13">No floor layout available.</div>';

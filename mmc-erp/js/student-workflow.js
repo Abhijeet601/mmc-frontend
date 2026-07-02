@@ -41,6 +41,7 @@ function mmcBuildStudentWorkflow(data){
   var shortlisted = ['shortlisted', 'approved', 'selected'].indexOf(statusKey) !== -1;
   var hostel = application && application.hostel_id ? hostels.find(function(item){ return Number(item.id) === Number(application.hostel_id); }) : null;
   var room = application && application.room_id ? rooms.find(function(item){ return Number(item.id) === Number(application.room_id); }) : null;
+  var bed = application && application.bed ? application.bed : null;
 
   return {
     student: student,
@@ -52,11 +53,12 @@ function mmcBuildStudentWorkflow(data){
     registrationPaid: MMC_PAYMENT_GATEWAY_ENABLED && Boolean(registrationReceipt || registrationPayment),
     hostelPaid: MMC_PAYMENT_GATEWAY_ENABLED && Boolean(hostelReceipt || hostelPayment),
     shortlisted: shortlisted,
-    roomAllotted: Boolean(application && application.hostel_id && application.room_id),
+    roomAllotted: Boolean(application && application.hostel_id && application.room_id && application.bed),
     status: status,
     draft: draft,
     hostel: hostel,
     room: room,
+    bed: bed,
     settings: data.settings || null
   };
 }
