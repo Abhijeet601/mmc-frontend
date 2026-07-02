@@ -344,3 +344,191 @@ table.dataTable thead .sorting:before, table.dataTable thead .sorting:after{ opa
   background-image: radial-gradient(circle at 1px 1px, rgba(10,31,68,.05) 1px, transparent 0);
   background-size: 22px 22px;
 }
+
+/* ============================= PREMIUM STUDENT EXPERIENCE ============================= */
+.mmc-app{
+  background:
+    radial-gradient(circle at 18% 0%, rgba(212,162,39,.13), transparent 28%),
+    radial-gradient(circle at 92% 4%, rgba(128,0,0,.09), transparent 26%),
+    linear-gradient(180deg,#f8fafc 0%,#f4f7fb 55%,#ffffff 100%);
+}
+.mmc-topbar{
+  background: rgba(255,255,255,.86);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 10px 30px rgba(10,31,68,.045);
+}
+.mmc-sidebar{
+  background:
+    radial-gradient(circle at 20% 0%, rgba(212,162,39,.16), transparent 30%),
+    linear-gradient(195deg, #0a1f44 0%, #071735 56%, #050d22 100%);
+}
+.mmc-sidebar-brand{
+  background: linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,0));
+}
+.mmc-sidebar-link{
+  border: 1px solid transparent;
+}
+.mmc-sidebar-link:hover{
+  border-color: rgba(255,255,255,.08);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.02);
+}
+.mmc-search input,
+.mmc-icon-btn,
+.mmc-sidebar-toggle,
+.mmc-profile-trigger{
+  box-shadow: 0 8px 22px rgba(15,23,42,.04);
+}
+.mmc-page-head{
+  position: relative;
+  padding: 20px 22px;
+  border: 1px solid rgba(230,233,240,.88);
+  border-radius: 18px;
+  background:
+    linear-gradient(135deg,rgba(255,255,255,.95),rgba(255,255,255,.78)),
+    radial-gradient(circle at 92% 18%,rgba(212,162,39,.13),transparent 28%);
+  box-shadow: 0 16px 42px rgba(10,31,68,.07);
+  overflow: hidden;
+}
+.mmc-page-head::before{
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 4px;
+  background: linear-gradient(90deg,var(--mmc-maroon),var(--mmc-brass),var(--mmc-navy));
+}
+.mmc-page-title{
+  font-weight: 800;
+  letter-spacing: 0;
+}
+.mmc-page-sub{
+  max-width: 760px;
+}
+.mmc-card,
+.mmc-ticket,
+.mmc-table-card{
+  border-color: rgba(230,233,240,.9);
+  box-shadow: 0 14px 36px rgba(10,31,68,.075);
+}
+.mmc-card{
+  background: rgba(255,255,255,.92);
+  backdrop-filter: blur(12px);
+}
+.mmc-card:hover,
+.mmc-ticket:hover{
+  box-shadow: 0 20px 52px rgba(10,31,68,.11);
+}
+.mmc-card-head{
+  background: linear-gradient(180deg,rgba(248,250,252,.82),rgba(255,255,255,.72));
+}
+.mmc-stat-card{
+  border-radius: 16px;
+  background:
+    linear-gradient(135deg,rgba(255,255,255,.98),rgba(255,255,255,.88)),
+    radial-gradient(circle at 100% 0%,rgba(128,0,0,.08),transparent 34%);
+}
+.mmc-stat-icon{
+  box-shadow: 0 12px 26px rgba(10,31,68,.1);
+}
+.btn-maroon{
+  background: linear-gradient(135deg,var(--mmc-maroon),#a11d2a);
+  border-color: transparent;
+  box-shadow: 0 10px 24px rgba(128,0,0,.18);
+}
+.btn-maroon:hover{
+  background: linear-gradient(135deg,var(--mmc-maroon-dark),var(--mmc-maroon));
+}
+.btn-ghost{
+  background: rgba(255,255,255,.72);
+}
+.btn-ghost:hover{
+  border-color: rgba(128,0,0,.18);
+  color: var(--mmc-maroon);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(10,31,68,.07);
+}
+.btn-outline-maroon:hover{
+  box-shadow: 0 10px 24px rgba(128,0,0,.16);
+  transform: translateY(-1px);
+}
+.form-control,
+.form-select,
+.input-group-text{
+  border-radius: 12px;
+}
+.form-control,
+.form-select{
+  background-color: rgba(255,255,255,.94);
+}
+.form-control:hover,
+.form-select:hover{
+  border-color: rgba(128,0,0,.22);
+}
+.mmc-dropzone{
+  background:
+    linear-gradient(135deg,rgba(255,255,255,.9),rgba(248,250,252,.94)),
+    radial-gradient(circle at 50% 0%,rgba(212,162,39,.1),transparent 32%);
+}
+.mmc-table-card{
+  border-radius: 16px;
+  overflow: hidden;
+  background: #fff;
+}
+.mmc-table-card thead th{
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: linear-gradient(180deg,#f1f5fb,#eaf0f8);
+}
+.mmc-table-card tbody tr{
+  transition: background .18s ease, transform .18s ease;
+}
+.mmc-table-card tbody tr:hover{
+  background: #fff8f8;
+}
+.mmc-ticket{
+  border-radius: 18px;
+}
+.mmc-ticket-head{
+  background:
+    radial-gradient(circle at 90% 10%,rgba(212,162,39,.35),transparent 24%),
+    linear-gradient(120deg,var(--mmc-navy),#061330 58%,var(--mmc-maroon-dark));
+}
+.mmc-pay-method,
+.mmc-fee-option,
+.mmc-room-card{
+  background: linear-gradient(135deg,#fff,#fbfcff);
+  box-shadow: 0 8px 22px rgba(10,31,68,.04);
+}
+.mmc-pay-method:hover,
+.mmc-fee-option:hover,
+.mmc-room-card:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 16px 34px rgba(10,31,68,.09);
+}
+.mmc-pay-method.selected,
+.mmc-fee-option.selected{
+  box-shadow: 0 0 0 3px rgba(128,0,0,.08), 0 14px 30px rgba(128,0,0,.08);
+}
+.mmc-auth-form-side{
+  background:
+    radial-gradient(circle at 10% 10%,rgba(212,162,39,.14),transparent 30%),
+    linear-gradient(180deg,#f8fafc,#fff);
+}
+.mmc-auth-card .mmc-card,
+.mmc-auth-card{
+  filter: none;
+}
+.mmc-auth-illustration{
+  background:
+    radial-gradient(circle at 22% 16%,rgba(212,162,39,.22),transparent 28%),
+    linear-gradient(160deg,var(--mmc-navy) 0%,var(--mmc-navy-dark) 62%,var(--mmc-maroon-dark) 130%);
+}
+@media (max-width: 575.98px){
+  .mmc-page-head{
+    padding: 18px;
+    border-radius: 15px;
+  }
+  .mmc-page-title{
+    font-size: 21px;
+  }
+}

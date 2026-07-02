@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard — Magadh Mahila College ERP Portal</title>
+<title>Student Dashboard - Magadh Mahila College ERP Portal</title>
 <link rel="icon" href="https://pub-56b2773adb554e88a3d5fbc74f0167bc.r2.dev/branding/Magadh_Mahila_College.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -11,15 +11,91 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 <link rel="stylesheet" href="../css/theme.css">
 <link rel="stylesheet" href="../css/components.css">
+<style>
+  body{ background:linear-gradient(180deg,#f8fafc 0%,#f3f6fb 46%,#fff 100%); }
+  .mmc-student-shell{ position:relative; }
+  .mmc-student-shell::before{ content:""; position:fixed; inset:0 0 auto var(--mmc-sidebar-w); height:340px; background:radial-gradient(circle at 18% 20%,rgba(212,175,55,.18),transparent 28%), radial-gradient(circle at 88% 12%,rgba(128,0,0,.14),transparent 24%), linear-gradient(135deg,rgba(128,0,0,.08),rgba(10,31,68,.04)); pointer-events:none; z-index:-1; }
+  .mmc-student-topbar{ background:rgba(255,255,255,.82); backdrop-filter:blur(18px); border-bottom:1px solid rgba(214,219,230,.78); }
+  .mmc-session-chip{ display:flex; align-items:center; gap:8px; border:1px solid var(--mmc-border); background:#fff; border-radius:999px; padding:9px 12px; font-size:12px; font-weight:700; color:var(--mmc-navy); box-shadow:0 8px 24px rgba(15,23,42,.05); }
+  .mmc-hero{ position:relative; overflow:hidden; border-radius:18px; padding:26px; color:#fff; background:linear-gradient(135deg,#720000 0%,#8d1111 46%,#0a1f44 100%); box-shadow:0 24px 60px rgba(82,0,0,.24); }
+  .mmc-hero::before{ content:""; position:absolute; inset:0; background:linear-gradient(90deg,rgba(255,255,255,.16),transparent 42%), radial-gradient(circle at 82% 20%,rgba(212,175,55,.35),transparent 22%); opacity:.9; }
+  .mmc-hero::after{ content:""; position:absolute; right:-70px; bottom:-110px; width:320px; height:320px; border:1px solid rgba(255,255,255,.18); border-radius:50%; box-shadow:inset 0 0 0 42px rgba(255,255,255,.05); }
+  .mmc-hero-content{ position:relative; z-index:1; display:grid; grid-template-columns:minmax(0,1fr) auto; gap:22px; align-items:center; }
+  .mmc-hero-kicker{ display:inline-flex; align-items:center; gap:8px; padding:7px 11px; border-radius:999px; background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.18); color:#ffe8a6; font-size:11px; font-weight:800; letter-spacing:.09em; text-transform:uppercase; margin-bottom:12px; }
+  .mmc-hero-title{ font-size:clamp(24px,3vw,38px); font-weight:800; line-height:1.12; margin:0 0 8px; letter-spacing:0; }
+  .mmc-hero-sub{ color:rgba(255,255,255,.78); font-size:14px; max-width:720px; margin:0; }
+  .mmc-hero-actions{ display:flex; gap:10px; flex-wrap:wrap; margin-top:20px; }
+  .mmc-hero-side{ min-width:210px; padding:16px; border-radius:16px; background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.18); backdrop-filter:blur(12px); }
+  .mmc-hero-side small{ display:block; color:rgba(255,255,255,.68); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; }
+  .mmc-hero-side strong{ display:block; font-size:28px; line-height:1; margin-top:8px; }
+  .mmc-progress-rail{ height:8px; border-radius:999px; background:rgba(255,255,255,.18); overflow:hidden; margin-top:12px; }
+  .mmc-progress-fill{ height:100%; width:0; border-radius:inherit; background:linear-gradient(90deg,#d4af37,#fff0b8); transition:width .7s ease; }
+  .mmc-glass-card{ position:relative; overflow:hidden; border:1px solid rgba(226,232,240,.86); border-radius:16px; background:rgba(255,255,255,.9); box-shadow:0 18px 44px rgba(15,23,42,.08); transition:transform .22s ease, box-shadow .22s ease, border-color .22s ease; }
+  .mmc-glass-card:hover{ transform:translateY(-4px); box-shadow:0 24px 60px rgba(15,23,42,.12); border-color:rgba(128,0,0,.18); }
+  .mmc-premium-stat{ padding:18px; min-height:148px; }
+  .mmc-premium-stat::before{ content:""; position:absolute; inset:0 0 auto 0; height:4px; background:linear-gradient(90deg,var(--stat-color),rgba(212,175,55,.7)); }
+  .mmc-stat-orb{ width:48px; height:48px; border-radius:14px; display:grid; place-items:center; color:#fff; background:linear-gradient(135deg,var(--stat-color),rgba(10,31,68,.92)); box-shadow:0 13px 26px rgba(15,23,42,.18); }
+  .mmc-stat-topline{ display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom:14px; }
+  .mmc-stat-value-lg{ color:var(--mmc-navy); font-size:24px; font-weight:800; line-height:1.1; word-break:break-word; }
+  .mmc-stat-label-soft{ color:var(--mmc-ink-faint); font-size:12px; font-weight:700; margin-top:5px; }
+  .mmc-mini-trend{ display:inline-flex; align-items:center; gap:6px; border-radius:999px; padding:6px 9px; background:rgba(15,23,42,.05); color:var(--mmc-navy); font-size:11px; font-weight:800; white-space:nowrap; }
+  .mmc-panel-head{ display:flex; align-items:center; justify-content:space-between; gap:14px; padding:18px 18px 0; }
+  .mmc-panel-head h6{ margin:0; color:var(--mmc-navy); font-size:15px; font-weight:800; }
+  .mmc-panel-head small{ color:var(--mmc-ink-faint); font-size:12px; }
+  .mmc-panel-body{ padding:18px; }
+  .mmc-journey{ position:relative; display:flex; flex-direction:column; gap:13px; }
+  .mmc-journey::before{ content:""; position:absolute; left:19px; top:20px; bottom:20px; width:2px; background:#e8edf5; }
+  .mmc-journey-step{ position:relative; display:grid; grid-template-columns:40px 1fr auto; gap:12px; align-items:center; padding:12px; border:1px solid #edf1f7; border-radius:14px; background:#fff; transition:all .2s ease; }
+  .mmc-journey-step:hover{ border-color:rgba(128,0,0,.18); box-shadow:0 12px 28px rgba(15,23,42,.07); }
+  .mmc-journey-dot{ position:relative; z-index:1; width:40px; height:40px; border-radius:13px; display:grid; place-items:center; background:#f1f5f9; color:#64748b; border:1px solid #e2e8f0; }
+  .mmc-journey-step.done .mmc-journey-dot{ background:linear-gradient(135deg,#16a34a,#22c55e); color:#fff; border-color:transparent; }
+  .mmc-journey-step.active .mmc-journey-dot{ background:linear-gradient(135deg,#800000,#a32121); color:#fff; border-color:transparent; box-shadow:0 0 0 5px rgba(128,0,0,.09); }
+  .mmc-journey-title{ color:var(--mmc-navy); font-weight:800; font-size:13px; }
+  .mmc-journey-desc{ color:var(--mmc-ink-faint); font-size:12px; margin-top:2px; }
+  .mmc-profile-premium{ text-align:center; padding:22px; }
+  .mmc-profile-cover{ height:78px; margin:-22px -22px 0; background:linear-gradient(135deg,rgba(128,0,0,.96),rgba(212,175,55,.84)); }
+  .mmc-profile-avatar{ width:78px; height:78px; margin:-39px auto 12px; border-radius:22px; display:grid; place-items:center; color:#fff; background:linear-gradient(135deg,#0a1f44,#800000); border:4px solid #fff; box-shadow:0 16px 32px rgba(15,23,42,.2); font-weight:800; font-size:24px; }
+  .mmc-info-grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px; text-align:left; margin-top:16px; }
+  .mmc-info-tile{ padding:12px; border-radius:13px; background:#f8fafc; border:1px solid #edf1f7; }
+  .mmc-info-tile span{ display:block; color:var(--mmc-ink-faint); font-size:11px; font-weight:700; margin-bottom:3px; }
+  .mmc-info-tile strong{ color:var(--mmc-navy); font-size:12.5px; word-break:break-word; }
+  .mmc-action-grid{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+  .mmc-action-card{ position:relative; overflow:hidden; display:flex; align-items:center; gap:12px; padding:14px; border-radius:15px; border:1px solid #edf1f7; background:linear-gradient(135deg,#fff,#fbfcff); color:var(--mmc-navy); text-decoration:none; transition:all .2s ease; min-height:74px; }
+  .mmc-action-card:hover{ color:var(--mmc-maroon); transform:translateY(-3px); box-shadow:0 14px 34px rgba(15,23,42,.1); border-color:rgba(128,0,0,.2); }
+  .mmc-action-card .icon{ width:42px; height:42px; border-radius:13px; display:grid; place-items:center; color:#fff; background:linear-gradient(135deg,var(--action-color,#800000),#0a1f44); flex-shrink:0; }
+  .mmc-action-card span{ display:block; font-size:12px; color:var(--mmc-ink-faint); margin-top:2px; }
+  .mmc-fee-row{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding:13px 0; border-bottom:1px solid #edf1f7; }
+  .mmc-fee-row:last-child{ border-bottom:0; }
+  .mmc-fee-row .label{ color:var(--mmc-ink-faint); font-size:12px; font-weight:700; }
+  .mmc-fee-row .value{ color:var(--mmc-navy); font-weight:800; text-align:right; }
+  .mmc-notice-item{ display:flex; gap:12px; padding:13px 0; border-bottom:1px solid #edf1f7; }
+  .mmc-notice-item:last-child{ border-bottom:0; }
+  .mmc-notice-icon{ width:36px; height:36px; border-radius:12px; display:grid; place-items:center; color:#800000; background:rgba(128,0,0,.08); flex-shrink:0; }
+  .mmc-ripple{ position:relative; overflow:hidden; }
+  .mmc-ripple .ripple{ position:absolute; border-radius:50%; transform:scale(0); animation:mmcRipple .6s linear; background:rgba(255,255,255,.42); pointer-events:none; }
+  @keyframes mmcRipple{ to{ transform:scale(4); opacity:0; } }
+  @media (max-width:991.98px){
+    .mmc-student-shell::before{ left:0; }
+    .mmc-hero-content{ grid-template-columns:1fr; }
+    .mmc-hero-side{ min-width:0; }
+  }
+  @media (max-width:575.98px){
+    .mmc-hero{ padding:20px; border-radius:15px; }
+    .mmc-hero-actions{ flex-direction:column; }
+    .mmc-hero-actions .btn{ width:100%; }
+    .mmc-journey-step{ grid-template-columns:38px 1fr; }
+    .mmc-journey-step .mmc-pill{ grid-column:2; width:max-content; }
+    .mmc-action-grid,.mmc-info-grid{ grid-template-columns:1fr; }
+    .mmc-session-chip{ display:none; }
+  }
+</style>
 </head>
 <body>
 
-<div id="mmcPageLoader" class="mmc-page-loader"><div class="mmc-spinner"></div><span>Preparing your dashboard…</span></div>
+<div id="mmcPageLoader" class="mmc-page-loader"><div class="mmc-spinner"></div><span>Preparing your dashboard...</span></div>
 <div class="mmc-sidebar-backdrop"></div>
 
-<div class="mmc-app">
-
-  <!-- ============ SIDEBAR ============ -->
+<div class="mmc-app mmc-student-shell">
   <aside class="mmc-sidebar">
     <div class="mmc-sidebar-brand">
       <div class="mmc-seal md"><img src="https://pub-56b2773adb554e88a3d5fbc74f0167bc.r2.dev/branding/Magadh_Mahila_College.png" alt="Magadh Mahila College logo"></div>
@@ -30,7 +106,7 @@
     </div>
     <nav class="mmc-sidebar-nav">
       <div class="mmc-sidebar-section">Main</div>
-      <a href="dashboard.html" class="mmc-sidebar-link"><i class="fa-solid fa-grid-2"></i><span>Dashboard</span></a>
+      <a href="dashboard.html" class="mmc-sidebar-link active"><i class="fa-solid fa-grid-2"></i><span>Dashboard</span></a>
 
       <div class="mmc-sidebar-section">Admission</div>
       <a href="application-form.html" class="mmc-sidebar-link"><i class="fa-solid fa-file-pen"></i><span>Hostel Application</span></a>
@@ -59,18 +135,17 @@
     </div>
   </aside>
 
-  <!-- ============ MAIN ============ -->
   <div class="mmc-main">
-
-    <header class="mmc-topbar">
+    <header class="mmc-topbar mmc-student-topbar">
       <div class="mmc-topbar-left">
         <button class="mmc-sidebar-toggle js-sidebar-toggle"><i class="fa-solid fa-bars"></i></button>
         <div class="mmc-search d-none d-md-block">
           <i class="fa-solid fa-magnifying-glass"></i>
-          <input type="text" class="form-control" placeholder="Search application, receipt no...">
+          <input type="text" class="form-control" id="dashboardSearch" placeholder="Search application, room, receipt...">
         </div>
       </div>
       <div class="mmc-topbar-right">
+        <div class="mmc-session-chip d-none d-lg-flex"><i class="fa-regular fa-calendar"></i><span id="currentDate">Today</span></div>
         <div class="dropdown">
           <button class="mmc-icon-btn" data-bs-toggle="dropdown"><i class="fa-regular fa-bell"></i><span class="mmc-dot" id="mmcNotifBadge"></span></button>
           <div class="dropdown-menu dropdown-menu-end p-0 shadow-lg" style="width:340px;border-radius:14px;overflow:hidden;">
@@ -81,8 +156,8 @@
         </div>
         <div class="dropdown">
           <div class="mmc-profile-trigger" data-bs-toggle="dropdown">
-            <div class="mmc-avatar">ST</div>
-            <div class="mmc-profile-meta"><strong>Student</strong><small>Student ID</small></div>
+            <div class="mmc-avatar" id="topAvatar">ST</div>
+            <div class="mmc-profile-meta"><strong id="topStudentName">Student</strong><small id="topStudentCode">Student ID</small></div>
             <i class="fa-solid fa-chevron-down fs-12 text-secondary d-none d-sm-inline"></i>
           </div>
           <ul class="dropdown-menu dropdown-menu-end shadow-lg" style="border-radius:12px;">
@@ -96,119 +171,134 @@
     </header>
 
     <main class="mmc-page">
+      <div class="mmc-breadcrumb mmc-fade-in"><a href="dashboard.html">Dashboard</a><span class="sep">/</span>Student Overview</div>
 
-      <div class="mmc-page-head mmc-fade-in">
-        <div>
-          <div class="mmc-page-title">Welcome back, Student</div>
-          <div class="mmc-page-sub">Your profile and application details will appear after backend data is available.</div>
+      <section class="mmc-hero mmc-fade-in mb-4">
+        <div class="mmc-hero-content">
+          <div>
+            <div class="mmc-hero-kicker"><i class="fa-solid fa-graduation-cap"></i> Magadh Mahila College Hostel ERP</div>
+            <h1 class="mmc-hero-title" id="heroTitle">Welcome back, Student</h1>
+            <p class="mmc-hero-sub" id="heroSub">Track your hostel application, payment status, merit result, room allotment, and official receipts from one place.</p>
+            <div class="mmc-hero-actions">
+              <span id="dashboardPrimaryAction"></span>
+              <a href="receipt.html" class="btn btn-light mmc-ripple"><i class="fa-solid fa-download me-1"></i> Receipts</a>
+              <a href="profile.html" class="btn btn-outline-light mmc-ripple"><i class="fa-solid fa-user-pen me-1"></i> Profile</a>
+            </div>
+          </div>
+          <div class="mmc-hero-side">
+            <small>Admission Progress</small>
+            <strong id="heroProgress">0%</strong>
+            <div class="mmc-progress-rail"><div class="mmc-progress-fill" id="heroProgressFill"></div></div>
+            <div class="d-flex justify-content-between mt-3 fs-12" style="color:rgba(255,255,255,.75);"><span id="heroCompleted">0 complete</span><span>6 steps</span></div>
+          </div>
         </div>
-        <div class="d-flex gap-2">
-          <a href="receipt.html" class="btn btn-ghost"><i class="fa-solid fa-download me-1"></i> Receipts</a>
-          <span id="dashboardPrimaryAction"></span>
-        </div>
-      </div>
+      </section>
 
-      <!-- STAT CARDS -->
       <div class="row g-3 mb-4">
-        <div class="col-sm-6 col-lg-3">
-          <div class="mmc-stat-card mmc-slide-up mmc-delay-1">
-            <div class="mmc-stat-icon mmc-icon-success"><i class="fa-solid fa-circle-check"></i></div>
-            <div>
-              <div class="mmc-stat-value" id="dashApplicationStatus">PENDING</div>
-              <div class="mmc-stat-label">Application Status</div>
-            </div>
+        <div class="col-sm-6 col-xl-3">
+          <div class="mmc-glass-card mmc-premium-stat mmc-slide-up mmc-delay-1" style="--stat-color:#800000;">
+            <div class="mmc-stat-topline"><div class="mmc-stat-orb"><i class="fa-solid fa-file-circle-check"></i></div><span class="mmc-mini-trend"><i class="fa-solid fa-circle"></i> Live</span></div>
+            <div class="mmc-stat-value-lg" id="dashApplicationStatus">Not Started</div>
+            <div class="mmc-stat-label-soft">Application Status</div>
           </div>
         </div>
-        <div class="col-sm-6 col-lg-3">
-          <div class="mmc-stat-card mmc-slide-up mmc-delay-2">
-            <div class="mmc-stat-icon mmc-icon-warning"><i class="fa-solid fa-hourglass-half"></i></div>
-            <div>
-              <div class="mmc-stat-value" id="dashPaymentStatus" style="font-size:18px;">Pending</div>
-              <div class="mmc-stat-label">Payment Status</div>
-            </div>
+        <div class="col-sm-6 col-xl-3">
+          <div class="mmc-glass-card mmc-premium-stat mmc-slide-up mmc-delay-2" style="--stat-color:#d4af37;">
+            <div class="mmc-stat-topline"><div class="mmc-stat-orb"><i class="fa-solid fa-shield-halved"></i></div><span class="mmc-mini-trend"><i class="fa-solid fa-lock"></i> Secure</span></div>
+            <div class="mmc-stat-value-lg" id="dashPaymentStatus">Pending</div>
+            <div class="mmc-stat-label-soft">Payment Status</div>
           </div>
         </div>
-        <div class="col-sm-6 col-lg-3">
-          <div class="mmc-stat-card mmc-slide-up mmc-delay-3">
-            <div class="mmc-stat-icon mmc-icon-navy"><i class="fa-solid fa-door-open"></i></div>
-            <div>
-              <div class="mmc-stat-value" id="dashRoomNumber">-</div>
-              <div class="mmc-stat-label">Room Number (pending fee)</div>
-            </div>
+        <div class="col-sm-6 col-xl-3">
+          <div class="mmc-glass-card mmc-premium-stat mmc-slide-up mmc-delay-3" style="--stat-color:#0a1f44;">
+            <div class="mmc-stat-topline"><div class="mmc-stat-orb"><i class="fa-solid fa-door-open"></i></div><span class="mmc-mini-trend"><i class="fa-solid fa-bed"></i> Hostel</span></div>
+            <div class="mmc-stat-value-lg" id="dashRoomNumber">-</div>
+            <div class="mmc-stat-label-soft">Room Number</div>
           </div>
         </div>
-        <div class="col-sm-6 col-lg-3">
-          <div class="mmc-stat-card mmc-slide-up mmc-delay-4">
-            <div class="mmc-stat-icon mmc-icon-maroon"><i class="fa-solid fa-building"></i></div>
-            <div>
-              <div class="mmc-stat-value" id="dashHostelName" style="font-size:18px;">-</div>
-              <div class="mmc-stat-label">Allotted Hostel</div>
-            </div>
+        <div class="col-sm-6 col-xl-3">
+          <div class="mmc-glass-card mmc-premium-stat mmc-slide-up mmc-delay-4" style="--stat-color:#16a34a;">
+            <div class="mmc-stat-topline"><div class="mmc-stat-orb"><i class="fa-solid fa-building-columns"></i></div><span class="mmc-mini-trend"><i class="fa-solid fa-location-dot"></i> Campus</span></div>
+            <div class="mmc-stat-value-lg" id="dashHostelName">-</div>
+            <div class="mmc-stat-label-soft">Allotted Hostel</div>
           </div>
         </div>
       </div>
 
       <div class="row g-3">
-        <!-- LEFT: Admission Timeline -->
-        <div class="col-lg-7">
-          <div class="mmc-card mmc-reveal">
-            <div class="mmc-card-head">
-              <h6>Your Admission Journey</h6>
+        <div class="col-xl-8">
+          <div class="mmc-glass-card mmc-reveal mb-3">
+            <div class="mmc-panel-head">
+              <div><h6>Your Admission Journey</h6><small>Step-by-step hostel admission tracking</small></div>
               <span class="mmc-pill warning" id="dashPendingPill"><i class="fa-solid fa-circle"></i> Loading</span>
             </div>
-            <div class="mmc-card-body">
-              <ul class="mmc-timeline" id="dashboardTimeline"><li class="mmc-timeline-item active"><div class="mmc-timeline-dot"></div><div class="mmc-timeline-title">Loading workflow</div><div class="mmc-timeline-date">-</div><div class="mmc-timeline-desc">Checking your current admission status.</div></li></ul>
+            <div class="mmc-panel-body">
+              <div class="mmc-journey" id="dashboardTimeline">
+                <div class="mmc-journey-step active"><div class="mmc-journey-dot"><i class="fa-solid fa-spinner"></i></div><div><div class="mmc-journey-title">Loading workflow</div><div class="mmc-journey-desc">Checking your current admission status.</div></div><span class="mmc-pill warning">Waiting</span></div>
+              </div>
             </div>
           </div>
 
-          <div class="row g-3 mt-1">
-            <div class="col-md-6">
-              <div class="mmc-card mmc-reveal mmc-card-body text-center">
-                <p class="mmc-eyebrow mb-2">Application Progress</p>
-                <div style="max-width:170px;margin:0 auto;"><canvas id="progressChart" height="170"></canvas></div>
-                <p class="fs-13 text-secondary mb-0 mt-2" id="progressText">0 of 6 milestones complete</p>
+          <div class="row g-3">
+            <div class="col-lg-5">
+              <div class="mmc-glass-card mmc-reveal h-100">
+                <div class="mmc-panel-head"><div><h6>Progress Ring</h6><small>Milestones completed</small></div></div>
+                <div class="mmc-panel-body text-center">
+                  <div style="max-width:210px;margin:0 auto;position:relative;">
+                    <canvas id="progressChart" height="210"></canvas>
+                    <div style="position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;">
+                      <div><div class="fw-800 fs-3 text-maroon" id="progressPercent">0%</div><div class="fs-12 text-secondary fw-700">Complete</div></div>
+                    </div>
+                  </div>
+                  <p class="fs-13 text-secondary mb-0 mt-3" id="progressText">0 of 6 milestones complete</p>
+                </div>
               </div>
             </div>
-            <div class="col-md-6">
-              <div class="mmc-card mmc-reveal mmc-card-body">
-                <p class="mmc-eyebrow mb-3">Fee Summary</p>
-                <div id="feeSummaryBlock"></div>
+            <div class="col-lg-7">
+              <div class="mmc-glass-card mmc-reveal h-100">
+                <div class="mmc-panel-head"><div><h6>Fee Summary</h6><small>Verified payment and receipt details</small></div></div>
+                <div class="mmc-panel-body" id="feeSummaryBlock">
+                  <div class="mmc-fee-row"><div class="label">Registration Fee</div><div class="value">Loading</div></div>
+                  <div class="mmc-fee-row"><div class="label">Hostel Fee</div><div class="value">Loading</div></div>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- RIGHT: Profile + Quick Actions + Notifications -->
-        <div class="col-lg-5">
-          <div class="mmc-card mmc-reveal mmc-card-body text-center mb-3">
-            <div class="mmc-avatar mx-auto mb-3" style="width:64px;height:64px;font-size:20px;">ST</div>
-            <h6 class="fw-700 mb-0" id="dashStudentName" style="color:var(--mmc-navy);">Student</h6>
-            <p class="fs-13 text-secondary mb-3">Student ID · Category</p>
-            <div class="row text-start fs-13 g-2 mb-3">
-              <div class="col-6 text-secondary">Mobile</div><div class="col-6 fw-600 text-end" id="dashStudentMobile">-</div>
-              <div class="col-6 text-secondary">Course</div><div class="col-6 fw-600 text-end" id="dashStudentCourse">-</div>
-              <div class="col-6 text-secondary">Hostel</div><div class="col-6 fw-600 text-end" id="dashStudentHostel">-</div>
+        <div class="col-xl-4">
+          <div class="mmc-glass-card mmc-profile-premium mmc-reveal mb-3">
+            <div class="mmc-profile-cover"></div>
+            <div class="mmc-profile-avatar" id="dashAvatar">ST</div>
+            <h6 class="fw-800 mb-1" id="dashStudentName" style="color:var(--mmc-navy);">Student</h6>
+            <p class="fs-12 text-secondary mb-0" id="dashStudentMeta">Student ID · Category</p>
+            <div class="mmc-info-grid">
+              <div class="mmc-info-tile"><span>Mobile</span><strong id="dashStudentMobile">-</strong></div>
+              <div class="mmc-info-tile"><span>Course</span><strong id="dashStudentCourse">-</strong></div>
+              <div class="mmc-info-tile"><span>Hostel</span><strong id="dashStudentHostel">-</strong></div>
+              <div class="mmc-info-tile"><span>Session</span><strong id="dashStudentSession">-</strong></div>
             </div>
-            <a href="profile.html" class="btn btn-outline-maroon w-100"><i class="fa-solid fa-pen me-1"></i> Edit Profile</a>
+            <a href="profile.html" class="btn btn-outline-maroon w-100 mt-3 mmc-ripple"><i class="fa-solid fa-pen me-1"></i> Edit Profile</a>
           </div>
 
-          <div class="mmc-card mmc-reveal mb-3">
-            <div class="mmc-card-head"><h6>Quick Actions</h6></div>
-            <div class="mmc-card-body d-flex flex-column gap-2" id="dashboardQuickActions">
-              <a href="merit-result.html" class="btn btn-ghost text-start"><i class="fa-solid fa-ranking-star me-2 text-maroon"></i> View Merit Result</a>
-              <a href="room-allotment.html" class="btn btn-ghost text-start"><i class="fa-solid fa-bed me-2 text-maroon"></i> View Room Allotment</a>
-              <a href="receipt.html" class="btn btn-ghost text-start"><i class="fa-solid fa-download me-2 text-maroon"></i> Download Receipts</a>
-              <a href="renewal.html" class="btn btn-ghost text-start"><i class="fa-solid fa-rotate me-2 text-maroon"></i> Apply for Renewal</a>
+          <div class="mmc-glass-card mmc-reveal mb-3">
+            <div class="mmc-panel-head"><div><h6>Quick Actions</h6><small>Continue your next step</small></div></div>
+            <div class="mmc-panel-body">
+              <div class="mmc-action-grid" id="dashboardQuickActions">
+                <a href="merit-result.html" class="mmc-action-card" style="--action-color:#800000;"><span class="icon"><i class="fa-solid fa-ranking-star"></i></span><div><strong>Merit Result</strong><span>Check selection</span></div></a>
+                <a href="receipt.html" class="mmc-action-card" style="--action-color:#d4af37;"><span class="icon"><i class="fa-solid fa-receipt"></i></span><div><strong>Receipts</strong><span>Download PDF</span></div></a>
+              </div>
             </div>
           </div>
 
-          <div class="mmc-card mmc-reveal">
-            <div class="mmc-card-head"><h6>Recent Notifications</h6><a href="#" class="fs-12 fw-600">View all</a></div>
-            <div class="mmc-card-body pt-2 pb-0" id="dashNotifList"></div>
+          <div class="mmc-glass-card mmc-reveal">
+            <div class="mmc-panel-head"><div><h6>Recent Notifications</h6><small>Important hostel updates</small></div></div>
+            <div class="mmc-panel-body pt-2" id="dashNotifList">
+              <div class="py-3 text-center fs-13 text-secondary">No notifications yet.</div>
+            </div>
           </div>
         </div>
       </div>
-
     </main>
   </div>
 </div>
@@ -222,8 +312,11 @@
   mmcChartDefaults();
   var progressChart = new Chart(document.getElementById('progressChart'), {
     type: 'doughnut',
-    data: { labels:['Completed','Pending'], datasets:[{ data:[0,0], backgroundColor:['#800000','#E6E9F0'], borderWidth:0, cutout:'72%' }] },
-    options: { plugins:{ legend:{ display:false } } }
+    data: {
+      labels: ['Completed', 'Pending'],
+      datasets: [{ data: [0, 6], backgroundColor: ['#800000', '#E6E9F0'], borderWidth: 0, cutout: '76%' }]
+    },
+    options: { responsive: true, plugins: { legend: { display: false }, tooltip: { enabled: true } } }
   });
 
   function escapeHtml(value){
@@ -231,14 +324,14 @@
       return ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' })[ch];
     });
   }
-  function completedLine(done, title, desc){
-    return '<li class="mmc-timeline-item ' + (done ? 'done' : 'active') + '">' +
-      '<div class="mmc-timeline-dot"></div><div class="mmc-timeline-title">' + (done ? '✓ ' : '') + escapeHtml(title) + '</div>' +
-      '<div class="mmc-timeline-date">' + (done ? 'Completed' : 'Waiting') + '</div>' +
-      '<div class="mmc-timeline-desc">' + escapeHtml(desc) + '</div></li>';
+  function initials(name){
+    var parts = String(name || 'Student').trim().split(/\s+/).filter(Boolean);
+    return ((parts[0] || 'S').charAt(0) + (parts[1] || parts[0] || 'T').charAt(0)).toUpperCase();
   }
-  function receiptButton(receipt, label){
-    return receipt ? '<a href="' + mmcReceiptDownloadUrl(receipt) + '" target="_blank" class="btn btn-ghost text-start"><i class="fa-solid fa-download me-2 text-maroon"></i> ' + label + '</a>' : '';
+  function formatDate(value){
+    if(!value) return '-';
+    var date = new Date(value);
+    return isNaN(date.getTime()) ? '-' : date.toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' });
   }
   function paymentStatusLabel(status){
     return ({ paid:'Paid', pending:'Pending', failed:'Failed', partially_paid:'Partially Paid', refunded:'Refunded' })[status] || 'Pending';
@@ -247,15 +340,92 @@
     var tone = ({ paid:'success', pending:'warning', failed:'danger', partially_paid:'info', refunded:'muted' })[status] || 'warning';
     return '<span class="mmc-pill ' + tone + '"><i class="fa-solid fa-circle"></i> ' + paymentStatusLabel(status) + '</span>';
   }
+  function receiptButton(receipt, label, color, sub){
+    return receipt ? '<a href="' + mmcReceiptDownloadUrl(receipt) + '" target="_blank" class="mmc-action-card" style="--action-color:' + color + ';"><span class="icon"><i class="fa-solid fa-download"></i></span><div><strong>' + label + '</strong><span>' + sub + '</span></div></a>' : '';
+  }
   function nextAction(workflow){
     if(!workflow.application && !mmcAdmissionIsOpen(workflow.settings)){
-      return '<button class="btn btn-ghost" disabled><i class="fa-solid fa-lock me-1"></i> ' + escapeHtml((workflow.settings && workflow.settings.admission_message) || 'Hostel Admission is Closed.') + '</button>';
+      return '<button class="btn btn-light mmc-ripple" disabled><i class="fa-solid fa-lock me-1"></i> ' + escapeHtml((workflow.settings && workflow.settings.admission_message) || 'Hostel Admission is Closed.') + '</button>';
     }
-    if(!workflow.application || workflow.draft) return '<a href="application-form.html" class="btn btn-maroon"><i class="fa-solid fa-file-pen me-1"></i> ' + (workflow.draft ? 'Resume Application' : 'Fill Application') + '</a>';
-    if(!workflow.registrationPaid) return '<a href="fee-payment.html" class="btn btn-maroon"><i class="fa-solid fa-credit-card me-1"></i> Pay Registration Fee</a>';
-    if(workflow.shortlisted && !workflow.hostelPaid) return '<a href="hostel-fee-payment.html" class="btn btn-maroon"><i class="fa-solid fa-money-bill-wave me-1"></i> Pay Hostel Fee</a>';
-    if(workflow.roomAllotted) return '<a href="room-allotment.html" class="btn btn-maroon"><i class="fa-solid fa-bed me-1"></i> View Room</a>';
-    return '<a href="application-preview.html" class="btn btn-ghost"><i class="fa-solid fa-eye me-1"></i> View Application</a>';
+    if(!workflow.application || workflow.draft) return '<a href="application-form.html" class="btn btn-light mmc-ripple"><i class="fa-solid fa-file-pen me-1"></i> ' + (workflow.draft ? 'Resume Application' : 'Fill Application') + '</a>';
+    if(!workflow.registrationPaid) return '<a href="fee-payment.html" class="btn btn-light mmc-ripple"><i class="fa-solid fa-credit-card me-1"></i> Pay Registration Fee</a>';
+    if(workflow.shortlisted && !workflow.hostelPaid) return '<a href="hostel-fee-payment.html" class="btn btn-light mmc-ripple"><i class="fa-solid fa-money-bill-wave me-1"></i> Pay Hostel Fee</a>';
+    if(workflow.roomAllotted) return '<a href="room-allotment.html" class="btn btn-light mmc-ripple"><i class="fa-solid fa-bed me-1"></i> View Room</a>';
+    return '<a href="application-preview.html" class="btn btn-light mmc-ripple"><i class="fa-solid fa-eye me-1"></i> View Application</a>';
+  }
+  function journeyStep(done, active, icon, title, desc){
+    var stateClass = done ? 'done' : (active ? 'active' : '');
+    var stateLabel = done ? '<span class="mmc-pill success">Done</span>' : (active ? '<span class="mmc-pill warning">Now</span>' : '<span class="mmc-pill muted">Waiting</span>');
+    return '<div class="mmc-journey-step ' + stateClass + '" data-search="' + escapeHtml(title + ' ' + desc) + '">' +
+      '<div class="mmc-journey-dot"><i class="fa-solid ' + icon + '"></i></div>' +
+      '<div><div class="mmc-journey-title">' + escapeHtml(title) + '</div><div class="mmc-journey-desc">' + escapeHtml(desc) + '</div></div>' +
+      stateLabel +
+    '</div>';
+  }
+  function feeRow(label, value){
+    return '<div class="mmc-fee-row"><div class="label">' + escapeHtml(label) + '</div><div class="value">' + value + '</div></div>';
+  }
+  function renderNotices(workflow){
+    var notices = [];
+    if(!workflow.application) notices.push(['fa-file-pen', 'Application pending', 'Submit your hostel application to begin the admission workflow.']);
+    if(workflow.application && !workflow.registrationPaid) notices.push(['fa-credit-card', 'Registration fee pending', 'Complete the registration payment through the secure gateway.']);
+    if(workflow.registrationPaid && !workflow.shortlisted) notices.push(['fa-ranking-star', 'Merit review in progress', 'Your application is waiting for admin merit review.']);
+    if(workflow.shortlisted && !workflow.hostelPaid) notices.push(['fa-money-bill-wave', 'Hostel fee open', 'You are shortlisted. Complete hostel fee payment when available.']);
+    if(workflow.hostelPaid && !workflow.roomAllotted) notices.push(['fa-bed', 'Room allotment pending', 'Hostel fee is verified. Room allotment will be published by admin.']);
+    if(workflow.roomAllotted) notices.push(['fa-circle-check', 'Room allotted', 'Your hostel room details are available in Room Allotment.']);
+    document.getElementById('dashNotifList').innerHTML = notices.map(function(item){
+      return '<div class="mmc-notice-item"><div class="mmc-notice-icon"><i class="fa-solid ' + item[0] + '"></i></div><div><div class="fw-800 fs-13" style="color:var(--mmc-navy);">' + escapeHtml(item[1]) + '</div><div class="fs-12 text-secondary mt-1">' + escapeHtml(item[2]) + '</div></div></div>';
+    }).join('') || '<div class="py-3 text-center fs-13 text-secondary">No notifications yet.</div>';
+  }
+  function renderQuickActions(workflow){
+    var app = workflow.application;
+    var actions = '';
+    if(app && !workflow.draft){
+      actions += '<a href="application-preview.html" class="mmc-action-card" style="--action-color:#800000;"><span class="icon"><i class="fa-solid fa-eye"></i></span><div><strong>Application</strong><span>Preview form</span></div></a>';
+    } else if(mmcAdmissionIsOpen(workflow.settings) || workflow.draft){
+      actions += '<a href="application-form.html" class="mmc-action-card" style="--action-color:#800000;"><span class="icon"><i class="fa-solid fa-file-pen"></i></span><div><strong>' + (workflow.draft ? 'Resume Form' : 'Apply Now') + '</strong><span>Hostel application</span></div></a>';
+    }
+    if(app && !workflow.registrationPaid){
+      actions += '<a href="fee-payment.html" class="mmc-action-card" style="--action-color:#d4af37;"><span class="icon"><i class="fa-solid fa-credit-card"></i></span><div><strong>Registration Fee</strong><span>Secure payment</span></div></a>';
+    }
+    if(workflow.shortlisted){
+      actions += '<a href="merit-result.html" class="mmc-action-card" style="--action-color:#0a1f44;"><span class="icon"><i class="fa-solid fa-ranking-star"></i></span><div><strong>Merit Result</strong><span>Selection status</span></div></a>';
+    }
+    if(workflow.shortlisted && !workflow.hostelPaid){
+      actions += '<a href="hostel-fee-payment.html" class="mmc-action-card" style="--action-color:#16a34a;"><span class="icon"><i class="fa-solid fa-money-bill-wave"></i></span><div><strong>Hostel Fee</strong><span>Pay admission fee</span></div></a>';
+    }
+    if(workflow.roomAllotted){
+      actions += '<a href="room-allotment.html" class="mmc-action-card" style="--action-color:#2563eb;"><span class="icon"><i class="fa-solid fa-bed"></i></span><div><strong>Room</strong><span>View allotment</span></div></a>';
+    }
+    actions += receiptButton(workflow.registrationReceipt, 'Reg. Receipt', '#800000', 'Download PDF');
+    actions += receiptButton(workflow.hostelReceipt, 'Hostel Receipt', '#d4af37', 'Download PDF');
+    actions += '<a href="receipt.html" class="mmc-action-card" style="--action-color:#64748b;"><span class="icon"><i class="fa-solid fa-receipt"></i></span><div><strong>All Receipts</strong><span>Payment records</span></div></a>';
+    document.getElementById('dashboardQuickActions').innerHTML = actions;
+  }
+  function updateSearch(){
+    var input = document.getElementById('dashboardSearch');
+    if(!input) return;
+    input.addEventListener('input', function(){
+      var term = input.value.toLowerCase().trim();
+      document.querySelectorAll('[data-search]').forEach(function(item){
+        item.style.display = !term || item.dataset.search.toLowerCase().indexOf(term) !== -1 ? '' : 'none';
+      });
+    });
+  }
+  function addRippleHandlers(){
+    document.addEventListener('click', function(event){
+      var button = event.target.closest('.mmc-ripple');
+      if(!button) return;
+      var rect = button.getBoundingClientRect();
+      var size = Math.max(rect.width, rect.height);
+      var ripple = document.createElement('span');
+      ripple.className = 'ripple';
+      ripple.style.width = ripple.style.height = size + 'px';
+      ripple.style.left = (event.clientX - rect.left - size / 2) + 'px';
+      ripple.style.top = (event.clientY - rect.top - size / 2) + 'px';
+      button.appendChild(ripple);
+      setTimeout(function(){ ripple.remove(); }, 600);
+    });
   }
   function renderDashboard(workflow){
     if(!workflow) return;
@@ -272,53 +442,71 @@
       workflow.roomAllotted
     ];
     var completedCount = completed.filter(Boolean).length;
-    document.querySelector('.mmc-page-title').textContent = 'Welcome back, ' + (student.name || 'Student');
-    document.querySelector('.mmc-page-sub').textContent = app ? 'Application No. ' + app.application_no + ' · ' + workflow.status : 'Start with your hostel application for the current session.';
+    var percent = Math.round((completedCount / 6) * 100);
+    var studentInitials = initials(student.name);
+    var session = (app && app.session) || '2026 - 2027';
+    var category = (app && app.category) || student.category || 'Category';
+
+    document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-IN', { weekday:'short', day:'2-digit', month:'short', year:'numeric' });
+    document.getElementById('topAvatar').textContent = studentInitials;
+    document.getElementById('dashAvatar').textContent = studentInitials;
+    document.getElementById('topStudentName').textContent = student.name || 'Student';
+    document.getElementById('topStudentCode').textContent = student.student_code || student.id || 'Student ID';
+    document.getElementById('heroTitle').textContent = 'Welcome back, ' + (student.name || 'Student');
+    document.getElementById('heroSub').textContent = app ? 'Application No. ' + (app.application_no || '-') + ' · ' + workflow.status + ' · ' + session : 'Start with your hostel application for the current session.';
     document.getElementById('dashboardPrimaryAction').innerHTML = nextAction(workflow);
-    document.getElementById('dashApplicationStatus').textContent = app ? workflow.status : 'NOT STARTED';
+    document.getElementById('heroProgress').textContent = percent + '%';
+    document.getElementById('heroProgressFill').style.width = percent + '%';
+    document.getElementById('heroCompleted').textContent = completedCount + ' complete';
+
+    document.getElementById('dashApplicationStatus').textContent = app ? workflow.status : 'Not Started';
     document.getElementById('dashPaymentStatus').innerHTML = paymentStatusPill(workflow.paymentStatus);
     document.getElementById('dashRoomNumber').textContent = workflow.room ? workflow.room.room_number : '-';
     document.getElementById('dashHostelName').textContent = workflow.hostel ? workflow.hostel.name : '-';
     document.getElementById('dashPendingPill').className = completedCount === 6 ? 'mmc-pill success' : 'mmc-pill warning';
     document.getElementById('dashPendingPill').innerHTML = '<i class="fa-solid fa-circle"></i> ' + (6 - completedCount) + ' pending';
+
     document.getElementById('dashboardTimeline').innerHTML = [
-      completedLine(true, 'Registration Completed', 'Student account is active.'),
-      completedLine(Boolean(app), 'Application Submitted', app ? 'View submitted application in read-only mode.' : 'Fill and submit the hostel application.'),
-      completedLine(workflow.registrationPaid, 'Registration Fee Paid', workflow.registrationPaid ? 'Registration fee receipt is available.' : 'Pay after application submission.'),
-      completedLine(workflow.shortlisted, 'Shortlisted', workflow.shortlisted ? 'You are eligible for hostel fee payment.' : 'Waiting for admin review.'),
-      completedLine(workflow.hostelPaid, 'Hostel Fee Paid', workflow.hostelPaid ? 'Hostel fee receipt is available.' : 'Visible after shortlisting.'),
-      completedLine(workflow.roomAllotted, 'Room Allotted', workflow.roomAllotted ? 'Room details are available.' : 'Waiting for admin allotment.')
+      journeyStep(true, false, 'fa-user-check', 'Student Account Active', 'Your ERP account is ready for hostel admission tracking.'),
+      journeyStep(Boolean(app), !app, 'fa-file-signature', 'Application Submitted', app ? 'Application No. ' + (app.application_no || '-') + ' submitted on ' + formatDate(app.created_at) + '.' : 'Fill and submit the hostel application.'),
+      journeyStep(workflow.registrationPaid, Boolean(app && !workflow.registrationPaid), 'fa-credit-card', 'Registration Fee Paid', workflow.registrationPaid ? 'Registration fee receipt is available.' : 'Pay after application submission.'),
+      journeyStep(workflow.shortlisted, Boolean(workflow.registrationPaid && !workflow.shortlisted), 'fa-ranking-star', 'Merit Shortlisting', workflow.shortlisted ? 'You are eligible for hostel fee payment.' : 'Waiting for admin review.'),
+      journeyStep(workflow.hostelPaid, Boolean(workflow.shortlisted && !workflow.hostelPaid), 'fa-money-bill-wave', 'Hostel Fee Paid', workflow.hostelPaid ? 'Hostel fee receipt is available.' : 'Visible after shortlisting.'),
+      journeyStep(workflow.roomAllotted, Boolean(workflow.hostelPaid && !workflow.roomAllotted), 'fa-bed', 'Room Allotted', workflow.roomAllotted ? 'Room details are available.' : 'Waiting for admin allotment.')
     ].join('');
+
     progressChart.data.datasets[0].data = [completedCount, 6 - completedCount];
     progressChart.update();
     document.getElementById('progressText').textContent = completedCount + ' of 6 milestones complete';
+    document.getElementById('progressPercent').textContent = percent + '%';
+
     var regReceiptUrl = workflow.registrationReceipt ? mmcReceiptDownloadUrl(workflow.registrationReceipt) : '';
     var hostelReceiptUrl = workflow.hostelReceipt ? mmcReceiptDownloadUrl(workflow.hostelReceipt) : '';
     document.getElementById('feeSummaryBlock').innerHTML =
-      '<div class="mmc-kv"><span class="k">Registration Fee</span><span class="v">' + (workflow.registrationPaid ? '✓ Paid' : app ? 'Pending' : 'Hidden') + '</span></div>' +
-      '<div class="mmc-kv"><span class="k">Hostel Fee</span><span class="v">' + (workflow.hostelPaid ? '✓ Paid' : workflow.shortlisted ? 'Pending' : 'Hidden') + '</span></div>' +
-      '<div class="mmc-kv"><span class="k">Payment Status</span><span class="v">' + paymentStatusLabel(workflow.paymentStatus) + '</span></div>' +
-      '<div class="mmc-kv"><span class="k">Transaction ID</span><span class="v">' + escapeHtml((workflow.registrationReceipt && workflow.registrationReceipt.transaction_id) || '-') + '</span></div>' +
-      '<div class="mmc-kv"><span class="k">Payment Date</span><span class="v">' + (workflow.registrationReceipt ? new Date(workflow.registrationReceipt.generated_at).toLocaleDateString('en-IN') : '-') + '</span></div>' +
-      (regReceiptUrl ? '<a href="' + regReceiptUrl + '" target="_blank" class="btn btn-outline-maroon w-100 mt-2"><i class="fa-solid fa-download me-1"></i> Download Registration Receipt</a><a href="' + regReceiptUrl + '" target="_blank" class="btn btn-ghost w-100 mt-2"><i class="fa-solid fa-print me-1"></i> Print Receipt</a>' : '') +
-      (hostelReceiptUrl ? '<a href="' + hostelReceiptUrl + '" target="_blank" class="btn btn-outline-maroon w-100 mt-2"><i class="fa-solid fa-download me-1"></i> Download Hostel Receipt</a>' : '');
+      feeRow('Registration Fee', workflow.registrationPaid ? '<span class="text-success">Paid</span>' : app ? '<span class="text-warning">Pending</span>' : '<span class="text-secondary">Hidden</span>') +
+      feeRow('Hostel Fee', workflow.hostelPaid ? '<span class="text-success">Paid</span>' : workflow.shortlisted ? '<span class="text-warning">Pending</span>' : '<span class="text-secondary">Hidden</span>') +
+      feeRow('Payment Status', paymentStatusPill(workflow.paymentStatus)) +
+      feeRow('Transaction ID', escapeHtml((workflow.registrationReceipt && (workflow.registrationReceipt.transaction_id || workflow.registrationReceipt.receipt_number)) || '-')) +
+      feeRow('Payment Date', workflow.registrationReceipt ? formatDate(workflow.registrationReceipt.generated_at || workflow.registrationReceipt.created_at) : '-') +
+      (regReceiptUrl ? '<a href="' + regReceiptUrl + '" target="_blank" class="btn btn-outline-maroon w-100 mt-2 mmc-ripple"><i class="fa-solid fa-download me-1"></i> Download Registration Receipt</a>' : '') +
+      (hostelReceiptUrl ? '<a href="' + hostelReceiptUrl + '" target="_blank" class="btn btn-outline-maroon w-100 mt-2 mmc-ripple"><i class="fa-solid fa-download me-1"></i> Download Hostel Receipt</a>' : '');
+
     document.getElementById('dashStudentName').textContent = student.name || 'Student';
+    document.getElementById('dashStudentMeta').textContent = (student.student_code || student.id || 'Student ID') + ' · ' + category;
     document.getElementById('dashStudentMobile').textContent = student.mobile || '-';
     document.getElementById('dashStudentCourse').textContent = (app && app.course) || student.course || '-';
     document.getElementById('dashStudentHostel').textContent = workflow.hostel ? workflow.hostel.name : '-';
-    document.getElementById('dashboardQuickActions').innerHTML =
-      (app && !workflow.draft ? '<a href="application-preview.html" class="btn btn-ghost text-start"><i class="fa-solid fa-eye me-2 text-maroon"></i> View Application</a>' : (mmcAdmissionIsOpen(workflow.settings) || workflow.draft ? '<a href="application-form.html" class="btn btn-ghost text-start"><i class="fa-solid fa-file-pen me-2 text-maroon"></i> ' + (workflow.draft ? 'Resume Application' : 'Fill Application') + '</a>' : '<button class="btn btn-ghost text-start" disabled><i class="fa-solid fa-lock me-2 text-maroon"></i> ' + escapeHtml((workflow.settings && workflow.settings.admission_message) || 'Hostel Admission is Closed.') + '</button>')) +
-      (workflow.shortlisted ? '<a href="merit-result.html" class="btn btn-ghost text-start"><i class="fa-solid fa-ranking-star me-2 text-maroon"></i> View Merit Result</a>' : '') +
-      (workflow.roomAllotted ? '<a href="room-allotment.html" class="btn btn-ghost text-start"><i class="fa-solid fa-bed me-2 text-maroon"></i> View Room Allotment</a>' : '') +
-      receiptButton(workflow.registrationReceipt, 'Download Registration Receipt') +
-      receiptButton(workflow.hostelReceipt, 'Download Hostel Receipt') +
-      '<a href="receipt.html" class="btn btn-ghost text-start"><i class="fa-solid fa-receipt me-2 text-maroon"></i> All Receipts</a>';
+    document.getElementById('dashStudentSession').textContent = session;
+
+    renderQuickActions(workflow);
+    renderNotices(workflow);
   }
 
+  updateSearch();
+  addRippleHandlers();
   mmcLoadStudentWorkflow().then(renderDashboard).catch(function(error){
     mmcToast('Dashboard not loaded', error.message || 'Unable to load workflow.', 'warning');
   });
-  document.getElementById('dashNotifList').innerHTML = '<div class="py-3 text-center fs-13 text-secondary">No notifications yet.</div>';
 </script>
 </body>
 </html>
