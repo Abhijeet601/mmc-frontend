@@ -113,19 +113,22 @@
     var original = btn.innerHTML;
     btn.disabled = true;
     btn.innerHTML = '<span class="mmc-spinner sm" style="border-color:rgba(255,255,255,.35);border-top-color:#fff;display:inline-block;vertical-align:middle;margin-right:8px;"></span> Signing in…';
-    mmcApi('/login', {
+    mmcApi('/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: {
-        identifier: mmcNormalizeLoginIdentifier(document.getElementById('loginIdentifier').value),
-        password: document.getElementById('loginPwd').value,
-        role: 'student'
-      }
+      body: JSON.stringify({
+        identifier: document.getElementById('loginIdentifier').value.trim(),
+        password: document.getElementById('loginPwd').value
+      })
     })
       .then(function(data){
-        var user = data.user || data;
-        mmcStoreStudentSession(data, document.getElementById('loginIdentifier').value.trim());
-        window.location.href = (data.application_completed || user.application_completed) ? 'dashboard.html' : 'application-form.html';
+        if(data.role === 'admin'){
+          sessionStorage.setItem('mmc_admin_user', JSON.stringify(data.user));
+          window.location.href = '../admin/dashboard.html';
+        } else {
+          sessionStorage.setItem('mmc_student_user', JSON.stringify(data.user));
+          window.location.href = 'dashboard.html';
+        }
       })
       .catch(function(err){
         mmcToast('Login failed', err.message, 'danger');

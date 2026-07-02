@@ -22,9 +22,7 @@ function mmcLatestByCreatedAt(items){
 
 function mmcBuildStudentWorkflow(data){
   var student = data.student;
-  var dashboard = data.dashboard || {};
-  var applicationForm = data.applicationForm || {};
-  var application = data.application || mmcLatestByCreatedAt(data.applications);
+  var application = mmcLatestByCreatedAt(data.applications);
   var payments = data.payments || [];
   var receipts = data.receipts || [];
   var hostels = data.hostels || [];
@@ -37,10 +35,10 @@ function mmcBuildStudentWorkflow(data){
   var hostelPayment = payments.find(function(payment){
     return /hostel/i.test(payment.payment_type || '') && mmcIsPaidStatus(payment.status);
   }) || null;
-  var status = application ? mmcNormalizeWorkflowStatus(application.status || application.form_status) : mmcNormalizeWorkflowStatus(dashboard.application_status || 'Not Started');
+  var status = application ? mmcNormalizeWorkflowStatus(application.status) : 'Not Started';
   var statusKey = status.toLowerCase();
-  var draft = statusKey === 'draft' || dashboard.form_status === 'draft';
-  var shortlisted = Boolean(dashboard.shortlisted) || ['shortlisted', 'approved', 'selected'].indexOf(statusKey) !== -1;
+  var draft = statusKey === 'draft';
+  var shortlisted = ['shortlisted', 'approved', 'selected'].indexOf(statusKey) !== -1;
   var hostel = application && application.hostel_id ? hostels.find(function(item){ return Number(item.id) === Number(application.hostel_id); }) : null;
   var room = application && application.room_id ? rooms.find(function(item){ return Number(item.id) === Number(application.room_id); }) : null;
 
@@ -51,10 +49,10 @@ function mmcBuildStudentWorkflow(data){
     receipts: receipts,
     registrationReceipt: registrationReceipt,
     hostelReceipt: hostelReceipt,
-    registrationPaid: MMC_PAYMENT_GATEWAY_ENABLED && (dashboard.application_payment_status === 'paid' || Boolean(registrationReceipt || registrationPayment)),
-    hostelPaid: MMC_PAYMENT_GATEWAY_ENABLED && (dashboard.hostel_receipt || Boolean(hostelReceipt || hostelPayment)),
+    registrationPaid: MMC_PAYMENT_GATEWAY_ENABLED && Boolean(registrationReceipt || registrationPayment),
+    hostelPaid: MMC_PAYMENT_GATEWAY_ENABLED && Boolean(hostelReceipt || hostelPayment),
     shortlisted: shortlisted,
-    roomAllotted: Boolean(dashboard.room_number || (application && application.hostel_id && application.room_id)),
+    roomAllotted: Boolean(application && application.hostel_id && application.room_id),
     status: status,
     draft: draft,
     hostel: hostel,
@@ -65,39 +63,26 @@ function mmcBuildStudentWorkflow(data){
 
 function mmcLoadStudentWorkflow(){
   var student = mmcCurrentStudent();
-  if(!student || (!student.access_token && !student.id)) return Promise.resolve(null);
+  if(!student || !student.id) return Promise.resolve(null);
   function optionalApi(path, fallback){
     return mmcApi(path).catch(function(){ return fallback; });
   }
   return Promise.all([
-    optionalApi('/dashboard', null),
-    optionalApi('/application', null),
+    mmcApi('/applications?student_id=' + student.id),
+    mmcApi('/payments?student_id=' + student.id),
+    mmcApi('/receipts?student_id=' + student.id),
+    mmcApi('/hostels'),
+    mmcApi('/rooms'),
     optionalApi('/settings/application', null)
   ]).then(function(results){
-    var dashboard = results[0] || {};
-    var applicationForm = results[1] || {};
-    var applicationSummary = applicationForm.data || dashboard.summary || {};
-    var application = applicationForm.application_number ? Object.assign({}, applicationSummary, {
-      application_no: applicationForm.application_number,
-      form_status: applicationForm.form_status,
-      status: applicationForm.form_status,
-      current_step: applicationForm.form_status === 'draft' ? 1 : 8
-    }) : null;
     return mmcBuildStudentWorkflow({
-      student: Object.assign({}, student, {
-        name: dashboard.student_name || student.name,
-        email: dashboard.email || student.email,
-        mobile: dashboard.mobile_number || student.mobile,
-        date_of_birth: applicationForm.registration_date_of_birth || student.date_of_birth
-      }),
-      dashboard: dashboard,
-      applicationForm: applicationForm,
-      application: application,
-      payments: dashboard.payment_history || [],
-      receipts: [dashboard.application_receipt, dashboard.hostel_receipt].filter(Boolean),
-      hostels: [{ id: 1, name: 'Vaidehi Hostel' }, { id: 2, name: 'Mahima Hostel' }],
-      rooms: [],
-      settings: results[2] || null
+      student: student,
+      applications: results[0] || [],
+      payments: results[1] || [],
+      receipts: results[2] || [],
+      hostels: results[3] || [],
+      rooms: results[4] || [],
+      settings: results[5] || null
     });
   });
 }

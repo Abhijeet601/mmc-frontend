@@ -218,6 +218,10 @@
     });
   }
 
+  function byIdMap(items){
+    return items.reduce(function(map, item){ map[item.id] = item; return map; }, {});
+  }
+
   function normalizeStatus(status){
     status = status || 'Pending';
     return status.charAt(0).toUpperCase() + status.slice(1);
@@ -256,38 +260,66 @@
   function loadApplications(){
     table.clear().draw();
     document.getElementById('studentsBody').innerHTML = '<tr><td colspan="12" class="text-center text-secondary py-3">Loading students and applications...</td></tr>';
-    Promise.all([mmcApi('/admin/students?limit=500'), mmcApi('/admin/hostel/rooms')])
+    Promise.all([mmcApi('/applications'), mmcApi('/students?limit=100000'), mmcApi('/hostels'), mmcApi('/rooms')])
       .then(function(results){
-        students = (results[0] && results[0].items) || [];
-        rooms = (results[1] && results[1].items) || [];
-        hostels = Array.from(new Set(rooms.map(function(room){ return room.hostel_name; }).filter(Boolean))).map(function(name){ return { name: name }; });
-        applications = students.map(function(student){
-          var status = student.verification_status === 'verified'
-            ? 'Approved'
-            : student.shortlist_status === 'shortlisted'
-              ? 'Shortlisted'
-              : normalizeStatus(student.form_status);
+        var rawApplications = results[0] || [];
+        students = results[1] || [];
+        hostels = results[2] || [];
+        rooms = results[3] || [];
+        var studentMap = byIdMap(students);
+        var hostelMap = byIdMap(hostels);
+        var roomMap = byIdMap(rooms);
+        var applicationStudentIds = {};
+        applications = rawApplications.map(function(app){
+          var student = studentMap[app.student_id] || {};
+          var hostel = app.hostel_id ? hostelMap[app.hostel_id] : null;
+          var room = app.room_id ? roomMap[app.room_id] : null;
+          applicationStudentIds[app.student_id] = true;
           return {
-            id: student.id,
-            appNo: student.application_number,
-            recordKey: 'student-' + student.id,
-            admissionId: student.application_number,
-            name: student.name || student.email || 'Student #' + student.id,
-            studentId: student.id,
-            studentCode: student.application_number || '',
+            id: app.id,
+            appNo: app.application_no,
+            recordKey: 'application-' + app.id,
+            admissionId: app.admission_id,
+            name: student.name || 'Student #' + app.student_id,
+            studentId: student.id || app.student_id,
+            studentCode: student.student_code || '',
             email: student.email || '',
-            mobile: student.mobile_number || '-',
-            course: student.course_name || '-',
+            mobile: student.mobile || '-',
+            course: app.course || student.course || '-',
+            session: student.session || app.session || '',
+            percentage: app.percentage,
+            appliedCat: app.applied_category,
+            allottedCat: app.allotted_category || '-',
+            status: normalizeStatus(app.status),
+            hostel: hostel ? hostel.name : '-',
+            room: room ? room.room_number : '-',
+            studentRaw: student,
+            raw: app
+          };
+        });
+        students.forEach(function(student){
+          if(applicationStudentIds[student.id]) return;
+          applications.push({
+            id: null,
+            appNo: 'Not submitted',
+            recordKey: 'student-' + student.id,
+            admissionId: '-',
+            name: student.name || 'Student #' + student.id,
+            studentId: student.id,
+            studentCode: student.student_code || '',
+            email: student.email || '',
+            mobile: student.mobile || '-',
+            course: student.course || '-',
             session: student.session || '',
             percentage: null,
-            appliedCat: student.category,
-            allottedCat: student.allotted_category || '-',
-            status: status,
-            hostel: student.allocated_hostel || student.preferred_hostel || '-',
-            room: student.room_number || '-',
+            appliedCat: '-',
+            allottedCat: '-',
+            status: 'ID Created',
+            hostel: '-',
+            room: '-',
             studentRaw: student,
-            raw: student
-          };
+            raw: {}
+          });
         });
         renderTable();
       })
@@ -302,22 +334,23 @@
     if(!app.id) return;
     var hostelSelect = document.getElementById('editHostelSelect');
     var roomSelect = document.getElementById('editRoomSelect');
-    var selectedHostelName = app.raw.allocated_hostel || '';
+    var selectedHostelId = app.raw.hostel_id || '';
     hostelSelect.innerHTML = '<option value="">No hostel allotted</option>' + hostels.map(function(hostel){
-      return '<option value="' + escapeHtml(hostel.name) + '"' + (selectedHostelName === hostel.name ? ' selected' : '') + '>' + escapeHtml(hostel.name) + '</option>';
+      return '<option value="' + hostel.id + '"' + (Number(selectedHostelId) === Number(hostel.id) ? ' selected' : '') + '>' + escapeHtml(hostel.name) + '</option>';
     }).join('');
 
     function updateRooms(){
-      var hostelName = hostelSelect.value;
-      var selectedRoomNumber = app.raw.room_number || '';
+      var hostelId = hostelSelect.value;
+      var selectedRoomId = app.raw.room_id || '';
       var filteredRooms = rooms.filter(function(room){
-        return room.hostel_name === hostelName && (room.available_beds > 0 || room.room_number === selectedRoomNumber);
+        return Number(room.hostel_id) === Number(hostelId) && (room.status === 'available' || Number(room.id) === Number(selectedRoomId));
       });
       roomSelect.innerHTML = '<option value="">No room allotted</option>' + filteredRooms.map(function(room){
-        return '<option value="' + room.id + '"' + (selectedRoomNumber === room.room_number ? ' selected' : '') + '>' + escapeHtml(room.room_number) + ' - ' + escapeHtml(room.available_beds) + ' beds available</option>';
+        return '<option value="' + room.id + '"' + (Number(selectedRoomId) === Number(room.id) ? ' selected' : '') + '>' + escapeHtml(room.room_number) + ' - ' + escapeHtml(room.status) + '</option>';
       }).join('');
     }
     hostelSelect.onchange = function(){
+      app.raw.room_id = null;
       updateRooms();
     };
     updateRooms();
@@ -371,38 +404,66 @@
   });
 
   document.getElementById('saveStudentAccountBtn').addEventListener('click', function(){
-    mmcToast('Account editing unavailable', 'The current backend does not expose student account edit or password reset endpoints for admins.', 'warning');
+    var studentId = document.getElementById('accountStudentId').value;
+    if(!studentId) return;
+    var button = this;
+    var originalContent = button.innerHTML;
+    var password = document.getElementById('accountPassword').value;
+    var payload = {
+      student_code: document.getElementById('accountStudentCode').value.trim(),
+      name: document.getElementById('accountName').value.trim(),
+      email: document.getElementById('accountEmail').value.trim(),
+      mobile: document.getElementById('accountMobile').value.trim(),
+      course: document.getElementById('accountCourse').value.trim() || null,
+      session: document.getElementById('accountSession').value.trim() || null
+    };
+    button.disabled = true;
+    button.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Saving...';
+    mmcApi('/students/' + studentId, {
+      method:'PATCH',
+      headers:{ 'Content-Type':'application/json' },
+      body:JSON.stringify(payload)
+    })
+      .then(function(){
+        if(!password) return null;
+        return mmcApi('/students/' + studentId + '/password', {
+          method:'PATCH',
+          headers:{ 'Content-Type':'application/json' },
+          body:JSON.stringify({ password: password })
+        });
+      })
+      .then(function(){
+        var modal = bootstrap.Modal.getInstance(document.getElementById('studentAccountModal'));
+        if(modal) modal.hide();
+        mmcToast('Student account saved', password ? 'Student ID details and password have been updated.' : 'Student ID details have been updated.', 'success');
+        return loadApplications();
+      })
+      .catch(function(error){
+        mmcToast('Student account not saved', error.message || 'Unable to update student account.', 'danger');
+      })
+      .finally(function(){
+        button.disabled = false;
+        button.innerHTML = originalContent;
+      });
   });
   document.getElementById('saveEditBtn').addEventListener('click', function(){
     var a = mmcFindByAppNo(editingAppNo);
     if(!a) return;
     var button = this;
     var originalContent = button.innerHTML;
-    var selectedStatus = document.getElementById('editStatusSelect').value;
-    var roomId = document.getElementById('editRoomSelect').value ? Number(document.getElementById('editRoomSelect').value) : null;
-    var hostelName = document.getElementById('editHostelSelect').value || null;
+    var payload = {
+      status: document.getElementById('editStatusSelect').value,
+      allotted_category: document.getElementById('editAllottedSelect').value || null,
+      hostel_id: document.getElementById('editHostelSelect').value ? Number(document.getElementById('editHostelSelect').value) : null,
+      room_id: document.getElementById('editRoomSelect').value ? Number(document.getElementById('editRoomSelect').value) : null
+    };
     button.disabled = true;
     button.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Saving...';
-    var updatePromise;
-    if(selectedStatus === 'Approved' || selectedStatus === 'Selected'){
-      updatePromise = mmcApi('/admin/students/' + a.id + '/verify', { method:'PATCH', body:{ verified: true } });
-    } else if(selectedStatus === 'Shortlisted'){
-      updatePromise = mmcApi('/admin/students/' + a.id + '/shortlist', { method:'PATCH', body:{ shortlisted: true } });
-    } else if(selectedStatus === 'Pending'){
-      updatePromise = mmcApi('/admin/students/' + a.id + '/verify', { method:'PATCH', body:{ verified: false } })
-        .then(function(){ return mmcApi('/admin/students/' + a.id + '/shortlist', { method:'PATCH', body:{ shortlisted: false } }); });
-    } else {
-      updatePromise = Promise.reject(new Error('Rejected/waitlisted status is not exposed by the current backend API.'));
-    }
-    if(roomId || hostelName){
-      updatePromise = updatePromise.then(function(){
-        return mmcApi('/admin/students/' + a.id + '/allocate-hostel', {
-          method:'PATCH',
-          body:{ hostel_name: hostelName, room_id: roomId }
-        });
-      });
-    }
-    updatePromise
+    mmcApi('/applications/' + a.id + '/status', {
+      method:'PATCH',
+      headers:{ 'Content-Type':'application/json' },
+      body:JSON.stringify(payload)
+    })
       .then(function(){
         var modal = bootstrap.Modal.getInstance(document.getElementById('editStudentModal'));
         if(modal) modal.hide();
@@ -426,14 +487,8 @@
       return;
     }
     mmcConfirm('Delete Application?', 'This will permanently remove ' + a.name + "'s application (" + a.appNo + ').', function(){
-      mmcApi('/admin/students/' + a.id, { method:'DELETE' })
-        .then(function(){
-          table.row('tr[data-record-key="' + a.recordKey + '"]').remove().draw(false);
-          mmcToast('Student deleted', 'Student record has been removed.', 'success');
-        })
-        .catch(function(error){
-          mmcToast('Student not deleted', error.message || 'Unable to delete student.', 'danger');
-        });
+      table.row('tr[data-record-key="' + a.recordKey + '"]').remove().draw(false);
+      mmcToast('Application not deleted', 'Deletion is only local until backend delete is connected.', 'warning');
     });
   }
 

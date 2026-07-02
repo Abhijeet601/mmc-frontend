@@ -52,12 +52,12 @@
 <script>
   function setDateValue(id, value){ document.getElementById(id).value = value || ''; }
   function loadSettings(){
-    return Promise.resolve(JSON.parse(localStorage.getItem('mmc_application_settings') || '{}')).then(function(settings){
+    return mmcApi('/settings/application').then(function(settings){
       setDateValue('admissionStartDate', settings.admission_start_date);
       setDateValue('admissionEndDate', settings.admission_end_date);
       setDateValue('paymentStartDate', settings.payment_start_date);
       setDateValue('paymentEndDate', settings.payment_end_date);
-      document.getElementById('settingsStatus').textContent = 'Settings are stored locally until the backend settings API is enabled.';
+      document.getElementById('settingsStatus').textContent = 'Admission: ' + settings.admission_state + ' · Payment: ' + settings.payment_state;
     }).catch(function(error){
       document.getElementById('settingsStatus').textContent = 'Unable to load settings.';
       mmcToast('Settings not loaded', error.message, 'danger');
@@ -69,15 +69,20 @@
     var original = button.innerHTML;
     button.disabled = true;
     button.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Saving...';
-    Promise.resolve({
+    mmcApi('/settings/application', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
         admission_start_date: document.getElementById('admissionStartDate').value || null,
         admission_end_date: document.getElementById('admissionEndDate').value || null,
         payment_start_date: document.getElementById('paymentStartDate').value || null,
         payment_end_date: document.getElementById('paymentEndDate').value || null
-    }).then(function(settings){
-      localStorage.setItem('mmc_application_settings', JSON.stringify(settings));
-      mmcToast('Settings saved locally', 'Backend settings API is not available yet.', 'warning');
+      })
+    }).then(function(){
+      mmcToast('Settings saved', 'Admission and payment dates have been updated.', 'success');
       return loadSettings();
+    }).catch(function(error){
+      mmcToast('Settings not saved', error.message, 'danger');
     }).finally(function(){
       button.disabled = false;
       button.innerHTML = original;
