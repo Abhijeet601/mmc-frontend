@@ -132,7 +132,7 @@
             </div>
             <div id="existingUploadBlock" style="display:none;">
               <label class="form-label">Upload Previous Year's Receipt</label>
-              <div class="mmc-dropzone" id="prevReceiptZone"><i class="fa-solid fa-cloud-arrow-up"></i><div class="fw-600 fs-13">Click or drag file to upload</div><div class="hint">PDF, JPG, JPEG or PNG, 200-250 KB</div></div>
+              <div class="mmc-dropzone" id="prevReceiptZone"><i class="fa-solid fa-cloud-arrow-up"></i><div class="fw-600 fs-13">Click or drag file to upload</div><div class="hint">PDF, JPG, JPEG or PNG, less than 250 KB</div></div>
               <input type="file" id="prevReceiptInput" class="d-none" accept=".pdf,.jpg,.jpeg,.png">
               <div id="prevReceiptChips"></div><div id="prevReceiptStatus" class="upload-status"></div>
             </div>
@@ -233,27 +233,27 @@
             <div class="row g-3">
               <div class="col-md-6">
                 <label class="form-label">Passport Size Photograph *</label>
-                <div class="mmc-dropzone" id="zone1"><i class="fa-solid fa-image"></i><div class="fw-600 fs-13">Click or drag photo</div><div class="hint">JPG, JPEG or PNG, 200-250 KB</div></div>
+                <div class="mmc-dropzone" id="zone1"><i class="fa-solid fa-image"></i><div class="fw-600 fs-13">Click or drag photo</div><div class="hint">JPG, JPEG or PNG, less than 250 KB</div></div>
                 <input type="file" id="input1" class="d-none" accept=".jpg,.jpeg,.png" required><div id="chips1"></div><div id="status1" class="upload-status"></div><img id="photoPreview" class="upload-preview d-none" alt="Photograph preview">
               </div>
               <div class="col-md-6">
                 <label class="form-label">Aadhar Card *</label>
-                <div class="mmc-dropzone" id="zone2"><i class="fa-solid fa-id-card"></i><div class="fw-600 fs-13">Click or drag file</div><div class="hint">PDF, JPG, JPEG or PNG, 200-250 KB</div></div>
+                <div class="mmc-dropzone" id="zone2"><i class="fa-solid fa-id-card"></i><div class="fw-600 fs-13">Click or drag file</div><div class="hint">PDF, JPG, JPEG or PNG, less than 250 KB</div></div>
                 <input type="file" id="input2" class="d-none" accept=".pdf,.jpg,.jpeg,.png" required><div id="chips2"></div><div id="status2" class="upload-status"></div>
               </div>
               <div class="col-md-6">
                 <label class="form-label">Admission Receipt *</label>
-                <div class="mmc-dropzone" id="zone3"><i class="fa-solid fa-file-invoice"></i><div class="fw-600 fs-13">Click or drag file</div><div class="hint">PDF, JPG, JPEG or PNG, 200-250 KB</div></div>
+                <div class="mmc-dropzone" id="zone3"><i class="fa-solid fa-file-invoice"></i><div class="fw-600 fs-13">Click or drag file</div><div class="hint">PDF, JPG, JPEG or PNG, less than 250 KB</div></div>
                 <input type="file" id="input3" class="d-none" accept=".pdf,.jpg,.jpeg,.png" required><div id="chips3"></div><div id="status3" class="upload-status"></div>
               </div>
               <div class="col-md-6" id="incomeDocument" hidden>
                 <label class="form-label">Income Certificate *</label>
-                <div class="mmc-dropzone" id="zone4"><i class="fa-solid fa-file-contract"></i><div class="fw-600 fs-13">Click or drag file</div><div class="hint">PDF, JPG, JPEG or PNG, 200-250 KB</div></div>
+                <div class="mmc-dropzone" id="zone4"><i class="fa-solid fa-file-contract"></i><div class="fw-600 fs-13">Click or drag file</div><div class="hint">PDF, JPG, JPEG or PNG, less than 250 KB</div></div>
                 <input type="file" id="input4" class="d-none" accept=".pdf,.jpg,.jpeg,.png"><div id="chips4"></div><div id="status4" class="upload-status"></div>
               </div>
               <div class="col-md-6" id="casteDocument" hidden>
                 <label class="form-label">Caste Certificate *</label>
-                <div class="mmc-dropzone" id="zone5"><i class="fa-solid fa-stamp"></i><div class="fw-600 fs-13">Click or drag file</div><div class="hint">PDF, JPG, JPEG or PNG, 200-250 KB</div></div>
+                <div class="mmc-dropzone" id="zone5"><i class="fa-solid fa-stamp"></i><div class="fw-600 fs-13">Click or drag file</div><div class="hint">PDF, JPG, JPEG or PNG, less than 250 KB</div></div>
                 <input type="file" id="input5" class="d-none" accept=".pdf,.jpg,.jpeg,.png"><div id="chips5"></div><div id="status5" class="upload-status"></div>
               </div>
             </div>
@@ -317,8 +317,8 @@
     }
     return workflow;
   }).catch(function(){});
-  // Accept the displayed 200-250 KB range from both decimal and binary file-size tools.
-  var MIN_BYTES = 200 * 1000;
+  // Accept files smaller than 250 KB.
+  var MIN_BYTES = 1;
   var MAX_BYTES = 250 * 1024;
   var CATEGORY_NAMES = { UR:'Unreserved', BC:'Backward Class', EBC:'Extremely Backward Class', EWS:'Economically Weaker Section', SC:'Scheduled Caste', ST:'Scheduled Tribe' };
   var COURSE_OPTIONS = { UG:['BA','BSc','BCom','BBA','BCA','Other'], PG:['MA','MSc','MCom','MBA','MCA','Other'] };
@@ -394,7 +394,7 @@
     var validExtension = isPhoto ? /\.(jpe?g|png)$/i.test(file.name) : /\.(pdf|jpe?g|png)$/i.test(file.name);
     var message = '';
     if(!validExtension) message = isPhoto ? 'Photo must be JPG, JPEG or PNG.' : 'Document must be PDF, JPG, JPEG or PNG.';
-    else if(file.size < MIN_BYTES || file.size > MAX_BYTES) message = isPhoto ? 'Photo size must be between 200 KB and 250 KB.' : 'Document size must be between 200 KB and 250 KB.';
+    else if(file.size < MIN_BYTES || file.size >= MAX_BYTES) message = isPhoto ? 'Photo size must be less than 250 KB.' : 'Document size must be less than 250 KB.';
     if(message){
       input.value = '';
       input.setCustomValidity(message);
@@ -433,7 +433,7 @@
     if(!file) return;
     if(!valid){
       this.value = '';
-      byId('prevReceiptStatus').innerHTML = '<span class="text-danger"><i class="fa-solid fa-circle-xmark me-1"></i>Document must be PDF, JPG, JPEG or PNG and between 200 KB and 250 KB.</span>';
+      byId('prevReceiptStatus').innerHTML = '<span class="text-danger"><i class="fa-solid fa-circle-xmark me-1"></i>Document must be PDF, JPG, JPEG or PNG and less than 250 KB.</span>';
       return;
     }
     byId('prevReceiptStatus').innerHTML = '<span class="text-success"><i class="fa-solid fa-circle-check me-1"></i>Upload ready (' + (file.size / 1024).toFixed(1) + ' KB)</span>';
