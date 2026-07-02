@@ -523,6 +523,21 @@ table.dataTable thead .sorting:before, table.dataTable thead .sorting:after{ opa
     radial-gradient(circle at 22% 16%,rgba(212,162,39,.22),transparent 28%),
     linear-gradient(160deg,var(--mmc-navy) 0%,var(--mmc-navy-dark) 62%,var(--mmc-maroon-dark) 130%);
 }
+.mmc-sidebar-brand .mmc-seal{
+  width: 54px;
+  height: 54px;
+  padding: 5px;
+  border-radius: 16px;
+  background: #fff;
+  overflow: visible;
+  box-shadow: 0 12px 28px rgba(0,0,0,.22);
+}
+.mmc-sidebar-brand .mmc-seal img{
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 10px;
+}
 @media (max-width: 575.98px){
   .mmc-page-head{
     padding: 18px;
