@@ -11,7 +11,7 @@ function mmcNormalizeWorkflowStatus(status){
 }
 
 function mmcReceiptDownloadUrl(receipt){
-  return mmcReceiptUrl(receipt);
+  return MMC_API_BASE + (receipt.pdf_url || ('/receipts/' + receipt.id + '/download'));
 }
 
 function mmcLatestByCreatedAt(items){
@@ -37,7 +37,6 @@ function mmcBuildStudentWorkflow(data){
   }) || null;
   var status = application ? mmcNormalizeWorkflowStatus(application.status) : 'Not Started';
   var statusKey = status.toLowerCase();
-  var draft = statusKey === 'draft';
   var shortlisted = ['shortlisted', 'approved', 'selected'].indexOf(statusKey) !== -1;
   var hostel = application && application.hostel_id ? hostels.find(function(item){ return Number(item.id) === Number(application.hostel_id); }) : null;
   var room = application && application.room_id ? rooms.find(function(item){ return Number(item.id) === Number(application.room_id); }) : null;
@@ -54,26 +53,20 @@ function mmcBuildStudentWorkflow(data){
     shortlisted: shortlisted,
     roomAllotted: Boolean(application && application.hostel_id && application.room_id),
     status: status,
-    draft: draft,
     hostel: hostel,
-    room: room,
-    settings: data.settings || null
+    room: room
   };
 }
 
 function mmcLoadStudentWorkflow(){
   var student = mmcCurrentStudent();
   if(!student || !student.id) return Promise.resolve(null);
-  function optionalApi(path, fallback){
-    return mmcApi(path).catch(function(){ return fallback; });
-  }
   return Promise.all([
     mmcApi('/applications?student_id=' + student.id),
     mmcApi('/payments?student_id=' + student.id),
     mmcApi('/receipts?student_id=' + student.id),
     mmcApi('/hostels'),
-    mmcApi('/rooms'),
-    optionalApi('/settings/application', null)
+    mmcApi('/rooms')
   ]).then(function(results){
     return mmcBuildStudentWorkflow({
       student: student,
@@ -81,18 +74,9 @@ function mmcLoadStudentWorkflow(){
       payments: results[1] || [],
       receipts: results[2] || [],
       hostels: results[3] || [],
-      rooms: results[4] || [],
-      settings: results[5] || null
+      rooms: results[4] || []
     });
   });
-}
-
-function mmcAdmissionIsOpen(settings){
-  return !settings || settings.admission_state === 'open';
-}
-
-function mmcPaymentIsOpen(settings){
-  return !settings || settings.payment_state === 'open';
 }
 
 function mmcApplyStudentNavigation(workflow){
@@ -102,8 +86,8 @@ function mmcApplyStudentNavigation(workflow){
       link.style.display = visible ? '' : 'none';
     });
   }
-  setVisible('application-form.html', !workflow.application || workflow.draft);
-  setVisible('fee-payment.html', Boolean(workflow.application && !workflow.draft && !workflow.registrationPaid));
+  setVisible('application-form.html', !workflow.application);
+  setVisible('fee-payment.html', Boolean(workflow.application && !workflow.registrationPaid));
   setVisible('hostel-fee-payment.html', Boolean(MMC_PAYMENT_GATEWAY_ENABLED && workflow.registrationPaid && workflow.shortlisted && !workflow.hostelPaid));
   setVisible('room-allotment.html', Boolean(workflow.hostelPaid || workflow.roomAllotted));
 }
@@ -123,16 +107,12 @@ function mmcShowWorkflowMessage(){
 
 function mmcGuardStudentWorkflow(pageName, workflow){
   if(!workflow) return false;
-  if(pageName === 'application-form' && workflow.application && !workflow.draft){
+  if(pageName === 'application-form' && workflow.application && workflow.registrationPaid){
     mmcWorkflowRedirect('You have already completed this step.');
     return true;
   }
-  if(pageName === 'registration-fee' && (!workflow.application || workflow.draft)){
+  if(pageName === 'registration-fee' && !workflow.application){
     mmcWorkflowRedirect('Submit your hostel application before paying the registration fee.');
-    return true;
-  }
-  if(pageName === 'registration-fee' && !mmcPaymentIsOpen(workflow.settings)){
-    mmcWorkflowRedirect(workflow.settings && workflow.settings.payment_message ? workflow.settings.payment_message : 'Payment is currently unavailable.');
     return true;
   }
   if(pageName === 'registration-fee' && workflow.registrationPaid){
@@ -141,10 +121,6 @@ function mmcGuardStudentWorkflow(pageName, workflow){
   }
   if(pageName === 'hostel-fee' && !MMC_PAYMENT_GATEWAY_ENABLED){
     mmcWorkflowRedirect('Hostel Fee Payment is currently disabled. This feature will be activated after the online payment gateway is integrated and the student is shortlisted.');
-    return true;
-  }
-  if(pageName === 'hostel-fee' && !mmcPaymentIsOpen(workflow.settings)){
-    mmcWorkflowRedirect(workflow.settings && workflow.settings.payment_message ? workflow.settings.payment_message : 'Payment is currently unavailable.');
     return true;
   }
   if(pageName === 'hostel-fee' && (!workflow.registrationPaid || !workflow.shortlisted)){
