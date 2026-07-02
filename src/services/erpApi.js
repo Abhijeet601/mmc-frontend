@@ -18,10 +18,7 @@ const API_BASE = isViteDevServer ? '' : explicitErpApiBase || genericApiBase || 
 const rawApiBaseUrl = (API_BASE || fallbackApiBaseUrl).trim().replace(/\/+$/, '');
 const ERP_API_BASE_URL = rawApiBaseUrl.replace(/\/api$/i, '');
 const ERP_API_BASE_LABEL = ERP_API_BASE_URL || `${browserOrigin || 'current site'} /api proxy`;
-const REFERENCE_HOSTEL_ERP_HOSTS = [
-  'hostel-erp-backend-production.up.railway.app',
-  'web-production-bc50a.up.railway.app',
-];
+const REFERENCE_HOSTEL_ERP_HOSTS = ['web-production-bc50a.up.railway.app'];
 const isReferenceHostelErpApi = REFERENCE_HOSTEL_ERP_HOSTS.some((host) =>
   ERP_API_BASE_URL.toLowerCase().includes(host)
 );
@@ -118,17 +115,12 @@ const request = async (
   return response.json();
 };
 
-const authPayloadToken = (data) =>
-  data?.access_token || data?.token || (data?.user?.id ? `mmc-${(data.role || '').includes('admin') ? 'admin' : 'student'}-${data.user.id}` : '');
+const authPayloadToken = (data) => data?.access_token || data?.token || '';
 
 const cleanString = (value) => String(value || '').trim();
 const normalizeLoginIdentifier = (value) => {
   const identifier = cleanString(value);
-  if (!identifier) return '';
-  if (identifier.includes('@')) return identifier.toLowerCase();
-  const digits = identifier.replace(/\D/g, '');
-  if (digits.length >= 10) return digits.slice(-10);
-  return identifier;
+  return identifier.includes('@') ? identifier.toLowerCase() : identifier;
 };
 
 const compactPayload = (payload) =>
@@ -296,14 +288,11 @@ export const registerStudent = async (payload) => {
 
 export const loginStudent = async ({ email, password, date_of_birth, dob }) => {
   const loginDateOfBirth = date_of_birth || dob;
-  const identifier = normalizeLoginIdentifier(email);
   const data = await request('/api/login', {
     method: 'POST',
     body: compactPayload({
-      identifier,
-      email: identifier,
+      email: normalizeLoginIdentifier(email),
       password: String(password || ''),
-      role: 'student',
       ...(loginDateOfBirth ? { date_of_birth: loginDateOfBirth } : {}),
     }),
   });
@@ -384,26 +373,34 @@ export const createStudentComplaint = (payload) =>
   });
 
 export const loginAdmin = async ({ email, username, password }) => {
-  const identifier = normalizeLoginIdentifier(username || email || '');
+  const identifier = (username || email || '').trim();
   const passwordValue = String(password || '');
-  const attempts = [
-    {
-      path: '/api/admin/login',
-      body: { identifier, username: identifier, email: identifier, password: passwordValue, role: 'admin' },
-    },
-    {
-      path: '/api/auth/admin/login',
-      body: { identifier, username: identifier, email: identifier, password: passwordValue },
-    },
-    {
-      path: '/login',
-      body: { identifier, password: passwordValue, role: 'admin' },
-    },
-    {
-      path: '/auth/login',
-      body: { identifier, password: passwordValue, role: 'admin' },
-    },
-  ];
+  const isEmailIdentifier = identifier.includes('@');
+  const referenceEmail = isEmailIdentifier ? identifier : identifier.toLowerCase() === 'admin' ? 'admin@mmcollege.edu' : identifier;
+  const attempts = isReferenceHostelErpApi
+    ? [
+        {
+          path: '/api/auth/admin/login',
+          body: { email: referenceEmail, password: passwordValue },
+        },
+      ]
+    : isEmailIdentifier
+      ? [
+          {
+            path: '/api/auth/admin/login',
+            body: { email: identifier, password: passwordValue },
+          },
+          {
+            path: '/api/admin/login',
+            body: { username: identifier, password: passwordValue },
+          },
+        ]
+      : [
+          {
+            path: '/api/admin/login',
+            body: { username: identifier, password: passwordValue },
+          },
+        ];
 
   let lastError;
   let data;

@@ -201,13 +201,23 @@
       updatePayButton();
       return;
     }
-    mmcApi('/payment/application', {
+    mmcApi('/payments/registration/success', {
       method:'POST',
-      body:{ transaction_id:'DEMO-REG-' + Date.now() }
-    }).then(function(payment){
-      sessionStorage.setItem('mmc_last_registration_receipt', JSON.stringify(payment));
+      headers:{ 'Content-Type':'application/json' },
+      body:JSON.stringify({
+        student_id:student.id,
+        application_id:activeApplication.id,
+        transaction_no:'DEMO-REG-' + Date.now(),
+        payment_type:selectedFee.type,
+        amount:selectedFee.amount,
+        mode:selectedPayMode + ' Demo Payment',
+        status:'Success',
+        paid_at:new Date().toISOString()
+      })
+    }).then(function(receipt){
+      sessionStorage.setItem('mmc_last_registration_receipt', JSON.stringify(receipt));
       mmcToast('Demo payment successful', 'Official registration receipt generated.', 'success');
-      setTimeout(function(){ if(payment.receipt_url) window.open(mmcFileUrl(payment.receipt_url), '_blank'); window.location.href = 'receipt.html'; }, 700);
+      setTimeout(function(){ window.open(MMC_API_BASE + receipt.pdf_url, '_blank'); window.location.href = 'receipt.html'; }, 700);
     }).catch(function(error){
       mmcToast('Demo payment failed', error.message, 'danger');
       btn.disabled = false;
@@ -221,16 +231,15 @@
     mmcLoadStudentWorkflow().then(function(workflow){
       mmcApplyStudentNavigation(workflow);
       if(mmcGuardStudentWorkflow('registration-fee', workflow)) return [];
-      return mmcApi('/application');
-    }).then(function(application){
-      if(!application || application.form_status !== 'submitted') return;
-      activeApplication = application;
+      return mmcApi('/applications?student_id=' + student.id);
+    }).then(function(applications){
+      if(!applications || !applications.length) return;
+      activeApplication = applications[0] || null;
       if(!activeApplication) return;
-      var data = activeApplication.data || {};
-      document.getElementById('regAppNo').textContent = activeApplication.application_number || '-';
+      document.getElementById('regAppNo').textContent = activeApplication.application_no || '-';
       document.getElementById('regStudentName').textContent = student.name || 'Student';
-      document.getElementById('regCourse').textContent = data.course_name || '-';
-      document.getElementById('regSession').textContent = data.session || '2026 - 2027';
+      document.getElementById('regCourse').textContent = activeApplication.course || '-';
+      document.getElementById('regSession').textContent = activeApplication.session || '2026 - 2027';
       var expected = activeApplication.application_type === 'existing' ? 100 : 1000;
       var card = document.querySelector('.mmc-fee-option[data-fee-amount="' + expected + '"]');
       if(card) mmcSelectFeeType(card);

@@ -128,7 +128,7 @@
             </div>
             <div id="existingUploadBlock" style="display:none;">
               <label class="form-label">Upload Previous Year's Receipt</label>
-              <div class="mmc-dropzone" id="prevReceiptZone"><i class="fa-solid fa-cloud-arrow-up"></i><div class="fw-600 fs-13">Click or drag file to upload</div><div class="hint">PDF, JPG, JPEG or PNG, max 250 KB</div></div>
+              <div class="mmc-dropzone" id="prevReceiptZone"><i class="fa-solid fa-cloud-arrow-up"></i><div class="fw-600 fs-13">Click or drag file to upload</div><div class="hint">PDF, JPG, JPEG or PNG, 200-250 KB</div></div>
               <input type="file" id="prevReceiptInput" class="d-none" accept=".pdf,.jpg,.jpeg,.png">
               <div id="prevReceiptChips"></div><div id="prevReceiptStatus" class="upload-status"></div>
             </div>
@@ -229,27 +229,27 @@
             <div class="row g-3">
               <div class="col-md-6">
                 <label class="form-label">Passport Size Photograph *</label>
-                <div class="mmc-dropzone" id="zone1"><i class="fa-solid fa-image"></i><div class="fw-600 fs-13">Click or drag photo</div><div class="hint">JPG, JPEG or PNG, max 250 KB</div></div>
+                <div class="mmc-dropzone" id="zone1"><i class="fa-solid fa-image"></i><div class="fw-600 fs-13">Click or drag photo</div><div class="hint">JPG, JPEG or PNG, 200-250 KB</div></div>
                 <input type="file" id="input1" class="d-none" accept=".jpg,.jpeg,.png" required><div id="chips1"></div><div id="status1" class="upload-status"></div><img id="photoPreview" class="upload-preview d-none" alt="Photograph preview">
               </div>
               <div class="col-md-6">
                 <label class="form-label">Aadhar Card *</label>
-                <div class="mmc-dropzone" id="zone2"><i class="fa-solid fa-id-card"></i><div class="fw-600 fs-13">Click or drag file</div><div class="hint">PDF, JPG, JPEG or PNG, max 250 KB</div></div>
+                <div class="mmc-dropzone" id="zone2"><i class="fa-solid fa-id-card"></i><div class="fw-600 fs-13">Click or drag file</div><div class="hint">PDF, JPG, JPEG or PNG, 200-250 KB</div></div>
                 <input type="file" id="input2" class="d-none" accept=".pdf,.jpg,.jpeg,.png" required><div id="chips2"></div><div id="status2" class="upload-status"></div>
               </div>
               <div class="col-md-6">
                 <label class="form-label">Admission Receipt *</label>
-                <div class="mmc-dropzone" id="zone3"><i class="fa-solid fa-file-invoice"></i><div class="fw-600 fs-13">Click or drag file</div><div class="hint">PDF, JPG, JPEG or PNG, max 250 KB</div></div>
+                <div class="mmc-dropzone" id="zone3"><i class="fa-solid fa-file-invoice"></i><div class="fw-600 fs-13">Click or drag file</div><div class="hint">PDF, JPG, JPEG or PNG, 200-250 KB</div></div>
                 <input type="file" id="input3" class="d-none" accept=".pdf,.jpg,.jpeg,.png" required><div id="chips3"></div><div id="status3" class="upload-status"></div>
               </div>
               <div class="col-md-6" id="incomeDocument" hidden>
                 <label class="form-label">Income Certificate *</label>
-                <div class="mmc-dropzone" id="zone4"><i class="fa-solid fa-file-contract"></i><div class="fw-600 fs-13">Click or drag file</div><div class="hint">PDF, JPG, JPEG or PNG, max 250 KB</div></div>
+                <div class="mmc-dropzone" id="zone4"><i class="fa-solid fa-file-contract"></i><div class="fw-600 fs-13">Click or drag file</div><div class="hint">PDF, JPG, JPEG or PNG, 200-250 KB</div></div>
                 <input type="file" id="input4" class="d-none" accept=".pdf,.jpg,.jpeg,.png"><div id="chips4"></div><div id="status4" class="upload-status"></div>
               </div>
               <div class="col-md-6" id="casteDocument" hidden>
                 <label class="form-label">Caste Certificate *</label>
-                <div class="mmc-dropzone" id="zone5"><i class="fa-solid fa-stamp"></i><div class="fw-600 fs-13">Click or drag file</div><div class="hint">PDF, JPG, JPEG or PNG, max 250 KB</div></div>
+                <div class="mmc-dropzone" id="zone5"><i class="fa-solid fa-stamp"></i><div class="fw-600 fs-13">Click or drag file</div><div class="hint">PDF, JPG, JPEG or PNG, 200-250 KB</div></div>
                 <input type="file" id="input5" class="d-none" accept=".pdf,.jpg,.jpeg,.png"><div id="chips5"></div><div id="status5" class="upload-status"></div>
               </div>
             </div>
@@ -290,29 +290,14 @@
 <script>
   (function(){
   'use strict';
-  var currentStudent = mmcCurrentStudent();
-  var draftApplication = null;
-  var admissionSettings = null;
-  var formLocked = false;
-  var formDirty = false;
-  var workflowPromise = mmcLoadStudentWorkflow().then(function(workflow){
+  mmcLoadStudentWorkflow().then(function(workflow){
     mmcApplyStudentNavigation(workflow);
-    admissionSettings = workflow && workflow.settings ? workflow.settings : null;
-    if(workflow && workflow.application && !workflow.draft){
+    if(workflow && workflow.application){
       mmcWorkflowRedirect('You have already completed this step.');
     }
-    if(workflow && workflow.draft){
-      draftApplication = workflow.application;
-    }
-    if(!workflow || !workflow.draft){
-      if(admissionSettings && admissionSettings.admission_state !== 'open'){
-        formLocked = true;
-        document.querySelectorAll('[data-wizard-next], #saveDraftBtn, #submitAppBtn').forEach(function(button){ button.disabled = true; });
-        mmcToast('Admission unavailable', admissionSettings.admission_message || 'Hostel Admission is currently unavailable.', 'info');
-      }
-    }
-    return workflow;
   }).catch(function(){});
+  // Accept the displayed 200-250 KB range from both decimal and binary file-size tools.
+  var MIN_BYTES = 200 * 1000;
   var MAX_BYTES = 250 * 1024;
   var CATEGORY_NAMES = { UR:'Unreserved', BC:'Backward Class', EBC:'Extremely Backward Class', EWS:'Economically Weaker Section', SC:'Scheduled Caste', ST:'Scheduled Tribe' };
   var COURSE_OPTIONS = { UG:['BA','BSc','BCom','BBA','BCA','Other'], PG:['MA','MSc','MCom','MBA','MCA','Other'] };
@@ -388,7 +373,7 @@
     var validExtension = isPhoto ? /\.(jpe?g|png)$/i.test(file.name) : /\.(pdf|jpe?g|png)$/i.test(file.name);
     var message = '';
     if(!validExtension) message = isPhoto ? 'Photo must be JPG, JPEG or PNG.' : 'Document must be PDF, JPG, JPEG or PNG.';
-    else if(file.size > MAX_BYTES) message = isPhoto ? 'Photo must be 250 KB or smaller.' : 'Document must be 250 KB or smaller.';
+    else if(file.size < MIN_BYTES || file.size > MAX_BYTES) message = isPhoto ? 'Photo size must be between 200 KB and 250 KB.' : 'Document size must be between 200 KB and 250 KB.';
     if(message){
       input.value = '';
       input.setCustomValidity(message);
@@ -401,7 +386,7 @@
     filesValid[input.id] = true;
     var icon = file.type === 'application/pdf' ? 'fa-file-pdf' : 'fa-file-image';
     chips.innerHTML = '<div class="mmc-upload-chip"><i class="fa-solid ' + icon + '"></i><span>' + file.name.replace(/[<>]/g,'') + '</span><span class="text-body-tertiary ms-1">(' + (file.size / 1024).toFixed(1) + ' KB)</span></div>';
-    status.innerHTML = '<span class="text-success"><i class="fa-solid fa-circle-check me-1"></i>Selected and ready to upload</span><div class="progress mt-1" style="height:6px;"><div class="progress-bar bg-success" style="width:100%"></div></div>';
+    status.innerHTML = '<span class="text-success"><i class="fa-solid fa-circle-check me-1"></i>Upload ready</span>';
     if(isPhoto){
       var reader = new FileReader();
       reader.onload = function(event){ byId('photoPreview').src = event.target.result; byId('photoPreview').classList.remove('d-none'); };
@@ -422,15 +407,15 @@
   byId('prevReceiptZone').addEventListener('click', function(){ byId('prevReceiptInput').click(); });
   byId('prevReceiptInput').addEventListener('change', function(){
     var file = this.files[0];
-    var valid = file && /\.(pdf|jpe?g|png)$/i.test(file.name) && file.size <= MAX_BYTES;
+    var valid = file && /\.(pdf|jpe?g|png)$/i.test(file.name) && file.size >= MIN_BYTES && file.size <= MAX_BYTES;
     byId('prevReceiptChips').innerHTML = '';
     if(!file) return;
     if(!valid){
       this.value = '';
-      byId('prevReceiptStatus').innerHTML = '<span class="text-danger"><i class="fa-solid fa-circle-xmark me-1"></i>Document must be PDF, JPG, JPEG or PNG and 250 KB or smaller.</span>';
+      byId('prevReceiptStatus').innerHTML = '<span class="text-danger"><i class="fa-solid fa-circle-xmark me-1"></i>Document must be PDF, JPG, JPEG or PNG and between 200 KB and 250 KB.</span>';
       return;
     }
-    byId('prevReceiptStatus').innerHTML = '<span class="text-success"><i class="fa-solid fa-circle-check me-1"></i>Selected and ready to upload (' + (file.size / 1024).toFixed(1) + ' KB)</span><div class="progress mt-1" style="height:6px;"><div class="progress-bar bg-success" style="width:100%"></div></div>';
+    byId('prevReceiptStatus').innerHTML = '<span class="text-success"><i class="fa-solid fa-circle-check me-1"></i>Upload ready (' + (file.size / 1024).toFixed(1) + ' KB)</span>';
   });
 
   ['pMobile','pAadhar','fGuardianMobile'].forEach(function(id){
@@ -532,254 +517,66 @@
     byId('previewBody').innerHTML = html;
   }
 
-  function selectedApplicationType(){
-    var selectedType = document.querySelector('.mmc-type-card.selected');
-    return selectedType ? selectedType.dataset.applicationType : 'new';
-  }
-
-  function localDraftKey(){
-    var student = currentStudent || mmcCurrentStudent() || {};
-    return 'mmc_hostel_application_draft_' + (student.id || 'guest');
-  }
-
-  function isEndpointMissing(error){
-    return error && /not found|status 404/i.test(error.message || '');
-  }
-
-  function collectApplicationPayload(){
-    return {
-      name: byId('pName').value.trim(),
-      gender: byId('pGender').value,
-      date_of_birth: byId('pDob').value || null,
-      mobile_number: byId('pMobile').value.trim(),
-      email: byId('pEmail').value.trim(),
-      category: byId('pCategory').value || null,
-      application_type: selectedApplicationType(),
-      admission_level: byId('admissionLevel').value || null,
-      admission_application_id: byId('acAdmId').value.trim() || null,
-      college_name: byId('currentCollege').value.trim() || null,
-      course_name: byId('acCourse').value || null,
-      session: byId('acSession').value.trim() || null,
-      father_name: byId('fFather').value.trim() || null,
-      mother_name: byId('fMother').value.trim() || null,
-      local_guardian_name: byId('fGuardian').value.trim() || null,
-      guardian_mobile_number: byId('fGuardianMobile').value.trim() || null,
-      correspondence_address: byId('aCorrespondence').value.trim() || null,
-      blood_group: byId('pBlood').value || null,
-      aadhaar_number: byId('pAadhar').value.trim() || null,
-      religion: byId('pReligion').value.trim() || null,
-      nationality: byId('pNationality').value.trim() || null,
-      intermediate_college_name: byId('acCollege').value.trim() || null,
-      intermediate_board: byId('acBoard').value.trim() || null,
-      result_type: byId('resultType').value || null,
-      marks_obtained: byId('acMarks').value ? Number(byId('acMarks').value) : null,
-      total_marks: byId('acTotal').value ? Number(byId('acTotal').value) : null,
-      aggregate_percentage: byId('acPercent').value ? Number(byId('acPercent').value.replace('%','')) : null,
-      roll_number: byId('acRoll').value.trim() || null,
-      honours_subject: byId('acSubject').value.trim() || null,
-      program: byId('admissionLevel').value || null
-    };
-  }
-
-  function buildApplicationFormData(){
-    var formData = new FormData();
-    var payload = collectApplicationPayload();
-    Object.keys(payload).forEach(function(key){
-      if(payload[key] !== null && payload[key] !== undefined && payload[key] !== '') formData.append(key, payload[key]);
-    });
-    if(byId('input1').files[0]) formData.append('student_photo', byId('input1').files[0]);
-    if(byId('input2').files[0]) formData.append('aadhaar_card', byId('input2').files[0]);
-    if(byId('input3').files[0]){
-      formData.append('college_id', byId('input3').files[0]);
-      formData.append('marksheet', byId('input3').files[0]);
-    }
-    return formData;
-  }
-
-  function setValue(id, value){
-    if(value == null) return;
-    byId(id).value = value;
-  }
-  function pick(source){
-    for(var i = 1; i < arguments.length; i++){
-      if(source && source[arguments[i]] != null && source[arguments[i]] !== '') return source[arguments[i]];
-    }
-    return null;
-  }
-
-  function fillDraft(application, student){
-    student = student || currentStudent || {};
-    if(!application && !student) return;
-    setValue('pName', student.name);
-    setValue('pGender', student.gender);
-    setValue('pDob', student.date_of_birth);
-    setValue('pMobile', student.mobile);
-    setValue('pEmail', student.email);
-    setValue('pCategory', application && application.applied_category ? application.applied_category : student.category);
-    if(application){
-      var typeCard = document.querySelector('[data-application-type="' + (application.application_type || 'new') + '"]');
-      if(typeCard) setApplicationType(typeCard);
-      setValue('admissionLevel', pick(application, 'admission_level', 'program'));
-      updateAdmission();
-      setValue('acAdmId', pick(application, 'admission_id', 'admission_application_id'));
-      setValue('currentCollege', application.college_name);
-      setValue('acCourse', pick(application, 'course', 'course_name'));
-      setValue('acSubject', pick(application, 'subject', 'honours_subject'));
-      setValue('acSession', application.session);
-      setValue('acRoll', application.roll_number);
-      setValue('fFather', application.father_name);
-      setValue('fMother', application.mother_name);
-      setValue('fGuardian', pick(application, 'guardian_name', 'local_guardian_name'));
-      setValue('fGuardianMobile', pick(application, 'guardian_mobile', 'guardian_mobile_number'));
-      setValue('aPermanent', application.permanent_address);
-      setValue('aCorrespondence', application.correspondence_address);
-      setValue('pBlood', application.blood_group);
-      setValue('pAadhar', pick(application, 'aadhar_number', 'aadhaar_number'));
-      setValue('pReligion', application.religion);
-      setValue('pNationality', application.nationality);
-      setValue('acCollege', pick(application, 'intermediate_college', 'intermediate_college_name'));
-      setValue('acBoard', pick(application, 'board', 'intermediate_board'));
-      setValue('previousCourse', application.previous_course);
-      setValue('resultType', application.result_type);
-      setValue('acTotal', application.total_marks);
-      setValue('acMarks', application.marks_obtained);
-      calculatePercentage();
-      if(application.student_photo_data){
-        byId('photoPreview').src = application.student_photo_data;
-        byId('photoPreview').classList.remove('d-none');
-      }
-    }
-    updateDocuments();
-  }
-
-  function saveLocalDraft(step){
-    localStorage.setItem(localDraftKey(), JSON.stringify({
-      current_step: step,
-      data: collectApplicationPayload(),
-      saved_at: new Date().toISOString()
-    }));
-  }
-
-  function loadLocalDraft(){
-    try {
-      return JSON.parse(localStorage.getItem(localDraftKey()) || 'null');
-    } catch(error){
-      return null;
-    }
-  }
-
-  function buildLegacySubmitPayload(student){
-    var payload = collectApplicationPayload();
-    payload.application_no = 'MMC-HST-' + new Date().getFullYear() + '-' + student.id + '-' + Date.now().toString().slice(-6);
-    payload.student_id = student.id;
-    delete payload.name;
-    delete payload.email;
-    delete payload.mobile;
-    delete payload.gender;
-    delete payload.date_of_birth;
-    delete payload.category;
-    return payload;
-  }
-
-  function setSaving(button, saving){
-    if(!button) return;
-    if(saving){
-      button.dataset.originalHtml = button.innerHTML;
-      button.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Saving...';
-      button.disabled = true;
-    } else {
-      button.innerHTML = button.dataset.originalHtml || button.innerHTML;
-      button.disabled = false;
-    }
-  }
-
-  function saveCurrentStep(step, button){
-    if(formLocked) return Promise.resolve(false);
-    var student = currentStudent || mmcCurrentStudent();
-    if(!student || !student.access_token){
-      mmcToast('Login required', 'Please sign in with your student account before saving.', 'warning');
-      return Promise.resolve(false);
-    }
-    setSaving(button, true);
-    return mmcApi('/application/draft', {
-      method: 'POST',
-      body: buildApplicationFormData()
-    }).then(function(application){
-      draftApplication = application;
-      formDirty = false;
-      localStorage.removeItem(localDraftKey());
-      mmcToast('Draft Saved Successfully', 'Your application progress has been saved.', 'success');
-      return true;
-    }).catch(function(error){
-      mmcToast('Draft save failed', error.message || 'Unable to save this step.', 'danger');
-      return false;
-    }).finally(function(){
-      setSaving(button, false);
-    });
-  }
-
   var wiz = mmcInitWizard('[data-wizard]', {
-    onBeforeNext: function(step, panel, button){
-      return saveCurrentStep(step, button);
-    },
     onChange: function(step){
       document.querySelector('.mmc-progressbar-thin > div').style.width = (step/8*100) + '%';
-      document.querySelector('.mmc-page-sub').textContent = 'Step ' + step + ' of 8. Complete each section to submit your hostel admission application.';
       if(step === 8) buildPreview();
     }
   });
 
-  document.querySelectorAll('input, select, textarea').forEach(function(field){
-    field.addEventListener('input', function(){ formDirty = true; });
-    field.addEventListener('change', function(){ formDirty = true; });
-  });
-  window.addEventListener('beforeunload', function(event){
-    if(formDirty){
-      event.preventDefault();
-      event.returnValue = '';
-    }
-  });
-
-  workflowPromise.then(function(workflow){
-    var student = workflow && workflow.student ? workflow.student : currentStudent;
-    var localDraft = loadLocalDraft();
-    if(!draftApplication && localDraft && localDraft.data){
-      draftApplication = Object.assign({ current_step: localDraft.current_step || 1 }, localDraft.data);
-    }
-    fillDraft(draftApplication, student);
-    if(draftApplication && draftApplication.current_step && wiz){
-      wiz.goTo(Math.max(1, Math.min(Number(draftApplication.current_step || 1), 8)));
-      mmcToast('Draft resumed', 'Your saved hostel application has been restored.', 'info');
-    }
-    formDirty = false;
-  });
-
-  document.getElementById('saveDraftBtn').addEventListener('click', function(){
-    saveCurrentStep(wiz ? wiz.current() : 1, this);
-  });
+  document.getElementById('saveDraftBtn').addEventListener('click', function(){ mmcToast('Draft not saved', 'Draft storage is not connected yet.', 'warning'); });
 
   document.getElementById('submitAppBtn').addEventListener('click', function(){
     if(!document.getElementById('declareCorrect').checked){ mmcToast('Declaration required', 'Please confirm the declaration checkbox to submit.', 'warning'); return; }
     mmcConfirm('Submit Application?', 'Once submitted, you will not be able to edit your application details.', function(){
       var student = mmcCurrentStudent();
-      if(!student || !student.access_token){
+      if(!student || !student.id){
         mmcToast('Login required', 'Please sign in with your student account before submitting.', 'warning');
         return;
       }
       var submitButton = byId('submitAppBtn');
       var originalContent = submitButton.innerHTML;
+      var selectedType = document.querySelector('.mmc-type-card.selected');
+      var applicationNumber = 'MMC-HST-' + new Date().getFullYear() + '-' + student.id + '-' + Date.now().toString().slice(-6);
+      var payload = {
+        application_no: applicationNumber,
+        student_id: student.id,
+        application_type: selectedType ? selectedType.dataset.applicationType : 'new',
+        admission_level: byId('admissionLevel').value,
+        admission_id: byId('acAdmId').value.trim(),
+        college_name: byId('currentCollege').value.trim(),
+        course: byId('acCourse').value,
+        session: byId('acSession').value.trim(),
+        father_name: byId('fFather').value.trim(),
+        mother_name: byId('fMother').value.trim(),
+        guardian_name: byId('fGuardian').value.trim() || null,
+        guardian_mobile: byId('fGuardianMobile').value.trim() || null,
+        permanent_address: byId('aPermanent').value.trim(),
+        correspondence_address: byId('aCorrespondence').value.trim(),
+        blood_group: byId('pBlood').value,
+        aadhar_number: byId('pAadhar').value,
+        religion: byId('pReligion').value.trim() || null,
+        nationality: byId('pNationality').value.trim() || null,
+        student_photo_data: byId('photoPreview').getAttribute('src') || null,
+        intermediate_college: byId('acCollege').value.trim(),
+        board: byId('acBoard').value.trim(),
+        previous_course: byId('previousCourse').value.trim(),
+        result_type: byId('resultType').value,
+        marks_obtained: Number(byId('acMarks').value),
+        total_marks: Number(byId('acTotal').value),
+        percentage: Number(byId('acPercent').value.replace('%','')),
+        roll_number: byId('acRoll').value.trim(),
+        subject: byId('acSubject').value.trim(),
+        applied_category: byId('pCategory').value
+      };
       submitButton.disabled = true;
       submitButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Submitting...';
-      mmcApi('/application/submit', {
+      mmcApi('/applications', {
         method: 'POST',
-        body: buildApplicationFormData(),
-        onUploadProgress: function(percent){
-          submitButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Uploading ' + percent + '%';
-        }
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
       })
         .then(function(application){
-          formDirty = false;
-          localStorage.removeItem(localDraftKey());
           sessionStorage.setItem('mmc_last_application', JSON.stringify(application));
           sessionStorage.setItem('mmc_last_application_preview', JSON.stringify({
             applicant_name: byId('pName').value.trim(), gender: byId('pGender').value,
@@ -791,7 +588,7 @@
             application: application
           }));
           submitButton.innerHTML = '<i class="fa-solid fa-circle-check me-1"></i> Application Submitted';
-          mmcToast('Application submitted', application.message || 'Your hostel application has been submitted.', 'success');
+          mmcToast('Application submitted', 'Application number: ' + application.application_no, 'success');
           setTimeout(function(){ window.location.href = 'application-preview.html'; }, 1200);
         })
         .catch(function(error){
