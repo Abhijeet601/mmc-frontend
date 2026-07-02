@@ -241,7 +241,10 @@
     return receipt ? '<a href="' + mmcReceiptDownloadUrl(receipt) + '" target="_blank" class="btn btn-ghost text-start"><i class="fa-solid fa-download me-2 text-maroon"></i> ' + label + '</a>' : '';
   }
   function nextAction(workflow){
-    if(!workflow.application) return '<a href="application-form.html" class="btn btn-maroon"><i class="fa-solid fa-file-pen me-1"></i> Fill Application</a>';
+    if(!workflow.application && !mmcAdmissionIsOpen(workflow.settings)){
+      return '<button class="btn btn-ghost" disabled><i class="fa-solid fa-lock me-1"></i> ' + escapeHtml((workflow.settings && workflow.settings.admission_message) || 'Hostel Admission is Closed.') + '</button>';
+    }
+    if(!workflow.application || workflow.draft) return '<a href="application-form.html" class="btn btn-maroon"><i class="fa-solid fa-file-pen me-1"></i> ' + (workflow.draft ? 'Resume Application' : 'Fill Application') + '</a>';
     if(!workflow.registrationPaid) return '<a href="fee-payment.html" class="btn btn-maroon"><i class="fa-solid fa-credit-card me-1"></i> Pay Registration Fee</a>';
     if(workflow.shortlisted && !workflow.hostelPaid) return '<a href="hostel-fee-payment.html" class="btn btn-maroon"><i class="fa-solid fa-money-bill-wave me-1"></i> Pay Hostel Fee</a>';
     if(workflow.roomAllotted) return '<a href="room-allotment.html" class="btn btn-maroon"><i class="fa-solid fa-bed me-1"></i> View Room</a>';
@@ -296,7 +299,7 @@
     document.getElementById('dashStudentCourse').textContent = (app && app.course) || student.course || '-';
     document.getElementById('dashStudentHostel').textContent = workflow.hostel ? workflow.hostel.name : '-';
     document.getElementById('dashboardQuickActions').innerHTML =
-      (app ? '<a href="application-preview.html" class="btn btn-ghost text-start"><i class="fa-solid fa-eye me-2 text-maroon"></i> View Application</a>' : '<a href="application-form.html" class="btn btn-ghost text-start"><i class="fa-solid fa-file-pen me-2 text-maroon"></i> Fill Application</a>') +
+      (app && !workflow.draft ? '<a href="application-preview.html" class="btn btn-ghost text-start"><i class="fa-solid fa-eye me-2 text-maroon"></i> View Application</a>' : (mmcAdmissionIsOpen(workflow.settings) || workflow.draft ? '<a href="application-form.html" class="btn btn-ghost text-start"><i class="fa-solid fa-file-pen me-2 text-maroon"></i> ' + (workflow.draft ? 'Resume Application' : 'Fill Application') + '</a>' : '<button class="btn btn-ghost text-start" disabled><i class="fa-solid fa-lock me-2 text-maroon"></i> ' + escapeHtml((workflow.settings && workflow.settings.admission_message) || 'Hostel Admission is Closed.') + '</button>')) +
       (workflow.shortlisted ? '<a href="merit-result.html" class="btn btn-ghost text-start"><i class="fa-solid fa-ranking-star me-2 text-maroon"></i> View Merit Result</a>' : '') +
       (workflow.roomAllotted ? '<a href="room-allotment.html" class="btn btn-ghost text-start"><i class="fa-solid fa-bed me-2 text-maroon"></i> View Room Allotment</a>' : '') +
       receiptButton(workflow.registrationReceipt, 'Download Registration Receipt') +

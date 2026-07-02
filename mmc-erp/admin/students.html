@@ -65,7 +65,7 @@
     <main class="mmc-page">
       <div class="mmc-breadcrumb"><a href="dashboard.html">Dashboard</a><span class="sep">/</span>Student Management</div>
       <div class="mmc-page-head mb-3">
-        <div><div class="mmc-page-title">Student Management</div><div class="mmc-page-sub">View, verify and manage all hostel applications.</div></div>
+        <div><div class="mmc-page-title">Student Management</div><div class="mmc-page-sub">View every student ID and hostel application record.</div></div>
         <div class="d-flex gap-2">
           <button class="btn btn-ghost" data-bs-toggle="collapse" data-bs-target="#filterPanel"><i class="fa-solid fa-sliders me-1"></i> Advanced Filters</button>
           <button class="btn btn-maroon" data-bs-toggle="modal" data-bs-target="#addStudentModal"><i class="fa-solid fa-plus me-1"></i> Add Student</button>
@@ -193,7 +193,7 @@
 <script src="../js/common.js"></script>
 <script src="../js/api.js"></script>
 <script>
-  var statusPill = { Approved:'success', Shortlisted:'info', Selected:'success', Waitlisted:'warning', Pending:'navy', Rejected:'danger' };
+  var statusPill = { Approved:'success', Shortlisted:'info', Selected:'success', Waitlisted:'warning', Pending:'navy', Rejected:'danger', Registered:'muted', 'ID Created':'muted' };
 
   var applications = [];
   var students = [];
@@ -228,6 +228,7 @@
   }
 
   function applicationRow(app, index){
+    var canEditApplication = Boolean(app.id);
     return [
       '<span class="fw-600">' + escapeHtml(app.appNo) + '</span>',
       escapeHtml(app.admissionId || '-'),
@@ -241,7 +242,7 @@
       escapeHtml(app.hostel || '-'),
       escapeHtml(app.room || '-'),
       '<button class="btn btn-sm btn-ghost" onclick="mmcViewStudent(' + index + ')"><i class="fa-solid fa-eye"></i></button>' +
-      '<button class="btn btn-sm btn-ghost" onclick="mmcEditStudent(' + index + ')"><i class="fa-solid fa-pen"></i></button>' +
+      '<button class="btn btn-sm btn-ghost" onclick="mmcEditStudent(' + index + ')" title="' + (canEditApplication ? 'Edit application' : 'No application submitted') + '"><i class="fa-solid fa-pen"></i></button>' +
       '<button class="btn btn-sm btn-ghost" onclick="mmcManageStudentAccount(' + index + ')" title="Manage student ID"><i class="fa-solid fa-id-card"></i></button>' +
       '<button class="btn btn-sm btn-ghost text-danger" onclick="mmcDeleteStudent(' + index + ')"><i class="fa-solid fa-trash"></i></button>'
     ];
@@ -251,15 +252,15 @@
     table.clear();
     applications.forEach(function(app, index){
       var row = table.row.add(applicationRow(app, index)).node();
-      row.setAttribute('data-appno', app.appNo);
+      row.setAttribute('data-record-key', app.recordKey);
     });
     table.draw(false);
   }
 
   function loadApplications(){
     table.clear().draw();
-    document.getElementById('studentsBody').innerHTML = '<tr><td colspan="12" class="text-center text-secondary py-3">Loading applications...</td></tr>';
-    Promise.all([mmcApi('/applications'), mmcApi('/students?limit=1000'), mmcApi('/hostels'), mmcApi('/rooms')])
+    document.getElementById('studentsBody').innerHTML = '<tr><td colspan="12" class="text-center text-secondary py-3">Loading students and applications...</td></tr>';
+    Promise.all([mmcApi('/applications'), mmcApi('/students?limit=100000'), mmcApi('/hostels'), mmcApi('/rooms')])
       .then(function(results){
         var rawApplications = results[0] || [];
         students = results[1] || [];
@@ -268,13 +269,16 @@
         var studentMap = byIdMap(students);
         var hostelMap = byIdMap(hostels);
         var roomMap = byIdMap(rooms);
+        var applicationStudentIds = {};
         applications = rawApplications.map(function(app){
           var student = studentMap[app.student_id] || {};
           var hostel = app.hostel_id ? hostelMap[app.hostel_id] : null;
           var room = app.room_id ? roomMap[app.room_id] : null;
+          applicationStudentIds[app.student_id] = true;
           return {
             id: app.id,
             appNo: app.application_no,
+            recordKey: 'application-' + app.id,
             admissionId: app.admission_id,
             name: student.name || 'Student #' + app.student_id,
             studentId: student.id || app.student_id,
@@ -293,6 +297,30 @@
             raw: app
           };
         });
+        students.forEach(function(student){
+          if(applicationStudentIds[student.id]) return;
+          applications.push({
+            id: null,
+            appNo: 'Not submitted',
+            recordKey: 'student-' + student.id,
+            admissionId: '-',
+            name: student.name || 'Student #' + student.id,
+            studentId: student.id,
+            studentCode: student.student_code || '',
+            email: student.email || '',
+            mobile: student.mobile || '-',
+            course: student.course || '-',
+            session: student.session || '',
+            percentage: null,
+            appliedCat: '-',
+            allottedCat: '-',
+            status: 'ID Created',
+            hostel: '-',
+            room: '-',
+            studentRaw: student,
+            raw: {}
+          });
+        });
         renderTable();
       })
       .catch(function(error){
@@ -303,6 +331,7 @@
   }
 
   function renderHostelRoomOptions(app){
+    if(!app.id) return;
     var hostelSelect = document.getElementById('editHostelSelect');
     var roomSelect = document.getElementById('editRoomSelect');
     var selectedHostelId = app.raw.hostel_id || '';
@@ -332,7 +361,7 @@
     if(!a) return;
     document.getElementById('viewStudentBody').innerHTML = [
       ['Application No', a.appNo], ['Admission ID', a.admissionId], ['Student Name', a.name], ['Mobile', a.mobile],
-      ['Course', a.course], ['Percentage', a.percentage + '%'], ['Applied Category', a.appliedCat], ['Allotted Category', a.allottedCat],
+      ['Course', a.course], ['Percentage', a.percentage ? a.percentage + '%' : '-'], ['Applied Category', a.appliedCat], ['Allotted Category', a.allottedCat],
       ['Status', a.status], ['Hostel Name', a.hostel || '-'], ['Room Number', a.room || '-']
     ].map(function(r){ return '<div class="col-md-6"><div class="mmc-kv"><span class="k">' + r[0] + '</span><span class="v">' + r[1] + '</span></div></div>'; }).join('');
     new bootstrap.Modal(document.getElementById('viewStudentModal')).show();
@@ -342,6 +371,10 @@
   function mmcEditStudent(i){
     var a = applications[i];
     if(!a) return;
+    if(!a.id){
+      mmcToast('No application submitted', 'This student account exists, but no hostel application has been submitted yet.', 'warning');
+      return;
+    }
     editingAppNo = a.appNo;
     document.getElementById('editStatusSelect').value = a.status;
     document.getElementById('editAllottedSelect').value = a.allottedCat === '-' ? '' : a.allottedCat;
@@ -449,8 +482,12 @@
   function mmcDeleteStudent(i){
     var a = applications[i];
     if(!a) return;
+    if(!a.id){
+      mmcToast('No application to delete', 'This row is a registered student account without a hostel application.', 'warning');
+      return;
+    }
     mmcConfirm('Delete Application?', 'This will permanently remove ' + a.name + "'s application (" + a.appNo + ').', function(){
-      table.row('tr[data-appno="' + a.appNo + '"]').remove().draw(false);
+      table.row('tr[data-record-key="' + a.recordKey + '"]').remove().draw(false);
       mmcToast('Application not deleted', 'Deletion is only local until backend delete is connected.', 'warning');
     });
   }
