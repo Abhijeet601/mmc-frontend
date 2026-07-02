@@ -240,6 +240,15 @@
     });
   }
 
+  function roomLabel(room){
+    var roomNumber = room && (room.room_number || room.room || '');
+    var bedSuffix = room && room.bed_suffix;
+    if(roomNumber && bedSuffix){
+      return String(roomNumber).trim() + String(bedSuffix).trim().toUpperCase();
+    }
+    return roomNumber || '';
+  }
+
   function roomSortValue(roomNumber){
     var match = String(roomNumber || '').match(/^(\d+)([A-Za-z]*)$/);
     if(!match) return { number: 0, suffix: String(roomNumber || '') };
@@ -374,8 +383,9 @@
 
     var html = '<div class="mmc-floor-label">' + escapeHtml(floorName(currentFloor)) + (floorRange(currentFloor) ? ' - Rooms ' + escapeHtml(floorRange(currentFloor)) : '') + '</div><div class="row g-2">';
     visibleRooms.forEach(function(r){
+        var label = roomLabel(r);
         html += '<div class="col-6 col-sm-4 col-md-3 col-lg-2"><div class="mmc-room-card ' + escapeHtml(r.status) + '" onclick="mmcOpenRoom(' + r.id + ')">' +
-          '<div class="room-dot"></div><div class="room-no">' + escapeHtml(r.room_number) + '</div><div class="room-meta">' + Number(r.beds || 0) + ' bed' + (Number(r.beds || 0) === 1 ? '' : 's') + ' - ' + escapeHtml(r.status) + '</div></div></div>';
+          '<div class="room-dot"></div><div class="room-no">' + escapeHtml(label) + '</div><div class="room-meta">' + Number(r.beds || 0) + ' bed' + (Number(r.beds || 0) === 1 ? '' : 's') + ' - ' + escapeHtml(r.status) + '</div></div></div>';
     });
     html += '</div>';
     document.getElementById('roomGridWrap').innerHTML = visibleRooms.length ? html : '<div class="py-4 text-center fs-13 text-secondary">No rooms found on ' + escapeHtml(floorName(currentFloor)) + '.</div>';
@@ -384,7 +394,7 @@
   mmcOpenRoom = function(roomId){
     var r = rooms.find(function(x){ return Number(x.id) === Number(roomId); });
     if(!r) return;
-    document.getElementById('raRoomNo').textContent = r.room_number;
+    document.getElementById('raRoomNo').textContent = roomLabel(r);
     document.getElementById('raFloor').textContent = r.floor;
     document.getElementById('raBuilding').textContent = r.building || '-';
     document.getElementById('raBeds').textContent = Number(r.beds || 0) + ' bed' + (Number(r.beds || 0) === 1 ? '' : 's');
