@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Room Management — Magadh Mahila College ERP Portal</title>
+<title>Room Management - Magadh Mahila College ERP Portal</title>
 <link rel="icon" href="https://pub-56b2773adb554e88a3d5fbc74f0167bc.r2.dev/branding/Magadh_Mahila_College.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -30,7 +30,7 @@
 </head>
 <body>
 
-<div id="mmcPageLoader" class="mmc-page-loader"><div class="mmc-spinner"></div><span>Loading room layout…</span></div>
+<div id="mmcPageLoader" class="mmc-page-loader"><div class="mmc-spinner"></div><span>Loading room layout...</span></div>
 <div class="mmc-sidebar-backdrop"></div>
 
 <div class="mmc-app">
@@ -52,7 +52,7 @@
       <a href="settings.html" class="mmc-sidebar-link"><i class="fa-solid fa-gear"></i><span>Settings</span></a>
       <a href="../student/login.html" class="mmc-sidebar-link"><i class="fa-solid fa-arrow-right-from-bracket"></i><span>Logout</span></a>
     </nav>
-    <div class="mmc-sidebar-foot"><div class="mmc-help-card"><i class="fa-solid fa-circle-info mb-2 text-brass"></i><div class="fw-600 text-white mb-1" style="font-size:12.5px;">Session 2026–27</div>Admission window closes 30 Jun 2026</div></div>
+    <div class="mmc-sidebar-foot"><div class="mmc-help-card"><i class="fa-solid fa-circle-info mb-2 text-brass"></i><div class="fw-600 text-white mb-1" style="font-size:12.5px;">Session 2026-27</div>Admission window closes 30 Jun 2026</div></div>
   </aside>
 
   <div class="mmc-main">
@@ -136,7 +136,7 @@
         <div id="raAllocateBlock" style="display:none;">
           <label class="form-label">Allocate to Student</label>
           <select class="form-select mb-2" id="raStudentSelect">
-            <option> — Pending — General</option>
+            <option> - Pending - General</option>
             <option> - Pending - BC</option>
             <option> - Waitlisted - EBC</option>
           </select>
@@ -206,7 +206,7 @@
 
     var html = '';
     Object.keys(byFloor).sort().forEach(function(floor){
-      html += '<div class="mmc-floor-label">Floor ' + floor + ' — ' + byFloor[floor][0].building + '</div><div class="row g-2">';
+      html += '<div class="mmc-floor-label">Floor ' + floor + ' - ' + byFloor[floor][0].building + '</div><div class="row g-2">';
       byFloor[floor].forEach(function(r){
         html += '<div class="col-6 col-sm-4 col-md-3 col-lg-2"><div class="mmc-room-card ' + r.status + '" onclick="mmcOpenRoom(' + r.room + ')">' +
           '<div class="room-dot"></div><div class="room-no">' + r.room + '</div><div class="room-meta">' + r.beds + ' beds · ' + r.status + '</div></div></div>';

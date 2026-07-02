@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Login — Magadh Mahila College ERP Portal</title>
+<title>Login - Magadh Mahila College ERP Portal</title>
 <link rel="icon" href="https://pub-56b2773adb554e88a3d5fbc74f0167bc.r2.dev/branding/Magadh_Mahila_College.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -16,7 +16,7 @@
 
 <div id="mmcPageLoader" class="mmc-page-loader">
   <div class="mmc-spinner"></div>
-  <span>Loading Magadh Mahila College ERP Portal…</span>
+  <span>Loading Magadh Mahila College ERP Portal...</span>
 </div>
 
 <div class="mmc-auth-wrap">
@@ -27,7 +27,7 @@
       <div class="mmc-seal lg mb-4 mmc-float"><img src="https://pub-56b2773adb554e88a3d5fbc74f0167bc.r2.dev/branding/Magadh_Mahila_College.png" alt="Magadh Mahila College logo"></div>
       <p class="mmc-eyebrow" style="color:var(--mmc-brass);">Magadh Mahila College</p>
       <h1 class="text-white fw-800 mb-3" style="font-size:34px;line-height:1.25;">Your home away<br>from home, on campus.</h1>
-      <p style="color:#c3cbe0;font-size:14.5px;">The official Hostel Admission &amp; Management portal for registration, merit results, fee payment and room allotment — all in one secure place.</p>
+      <p style="color:#c3cbe0;font-size:14.5px;">The official Hostel Admission &amp; Management portal for registration, merit results, fee payment and room allotment - all in one secure place.</p>
 
       <div class="row mt-5 g-4">
         <div class="col-4">
@@ -112,7 +112,7 @@
     var btn = document.getElementById('loginBtn');
     var original = btn.innerHTML;
     btn.disabled = true;
-    btn.innerHTML = '<span class="mmc-spinner sm" style="border-color:rgba(255,255,255,.35);border-top-color:#fff;display:inline-block;vertical-align:middle;margin-right:8px;"></span> Signing in…';
+    btn.innerHTML = '<span class="mmc-spinner sm" style="border-color:rgba(255,255,255,.35);border-top-color:#fff;display:inline-block;vertical-align:middle;margin-right:8px;"></span> Signing in...';
     mmcApi('/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

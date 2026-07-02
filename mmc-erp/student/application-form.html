@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hostel Application Form — Magadh Mahila College ERP Portal</title>
+<title>Hostel Application Form - Magadh Mahila College ERP Portal</title>
 <link rel="icon" href="https://pub-56b2773adb554e88a3d5fbc74f0167bc.r2.dev/branding/Magadh_Mahila_College.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -23,7 +23,7 @@
 </head>
 <body>
 
-<div id="mmcPageLoader" class="mmc-page-loader"><div class="mmc-spinner"></div><span>Loading application form…</span></div>
+<div id="mmcPageLoader" class="mmc-page-loader"><div class="mmc-spinner"></div><span>Loading application form...</span></div>
 <div class="mmc-sidebar-backdrop"></div>
 
 <div class="mmc-app">
@@ -93,7 +93,7 @@
       </div>
 
       <div class="d-flex flex-wrap gap-2 mb-3" id="connectivityStatus">
-        <span class="badge bg-secondary-subtle text-secondary">Checking connection…</span>
+        <span class="badge bg-secondary-subtle text-secondary">Checking connection...</span>
       </div>
 
       <div data-wizard>
@@ -119,7 +119,7 @@
                 <div class="mmc-type-card selected" data-application-type="new" tabindex="0">
                   <i class="fa-solid fa-user-plus"></i>
                   <h6 class="fw-700" style="color:var(--mmc-navy);">New Registration</h6>
-                  <p class="fs-13 text-secondary mb-0">First-time hostel applicant for Session 2026–27.</p>
+                  <p class="fs-13 text-secondary mb-0">First-time hostel applicant for Session 2026-27.</p>
                 </div>
               </div>
               <div class="col-md-6">
@@ -467,7 +467,7 @@
       ['Session', document.getElementById('acSession').value]
     ];
     document.getElementById('previewBody').innerHTML = rows.map(function(r){
-      return '<div class="col-md-6"><div class="mmc-kv"><span class="k">' + r[0] + '</span><span class="v">' + (r[1] || '—') + '</span></div></div>';
+      return '<div class="col-md-6"><div class="mmc-kv"><span class="k">' + r[0] + '</span><span class="v">' + (r[1] || '-') + '</span></div></div>';
     }).join('');
   }
 
@@ -688,7 +688,7 @@
     var storageOk = storageStatus && storageStatus.ok;
     statusEl.innerHTML = [
       '<span class="badge ' + (apiOk ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger') + '"><i class="fa-solid ' + (apiOk ? 'fa-circle-check' : 'fa-circle-xmark') + ' me-1"></i>API: ' + (apiOk ? 'Online' : 'Offline') + '</span>',
-      '<span class="badge ' + (storageOk ? 'bg-success-subtle text-success' : 'bg-warning-subtle text-warning') + '"><i class="fa-solid ' + (storageOk ? 'fa-cloud' : 'fa-cloud-slash') + ' me-1"></i>Storage: ' + (storageStatus ? storageStatus.label : 'Checking…') + '</span>'
+      '<span class="badge ' + (storageOk ? 'bg-success-subtle text-success' : 'bg-warning-subtle text-warning') + '"><i class="fa-solid ' + (storageOk ? 'fa-cloud' : 'fa-cloud-slash') + ' me-1"></i>Storage: ' + (storageStatus ? storageStatus.label : 'Checking...') + '</span>'
     ].join('');
   }
 

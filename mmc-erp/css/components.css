@@ -547,3 +547,152 @@ table.dataTable thead .sorting:before, table.dataTable thead .sorting:after{ opa
     font-size: 21px;
   }
 }
+
+/* ============================= ADMIN + STUDENT FULL UI POLISH ============================= */
+.mmc-page{
+  position: relative;
+}
+.mmc-page::before{
+  content: "";
+  position: fixed;
+  left: var(--mmc-sidebar-w);
+  right: 0;
+  top: var(--mmc-topbar-h);
+  height: 220px;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 14% 20%, rgba(212,162,39,.12), transparent 28%),
+    radial-gradient(circle at 88% 0%, rgba(128,0,0,.09), transparent 24%),
+    linear-gradient(180deg, rgba(255,255,255,.58), rgba(255,255,255,0));
+  z-index: -1;
+}
+.mmc-breadcrumb{
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.72);
+  border: 1px solid rgba(230,233,240,.85);
+  box-shadow: 0 8px 20px rgba(10,31,68,.04);
+  margin-bottom: 10px;
+}
+.mmc-card-head h6 i,
+.mmc-form-section-title i{
+  color: var(--mmc-maroon);
+}
+.modal-content{
+  background:
+    linear-gradient(135deg,rgba(255,255,255,.98),rgba(248,250,252,.96)),
+    radial-gradient(circle at 100% 0%,rgba(212,162,39,.1),transparent 26%);
+}
+.modal-header{
+  background: linear-gradient(180deg,rgba(255,255,255,.98),rgba(248,250,252,.88));
+}
+.dropdown-menu{
+  border: 1px solid rgba(230,233,240,.9);
+  box-shadow: 0 18px 48px rgba(10,31,68,.14) !important;
+}
+.dropdown-item{
+  font-size: 13px;
+  border-radius: 9px;
+  margin: 2px 6px;
+  width: auto;
+}
+.dropdown-item:hover{
+  background: var(--mmc-maroon-50);
+  color: var(--mmc-maroon);
+}
+.dataTables_wrapper{
+  color: var(--mmc-ink);
+}
+.dataTables_wrapper .dataTables_filter input,
+.dataTables_wrapper .dataTables_length select,
+.dt-input{
+  min-height: 38px;
+  border-radius: 12px !important;
+  border: 1px solid var(--mmc-border) !important;
+  background: #fff !important;
+  padding: 7px 12px !important;
+  box-shadow: 0 8px 18px rgba(10,31,68,.04);
+}
+.dataTables_wrapper .dataTables_filter input:focus,
+.dataTables_wrapper .dataTables_length select:focus,
+.dt-input:focus{
+  border-color: var(--mmc-maroon-light) !important;
+  box-shadow: 0 0 0 .2rem rgba(128,0,0,.12) !important;
+  outline: 0;
+}
+.dt-buttons,
+.dt-container .dt-buttons{
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.dt-button,
+button.dt-button,
+div.dt-button,
+a.dt-button{
+  border: 1px solid rgba(230,233,240,.95) !important;
+  background: linear-gradient(135deg,#fff,#f8fafc) !important;
+  color: var(--mmc-navy) !important;
+  border-radius: 12px !important;
+  font-size: 12.5px !important;
+  font-weight: 700 !important;
+  padding: 8px 14px !important;
+  box-shadow: 0 8px 18px rgba(10,31,68,.05) !important;
+  transition: all .18s ease !important;
+}
+.dt-button:hover,
+button.dt-button:hover,
+div.dt-button:hover,
+a.dt-button:hover{
+  background: var(--mmc-maroon-50) !important;
+  color: var(--mmc-maroon) !important;
+  border-color: rgba(128,0,0,.2) !important;
+  transform: translateY(-1px);
+}
+.dataTables_wrapper .dataTables_paginate .paginate_button,
+.dt-container .dt-paging .dt-paging-button{
+  border: 1px solid transparent !important;
+  border-radius: 10px !important;
+  color: var(--mmc-ink-soft) !important;
+}
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover,
+.dt-container .dt-paging .dt-paging-button:hover{
+  background: var(--mmc-maroon-50) !important;
+  border-color: rgba(128,0,0,.16) !important;
+  color: var(--mmc-maroon) !important;
+}
+.dataTables_wrapper .dataTables_paginate .paginate_button.current,
+.dt-container .dt-paging .dt-paging-button.current{
+  background: linear-gradient(135deg,var(--mmc-maroon),var(--mmc-maroon-dark)) !important;
+  color: #fff !important;
+  box-shadow: 0 10px 22px rgba(128,0,0,.18);
+}
+.mmc-empty-state{
+  border-radius: 18px;
+  background:
+    linear-gradient(135deg,rgba(255,255,255,.94),rgba(248,250,252,.9)),
+    radial-gradient(circle at 50% 0%,rgba(212,162,39,.1),transparent 26%);
+  box-shadow: 0 14px 36px rgba(10,31,68,.07);
+}
+.mmc-empty-state i{
+  width: 70px;
+  height: 70px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 20px;
+  background: var(--mmc-maroon-50);
+  color: var(--mmc-maroon);
+}
+.mmc-success-check,
+.mmc-status-ring{
+  filter: drop-shadow(0 14px 24px rgba(10,31,68,.12));
+}
+@media (max-width: 991.98px){
+  .mmc-page::before{
+    left: 0;
+  }
+}
