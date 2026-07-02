@@ -36,49 +36,55 @@
 /* ---- Sidebar ---- */
 .mmc-sidebar{
   width: var(--mmc-sidebar-w);
-  background: linear-gradient(195deg, var(--mmc-navy) 0%, var(--mmc-navy-dark) 100%);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,0) 22%),
+    linear-gradient(195deg, var(--mmc-navy) 0%, #071735 58%, var(--mmc-navy-dark) 100%);
   color: #cfd6e8;
   position: fixed; top: 0; left: 0; height: 100vh;
   display: flex; flex-direction: column;
   z-index: 1040;
   transition: width .25s ease, transform .25s ease;
-  box-shadow: 4px 0 24px rgba(6,19,48,.18);
+  box-shadow: 6px 0 28px rgba(6,19,48,.22);
 }
-.mmc-sidebar.collapsed{ width: var(--mmc-sidebar-w-collapsed); }
+.mmc-sidebar.collapsed{ width: var(--mmc-sidebar-w); }
 
 .mmc-sidebar-brand{
-  display: flex; align-items: center; gap: 12px;
-  padding: 22px 20px;
-  border-bottom: 1px solid rgba(255,255,255,.08);
+  display: flex; align-items: center; gap: 13px;
+  padding: 20px 18px;
+  border-bottom: 1px solid rgba(255,255,255,.1);
   min-height: var(--mmc-topbar-h);
 }
-.mmc-sidebar-brand .mmc-seal{ width: 38px; height: 38px; flex-shrink: 0; }
-.mmc-sidebar-brand-text{ overflow: hidden; white-space: nowrap; }
-.mmc-sidebar-brand-text strong{ display: block; color: #fff; font-size: 14.5px; line-height: 1.25; }
-.mmc-sidebar-brand-text small{ display: block; color: var(--mmc-brass); font-size: 10.5px; letter-spacing: .08em; font-weight: 600; }
-.mmc-sidebar.collapsed .mmc-sidebar-brand-text{ display: none; }
+.mmc-sidebar-brand .mmc-seal{ width: 42px; height: 42px; flex-shrink: 0; box-shadow: 0 8px 20px rgba(0,0,0,.18); }
+.mmc-sidebar-brand-text{ overflow: visible; white-space: normal; min-width: 0; }
+.mmc-sidebar-brand-text strong{ display: block; color: #fff; font-size: 14.5px; line-height: 1.25; letter-spacing: 0; }
+.mmc-sidebar-brand-text small{ display: block; color: var(--mmc-brass); font-size: 10px; letter-spacing: .07em; font-weight: 700; margin-top: 2px; }
+.mmc-sidebar-brand-text::after{ content: "Affiliated to Patna University"; display: block; color: rgba(255,255,255,.72); font-size: 10.5px; line-height: 1.25; margin-top: 3px; }
+.mmc-sidebar.collapsed .mmc-sidebar-brand-text{ display: block; }
 
-.mmc-sidebar-nav{ flex: 1; overflow-y: auto; padding: 16px 12px; }
-.mmc-sidebar-section{ font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: rgba(207,214,232,.45); font-weight: 700; padding: 14px 12px 6px; }
-.mmc-sidebar.collapsed .mmc-sidebar-section{ display: none; }
+.mmc-sidebar-nav{ flex: 1; overflow-y: auto; padding: 14px 12px 18px; }
+.mmc-sidebar-section{ font-size: 10px; letter-spacing: .13em; text-transform: uppercase; color: rgba(207,214,232,.55); font-weight: 800; padding: 16px 12px 7px; }
+.mmc-sidebar.collapsed .mmc-sidebar-section{ display: block; }
 
 .mmc-sidebar-link{
-  display: flex; align-items: center; gap: 13px;
-  padding: 11px 12px; margin-bottom: 3px;
-  border-radius: 10px; color: #c3cbe0; font-size: 14px; font-weight: 500;
+  display: flex; align-items: center; gap: 12px;
+  padding: 11px 12px; margin-bottom: 4px;
+  border-radius: 12px; color: #c3cbe0; font-size: 13.5px; font-weight: 600;
   transition: all .18s ease; position: relative; white-space: nowrap; overflow: hidden;
 }
-.mmc-sidebar-link i{ width: 19px; text-align: center; font-size: 16px; flex-shrink: 0; }
-.mmc-sidebar-link:hover{ background: rgba(255,255,255,.07); color: #fff; }
-.mmc-sidebar-link.active{ background: var(--mmc-maroon); color: #fff; box-shadow: 0 4px 14px rgba(128,0,0,.4); }
+.mmc-sidebar-link i{ width: 21px; text-align: center; font-size: 15.5px; flex-shrink: 0; color: rgba(255,255,255,.78); }
+.mmc-sidebar-link:hover{ background: rgba(255,255,255,.09); color: #fff; transform: translateX(2px); }
+.mmc-sidebar-link:hover i{ color: #fff; }
+.mmc-sidebar-link.active{ background: linear-gradient(135deg, var(--mmc-maroon), var(--mmc-maroon-dark)); color: #fff; box-shadow: 0 8px 20px rgba(128,0,0,.34); }
+.mmc-sidebar-link.active::before{ content: ""; position: absolute; left: 0; top: 9px; bottom: 9px; width: 3px; border-radius: 0 4px 4px 0; background: var(--mmc-brass); }
+.mmc-sidebar-link.active i{ color: #fff; }
 .mmc-sidebar-link .badge{ margin-left: auto; }
-.mmc-sidebar.collapsed .mmc-sidebar-link span{ display: none; }
-.mmc-sidebar.collapsed .mmc-sidebar-link{ justify-content: center; }
+.mmc-sidebar.collapsed .mmc-sidebar-link span{ display: inline; }
+.mmc-sidebar.collapsed .mmc-sidebar-link{ justify-content: flex-start; }
 .mmc-sidebar.collapsed .mmc-sidebar-link .badge{ display: none; }
 
 .mmc-sidebar-foot{ padding: 16px; border-top: 1px solid rgba(255,255,255,.08); }
-.mmc-sidebar-foot .mmc-help-card{ background: rgba(255,255,255,.06); border-radius: 12px; padding: 14px; font-size: 12.5px; color: #c3cbe0; }
-.mmc-sidebar.collapsed .mmc-sidebar-foot{ display: none; }
+.mmc-sidebar-foot .mmc-help-card{ background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.08); border-radius: 12px; padding: 14px; font-size: 12.5px; color: #c3cbe0; }
+.mmc-sidebar.collapsed .mmc-sidebar-foot{ display: block; }
 
 /* ---- Mobile sidebar ---- */
 @media (max-width: 991.98px){
@@ -90,7 +96,7 @@
 
 /* ---- Main content area ---- */
 .mmc-main{ flex: 1; margin-left: var(--mmc-sidebar-w); min-width: 0; transition: margin-left .25s ease; display: flex; flex-direction: column; }
-.mmc-main.collapsed{ margin-left: var(--mmc-sidebar-w-collapsed); }
+.mmc-main.collapsed{ margin-left: var(--mmc-sidebar-w); }
 @media (max-width: 991.98px){ .mmc-main, .mmc-main.collapsed{ margin-left: 0; } }
 
 /* ---- Topbar ---- */

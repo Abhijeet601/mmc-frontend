@@ -80,13 +80,15 @@
             <div class="col-md-3"><label class="form-label">Hostel</label><select class="form-select"><option>All Hostels</option><option>Mahima Hostel</option><option>Vaidehi Hostel</option></select></div>
             <div class="col-md-3"><label class="form-label">Session</label><select class="form-select"><option>2026 – 2027</option><option>2025 – 2026</option></select></div>
             <div class="col-md-3"><label class="form-label">Status</label><select class="form-select"><option>All Status</option><option>Selected</option><option>Waitlisted</option><option>Pending</option><option>Rejected</option></select></div>
+            <div class="col-md-3"><label class="form-label">Registration Type</label><select class="form-select" id="registrationTypeFilter"><option value="">All Registrations</option><option value="new">New Registration</option><option value="existing">Existing / Renewal</option></select></div>
+            <div class="col-md-3"><label class="form-label">Payment Status</label><select class="form-select" id="paymentStatusFilter"><option value="">All Payment Statuses</option><option value="paid">Paid</option><option value="pending">Pending</option><option value="failed">Failed</option><option value="partially_paid">Partially Paid</option><option value="refunded">Refunded</option></select></div>
             <div class="col-md-3"><label class="form-label">Applied Category</label><select class="form-select"><option>Any</option><option value="UR">UR - Unreserved</option><option value="EWS">EWS - Economically Weaker Section</option><option value="BC">BC - Backward Class</option><option value="EBC">EBC - Extremely Backward Class</option><option value="SC">SC - Scheduled Caste</option><option value="ST">ST - Scheduled Tribe</option></select></div>
             <div class="col-md-3"><label class="form-label">Allotted Category</label><select class="form-select"><option>Any</option><option value="UR">UR - Unreserved</option><option value="EWS">EWS - Economically Weaker Section</option><option value="BC">BC - Backward Class</option><option value="EBC">EBC - Extremely Backward Class</option><option value="SC">SC - Scheduled Caste</option><option value="ST">ST - Scheduled Tribe</option></select></div>
             <div class="col-md-3"><label class="form-label">Date Applied</label><input type="date" class="form-control"></div>
           </div>
           <div class="d-flex justify-content-end gap-2 mt-3">
-            <button class="btn btn-ghost">Reset</button>
-            <button class="btn btn-maroon" onclick="mmcToast('Filters Applied','Showing matching applications.','success')">Apply Filters</button>
+            <button class="btn btn-ghost" id="resetStudentFilters" type="button">Reset</button>
+            <button class="btn btn-maroon" id="applyStudentFilters" type="button">Apply Filters</button>
           </div>
         </div>
       </div>
@@ -97,7 +99,7 @@
             <thead>
               <tr>
                 <th>Application No</th><th>Admission ID</th><th>Student Name</th><th>Mobile</th><th>Course</th><th>%</th>
-                <th>Applied Cat.</th><th>Allotted Cat.</th><th>Status</th><th>Hostel</th><th>Room</th><th>Actions</th>
+                <th>Applied Cat.</th><th>Allotted Cat.</th><th>Status</th><th>Payment</th><th>Hostel</th><th>Room</th><th>Actions</th>
               </tr>
             </thead>
             <tbody id="studentsBody"></tbody>
@@ -221,6 +223,12 @@
     });
   }
 
+  function adminAuthHeaders(){
+    var admin = mmcCurrentAdmin();
+    if(!admin || !admin.access_token) return {};
+    return { 'Authorization':'Bearer ' + admin.access_token };
+  }
+
   function byIdMap(items){
     return items.reduce(function(map, item){ map[item.id] = item; return map; }, {});
   }
@@ -228,6 +236,35 @@
   function normalizeStatus(status){
     status = status || 'Pending';
     return status.charAt(0).toUpperCase() + status.slice(1);
+  }
+
+  function normalizeRegistrationType(type){
+    var normalized = String(type || 'new').trim().toLowerCase();
+    return ['existing', 'renewal', 'old'].indexOf(normalized) !== -1 ? 'existing' : 'new';
+  }
+
+  function registrationTypeLabel(type){
+    return normalizeRegistrationType(type) === 'existing' ? 'Existing / Renewal' : 'New Registration';
+  }
+
+  function normalizePaymentStatus(app){
+    var raw = String((app && (app.payment_status || app.paymentStatus || app.application_payment_status)) || '').toLowerCase();
+    var hostelRaw = String((app && (app.hostel_status || app.hostelStatus)) || '').toLowerCase();
+    if(raw === 'paid' || raw === 'success' || raw === 'completed') return 'paid';
+    if(raw === 'partially_paid') return 'partially_paid';
+    if(raw === 'refunded') return 'refunded';
+    if(raw === 'failed' || raw === 'payment_failed' || hostelRaw === 'payment_failed') return 'failed';
+    if((raw === 'paid' || raw === 'success') && hostelRaw && hostelRaw !== 'paid') return 'partially_paid';
+    return 'pending';
+  }
+
+  function paymentStatusLabel(status){
+    return ({ paid:'Paid', pending:'Pending', failed:'Failed', partially_paid:'Partially Paid', refunded:'Refunded' })[status] || 'Pending';
+  }
+
+  function paymentStatusPill(status){
+    var tone = ({ paid:'success', pending:'warning', failed:'danger', partially_paid:'info', refunded:'muted' })[status] || 'warning';
+    return '<span class="mmc-pill ' + tone + '"><i class="fa-solid fa-circle"></i> ' + paymentStatusLabel(status) + '</span>';
   }
 
   function applicationRow(app, index){
@@ -242,6 +279,7 @@
       '<span class="mmc-pill muted">' + escapeHtml(app.appliedCat || '-') + '</span>',
       '<span class="mmc-pill muted">' + escapeHtml(app.allottedCat || '-') + '</span>',
       '<span class="mmc-pill ' + (statusPill[app.status] || 'muted') + '"><i class="fa-solid fa-circle"></i> ' + escapeHtml(app.status) + '</span>',
+      paymentStatusPill(app.paymentStatus),
       escapeHtml(app.hostel || '-'),
       escapeHtml(app.room || '-'),
       '<button class="btn btn-sm btn-ghost" onclick="mmcViewStudent(' + index + ')"><i class="fa-solid fa-eye"></i></button>' +
@@ -252,8 +290,12 @@
   }
 
   function renderTable(){
+    var selectedRegistrationType = document.getElementById('registrationTypeFilter').value;
+    var selectedPaymentStatus = document.getElementById('paymentStatusFilter').value;
     table.clear();
     applications.forEach(function(app, index){
+      if(selectedRegistrationType && app.registrationType !== selectedRegistrationType) return;
+      if(selectedPaymentStatus && app.paymentStatus !== selectedPaymentStatus) return;
       var row = table.row.add(applicationRow(app, index)).node();
       row.setAttribute('data-record-key', app.recordKey);
     });
@@ -262,11 +304,11 @@
 
   function loadApplications(){
     table.clear().draw();
-    document.getElementById('studentsBody').innerHTML = '<tr><td colspan="12" class="text-center text-secondary py-3">Loading students and applications...</td></tr>';
+    document.getElementById('studentsBody').innerHTML = '<tr><td colspan="13" class="text-center text-secondary py-3">Loading students and applications...</td></tr>';
     Promise.all([mmcApi('/applications'), mmcApi('/students?limit=100000'), mmcApi('/hostels'), mmcApi('/rooms')])
       .then(function(results){
         var rawApplications = results[0] || [];
-        students = results[1] || [];
+        students = (results[1] || []).filter(function(student){ return student.is_active !== false; });
         hostels = results[2] || [];
         rooms = results[3] || [];
         var studentMap = byIdMap(students);
@@ -294,6 +336,9 @@
             appliedCat: app.applied_category,
             allottedCat: app.allotted_category || '-',
             status: normalizeStatus(app.status),
+            registrationType: normalizeRegistrationType(app.application_type),
+            registrationTypeLabel: registrationTypeLabel(app.application_type),
+            paymentStatus: normalizePaymentStatus(app),
             hostel: hostel ? hostel.name : '-',
             room: room ? room.room_number : '-',
             studentRaw: student,
@@ -318,6 +363,9 @@
             appliedCat: '-',
             allottedCat: '-',
             status: 'ID Created',
+            registrationType: '',
+            registrationTypeLabel: '-',
+            paymentStatus: 'pending',
             hostel: '-',
             room: '-',
             studentRaw: student,
@@ -328,7 +376,7 @@
       })
       .catch(function(error){
         table.clear().draw();
-        document.getElementById('studentsBody').innerHTML = '<tr><td colspan="12" class="text-center text-secondary py-3">Unable to load applications.</td></tr>';
+        document.getElementById('studentsBody').innerHTML = '<tr><td colspan="13" class="text-center text-secondary py-3">Unable to load applications.</td></tr>';
         mmcToast('Applications not loaded', error.message, 'warning');
       });
   }
@@ -403,11 +451,25 @@
     if(!a) return;
     document.getElementById('viewStudentBody').innerHTML = [
       ['Application No', a.appNo], ['Admission ID', a.admissionId], ['Student Name', a.name], ['Mobile', a.mobile],
+      ['Registration Type', a.registrationTypeLabel || '-'],
+      ['Payment Status', paymentStatusLabel(a.paymentStatus)],
       ['Course', a.course], ['Percentage', a.percentage ? a.percentage + '%' : '-'], ['Applied Category', a.appliedCat], ['Allotted Category', a.allottedCat],
       ['Status', a.status], ['Hostel Name', a.hostel || '-'], ['Room Number', a.room || '-']
     ].map(function(r){ return '<div class="col-md-6"><div class="mmc-kv"><span class="k">' + r[0] + '</span><span class="v">' + r[1] + '</span></div></div>'; }).join('');
     new bootstrap.Modal(document.getElementById('viewStudentModal')).show();
   }
+
+  document.getElementById('applyStudentFilters').addEventListener('click', function(){
+    renderTable();
+    mmcToast('Filters Applied', 'Showing matching applications.', 'success');
+  });
+
+  document.getElementById('resetStudentFilters').addEventListener('click', function(){
+    document.getElementById('registrationTypeFilter').value = '';
+    document.getElementById('paymentStatusFilter').value = '';
+    renderTable();
+    mmcToast('Filters Reset', 'Showing all student records.', 'info');
+  });
 
   var editingAppNo = null;
   function mmcEditStudent(i){
@@ -526,13 +588,21 @@
   function mmcDeleteStudent(i){
     var a = applications[i];
     if(!a) return;
-    if(!a.id){
-      mmcToast('No application to delete', 'This row is a registered student account without a hostel application.', 'warning');
+    if(!a.studentId){
+      mmcToast('Student unavailable', 'This row is not linked to a student ID.', 'warning');
       return;
     }
-    mmcConfirm('Delete Application?', 'This will permanently remove ' + a.name + "'s application (" + a.appNo + ').', function(){
-      table.row('tr[data-record-key="' + a.recordKey + '"]').remove().draw(false);
-      mmcToast('Application not deleted', 'Deletion is only local until backend delete is connected.', 'warning');
+    mmcConfirm('Delete Student ID?', 'This will revoke login access for ' + a.name + ' and remove the student from admin lists.', function(){
+      mmcApi('/api/admin/students/' + a.studentId, {
+        method:'DELETE',
+        headers:adminAuthHeaders()
+      }).then(function(){
+        applications = applications.filter(function(item){ return item.studentId !== a.studentId; });
+        renderTable();
+        mmcToast('Student ID deleted', 'Login access has been revoked and the record is hidden from lists.', 'success');
+      }).catch(function(error){
+        mmcToast('Student ID not deleted', error.message || 'Unable to delete student ID.', 'danger');
+      });
     });
   }
 

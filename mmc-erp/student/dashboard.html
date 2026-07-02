@@ -240,6 +240,13 @@
   function receiptButton(receipt, label){
     return receipt ? '<a href="' + mmcReceiptDownloadUrl(receipt) + '" target="_blank" class="btn btn-ghost text-start"><i class="fa-solid fa-download me-2 text-maroon"></i> ' + label + '</a>' : '';
   }
+  function paymentStatusLabel(status){
+    return ({ paid:'Paid', pending:'Pending', failed:'Failed', partially_paid:'Partially Paid', refunded:'Refunded' })[status] || 'Pending';
+  }
+  function paymentStatusPill(status){
+    var tone = ({ paid:'success', pending:'warning', failed:'danger', partially_paid:'info', refunded:'muted' })[status] || 'warning';
+    return '<span class="mmc-pill ' + tone + '"><i class="fa-solid fa-circle"></i> ' + paymentStatusLabel(status) + '</span>';
+  }
   function nextAction(workflow){
     if(!workflow.application && !mmcAdmissionIsOpen(workflow.settings)){
       return '<button class="btn btn-ghost" disabled><i class="fa-solid fa-lock me-1"></i> ' + escapeHtml((workflow.settings && workflow.settings.admission_message) || 'Hostel Admission is Closed.') + '</button>';
@@ -269,7 +276,7 @@
     document.querySelector('.mmc-page-sub').textContent = app ? 'Application No. ' + app.application_no + ' · ' + workflow.status : 'Start with your hostel application for the current session.';
     document.getElementById('dashboardPrimaryAction').innerHTML = nextAction(workflow);
     document.getElementById('dashApplicationStatus').textContent = app ? workflow.status : 'NOT STARTED';
-    document.getElementById('dashPaymentStatus').textContent = workflow.hostelPaid ? 'All Paid' : workflow.registrationPaid ? 'Reg. Paid' : 'Pending';
+    document.getElementById('dashPaymentStatus').innerHTML = paymentStatusPill(workflow.paymentStatus);
     document.getElementById('dashRoomNumber').textContent = workflow.room ? workflow.room.room_number : '-';
     document.getElementById('dashHostelName').textContent = workflow.hostel ? workflow.hostel.name : '-';
     document.getElementById('dashPendingPill').className = completedCount === 6 ? 'mmc-pill success' : 'mmc-pill warning';
@@ -290,6 +297,7 @@
     document.getElementById('feeSummaryBlock').innerHTML =
       '<div class="mmc-kv"><span class="k">Registration Fee</span><span class="v">' + (workflow.registrationPaid ? '✓ Paid' : app ? 'Pending' : 'Hidden') + '</span></div>' +
       '<div class="mmc-kv"><span class="k">Hostel Fee</span><span class="v">' + (workflow.hostelPaid ? '✓ Paid' : workflow.shortlisted ? 'Pending' : 'Hidden') + '</span></div>' +
+      '<div class="mmc-kv"><span class="k">Payment Status</span><span class="v">' + paymentStatusLabel(workflow.paymentStatus) + '</span></div>' +
       '<div class="mmc-kv"><span class="k">Transaction ID</span><span class="v">' + escapeHtml((workflow.registrationReceipt && workflow.registrationReceipt.transaction_id) || '-') + '</span></div>' +
       '<div class="mmc-kv"><span class="k">Payment Date</span><span class="v">' + (workflow.registrationReceipt ? new Date(workflow.registrationReceipt.generated_at).toLocaleDateString('en-IN') : '-') + '</span></div>' +
       (regReceiptUrl ? '<a href="' + regReceiptUrl + '" target="_blank" class="btn btn-outline-maroon w-100 mt-2"><i class="fa-solid fa-download me-1"></i> Download Registration Receipt</a><a href="' + regReceiptUrl + '" target="_blank" class="btn btn-ghost w-100 mt-2"><i class="fa-solid fa-print me-1"></i> Print Receipt</a>' : '') +

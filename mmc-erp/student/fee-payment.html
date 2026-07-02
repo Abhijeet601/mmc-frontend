@@ -175,6 +175,21 @@
   function updatePayButton(){
     payNowBtn.innerHTML = '<i class="fa-solid fa-lock me-1"></i> Pay Securely via CCAvenue';
   }
+  function mmcApplicationIsRenewal(application){
+    var type = String(application && application.application_type || 'new').toLowerCase();
+    return type === 'existing' || type === 'renewal';
+  }
+  function lockFeeTypeForApplication(application){
+    var expectedAmount = mmcApplicationIsRenewal(application) ? 100 : 1000;
+    document.querySelectorAll('.mmc-fee-option').forEach(function(card){
+      var matches = Number(card.dataset.feeAmount) === expectedAmount;
+      var wrapper = card.closest('.col-sm-6') || card;
+      wrapper.style.display = matches ? '' : 'none';
+      card.style.pointerEvents = matches ? 'auto' : 'none';
+      card.setAttribute('aria-hidden', matches ? 'false' : 'true');
+      if(matches) mmcSelectFeeType(card);
+    });
+  }
   function showPaymentError(message){
     paymentError.textContent = message || 'Unable to initiate payment. Please try again.';
     paymentError.classList.remove('d-none');
@@ -246,6 +261,12 @@
       mmcToast('Invalid amount', 'Payment amount is invalid.', 'warning');
       return;
     }
+    var expectedAmount = mmcApplicationIsRenewal(activeApplication) ? 100 : 1000;
+    if(Number(selectedFee.amount) !== expectedAmount){
+      showPaymentError('Selected registration fee does not match your application type. Please refresh the page and try again.');
+      mmcToast('Invalid registration type', 'Selected fee does not match your application type.', 'warning');
+      return;
+    }
 
     payNowBtn.disabled = true;
     payNowBtn.innerHTML = '<span class="mmc-spinner sm" style="border-color:rgba(255,255,255,.35);border-top-color:#fff;display:inline-block;vertical-align:middle;margin-right:8px;"></span> Redirecting to CCAvenue...';
@@ -287,9 +308,7 @@
       document.getElementById('regStudentName').textContent = student.name || 'Student';
       document.getElementById('regCourse').textContent = activeApplication.course || '-';
       document.getElementById('regSession').textContent = activeApplication.session || '2026 - 2027';
-      var expected = activeApplication.application_type === 'existing' ? 100 : 1000;
-      var card = document.querySelector('.mmc-fee-option[data-fee-amount="' + expected + '"]');
-      if(card) mmcSelectFeeType(card);
+      lockFeeTypeForApplication(activeApplication);
     }).catch(function(error){ mmcToast('Application not loaded', error.message, 'warning'); });
   }());
 </script>

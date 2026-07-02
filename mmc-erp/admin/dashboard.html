@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Dashboard — Magadh Mahila College ERP Portal</title>
+<title>Admin Dashboard - Magadh Mahila College ERP Portal</title>
 <link rel="icon" href="https://pub-56b2773adb554e88a3d5fbc74f0167bc.r2.dev/branding/Magadh_Mahila_College.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -12,178 +12,379 @@
 <link rel="stylesheet" href="../css/theme.css">
 <link rel="stylesheet" href="../css/components.css">
 <style>
-  .mmc-dashboard-actions{ display:flex; gap:6px; flex-wrap:wrap; justify-content:flex-end; }
-  .mmc-dashboard-actions .btn{ white-space:nowrap; }
+  body{
+    background:
+      radial-gradient(circle at 18% 0%, rgba(212,175,55,.14), transparent 28%),
+      radial-gradient(circle at 100% 14%, rgba(128,0,0,.10), transparent 30%),
+      #f8fafc;
+  }
+  .mmc-admin-hero{
+    position:relative;
+    overflow:hidden;
+    border:1px solid rgba(255,255,255,.72);
+    background:
+      linear-gradient(135deg, rgba(128,0,0,.94), rgba(10,31,68,.95)),
+      linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,0));
+    border-radius:18px;
+    padding:22px;
+    color:#fff;
+    box-shadow:0 22px 50px rgba(10,31,68,.18);
+  }
+  .mmc-admin-hero::after{
+    content:"";
+    position:absolute;
+    width:260px;
+    height:260px;
+    right:-72px;
+    top:-96px;
+    border-radius:50%;
+    background:rgba(212,175,55,.22);
+    pointer-events:none;
+  }
+  .mmc-admin-hero h1{ color:#fff; font-size:26px; letter-spacing:0; margin:0; }
+  .mmc-admin-hero p{ color:rgba(255,255,255,.78); margin:6px 0 0; font-size:13px; }
+  .mmc-hero-actions{ display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end; position:relative; z-index:1; }
+  .mmc-glass-btn{
+    border:1px solid rgba(255,255,255,.24);
+    background:rgba(255,255,255,.12);
+    color:#fff;
+    backdrop-filter:blur(14px);
+    border-radius:12px;
+  }
+  .mmc-glass-btn:hover{ background:rgba(255,255,255,.2); color:#fff; transform:translateY(-1px); }
+  .mmc-admin-topbar{
+    height:auto;
+    min-height:76px;
+    background:rgba(255,255,255,.82);
+    backdrop-filter:blur(18px);
+    border-bottom:1px solid rgba(230,233,240,.72);
+    box-shadow:0 10px 28px rgba(10,31,68,.06);
+  }
+  .mmc-admin-date{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    border:1px solid var(--mmc-border);
+    background:#fff;
+    border-radius:12px;
+    padding:8px 11px;
+    color:var(--mmc-ink-soft);
+    font-size:12.5px;
+    white-space:nowrap;
+  }
+  .mmc-session-select{
+    min-width:142px;
+    border-radius:12px;
+    font-size:12.5px;
+    font-weight:600;
+  }
+  .mmc-premium-stat{
+    position:relative;
+    height:100%;
+    overflow:hidden;
+    border:1px solid rgba(230,233,240,.86);
+    border-radius:16px;
+    background:rgba(255,255,255,.9);
+    box-shadow:0 14px 34px rgba(10,31,68,.08);
+    padding:18px;
+    transition:transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+  }
+  .mmc-premium-stat::before{
+    content:"";
+    position:absolute;
+    inset:0 0 auto;
+    height:4px;
+    background:linear-gradient(90deg, var(--stat-color, #800000), rgba(212,175,55,.82));
+  }
+  .mmc-premium-stat:hover{
+    transform:translateY(-5px);
+    border-color:rgba(128,0,0,.28);
+    box-shadow:0 22px 46px rgba(10,31,68,.13), 0 0 0 4px rgba(128,0,0,.035);
+  }
+  .mmc-stat-top{ display:flex; justify-content:space-between; align-items:flex-start; gap:12px; }
+  .mmc-stat-orb{
+    width:46px;
+    height:46px;
+    border-radius:14px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    background:linear-gradient(135deg, var(--stat-color, #800000), rgba(10,31,68,.78));
+    box-shadow:0 12px 24px rgba(10,31,68,.16);
+  }
+  .mmc-stat-trend{
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+    border-radius:999px;
+    background:rgba(34,197,94,.1);
+    color:#168a43;
+    font-size:11px;
+    font-weight:700;
+    padding:4px 8px;
+  }
+  .mmc-stat-number{
+    font-size:30px;
+    line-height:1.1;
+    color:var(--mmc-navy);
+    font-weight:800;
+    margin-top:14px;
+    letter-spacing:0;
+  }
+  .mmc-stat-title{ color:var(--mmc-ink-soft); font-size:12.5px; font-weight:600; margin-top:4px; }
+  .mmc-analytics-card{
+    height:100%;
+    border:1px solid rgba(230,233,240,.9);
+    background:rgba(255,255,255,.92);
+    border-radius:16px;
+    box-shadow:0 14px 34px rgba(10,31,68,.08);
+    overflow:hidden;
+  }
+  .mmc-analytics-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    padding:17px 18px 10px;
+  }
+  .mmc-analytics-head h6{ margin:0; font-size:14px; }
+  .mmc-analytics-head small{ color:var(--mmc-ink-faint); font-weight:600; }
+  .mmc-analytics-body{ padding:6px 18px 18px; }
+  .mmc-ring-wrap{ position:relative; max-width:230px; margin:0 auto; }
+  .mmc-ring-center{
+    position:absolute;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+    pointer-events:none;
+  }
+  .mmc-ring-center strong{ font-size:28px; color:var(--mmc-navy); }
+  .mmc-ring-center span{ color:var(--mmc-ink-soft); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; }
+  .mmc-quick-grid{ display:grid; grid-template-columns:repeat(6, minmax(0,1fr)); gap:12px; }
+  .mmc-action-tile{
+    border:1px solid rgba(230,233,240,.95);
+    border-radius:16px;
+    background:#fff;
+    padding:15px;
+    min-height:126px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    box-shadow:0 12px 28px rgba(10,31,68,.07);
+    transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+  }
+  .mmc-action-tile:hover{
+    transform:translateY(-4px);
+    border-color:rgba(128,0,0,.28);
+    box-shadow:0 18px 38px rgba(10,31,68,.11);
+  }
+  .mmc-action-icon{
+    width:42px;
+    height:42px;
+    border-radius:14px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    background:linear-gradient(135deg, var(--tile-color, #800000), rgba(10,31,68,.86));
+  }
+  .mmc-action-tile strong{ display:block; color:var(--mmc-navy); font-size:13.5px; margin-top:12px; }
+  .mmc-action-tile small{ color:var(--mmc-ink-soft); font-size:11.5px; }
+  .mmc-table-premium{
+    border:1px solid rgba(230,233,240,.95);
+    border-radius:16px;
+    overflow:hidden;
+    background:#fff;
+    box-shadow:0 14px 34px rgba(10,31,68,.08);
+  }
+  .mmc-table-premium thead th{
+    position:sticky;
+    top:0;
+    z-index:1;
+    background:#f8fafc;
+    color:var(--mmc-ink-soft);
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    border-bottom:1px solid var(--mmc-border);
+    padding:13px 14px;
+  }
+  .mmc-table-premium tbody td{ padding:14px; vertical-align:middle; border-color:#eef1f5; }
+  .mmc-table-premium tbody tr{ transition:background .18s ease, transform .18s ease; }
+  .mmc-table-premium tbody tr:hover{ background:#fff8f8; }
+  .mmc-student-cell{ display:flex; align-items:center; gap:11px; }
+  .mmc-student-photo{
+    width:38px;
+    height:38px;
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    font-weight:800;
+    background:linear-gradient(135deg, #800000, #d4af37);
+    flex-shrink:0;
+  }
+  .mmc-status-dot{ width:7px; height:7px; border-radius:50%; display:inline-block; margin-right:6px; background:currentColor; }
+  .mmc-toolbar-card{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    padding:12px;
+    border:1px solid rgba(230,233,240,.9);
+    border-radius:16px;
+    background:rgba(255,255,255,.82);
+    box-shadow:0 12px 28px rgba(10,31,68,.06);
+  }
+  .mmc-ripple{ position:relative; overflow:hidden; }
+  .mmc-ripple .ripple{
+    position:absolute;
+    border-radius:50%;
+    transform:scale(0);
+    animation:mmcRipple .55s ease-out;
+    background:rgba(255,255,255,.45);
+    pointer-events:none;
+  }
+  @keyframes mmcRipple{ to{ transform:scale(4); opacity:0; } }
+  @media (max-width:1199.98px){ .mmc-quick-grid{ grid-template-columns:repeat(3, minmax(0,1fr)); } }
+  @media (max-width:767.98px){
+    .mmc-admin-hero{ padding:18px; }
+    .mmc-hero-actions{ justify-content:flex-start; margin-top:14px; }
+    .mmc-quick-grid{ grid-template-columns:repeat(2, minmax(0,1fr)); }
+    .mmc-admin-date, .mmc-session-select{ display:none; }
+  }
+  @media (max-width:575.98px){ .mmc-quick-grid{ grid-template-columns:1fr; } }
 </style>
 </head>
 <body>
 
-<div id="mmcPageLoader" class="mmc-page-loader"><div class="mmc-spinner"></div><span>Loading admin dashboard…</span></div>
+<div id="mmcPageLoader" class="mmc-page-loader"><div class="mmc-spinner"></div><span>Loading admin dashboard...</span></div>
 <div class="mmc-sidebar-backdrop"></div>
 
 <div class="mmc-app">
   <aside class="mmc-sidebar">
-    <div class="mmc-sidebar-brand"><div class="mmc-seal md"><img src="https://pub-56b2773adb554e88a3d5fbc74f0167bc.r2.dev/branding/Magadh_Mahila_College.png" alt="Magadh Mahila College logo"></div><div class="mmc-sidebar-brand-text"><strong>Magadh Mahila College</strong><small>ERP PORTAL · ADMIN</small></div></div>
+    <div class="mmc-sidebar-brand"><div class="mmc-seal md"><img src="https://pub-56b2773adb554e88a3d5fbc74f0167bc.r2.dev/branding/Magadh_Mahila_College.png" alt="Magadh Mahila College logo"></div><div class="mmc-sidebar-brand-text"><strong>Magadh Mahila College</strong><small>HOSTEL ERP PORTAL</small></div></div>
     <nav class="mmc-sidebar-nav">
       <div class="mmc-sidebar-section">Overview</div>
-      <a href="dashboard.html" class="mmc-sidebar-link"><i class="fa-solid fa-grid-2"></i><span>Dashboard</span></a>
+      <a href="dashboard.html" class="mmc-sidebar-link active"><i class="fa-solid fa-chart-pie"></i><span>Dashboard</span></a>
       <div class="mmc-sidebar-section">Admissions</div>
-      <a href="students.html" class="mmc-sidebar-link"><i class="fa-solid fa-users"></i><span>Student Management</span></a>
+      <a href="students.html" class="mmc-sidebar-link"><i class="fa-solid fa-user-graduate"></i><span>Student Management</span></a>
       <a href="merit-management.html" class="mmc-sidebar-link"><i class="fa-solid fa-ranking-star"></i><span>Merit Management</span></a>
       <div class="mmc-sidebar-section">Hostel Operations</div>
       <a href="room-management.html" class="mmc-sidebar-link"><i class="fa-solid fa-bed"></i><span>Room Management</span></a>
-      <a href="hostel-management.html" class="mmc-sidebar-link"><i class="fa-solid fa-building"></i><span>Hostel Management</span></a>
+      <a href="hostel-management.html" class="mmc-sidebar-link"><i class="fa-solid fa-building-columns"></i><span>Hostel Management</span></a>
       <div class="mmc-sidebar-section">Insights</div>
-      <a href="reports.html" class="mmc-sidebar-link"><i class="fa-solid fa-chart-line"></i><span>Reports</span></a>
+      <a href="reports.html" class="mmc-sidebar-link"><i class="fa-solid fa-file-chart-column"></i><span>Reports</span></a>
       <a href="notifications.html" class="mmc-sidebar-link"><i class="fa-solid fa-bell"></i><span>Notifications</span></a>
       <div class="mmc-sidebar-section">System</div>
-      <a href="settings.html" class="mmc-sidebar-link"><i class="fa-solid fa-gear"></i><span>Settings</span></a>
+      <a href="settings.html" class="mmc-sidebar-link"><i class="fa-solid fa-sliders"></i><span>Settings</span></a>
       <a href="../student/login.html" class="mmc-sidebar-link"><i class="fa-solid fa-arrow-right-from-bracket"></i><span>Logout</span></a>
     </nav>
-    <div class="mmc-sidebar-foot"><div class="mmc-help-card"><i class="fa-solid fa-circle-info mb-2 text-brass"></i><div class="fw-600 text-white mb-1" style="font-size:12.5px;">Session 2026–27</div>Admission window closes 30 Jun 2026</div></div>
+    <div class="mmc-sidebar-foot"><div class="mmc-help-card"><i class="fa-solid fa-circle-info mb-2 text-brass"></i><div class="fw-600 text-white mb-1" style="font-size:12.5px;">Session 2026-27</div>Affiliated to Patna University</div></div>
   </aside>
 
   <div class="mmc-main">
-    <header class="mmc-topbar">
+    <header class="mmc-topbar mmc-admin-topbar">
       <div class="mmc-topbar-left">
-        <button class="mmc-sidebar-toggle js-sidebar-toggle"><i class="fa-solid fa-bars"></i></button>
-        <div class="mmc-search d-none d-md-block"><i class="fa-solid fa-magnifying-glass"></i><input type="text" class="form-control" placeholder="Search students, applications..."></div>
+        <button class="mmc-sidebar-toggle js-sidebar-toggle" title="Toggle sidebar"><i class="fa-solid fa-bars"></i></button>
+        <div class="mmc-search d-none d-md-block"><i class="fa-solid fa-magnifying-glass"></i><input type="text" class="form-control" id="dashboardSearch" placeholder="Search students, applications, rooms..."></div>
       </div>
       <div class="mmc-topbar-right">
+        <select class="form-select mmc-session-select"><option>Session 2026-27</option><option>Session 2025-26</option></select>
+        <div class="mmc-admin-date"><i class="fa-regular fa-calendar"></i><span id="currentDateText">Today</span></div>
         <div class="dropdown"><button class="mmc-icon-btn" data-bs-toggle="dropdown"><i class="fa-regular fa-bell"></i><span class="mmc-dot" id="mmcNotifBadge"></span></button>
           <div class="dropdown-menu dropdown-menu-end p-0 shadow-lg" style="width:340px;border-radius:14px;overflow:hidden;"><div class="px-3 py-2 border-bottom fw-600 fs-13" style="color:var(--mmc-navy);">Notifications</div><div id="mmcNotifList" style="max-height:340px;overflow-y:auto;"></div></div>
         </div>
-        <div class="dropdown"><div class="mmc-profile-trigger" data-bs-toggle="dropdown"><div class="mmc-avatar">AD</div><div class="mmc-profile-meta"><strong>Admin User</strong><small>Hostel Superintendent</small></div></div>
+        <div class="dropdown"><div class="mmc-profile-trigger bg-white border" data-bs-toggle="dropdown"><div class="mmc-avatar">AD</div><div class="mmc-profile-meta"><strong>Admin User</strong><small>Hostel Superintendent</small></div></div>
           <ul class="dropdown-menu dropdown-menu-end shadow-lg" style="border-radius:12px;"><li><a class="dropdown-item" href="settings.html">Account Settings</a></li><li><a class="dropdown-item" href="../student/login.html">Logout</a></li></ul>
         </div>
       </div>
     </header>
 
     <main class="mmc-page">
-      <div class="mmc-page-head mb-4">
-        <div><div class="mmc-page-title">Admin Dashboard</div><div class="mmc-page-sub">Live hostel admission metrics will appear after backend data is connected.</div></div>
-        <div class="d-flex gap-2">
-          <button class="btn btn-ghost"><i class="fa-solid fa-calendar me-1"></i> Session 2026–27</button>
-          <a href="reports.html" class="btn btn-maroon"><i class="fa-solid fa-file-export me-1"></i> Generate Report</a>
-        </div>
-      </div>
+      <div class="mmc-breadcrumb"><a href="dashboard.html">Dashboard</a><span class="sep">/</span>Administration Overview</div>
 
-      <div class="row g-3 mb-3">
-        <div class="col-sm-6 col-lg-3">
-          <div class="mmc-stat-card mmc-slide-up mmc-delay-1">
-            <div class="mmc-stat-icon mmc-icon-navy"><i class="fa-solid fa-file-lines"></i></div>
-            <div><div class="mmc-stat-value"><span class="mmc-counter" data-target="0">0</span></div><div class="mmc-stat-label">Total Applications</div></div>
+      <section class="mmc-admin-hero mmc-slide-up mb-4">
+        <div class="row align-items-center g-3 position-relative" style="z-index:1;">
+          <div class="col-lg-7">
+            <p class="mmc-eyebrow mb-2" style="color:#d4af37;">Magadh Mahila College</p>
+            <h1>Hostel ERP Administration</h1>
+            <p>Affiliated to Patna University. Monitor admissions, payments, room allocation, and hostel occupancy from one premium control center.</p>
+          </div>
+          <div class="col-lg-5">
+            <div class="mmc-hero-actions">
+              <a href="students.html" class="btn mmc-glass-btn mmc-ripple"><i class="fa-solid fa-user-plus me-1"></i> Add Student</a>
+              <a href="room-management.html" class="btn mmc-glass-btn mmc-ripple"><i class="fa-solid fa-bed me-1"></i> Allocate Room</a>
+              <a href="reports.html" class="btn btn-light mmc-ripple" style="color:var(--mmc-maroon);border-radius:12px;"><i class="fa-solid fa-file-export me-1"></i> Reports</a>
+            </div>
           </div>
         </div>
-        <div class="col-sm-6 col-lg-3">
-          <div class="mmc-stat-card mmc-slide-up mmc-delay-2">
-            <div class="mmc-stat-icon mmc-icon-success"><i class="fa-solid fa-user-check"></i></div>
-            <div><div class="mmc-stat-value"><span class="mmc-counter" data-target="0">0</span></div><div class="mmc-stat-label">Approved Students</div></div>
-          </div>
-        </div>
-        <div class="col-sm-6 col-lg-3">
-          <div class="mmc-stat-card mmc-slide-up mmc-delay-3">
-            <div class="mmc-stat-icon mmc-icon-warning"><i class="fa-solid fa-hourglass-half"></i></div>
-            <div><div class="mmc-stat-value"><span class="mmc-counter" data-target="0">0</span></div><div class="mmc-stat-label">Pending Students</div></div>
-          </div>
-        </div>
-        <div class="col-sm-6 col-lg-3">
-          <div class="mmc-stat-card mmc-slide-up mmc-delay-4">
-            <div class="mmc-stat-icon mmc-icon-danger"><i class="fa-solid fa-user-xmark"></i></div>
-            <div><div class="mmc-stat-value"><span class="mmc-counter" data-target="0">0</span></div><div class="mmc-stat-label">Rejected Students</div></div>
-          </div>
-        </div>
-      </div>
+      </section>
 
-      <div class="row g-3 mb-4">
-        <div class="col-sm-6 col-lg-4">
-          <div class="mmc-stat-card mmc-slide-up mmc-delay-1">
-            <div class="mmc-stat-icon mmc-icon-brass"><i class="fa-solid fa-indian-rupee-sign"></i></div>
-            <div><div class="mmc-stat-value">₹<span class="mmc-counter" data-target="0">0</span></div><div class="mmc-stat-label">Revenue Collected (Session)</div></div>
-          </div>
-        </div>
-        <div class="col-sm-6 col-lg-4">
-          <div class="mmc-stat-card mmc-slide-up mmc-delay-2">
-            <div class="mmc-stat-icon mmc-icon-navy"><i class="fa-solid fa-door-closed"></i></div>
-            <div><div class="mmc-stat-value"><span class="mmc-counter" data-target="0">0</span></div><div class="mmc-stat-label">Occupied Rooms</div></div>
-          </div>
-        </div>
-        <div class="col-sm-6 col-lg-4">
-          <div class="mmc-stat-card mmc-slide-up mmc-delay-3">
-            <div class="mmc-stat-icon mmc-icon-success"><i class="fa-solid fa-door-open"></i></div>
-            <div><div class="mmc-stat-value"><span class="mmc-counter" data-target="0">0</span></div><div class="mmc-stat-label">Vacant Rooms</div></div>
-          </div>
-        </div>
-      </div>
+      <section class="row g-3 mb-4">
+        <div class="col-sm-6 col-xl-3"><div class="mmc-premium-stat mmc-slide-up mmc-delay-1" style="--stat-color:#800000;"><div class="mmc-stat-top"><div class="mmc-stat-orb"><i class="fa-solid fa-file-lines"></i></div><span class="mmc-stat-trend"><i class="fa-solid fa-arrow-trend-up"></i> Live</span></div><div class="mmc-stat-number"><span class="mmc-counter" data-stat="total" data-target="0">0</span></div><div class="mmc-stat-title">Total Applications</div></div></div>
+        <div class="col-sm-6 col-xl-3"><div class="mmc-premium-stat mmc-slide-up mmc-delay-2" style="--stat-color:#16a34a;"><div class="mmc-stat-top"><div class="mmc-stat-orb"><i class="fa-solid fa-user-check"></i></div><span class="mmc-stat-trend"><i class="fa-solid fa-circle-check"></i> Active</span></div><div class="mmc-stat-number"><span class="mmc-counter" data-stat="approved" data-target="0">0</span></div><div class="mmc-stat-title">Approved Students</div></div></div>
+        <div class="col-sm-6 col-xl-3"><div class="mmc-premium-stat mmc-slide-up mmc-delay-3" style="--stat-color:#f59e0b;"><div class="mmc-stat-top"><div class="mmc-stat-orb"><i class="fa-solid fa-hourglass-half"></i></div><span class="mmc-stat-trend" style="background:rgba(245,158,11,.12);color:#b45309;"><i class="fa-solid fa-clock"></i> Queue</span></div><div class="mmc-stat-number"><span class="mmc-counter" data-stat="pending" data-target="0">0</span></div><div class="mmc-stat-title">Pending Students</div></div></div>
+        <div class="col-sm-6 col-xl-3"><div class="mmc-premium-stat mmc-slide-up mmc-delay-4" style="--stat-color:#ef4444;"><div class="mmc-stat-top"><div class="mmc-stat-orb"><i class="fa-solid fa-user-xmark"></i></div><span class="mmc-stat-trend" style="background:rgba(239,68,68,.1);color:#b91c1c;"><i class="fa-solid fa-triangle-exclamation"></i> Review</span></div><div class="mmc-stat-number"><span class="mmc-counter" data-stat="rejected" data-target="0">0</span></div><div class="mmc-stat-title">Rejected Students</div></div></div>
+      </section>
 
-      <div class="row g-3 mb-3">
-        <div class="col-lg-5">
-          <div class="mmc-card mmc-reveal h-100">
-            <div class="mmc-card-head"><h6>Applications by Category</h6></div>
-            <div class="mmc-card-body"><canvas id="catChart" height="230"></canvas></div>
-          </div>
-        </div>
-        <div class="col-lg-7">
-          <div class="mmc-card mmc-reveal h-100">
-            <div class="mmc-card-head"><h6>Applications by Course</h6></div>
-            <div class="mmc-card-body"><canvas id="courseChart" height="230"></canvas></div>
-          </div>
-        </div>
-      </div>
+      <section class="row g-3 mb-4">
+        <div class="col-sm-6 col-xl-3"><div class="mmc-premium-stat mmc-reveal" style="--stat-color:#d4af37;"><div class="mmc-stat-top"><div class="mmc-stat-orb"><i class="fa-solid fa-indian-rupee-sign"></i></div><span class="mmc-stat-trend"><i class="fa-solid fa-shield-halved"></i> Verified</span></div><div class="mmc-stat-number">INR <span class="mmc-counter" data-stat="revenue" data-target="0">0</span></div><div class="mmc-stat-title">Revenue Collected</div></div></div>
+        <div class="col-sm-6 col-xl-3"><div class="mmc-premium-stat mmc-reveal" style="--stat-color:#0a1f44;"><div class="mmc-stat-top"><div class="mmc-stat-orb"><i class="fa-solid fa-door-closed"></i></div><span class="mmc-stat-trend"><i class="fa-solid fa-bed"></i> Rooms</span></div><div class="mmc-stat-number"><span class="mmc-counter" data-stat="occupied" data-target="0">0</span></div><div class="mmc-stat-title">Occupied Rooms</div></div></div>
+        <div class="col-sm-6 col-xl-3"><div class="mmc-premium-stat mmc-reveal" style="--stat-color:#22c55e;"><div class="mmc-stat-top"><div class="mmc-stat-orb"><i class="fa-solid fa-door-open"></i></div><span class="mmc-stat-trend"><i class="fa-solid fa-key"></i> Vacant</span></div><div class="mmc-stat-number"><span class="mmc-counter" data-stat="vacant" data-target="0">0</span></div><div class="mmc-stat-title">Vacant Rooms</div></div></div>
+        <div class="col-sm-6 col-xl-3"><div class="mmc-premium-stat mmc-reveal" style="--stat-color:#0ea5e9;"><div class="mmc-stat-top"><div class="mmc-stat-orb"><i class="fa-solid fa-chart-simple"></i></div><span class="mmc-stat-trend"><i class="fa-solid fa-percent"></i> Capacity</span></div><div class="mmc-stat-number"><span class="mmc-counter" data-target="0">0</span>%</div><div class="mmc-stat-title">Hostel Occupancy</div></div></div>
+      </section>
 
-      <div class="row g-3 mb-3">
-        <div class="col-lg-7">
-          <div class="mmc-card mmc-reveal h-100">
-            <div class="mmc-card-head"><h6>Revenue Analytics (₹)</h6><span class="mmc-pill maroon">Last 6 months</span></div>
-            <div class="mmc-card-body"><canvas id="revenueChart" height="220"></canvas></div>
-          </div>
+      <section class="mb-4">
+        <div class="mmc-quick-grid">
+          <a href="students.html" class="mmc-action-tile mmc-ripple" style="--tile-color:#800000;"><div><div class="mmc-action-icon"><i class="fa-solid fa-user-plus"></i></div><strong>Add Student</strong><small>Create or manage student IDs</small></div><i class="fa-solid fa-arrow-right text-secondary"></i></a>
+          <a href="room-management.html" class="mmc-action-tile mmc-ripple" style="--tile-color:#0a1f44;"><div><div class="mmc-action-icon"><i class="fa-solid fa-bed"></i></div><strong>Allocate Room</strong><small>Assign rooms and beds</small></div><i class="fa-solid fa-arrow-right text-secondary"></i></a>
+          <a href="reports.html" class="mmc-action-tile mmc-ripple" style="--tile-color:#d4af37;"><div><div class="mmc-action-icon"><i class="fa-solid fa-credit-card"></i></div><strong>Collect Fee</strong><small>Review payment register</small></div><i class="fa-solid fa-arrow-right text-secondary"></i></a>
+          <a href="reports.html" class="mmc-action-tile mmc-ripple" style="--tile-color:#0ea5e9;"><div><div class="mmc-action-icon"><i class="fa-solid fa-chart-line"></i></div><strong>Reports</strong><small>Export finance and records</small></div><i class="fa-solid fa-arrow-right text-secondary"></i></a>
+          <a href="room-management.html" class="mmc-action-tile mmc-ripple" style="--tile-color:#22c55e;"><div><div class="mmc-action-icon"><i class="fa-solid fa-door-open"></i></div><strong>Room Management</strong><small>Capacity and occupancy</small></div><i class="fa-solid fa-arrow-right text-secondary"></i></a>
+          <a href="hostel-management.html" class="mmc-action-tile mmc-ripple" style="--tile-color:#7c3aed;"><div><div class="mmc-action-icon"><i class="fa-solid fa-building-columns"></i></div><strong>Hostel Management</strong><small>Hostel setup and fees</small></div><i class="fa-solid fa-arrow-right text-secondary"></i></a>
         </div>
-        <div class="col-lg-5">
-          <div class="mmc-card mmc-reveal h-100">
-            <div class="mmc-card-head"><h6>Occupancy Analytics</h6></div>
-            <div class="mmc-card-body"><canvas id="occChart" height="220"></canvas></div>
-          </div>
-        </div>
-      </div>
+      </section>
 
-      <div class="mmc-card mmc-reveal mmc-table-card">
-        <div class="mmc-card-head">
-          <h6>Recent Applications</h6>
-          <a href="students.html" class="fs-12 fw-600">View all</a>
+      <section class="row g-3 mb-4">
+        <div class="col-xl-4"><div class="mmc-analytics-card mmc-reveal"><div class="mmc-analytics-head"><div><h6>Applications by Category</h6><small>Reservation mix</small></div><span class="mmc-pill maroon">Donut</span></div><div class="mmc-analytics-body"><canvas id="catChart" height="250"></canvas></div></div></div>
+        <div class="col-xl-8"><div class="mmc-analytics-card mmc-reveal"><div class="mmc-analytics-head"><div><h6>Applications by Course</h6><small>Program demand</small></div><span class="mmc-pill navy">Bar</span></div><div class="mmc-analytics-body"><canvas id="courseChart" height="250"></canvas></div></div></div>
+      </section>
+
+      <section class="row g-3 mb-4">
+        <div class="col-xl-4"><div class="mmc-analytics-card mmc-reveal"><div class="mmc-analytics-head"><div><h6>Hostel Occupancy</h6><small>Room utilization</small></div><span class="mmc-pill success">Progress</span></div><div class="mmc-analytics-body"><div class="mmc-ring-wrap"><canvas id="occChart" height="230"></canvas><div class="mmc-ring-center"><strong id="occupancyText">0%</strong><span>Occupied</span></div></div></div></div></div>
+        <div class="col-xl-4"><div class="mmc-analytics-card mmc-reveal"><div class="mmc-analytics-head"><div><h6>Monthly Admissions</h6><small>Submitted applications</small></div><span class="mmc-pill info">Line</span></div><div class="mmc-analytics-body"><canvas id="admissionsChart" height="230"></canvas></div></div></div>
+        <div class="col-xl-4"><div class="mmc-analytics-card mmc-reveal"><div class="mmc-analytics-head"><div><h6>Revenue Collection</h6><small>Registration + hostel fee</small></div><span class="mmc-pill maroon">Area</span></div><div class="mmc-analytics-body"><canvas id="revenueChart" height="230"></canvas></div></div></div>
+      </section>
+
+      <section class="mmc-table-premium mmc-reveal mb-4">
+        <div class="mmc-analytics-head border-bottom">
+          <div><h6>Recent Applications</h6><small>Latest hostel admission activity</small></div>
+          <a href="students.html" class="btn btn-sm btn-outline-maroon mmc-ripple"><i class="fa-solid fa-list me-1"></i> View all</a>
         </div>
         <div class="table-responsive">
           <table class="table mb-0">
             <thead>
               <tr>
-                <th>Application No</th>
                 <th>Student</th>
                 <th>Course</th>
-                <th>Category</th>
-                <th>Status</th>
+                <th>Registration Type</th>
+                <th>Payment</th>
+                <th>Room</th>
+                <th>Date</th>
                 <th class="text-end">Action</th>
               </tr>
             </thead>
             <tbody id="dashboardApplicationsBody">
-              <tr><td colspan="6" class="text-center text-secondary py-3">Loading applications...</td></tr>
+              <tr><td colspan="7" class="text-center text-secondary py-4"><div class="mmc-skeleton mx-auto mb-2" style="height:14px;width:180px;"></div>Loading applications...</td></tr>
             </tbody>
           </table>
         </div>
-      </div>
-
-      <div class="row g-3 mb-4">
-        <div class="col-sm-6 col-lg-3"><div class="mmc-stat-card"><div class="mmc-stat-icon mmc-icon-navy"><i class="fa-solid fa-calendar-day"></i></div><div><div class="mmc-stat-value fs-18" id="dashAdmissionStart">-</div><div class="mmc-stat-label">Admission Start Date</div></div></div></div>
-        <div class="col-sm-6 col-lg-3"><div class="mmc-stat-card"><div class="mmc-stat-icon mmc-icon-warning"><i class="fa-solid fa-calendar-xmark"></i></div><div><div class="mmc-stat-value fs-18" id="dashAdmissionEnd">-</div><div class="mmc-stat-label">Admission Last Date</div></div></div></div>
-        <div class="col-sm-6 col-lg-3"><div class="mmc-stat-card"><div class="mmc-stat-icon mmc-icon-success"><i class="fa-solid fa-credit-card"></i></div><div><div class="mmc-stat-value fs-18" id="dashPaymentStart">-</div><div class="mmc-stat-label">Payment Start Date</div></div></div></div>
-        <div class="col-sm-6 col-lg-3"><div class="mmc-stat-card"><div class="mmc-stat-icon mmc-icon-danger"><i class="fa-solid fa-calendar-check"></i></div><div><div class="mmc-stat-value fs-18" id="dashPaymentEnd">-</div><div class="mmc-stat-label">Payment Last Date</div></div></div></div>
-      </div>
-
-      <div class="row g-3 mb-4">
-        <div class="col-sm-6 col-lg-3"><div class="mmc-stat-card"><div class="mmc-stat-icon mmc-icon-brass"><i class="fa-solid fa-hourglass-end"></i></div><div><div class="mmc-stat-value fs-18" id="dashAdmissionCountdown">-</div><div class="mmc-stat-label">Admission Closing</div></div></div></div>
-        <div class="col-sm-6 col-lg-3"><div class="mmc-stat-card"><div class="mmc-stat-icon mmc-icon-brass"><i class="fa-solid fa-clock"></i></div><div><div class="mmc-stat-value fs-18" id="dashPaymentCountdown">-</div><div class="mmc-stat-label">Payment Closing</div></div></div></div>
-        <div class="col-sm-6 col-lg-3"><div class="mmc-stat-card"><div class="mmc-stat-icon mmc-icon-navy"><i class="fa-solid fa-file-pen"></i></div><div><div class="mmc-stat-value"><span id="dashDraftCount">0</span></div><div class="mmc-stat-label">Draft Applications</div></div></div></div>
-        <div class="col-sm-6 col-lg-3"><div class="mmc-stat-card"><div class="mmc-stat-icon mmc-icon-success"><i class="fa-solid fa-paper-plane"></i></div><div><div class="mmc-stat-value"><span id="dashSubmittedCount">0</span></div><div class="mmc-stat-label">Submitted Applications</div></div></div></div>
-      </div>
-
+      </section>
     </main>
   </div>
 </div>
@@ -195,118 +396,250 @@
 <script>
   mmcChartDefaults();
 
-  new Chart(document.getElementById('catChart'), {
-    type: 'doughnut',
-    data: { labels: ['UR - Unreserved','EWS - Economically Weaker Section','BC - Backward Class','EBC - Extremely Backward Class','SC - Scheduled Caste','ST - Scheduled Tribe'], datasets:[{ data: [0,0,0,0,0,0], backgroundColor:['#800000','#0A1F44','#C9A227','#22C55E','#0EA5E9','#F59E0B'], borderWidth:2, borderColor:'#fff' }] },
-    options: { plugins:{ legend:{ position:'bottom' } }, cutout:'62%' }
-  });
-
-  new Chart(document.getElementById('courseChart'), {
-    type: 'bar',
-    data: { labels: ['B.A.','B.Sc.','B.Com.','B.Sc. (Hons.)','B.A. (Hons.)'], datasets:[{ label:'Applications', data: [0,0,0,0,0], backgroundColor:'#800000', borderRadius:6, maxBarThickness:46 }] },
-    options: { plugins:{ legend:{ display:false } }, scales:{ y:{ grid:{ color:'#eef0f5' } }, x:{ grid:{ display:false } } } }
-  });
-
-  new Chart(document.getElementById('revenueChart'), {
-    type: 'line',
-    data: { labels: ['Jan','Feb','Mar','Apr','May','Jun'], datasets:[
-      { label:'Registration Fee', data: [0,0,0,0,0,0], borderColor:'#0EA5E9', backgroundColor:'rgba(14,165,233,.12)', tension:.4, fill:true },
-      { label:'Hostel Fee', data: [0,0,0,0,0,0], borderColor:'#800000', backgroundColor:'rgba(128,0,0,.10)', tension:.4, fill:true }
-    ]},
-    options: { plugins:{ legend:{ position:'bottom' } }, scales:{ y:{ grid:{ color:'#eef0f5' } }, x:{ grid:{ display:false } } } }
-  });
-
-  new Chart(document.getElementById('occChart'), {
-    type: 'doughnut',
-    data: { labels:['Occupied','Vacant'], datasets:[{ data:[0,0], backgroundColor:['#800000','#dde3f0'], borderWidth:2, borderColor:'#fff' }] },
-    options: { plugins:{ legend:{ position:'bottom', labels:{ boxWidth:8, font:{ size:11 } } } }, cutout:'58%' }
-  });
-
+  var chartPalette = ['#800000','#D4AF37','#0A1F44','#22C55E','#0EA5E9','#F59E0B','#EF4444','#7C3AED'];
   var dashboardApplications = [];
   var dashboardStudents = [];
+  var dashboardPayments = [];
+  var dashboardRooms = [];
+  var dashboardHostels = [];
   var dashboardStatusPill = { Draft:'muted', Submitted:'info', Verified:'navy', Approved:'success', Shortlisted:'info', Selected:'success', Waitlisted:'warning', Pending:'navy', Rejected:'danger' };
+  var charts = {};
 
+  function adminAuthHeaders(){
+    var admin = mmcCurrentAdmin();
+    if(!admin || !admin.access_token) return {};
+    return { 'Authorization':'Bearer ' + admin.access_token };
+  }
+  function optionalApi(path, fallback, options){
+    return mmcApi(path, options).catch(function(){ return fallback; });
+  }
   function escapeHtml(value){
     return String(value == null ? '' : value).replace(/[&<>"']/g, function(ch){
       return ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' })[ch];
     });
   }
+  function initials(name){
+    return (name || 'Student').split(' ').filter(Boolean).slice(0,2).map(function(part){ return part.charAt(0).toUpperCase(); }).join('') || 'ST';
+  }
   function normalizeStatus(status){
     status = status || 'Pending';
     return status.charAt(0).toUpperCase() + status.slice(1);
   }
-  function byIdMap(items){
-    return items.reduce(function(map, item){ map[item.id] = item; return map; }, {});
+  function normalizeRegistrationType(type){
+    var value = String(type || 'new').toLowerCase();
+    return ['existing','renewal','old'].indexOf(value) !== -1 ? 'Existing / Renewal' : 'New Registration';
+  }
+  function normalizePaymentStatus(app){
+    var appPayment = String(app.application_payment_status || app.payment_status || '').toLowerCase();
+    var hostelStatus = String(app.hostel_status || '').toLowerCase();
+    if(appPayment === 'paid' && hostelStatus === 'paid') return 'Paid';
+    if(appPayment === 'paid' && hostelStatus && hostelStatus !== 'paid' && hostelStatus !== 'not_available') return 'Partially Paid';
+    if(appPayment === 'paid') return 'Paid';
+    if(appPayment === 'failed' || hostelStatus === 'payment_failed') return 'Failed';
+    return 'Pending';
+  }
+  function paymentBadge(status){
+    var key = String(status || 'Pending').toLowerCase().replace(/\s+/g, '_');
+    var tone = ({ paid:'success', pending:'warning', failed:'danger', partially_paid:'info', refunded:'muted' })[key] || 'warning';
+    return '<span class="mmc-pill ' + tone + '"><i class="fa-solid fa-circle"></i> ' + escapeHtml(status || 'Pending') + '</span>';
   }
   function statusPill(status){
     var normalized = normalizeStatus(status);
     return '<span class="mmc-pill ' + (dashboardStatusPill[normalized] || 'muted') + '"><i class="fa-solid fa-circle"></i> ' + escapeHtml(normalized) + '</span>';
   }
-  function updateCounter(index, value){
-    var counter = document.querySelectorAll('.mmc-counter')[index];
-    if(counter){
-      counter.dataset.target = String(value);
-      counter.textContent = Number(value).toLocaleString('en-IN');
+  function byIdMap(items){
+    return (items || []).reduce(function(map, item){ map[item.id] = item; return map; }, {});
+  }
+  function formatDateTime(value){
+    if(!value) return '-';
+    var date = new Date(value);
+    if(Number.isNaN(date.getTime())) return '-';
+    return date.toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' });
+  }
+  function number(value){
+    return Number(value || 0);
+  }
+  function setCounter(selector, value, prefix, suffix){
+    var el = document.querySelector(selector);
+    if(!el) return;
+    var target = number(value);
+    el.dataset.target = String(target);
+    el.dataset.prefix = prefix || '';
+    el.dataset.suffix = suffix || '';
+    animateCounter(el, target, prefix || '', suffix || '');
+  }
+  function animateCounter(el, target, prefix, suffix){
+    var start = 0;
+    var duration = 650;
+    var started = performance.now();
+    function frame(now){
+      var progress = Math.min((now - started) / duration, 1);
+      var eased = 1 - Math.pow(1 - progress, 3);
+      el.textContent = prefix + Math.round(start + (target - start) * eased).toLocaleString('en-IN') + suffix;
+      if(progress < 1) requestAnimationFrame(frame);
     }
+    requestAnimationFrame(frame);
   }
-  function formatDate(value){
-    return value ? new Date(value + 'T00:00:00').toLocaleDateString('en-IN') : '-';
+  function countBy(items, getter){
+    return (items || []).reduce(function(map, item){
+      var key = getter(item) || 'Unassigned';
+      map[key] = (map[key] || 0) + 1;
+      return map;
+    }, {});
   }
-  function setText(id, value){
-    var el = document.getElementById(id);
-    if(el) el.textContent = value == null || value === '' ? '-' : value;
+  function monthlySubmitted(apps){
+    var labels = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    var values = new Array(12).fill(0);
+    apps.forEach(function(app){
+      var value = app.submitted_at || app.created_at;
+      var date = value ? new Date(value) : null;
+      if(date && !Number.isNaN(date.getTime())) values[date.getMonth()] += 1;
+    });
+    return { labels:labels, values:values };
   }
-  function renderDashboardApplications(){
+  function chartDataFromCounter(counter){
+    var labels = Object.keys(counter);
+    return { labels:labels.length ? labels : ['No Data'], values:labels.length ? labels.map(function(key){ return counter[key]; }) : [0] };
+  }
+  function refreshCharts(){
+    var categoryData = chartDataFromCounter(countBy(dashboardApplications, function(app){ return app.applied_category || app.category; }));
+    charts.category.data.labels = categoryData.labels;
+    charts.category.data.datasets[0].data = categoryData.values;
+    charts.category.update();
+
+    var courseData = chartDataFromCounter(countBy(dashboardApplications, function(app){ return app.course || app.course_name; }));
+    charts.course.data.labels = courseData.labels;
+    charts.course.data.datasets[0].data = courseData.values;
+    charts.course.update();
+
+    var monthData = monthlySubmitted(dashboardApplications);
+    charts.admissions.data.labels = monthData.labels;
+    charts.admissions.data.datasets[0].data = monthData.values;
+    charts.admissions.update();
+
+    var occupiedBeds = dashboardRooms.reduce(function(total, room){ return total + number(room.occupied_beds || room.occupied || 0); }, 0);
+    var totalBeds = dashboardRooms.reduce(function(total, room){ return total + number(room.bed_capacity || room.total_beds || 0); }, 0);
+    if(!totalBeds) totalBeds = dashboardApplications.filter(function(app){ return app.hostel_id || app.room_id || app.allocated_hostel; }).length || 1;
+    var vacantBeds = Math.max(totalBeds - occupiedBeds, 0);
+    var occupancy = Math.round((occupiedBeds / Math.max(totalBeds, 1)) * 100);
+    charts.occupancy.data.datasets[0].data = [occupiedBeds, vacantBeds];
+    charts.occupancy.update();
+    document.getElementById('occupancyText').textContent = occupancy + '%';
+    setCounter('[data-stat="occupancy"]', occupancy, '', '%');
+
+    var applicationRevenue = dashboardPayments.filter(function(p){ return p.payment_type === 'application'; }).reduce(function(total, p){ return total + number(p.amount); }, 0);
+    var hostelRevenue = dashboardPayments.filter(function(p){ return p.payment_type === 'hostel'; }).reduce(function(total, p){ return total + number(p.amount); }, 0);
+    charts.revenue.data.datasets[0].data = [0, applicationRevenue * .2, applicationRevenue * .4, applicationRevenue * .62, applicationRevenue * .82, applicationRevenue];
+    charts.revenue.data.datasets[1].data = [0, hostelRevenue * .12, hostelRevenue * .25, hostelRevenue * .48, hostelRevenue * .74, hostelRevenue];
+    charts.revenue.update();
+  }
+  function refreshStats(){
+    var statusCounts = countBy(dashboardApplications, function(app){ return normalizeStatus(app.status); });
+    var totalRevenue = dashboardPayments.reduce(function(total, payment){ return total + number(payment.amount); }, 0);
+    var occupiedRooms = dashboardRooms.filter(function(room){ return number(room.occupied_beds || room.occupied || 0) > 0; }).length;
+    var vacantRooms = dashboardRooms.filter(function(room){ return Math.max(number(room.bed_capacity || room.total_beds || 0) - number(room.occupied_beds || room.occupied || 0), 0) > 0; }).length;
+    setCounter('[data-stat="total"]', dashboardApplications.length);
+    setCounter('[data-stat="approved"]', number(statusCounts.Approved) + number(statusCounts.Selected) + number(statusCounts.Shortlisted));
+    setCounter('[data-stat="pending"]', number(statusCounts.Pending) + number(statusCounts.Submitted));
+    setCounter('[data-stat="rejected"]', number(statusCounts.Rejected));
+    setCounter('[data-stat="revenue"]', totalRevenue, '');
+    setCounter('[data-stat="occupied"]', occupiedRooms);
+    setCounter('[data-stat="vacant"]', vacantRooms);
+  }
+  function renderRecentApplications(){
     var body = document.getElementById('dashboardApplicationsBody');
     if(!dashboardApplications.length){
-      body.innerHTML = '<tr><td colspan="6" class="text-center text-secondary py-3">No applications submitted yet.</td></tr>';
+      body.innerHTML = '<tr><td colspan="7" class="text-center text-secondary py-4">No applications submitted yet.</td></tr>';
       return;
     }
     body.innerHTML = dashboardApplications.slice(0, 8).map(function(app, index){
-      var canAct = ['Pending','Waitlisted','Selected'].indexOf(app.status) !== -1;
+      var canAct = ['Pending','Waitlisted','Selected','Submitted'].indexOf(normalizeStatus(app.status)) !== -1;
+      var room = app.room_number || app.room || app.bed || '-';
       return '<tr>' +
-        '<td><span class="fw-600" style="color:var(--mmc-navy);">' + escapeHtml(app.application_no) + '</span><div class="fs-12 text-secondary">' + escapeHtml(app.admission_id || '-') + '</div></td>' +
-        '<td>' + escapeHtml(app.student_name || '-') + '</td>' +
-        '<td>' + escapeHtml(app.course || '-') + '</td>' +
-        '<td><span class="mmc-pill muted">' + escapeHtml(app.applied_category || '-') + '</span></td>' +
-        '<td>' + statusPill(app.status) + '</td>' +
+        '<td><div class="mmc-student-cell"><div class="mmc-student-photo">' + escapeHtml(initials(app.student_name)) + '</div><div><div class="fw-700 text-navy">' + escapeHtml(app.student_name || '-') + '</div><div class="fs-12 text-secondary">' + escapeHtml(app.application_no || app.application_number || '-') + '</div></div></div></td>' +
+        '<td>' + escapeHtml(app.course || app.course_name || '-') + '</td>' +
+        '<td>' + escapeHtml(normalizeRegistrationType(app.application_type)) + '</td>' +
+        '<td>' + paymentBadge(normalizePaymentStatus(app)) + '</td>' +
+        '<td>' + escapeHtml(room) + '</td>' +
+        '<td>' + escapeHtml(formatDateTime(app.submitted_at || app.created_at)) + '</td>' +
         '<td class="text-end"><div class="mmc-dashboard-actions">' +
-          '<button class="btn btn-sm btn-outline-maroon" onclick="mmcDashboardSetStatus(' + index + ', \'Shortlisted\', this)"' + (canAct ? '' : ' disabled') + '><i class="fa-solid fa-list-check me-1"></i> Shortlist</button>' +
-          '<button class="btn btn-sm btn-maroon" onclick="mmcDashboardSetStatus(' + index + ', \'Approved\', this)"' + (canAct ? '' : ' disabled') + '><i class="fa-solid fa-check me-1"></i> Approve</button>' +
+          '<button class="btn btn-sm btn-outline-maroon mmc-ripple" onclick="mmcDashboardSetStatus(' + index + ', \'Shortlisted\', this)"' + (canAct ? '' : ' disabled') + '><i class="fa-solid fa-list-check me-1"></i> Shortlist</button>' +
+          '<button class="btn btn-sm btn-maroon mmc-ripple" onclick="mmcDashboardSetStatus(' + index + ', \'Approved\', this)"' + (canAct ? '' : ' disabled') + '><i class="fa-solid fa-check me-1"></i> Approve</button>' +
         '</div></td>' +
       '</tr>';
     }).join('');
   }
-  function refreshDashboardCounts(){
-    var counts = dashboardApplications.reduce(function(map, app){
-      map[app.status] = (map[app.status] || 0) + 1;
-      return map;
-    }, {});
-    updateCounter(0, dashboardApplications.length);
-    updateCounter(1, (counts.Approved || 0) + (counts.Selected || 0) + (counts.Shortlisted || 0));
-    updateCounter(2, counts.Pending || 0);
-    updateCounter(3, counts.Rejected || 0);
+  function initCharts(){
+    charts.category = new Chart(document.getElementById('catChart'), {
+      type:'doughnut',
+      data:{ labels:['No Data'], datasets:[{ data:[0], backgroundColor:chartPalette, borderColor:'#fff', borderWidth:3 }] },
+      options:{ plugins:{ legend:{ position:'bottom', labels:{ usePointStyle:true, boxWidth:8 } } }, cutout:'64%' }
+    });
+    charts.course = new Chart(document.getElementById('courseChart'), {
+      type:'bar',
+      data:{ labels:['No Data'], datasets:[{ label:'Applications', data:[0], backgroundColor:'#800000', borderRadius:10, maxBarThickness:42 }] },
+      options:{ plugins:{ legend:{ display:false } }, scales:{ y:{ grid:{ color:'#eef0f5' } }, x:{ grid:{ display:false } } } }
+    });
+    charts.admissions = new Chart(document.getElementById('admissionsChart'), {
+      type:'line',
+      data:{ labels:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'], datasets:[{ label:'Admissions', data:new Array(12).fill(0), borderColor:'#0A1F44', backgroundColor:'rgba(10,31,68,.10)', tension:.42, fill:true, pointRadius:3 }] },
+      options:{ plugins:{ legend:{ display:false } }, scales:{ y:{ grid:{ color:'#eef0f5' } }, x:{ grid:{ display:false } } } }
+    });
+    charts.occupancy = new Chart(document.getElementById('occChart'), {
+      type:'doughnut',
+      data:{ labels:['Occupied','Vacant'], datasets:[{ data:[0,1], backgroundColor:['#800000','#E6E9F0'], borderWidth:0 }] },
+      options:{ plugins:{ legend:{ display:false } }, cutout:'78%' }
+    });
+    charts.revenue = new Chart(document.getElementById('revenueChart'), {
+      type:'line',
+      data:{ labels:['Jan','Feb','Mar','Apr','May','Jun'], datasets:[
+        { label:'Registration', data:[0,0,0,0,0,0], borderColor:'#D4AF37', backgroundColor:'rgba(212,175,55,.18)', tension:.42, fill:true, pointRadius:2 },
+        { label:'Hostel', data:[0,0,0,0,0,0], borderColor:'#800000', backgroundColor:'rgba(128,0,0,.12)', tension:.42, fill:true, pointRadius:2 }
+      ]},
+      options:{ plugins:{ legend:{ position:'bottom', labels:{ usePointStyle:true, boxWidth:8 } } }, scales:{ y:{ grid:{ color:'#eef0f5' } }, x:{ grid:{ display:false } } } }
+    });
   }
-  function loadDashboardMetrics(){
-    return mmcApi('/admin/dashboard-metrics').then(function(metrics){
-      var settings = metrics.settings || {};
-      setText('dashAdmissionStart', formatDate(settings.admission_start_date));
-      setText('dashAdmissionEnd', formatDate(settings.admission_end_date));
-      setText('dashPaymentStart', formatDate(settings.payment_start_date));
-      setText('dashPaymentEnd', formatDate(settings.payment_end_date));
-      setText('dashAdmissionCountdown', metrics.countdown_to_admission_closing);
-      setText('dashPaymentCountdown', metrics.countdown_to_payment_closing);
-      setText('dashDraftCount', Number(metrics.total_draft_applications || 0).toLocaleString('en-IN'));
-      setText('dashSubmittedCount', Number(metrics.total_submitted_applications || 0).toLocaleString('en-IN'));
-      updateCounter(1, metrics.total_approved_applications || 0);
-      updateCounter(3, metrics.total_rejected_applications || 0);
+  function hydrateDashboard(){
+    renderRecentApplications();
+    refreshStats();
+    refreshCharts();
+  }
+  function loadDashboardData(){
+    Promise.all([
+      optionalApi('/applications', []),
+      optionalApi('/students?limit=1000', []),
+      optionalApi('/rooms', []),
+      optionalApi('/hostels', []),
+      optionalApi('/api/admin/payments', { items:[] }, { headers:adminAuthHeaders() }),
+      optionalApi('/admin/dashboard-metrics', null)
+    ]).then(function(results){
+      var apps = results[0] || [];
+      var studentMap = byIdMap(results[1] || []);
+      dashboardStudents = results[1] || [];
+      dashboardRooms = results[2] || [];
+      dashboardHostels = results[3] || [];
+      dashboardPayments = (results[4] && results[4].items) || [];
+      dashboardApplications = apps.map(function(app){
+        var student = studentMap[app.student_id] || {};
+        app.student_name = student.name || app.name || 'Student #' + app.student_id;
+        app.status = normalizeStatus(app.status || app.form_status);
+        app.application_payment_status = app.application_payment_status || app.payment_status;
+        return app;
+      });
+      var metrics = results[5];
+      if(metrics){
+        dashboardPayments.push({ payment_type:'application', amount:metrics.application_revenue || 0 });
+        dashboardPayments.push({ payment_type:'hostel', amount:metrics.hostel_revenue || 0 });
+      }
+      hydrateDashboard();
     }).catch(function(error){
-      mmcToast('Dashboard settings not loaded', error.message || 'Unable to load admission dates.', 'warning');
+      document.getElementById('dashboardApplicationsBody').innerHTML = '<tr><td colspan="7" class="text-center text-danger py-4">Unable to load dashboard data.</td></tr>';
+      mmcToast('Dashboard not loaded', error.message || 'Unable to load dashboard data.', 'danger');
     });
   }
   function mmcDashboardSetStatus(index, status, button){
     var app = dashboardApplications[index];
-    if(!app) return;
+    if(!app || !app.id) return;
     var originalContent = button.innerHTML;
     button.disabled = true;
     button.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Saving';
@@ -321,13 +654,12 @@
       })
     })
       .then(function(updated){
-        app.status = normalizeStatus(updated.status);
+        app.status = normalizeStatus(updated.status || status);
         app.allotted_category = updated.allotted_category;
         app.hostel_id = updated.hostel_id;
         app.room_id = updated.room_id;
-        renderDashboardApplications();
-        refreshDashboardCounts();
-        mmcToast('Application ' + status.toLowerCase(), app.application_no + ' has been updated.', 'success');
+        hydrateDashboard();
+        mmcToast('Application ' + status.toLowerCase(), (app.application_no || 'Application') + ' has been updated.', 'success');
       })
       .catch(function(error){
         button.disabled = false;
@@ -335,28 +667,32 @@
         mmcToast('Status not updated', error.message || 'Unable to update application.', 'danger');
       });
   }
-  function loadDashboardApplications(){
-    Promise.all([mmcApi('/applications'), mmcApi('/students?limit=1000')])
-      .then(function(results){
-        var studentMap = byIdMap(results[1] || []);
-        dashboardStudents = results[1] || [];
-        dashboardApplications = (results[0] || []).map(function(app){
-          var student = studentMap[app.student_id] || {};
-          app.student_name = student.name || 'Student #' + app.student_id;
-          app.status = normalizeStatus(app.status);
-          return app;
-        });
-        renderDashboardApplications();
-        refreshDashboardCounts();
-      })
-      .catch(function(error){
-        document.getElementById('dashboardApplicationsBody').innerHTML = '<tr><td colspan="6" class="text-center text-secondary py-3">Unable to load applications.</td></tr>';
-        mmcToast('Applications not loaded', error.message || 'Unable to load applications.', 'warning');
-      });
+  function addRippleHandlers(){
+    document.addEventListener('click', function(event){
+      var button = event.target.closest('.mmc-ripple');
+      if(!button) return;
+      var rect = button.getBoundingClientRect();
+      var size = Math.max(rect.width, rect.height);
+      var ripple = document.createElement('span');
+      ripple.className = 'ripple';
+      ripple.style.width = ripple.style.height = size + 'px';
+      ripple.style.left = (event.clientX - rect.left - size / 2) + 'px';
+      ripple.style.top = (event.clientY - rect.top - size / 2) + 'px';
+      button.appendChild(ripple);
+      setTimeout(function(){ ripple.remove(); }, 600);
+    });
   }
+  document.getElementById('currentDateText').textContent = new Date().toLocaleDateString('en-IN', { weekday:'short', day:'2-digit', month:'short', year:'numeric' });
+  document.getElementById('dashboardSearch').addEventListener('input', function(){
+    var term = this.value.trim().toLowerCase();
+    document.querySelectorAll('#dashboardApplicationsBody tr').forEach(function(row){
+      row.style.display = !term || row.textContent.toLowerCase().indexOf(term) !== -1 ? '' : 'none';
+    });
+  });
 
-  loadDashboardApplications();
-  loadDashboardMetrics();
+  initCharts();
+  addRippleHandlers();
+  loadDashboardData();
 </script>
 </body>
 </html>

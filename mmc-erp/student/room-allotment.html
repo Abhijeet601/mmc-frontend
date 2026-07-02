@@ -118,6 +118,7 @@
               <p class="fs-13 text-secondary">Allotment letter details will appear after a real room allotment is published.</p>
               <div class="mmc-kv"><span class="k">Hostel</span><span class="v">-</span></div>
               <div class="mmc-kv"><span class="k">Room / Bed</span><span class="v">-</span></div>
+              <div class="mmc-kv"><span class="k">Payment Status</span><span class="v" id="roomPaymentStatus">Pending</span></div>
               <div class="mmc-kv"><span class="k">Check-in From</span><span class="v">01 Jul 2026</span></div>
               <button class="btn btn-maroon w-100 mt-3" onclick="mmcToast('Document unavailable','No allotment letter has been generated yet.','warning')"><i class="fa-solid fa-download me-1"></i> Download Allotment Letter</button>
             </div>
@@ -147,11 +148,15 @@
       if(key && val && key.textContent.trim() === label) val.textContent = value || '-';
     });
   }
+  function paymentStatusLabel(status){
+    return ({ paid:'Paid', pending:'Pending', failed:'Failed', partially_paid:'Partially Paid', refunded:'Refunded' })[status] || 'Pending';
+  }
   function renderRoomAllotment(workflow){
     if(!workflow) return;
     mmcApplyStudentNavigation(workflow);
     var room = workflow.room;
     var hostel = workflow.hostel;
+    document.getElementById('roomPaymentStatus').textContent = paymentStatusLabel(workflow.paymentStatus);
     if(!workflow.roomAllotted){
       document.getElementById('floorMap').innerHTML = '<div class="col-12 text-center text-secondary py-3 fs-13">Room allotment is waiting for admin action.</div>';
       document.querySelector('.mmc-page-sub').textContent = workflow.hostelPaid ? 'Hostel fee paid. Waiting for admin room allotment.' : 'Room details will appear after hostel fee payment and admin allotment.';

@@ -17,6 +17,13 @@ function mmcLatestByCreatedAt(items){
   })[0] || null;
 }
 
+function mmcWorkflowPaymentStatus(registrationPaid, hostelPaid, shortlisted){
+  if(registrationPaid && hostelPaid) return 'paid';
+  if(registrationPaid && shortlisted) return 'partially_paid';
+  if(registrationPaid) return 'paid';
+  return 'pending';
+}
+
 function mmcBuildStudentWorkflow(data){
   var student = data.student;
   var application = mmcLatestByCreatedAt(data.applications);
@@ -31,6 +38,9 @@ function mmcBuildStudentWorkflow(data){
   }) || null;
   var hostelPayment = payments.find(function(payment){
     return /hostel/i.test(payment.payment_type || '') && mmcIsPaidStatus(payment.status);
+  }) || null;
+  var failedPayment = payments.find(function(payment){
+    return String(payment.status || '').toLowerCase() === 'failed';
   }) || null;
   var status = application ? mmcNormalizeWorkflowStatus(application.status) : 'Not Started';
   var statusKey = status.toLowerCase();
@@ -49,6 +59,7 @@ function mmcBuildStudentWorkflow(data){
     hostelReceipt: hostelReceipt,
     registrationPaid: Boolean(registrationReceipt || registrationPayment),
     hostelPaid: Boolean(hostelReceipt || hostelPayment),
+    paymentStatus: failedPayment ? 'failed' : mmcWorkflowPaymentStatus(Boolean(registrationReceipt || registrationPayment), Boolean(hostelReceipt || hostelPayment), shortlisted),
     shortlisted: shortlisted,
     roomAllotted: Boolean(application && application.hostel_id && application.room_id && application.bed),
     status: status,
