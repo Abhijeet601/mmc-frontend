@@ -150,7 +150,7 @@
   }
 
   function receiptDownloadUrl(r){
-    return MMC_API_BASE + (r.pdf_url || ('/receipts/' + r.id + '/download'));
+    return MMC_API_BASE + '/receipts/' + r.id + '/download';
   }
 
   function renderReceiptRows(){
