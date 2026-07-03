@@ -131,6 +131,15 @@
               </div>
             </div>
             <div id="existingUploadBlock" style="display:none;">
+              <div class="alert alert-info py-2 fs-13 mb-3">Existing students must enter their current hostel details for renewal verification.</div>
+              <div class="row g-3 mb-3">
+                <div class="col-md-6"><label class="form-label">Current Hostel Name *</label><input type="text" id="existingHostelName" class="form-control" placeholder="e.g. Mahima Hostel"></div>
+                <div class="col-md-3"><label class="form-label">Room Number *</label><input type="text" id="existingRoomNumber" class="form-control" placeholder="Room no."></div>
+                <div class="col-md-3"><label class="form-label">Bed Number</label><input type="text" id="existingBedNumber" class="form-control" placeholder="Bed no."></div>
+                <div class="col-md-4"><label class="form-label">Block</label><input type="text" id="existingBlock" class="form-control" placeholder="Block"></div>
+                <div class="col-md-4"><label class="form-label">Floor</label><input type="text" id="existingFloor" class="form-control" placeholder="Floor"></div>
+                <div class="col-md-4"><label class="form-label">Previous Session *</label><input type="text" id="existingPreviousSession" class="form-control" placeholder="2025-26"></div>
+              </div>
               <label class="form-label">Upload Previous Year's Receipt</label>
               <div class="mmc-dropzone" id="prevReceiptZone"><i class="fa-solid fa-cloud-arrow-up"></i><div class="fw-600 fs-13">Click or drag file to upload</div><div class="hint">PDF, JPG, JPEG or PNG, less than 250 KB</div></div>
               <input type="file" id="prevReceiptInput" class="d-none" accept=".pdf,.jpg,.jpeg,.png">
@@ -327,9 +336,13 @@
 
   function byId(id){ return document.getElementById(id); }
   function setApplicationType(card){
+    var existing = card.dataset.applicationType === 'existing';
     document.querySelectorAll('.mmc-type-card').forEach(function(item){ item.classList.toggle('selected', item === card); });
-    byId('existingUploadBlock').style.display = card.dataset.applicationType === 'existing' ? 'block' : 'none';
-    byId('prevReceiptInput').required = card.dataset.applicationType === 'existing';
+    byId('existingUploadBlock').style.display = existing ? 'block' : 'none';
+    byId('prevReceiptInput').required = existing;
+    ['existingHostelName','existingRoomNumber','existingPreviousSession'].forEach(function(id){
+      byId(id).required = existing;
+    });
   }
   document.querySelectorAll('[data-application-type]').forEach(function(card){
     card.addEventListener('click', function(){ setApplicationType(card); });
@@ -502,6 +515,12 @@
     var renewal = applicationType().indexOf('Existing') === 0;
     var html = section('Application Type', [
       ['Application Type', applicationType()],
+      ['Current Hostel Name', renewal ? byId('existingHostelName').value : 'Not applicable'],
+      ['Current Room Number', renewal ? byId('existingRoomNumber').value : 'Not applicable'],
+      ['Current Bed Number', renewal ? byId('existingBedNumber').value : 'Not applicable'],
+      ['Current Block', renewal ? byId('existingBlock').value : 'Not applicable'],
+      ['Current Floor', renewal ? byId('existingFloor').value : 'Not applicable'],
+      ['Previous Session', renewal ? byId('existingPreviousSession').value : 'Not applicable'],
       ['Previous Receipt', renewal ? fileDetails('prevReceiptInput') : 'Not applicable']
     ]);
     html += section('Personal Details', [
@@ -596,6 +615,12 @@
       admission_receipt_data: uploadData.input3 || null,
       income_certificate_data: category === 'EWS' ? uploadData.input4 || null : null,
       caste_certificate_data: ['BC','EBC','SC','ST'].indexOf(category) !== -1 ? uploadData.input5 || null : null,
+      existing_hostel_name: selectedApplicationType() === 'existing' ? byId('existingHostelName').value.trim() || null : null,
+      existing_room_number: selectedApplicationType() === 'existing' ? byId('existingRoomNumber').value.trim() || null : null,
+      existing_bed_number: selectedApplicationType() === 'existing' ? byId('existingBedNumber').value.trim() || null : null,
+      existing_block: selectedApplicationType() === 'existing' ? byId('existingBlock').value.trim() || null : null,
+      existing_floor: selectedApplicationType() === 'existing' ? byId('existingFloor').value.trim() || null : null,
+      existing_previous_session: selectedApplicationType() === 'existing' ? byId('existingPreviousSession').value.trim() || null : null,
       intermediate_college: byId('acCollege').value.trim() || null,
       board: byId('acBoard').value.trim() || null,
       previous_course: byId('previousCourse').value.trim() || null,
@@ -607,6 +632,20 @@
       subject: byId('acSubject').value.trim() || null,
       applied_category: category
     };
+  }
+
+  function requiredDocumentErrors(){
+    var category = byId('pCategory').value || '';
+    var required = [
+      ['input1', 'Passport Size Photograph'],
+      ['input2', 'Aadhaar Card'],
+      ['input3', 'Admission Receipt']
+    ];
+    if(category === 'EWS') required.push(['input4', 'Income Certificate']);
+    if(['BC','EBC','SC','ST'].indexOf(category) !== -1) required.push(['input5', 'Caste Certificate']);
+    return required.filter(function(item){
+      return !uploadData[item[0]];
+    }).map(function(item){ return item[1]; });
   }
 
   function setValue(id, value){
@@ -626,6 +665,12 @@
     if(application){
       var typeCard = document.querySelector('[data-application-type="' + (application.application_type || 'new') + '"]');
       if(typeCard) setApplicationType(typeCard);
+      setValue('existingHostelName', application.existing_hostel_name);
+      setValue('existingRoomNumber', application.existing_room_number);
+      setValue('existingBedNumber', application.existing_bed_number);
+      setValue('existingBlock', application.existing_block);
+      setValue('existingFloor', application.existing_floor);
+      setValue('existingPreviousSession', application.existing_previous_session);
       setValue('admissionLevel', application.admission_level);
       updateAdmission();
       setValue('acAdmId', application.admission_id);
@@ -746,6 +791,15 @@
 
   function saveCurrentStep(step, button){
     if(formLocked) return Promise.resolve(false);
+    if(Number(step) === 7){
+      var missingDocuments = requiredDocumentErrors();
+      if(missingDocuments.length){
+        var message = 'Please upload: ' + missingDocuments.join(', ') + '.';
+        showUploadError(message);
+        mmcToast('Documents required', message, 'warning');
+        return Promise.resolve(false);
+      }
+    }
     var student = currentStudent || mmcCurrentStudent();
     if(!student || !student.id){
       mmcToast('Login required', 'Please sign in with your student account before saving.', 'warning');

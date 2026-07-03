@@ -308,14 +308,25 @@
   }
 
   function studentDetailsHtml(a){
-    return [
+    var rows = [
       ['Student ID', a.appNo], ['Admission ID', a.admissionId], ['Student Name', a.name], ['Mobile', a.mobile],
       ['Registration Type', a.registrationTypeLabel || '-'],
       ['Registration Fee', paymentStatusLabel(a.registrationPaymentStatus)],
       ['Hostel Fee', paymentStatusLabel(a.hostelPaymentStatus)],
       ['Course', a.course], ['Percentage', a.percentage ? a.percentage + '%' : '-'], ['Applied Category', a.appliedCat], ['Allotted Category', a.allottedCat],
       ['Status', a.status], ['Hostel Name', a.hostel || '-'], ['Room Number', a.room || '-']
-    ].map(function(r){
+    ];
+    if(a.registrationType === 'existing'){
+      rows.push(
+        ['Existing Hostel Name', a.existingHostelName],
+        ['Existing Room Number', a.existingRoomNumber],
+        ['Existing Bed Number', a.existingBedNumber],
+        ['Existing Block', a.existingBlock],
+        ['Existing Floor', a.existingFloor],
+        ['Previous Session', a.existingPreviousSession]
+      );
+    }
+    return rows.map(function(r){
       return '<div class="col-md-6"><div class="mmc-kv"><span class="k">' + escapeHtml(r[0]) + '</span><span class="v">' + escapeHtml(r[1]) + '</span></div></div>';
     }).join('');
   }
@@ -446,6 +457,12 @@
       status: status,
       registrationType: normalizeRegistrationType(summary.application_type),
       registrationTypeLabel: registrationTypeLabel(summary.application_type),
+      existingHostelName: summary.existing_hostel_name || '-',
+      existingRoomNumber: summary.existing_room_number || '-',
+      existingBedNumber: summary.existing_bed_number || '-',
+      existingBlock: summary.existing_block || '-',
+      existingFloor: summary.existing_floor || '-',
+      existingPreviousSession: summary.existing_previous_session || '-',
       paymentStatus: normalizePaymentStatus(student),
       registrationPaymentStatus: normalizePaymentValue(student.registration_payment_status || student.application_payment_status),
       hostelPaymentStatus: student.hostel_payment_status || student.hostel_status ? normalizePaymentValue(student.hostel_payment_status || student.hostel_status) : 'not_applicable',
