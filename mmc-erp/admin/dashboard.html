@@ -327,7 +327,7 @@
 
       <section class="row g-3 mb-4">
         <div class="col-sm-6 col-xl-3"><div class="mmc-premium-stat mmc-slide-up mmc-delay-1" style="--stat-color:#800000;"><div class="mmc-stat-top"><div class="mmc-stat-orb"><i class="fa-solid fa-file-lines"></i></div><span class="mmc-stat-trend"><i class="fa-solid fa-arrow-trend-up"></i> Live</span></div><div class="mmc-stat-number"><span class="mmc-counter" data-stat="total" data-target="0">0</span></div><div class="mmc-stat-title">Total Applications</div></div></div>
-        <div class="col-sm-6 col-xl-3"><div class="mmc-premium-stat mmc-slide-up mmc-delay-2" style="--stat-color:#16a34a;"><div class="mmc-stat-top"><div class="mmc-stat-orb"><i class="fa-solid fa-user-check"></i></div><span class="mmc-stat-trend"><i class="fa-solid fa-circle-check"></i> Active</span></div><div class="mmc-stat-number"><span class="mmc-counter" data-stat="approved" data-target="0">0</span></div><div class="mmc-stat-title">Approved Students</div></div></div>
+        <div class="col-sm-6 col-xl-3"><div class="mmc-premium-stat mmc-slide-up mmc-delay-2" style="--stat-color:#16a34a;"><div class="mmc-stat-top"><div class="mmc-stat-orb"><i class="fa-solid fa-user-check"></i></div><span class="mmc-stat-trend"><i class="fa-solid fa-circle-check"></i> Merit</span></div><div class="mmc-stat-number"><span class="mmc-counter" data-stat="approved" data-target="0">0</span></div><div class="mmc-stat-title">Shortlisted Students</div></div></div>
         <div class="col-sm-6 col-xl-3"><div class="mmc-premium-stat mmc-slide-up mmc-delay-3" style="--stat-color:#f59e0b;"><div class="mmc-stat-top"><div class="mmc-stat-orb"><i class="fa-solid fa-hourglass-half"></i></div><span class="mmc-stat-trend" style="background:rgba(245,158,11,.12);color:#b45309;"><i class="fa-solid fa-clock"></i> Queue</span></div><div class="mmc-stat-number"><span class="mmc-counter" data-stat="pending" data-target="0">0</span></div><div class="mmc-stat-title">Pending Students</div></div></div>
         <div class="col-sm-6 col-xl-3"><div class="mmc-premium-stat mmc-slide-up mmc-delay-4" style="--stat-color:#ef4444;"><div class="mmc-stat-top"><div class="mmc-stat-orb"><i class="fa-solid fa-user-xmark"></i></div><span class="mmc-stat-trend" style="background:rgba(239,68,68,.1);color:#b91c1c;"><i class="fa-solid fa-triangle-exclamation"></i> Review</span></div><div class="mmc-stat-number"><span class="mmc-counter" data-stat="rejected" data-target="0">0</span></div><div class="mmc-stat-title">Rejected Students</div></div></div>
       </section>
@@ -361,30 +361,6 @@
         <div class="col-xl-4"><div class="mmc-analytics-card mmc-reveal"><div class="mmc-analytics-head"><div><h6>Revenue Collection</h6><small>Registration + hostel fee</small></div><span class="mmc-pill maroon">Area</span></div><div class="mmc-analytics-body"><canvas id="revenueChart" height="230"></canvas></div></div></div>
       </section>
 
-      <section class="mmc-table-premium mmc-reveal mb-4">
-        <div class="mmc-analytics-head border-bottom">
-          <div><h6>Recent Applications</h6><small>Latest hostel admission activity</small></div>
-          <a href="students.html" class="btn btn-sm btn-outline-maroon mmc-ripple"><i class="fa-solid fa-list me-1"></i> View all</a>
-        </div>
-        <div class="table-responsive">
-          <table class="table mb-0">
-            <thead>
-              <tr>
-                <th>Student</th>
-                <th>Course</th>
-                <th>Registration Type</th>
-                <th>Payment</th>
-                <th>Room</th>
-                <th>Date</th>
-                <th class="text-end">Action</th>
-              </tr>
-            </thead>
-            <tbody id="dashboardApplicationsBody">
-              <tr><td colspan="7" class="text-center text-secondary py-4"><div class="mmc-skeleton mx-auto mb-2" style="height:14px;width:180px;"></div>Loading applications...</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
     </main>
   </div>
 </div>
@@ -580,7 +556,7 @@
     var occupiedRooms = dashboardRooms.filter(function(room){ return number(room.occupied_beds || room.occupied || 0) > 0; }).length;
     var vacantRooms = dashboardRooms.filter(function(room){ return number(room.available_beds || Math.max(number(room.bed_capacity || room.total_beds || 0) - number(room.occupied_beds || room.occupied || 0), 0)) > 0; }).length;
     setCounter('[data-stat="total"]', dashboardMetrics ? number(dashboardMetrics.total_applications) : dashboardApplications.length);
-    setCounter('[data-stat="approved"]', dashboardMetrics ? number(dashboardMetrics.shortlisted_students || dashboardMetrics.verified_students) : number(statusCounts.Approved) + number(statusCounts.Selected) + number(statusCounts.Shortlisted));
+    setCounter('[data-stat="approved"]', dashboardMetrics ? number(dashboardMetrics.shortlisted_students) : number(statusCounts.Selected) + number(statusCounts.Shortlisted));
     setCounter('[data-stat="pending"]', dashboardMetrics ? number(dashboardMetrics.pending_applications) : number(statusCounts.Pending) + number(statusCounts.Submitted) + number(statusCounts.ApplicationSubmitted));
     setCounter('[data-stat="rejected"]', number(statusCounts.Rejected));
     setCounter('[data-stat="revenue"]', totalRevenue, '');
@@ -589,6 +565,7 @@
   }
   function renderRecentApplications(){
     var body = document.getElementById('dashboardApplicationsBody');
+    if(!body) return;
     if(!dashboardApplications.length){
       body.innerHTML = '<tr><td colspan="7" class="text-center text-secondary py-4">No applications submitted yet.</td></tr>';
       return;
@@ -642,7 +619,6 @@
     });
   }
   function hydrateDashboard(){
-    renderRecentApplications();
     refreshStats();
     refreshCharts();
   }
