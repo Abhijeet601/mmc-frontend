@@ -51,13 +51,18 @@
 <script src="../js/api.js"></script>
 <script>
   function setDateValue(id, value){ document.getElementById(id).value = value || ''; }
+  function formatDate(value){
+    if(!value) return 'not set';
+    var date = new Date(value + 'T00:00:00');
+    return Number.isNaN(date.getTime()) ? value : date.toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' });
+  }
   function loadSettings(){
-    return mmcApi('/settings/application').then(function(settings){
+    return mmcApi('/api/settings/application').then(function(settings){
       setDateValue('admissionStartDate', settings.admission_start_date);
       setDateValue('admissionEndDate', settings.admission_end_date);
       setDateValue('paymentStartDate', settings.payment_start_date);
       setDateValue('paymentEndDate', settings.payment_end_date);
-      document.getElementById('settingsStatus').textContent = 'Admission: ' + settings.admission_state + ' · Payment: ' + settings.payment_state;
+      document.getElementById('settingsStatus').textContent = 'Admission closes: ' + formatDate(settings.admission_end_date) + ' · Admission: ' + settings.admission_state + ' · Payment: ' + settings.payment_state;
     }).catch(function(error){
       document.getElementById('settingsStatus').textContent = 'Unable to load settings.';
       mmcToast('Settings not loaded', error.message, 'danger');
@@ -69,7 +74,7 @@
     var original = button.innerHTML;
     button.disabled = true;
     button.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Saving...';
-    mmcApi('/settings/application', {
+    mmcApi('/api/settings/application', {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

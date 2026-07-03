@@ -193,6 +193,32 @@ function mmcApplyAdminPermissions(scope){
   document.documentElement.dataset.adminRole = 'admin';
 }
 
+function mmcFormatShortDate(value){
+  if(!value) return '';
+  var date = new Date(value + 'T00:00:00');
+  if(Number.isNaN(date.getTime())) return '';
+  return date.toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' }).replace(/ /g, ' ');
+}
+
+function mmcUpdateAdmissionWindowCard(){
+  if(!location.pathname.toLowerCase().includes('/admin/')) return;
+  if(typeof mmcApi !== 'function') return;
+  var cards = document.querySelectorAll('.mmc-sidebar-foot .mmc-help-card');
+  if(!cards.length) return;
+  mmcApi('/settings/application').then(function(settings){
+    var closeDate = mmcFormatShortDate(settings && settings.admission_end_date);
+    var state = settings && settings.admission_state ? String(settings.admission_state).replace(/_/g, ' ') : '';
+    var message = closeDate ? 'Admission window closes ' + closeDate : 'Admission window date not set';
+    if(state === 'closed') message = closeDate ? 'Admission window closed ' + closeDate : 'Admission window closed';
+    cards.forEach(function(card){
+      card.innerHTML =
+        '<i class="fa-solid fa-circle-info mb-2 text-brass"></i>' +
+        '<div class="fw-600 text-white mb-1" style="font-size:12.5px;">Session 2026-27</div>' +
+        message;
+    });
+  }).catch(function(){});
+}
+
 /* ---------------------------------------------------------------
    Dropzone — usage: mmcInitDropzone('#docDropzone', '#docInput', '#docChipList')
 --------------------------------------------------------------- */
@@ -370,6 +396,7 @@ document.addEventListener('DOMContentLoaded', function(){
   mmcInitReveal();
   mmcInitPasswordToggles();
   mmcApplyAdminPermissions(document);
+  mmcUpdateAdmissionWindowCard();
 
   if(location.pathname.toLowerCase().includes('/admin/')){
     new MutationObserver(function(records){
