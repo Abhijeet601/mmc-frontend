@@ -103,7 +103,28 @@ function mmcReceiptUrl(receipt) {
 
 function mmcCurrentStudent() {
   try {
-    return JSON.parse(sessionStorage.getItem('mmc_student_user') || 'null');
+    var student = JSON.parse(sessionStorage.getItem('mmc_student_user') || 'null');
+    if(!student) return null;
+    var user = student.user || {};
+    if(!student.id && (student.student_id || user.id)){
+      student.id = Number(student.student_id || user.id);
+    }
+    if(!student.student_id && student.id){
+      student.student_id = student.id;
+    }
+    if(!student.name && (student.student_name || user.name || user.full_name)){
+      student.name = student.student_name || user.name || user.full_name;
+    }
+    if(!student.email && user.email){
+      student.email = user.email;
+    }
+    if(!student.mobile && (user.mobile || user.mobile_number)){
+      student.mobile = user.mobile || user.mobile_number;
+    }
+    if(!student.student_code && (user.student_code || student.application_number)){
+      student.student_code = user.student_code || student.application_number;
+    }
+    return student;
   } catch (err) {
     return null;
   }
