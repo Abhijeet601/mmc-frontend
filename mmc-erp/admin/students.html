@@ -81,7 +81,8 @@
             <div class="col-md-3"><label class="form-label">Session</label><select class="form-select"><option>2026 - 2027</option><option>2025 - 2026</option></select></div>
             <div class="col-md-3"><label class="form-label">Status</label><select class="form-select"><option>All Status</option><option>Selected</option><option>Waitlisted</option><option>Pending</option><option>Rejected</option></select></div>
             <div class="col-md-3"><label class="form-label">Registration Type</label><select class="form-select" id="registrationTypeFilter"><option value="">All Registrations</option><option value="new">New Registration</option><option value="existing">Existing / Renewal</option></select></div>
-            <div class="col-md-3"><label class="form-label">Payment Status</label><select class="form-select" id="paymentStatusFilter"><option value="">All Payment Statuses</option><option value="paid">Paid</option><option value="pending">Pending</option><option value="failed">Failed</option><option value="partially_paid">Partially Paid</option><option value="refunded">Refunded</option></select></div>
+            <div class="col-md-3"><label class="form-label">Registration Fee</label><select class="form-select" id="registrationPaymentStatusFilter"><option value="">All Registration Statuses</option><option value="paid">Paid</option><option value="pending">Pending</option><option value="failed">Failed</option><option value="refunded">Refunded</option></select></div>
+            <div class="col-md-3"><label class="form-label">Hostel Fee</label><select class="form-select" id="hostelPaymentStatusFilter"><option value="">All Hostel Fee Statuses</option><option value="paid">Paid</option><option value="pending">Pending</option><option value="failed">Failed</option><option value="refunded">Refunded</option><option value="not_applicable">N/A</option></select></div>
             <div class="col-md-3"><label class="form-label">Applied Category</label><select class="form-select"><option>Any</option><option value="UR">UR - Unreserved</option><option value="EWS">EWS - Economically Weaker Section</option><option value="BC">BC - Backward Class</option><option value="EBC">EBC - Extremely Backward Class</option><option value="SC">SC - Scheduled Caste</option><option value="ST">ST - Scheduled Tribe</option></select></div>
             <div class="col-md-3"><label class="form-label">Allotted Category</label><select class="form-select"><option>Any</option><option value="UR">UR - Unreserved</option><option value="EWS">EWS - Economically Weaker Section</option><option value="BC">BC - Backward Class</option><option value="EBC">EBC - Extremely Backward Class</option><option value="SC">SC - Scheduled Caste</option><option value="ST">ST - Scheduled Tribe</option></select></div>
             <div class="col-md-3"><label class="form-label">Date Applied</label><input type="date" class="form-control"></div>
@@ -99,7 +100,7 @@
             <thead>
               <tr>
                 <th>Application No</th><th>Admission ID</th><th>Student Name</th><th>Mobile</th><th>Course</th><th>%</th>
-                <th>Applied Cat.</th><th>Allotted Cat.</th><th>Status</th><th>Payment</th><th>Hostel</th><th>Room</th><th>Actions</th>
+                <th>Applied Cat.</th><th>Allotted Cat.</th><th>Status</th><th>Registration Fee</th><th>Hostel Fee</th><th>Hostel</th><th>Room</th><th>Actions</th>
               </tr>
             </thead>
             <tbody id="studentsBody"></tbody>
@@ -310,7 +311,8 @@
     return [
       ['Application No', a.appNo], ['Admission ID', a.admissionId], ['Student Name', a.name], ['Mobile', a.mobile],
       ['Registration Type', a.registrationTypeLabel || '-'],
-      ['Payment Status', paymentStatusLabel(a.paymentStatus)],
+      ['Registration Fee', paymentStatusLabel(a.registrationPaymentStatus)],
+      ['Hostel Fee', paymentStatusLabel(a.hostelPaymentStatus)],
       ['Course', a.course], ['Percentage', a.percentage ? a.percentage + '%' : '-'], ['Applied Category', a.appliedCat], ['Allotted Category', a.allottedCat],
       ['Status', a.status], ['Hostel Name', a.hostel || '-'], ['Room Number', a.room || '-']
     ].map(function(r){
@@ -381,6 +383,12 @@
   function normalizePaymentStatus(app){
     var raw = String((app && (app.payment_status || app.paymentStatus || app.application_payment_status)) || '').toLowerCase();
     var hostelRaw = String((app && (app.hostel_status || app.hostelStatus)) || '').toLowerCase();
+    if(!raw && app && Array.isArray(app.payment_history)){
+      var states = app.payment_history.map(function(payment){ return String(payment.status || '').toLowerCase(); });
+      if(states.some(function(state){ return ['paid','success','successful','completed','captured'].indexOf(state) !== -1; })) raw = 'paid';
+      else if(states.some(function(state){ return ['failed','failure','declined','cancelled','canceled','aborted'].indexOf(state) !== -1; })) raw = 'failed';
+      else if(states.some(function(state){ return ['refunded','refund'].indexOf(state) !== -1; })) raw = 'refunded';
+    }
     if(raw === 'paid' || raw === 'success' || raw === 'completed') return 'paid';
     if(raw === 'partially_paid') return 'partially_paid';
     if(raw === 'refunded') return 'refunded';
@@ -389,13 +397,67 @@
     return 'pending';
   }
 
+  function normalizePaymentValue(value){
+    var raw = String(value == null ? '' : value).toLowerCase();
+    if(raw === 'paid' || raw === 'success' || raw === 'successful' || raw === 'completed' || raw === 'captured') return 'paid';
+    if(raw === 'failed' || raw === 'failure' || raw === 'declined' || raw === 'cancelled' || raw === 'canceled' || raw === 'aborted' || raw === 'payment_failed') return 'failed';
+    if(raw === 'refunded' || raw === 'refund') return 'refunded';
+    if(raw === 'not_applicable' || raw === 'not applicable' || raw === 'na' || raw === 'n/a') return 'not_applicable';
+    return 'pending';
+  }
+
   function paymentStatusLabel(status){
-    return ({ paid:'Paid', pending:'Pending', failed:'Failed', partially_paid:'Partially Paid', refunded:'Refunded' })[status] || 'Pending';
+    return ({ paid:'Paid', pending:'Pending', failed:'Failed', partially_paid:'Partially Paid', refunded:'Refunded', not_applicable:'N/A' })[status] || 'Pending';
   }
 
   function paymentStatusPill(status){
-    var tone = ({ paid:'success', pending:'warning', failed:'danger', partially_paid:'info', refunded:'muted' })[status] || 'warning';
+    var tone = ({ paid:'success', pending:'warning', failed:'danger', partially_paid:'info', refunded:'muted', not_applicable:'muted' })[status] || 'warning';
     return '<span class="mmc-pill ' + tone + '"><i class="fa-solid fa-circle"></i> ' + paymentStatusLabel(status) + '</span>';
+  }
+
+  function validateAccountPassword(password){
+    if(!password || password.length < 8) return 'Password must be at least 8 characters.';
+    if(!/[A-Z]/.test(password)) return 'Password must include an uppercase letter.';
+    if(!/[a-z]/.test(password)) return 'Password must include a lowercase letter.';
+    if(!/[0-9]/.test(password)) return 'Password must include a number.';
+    if(!/[^A-Za-z0-9]/.test(password)) return 'Password must include a special character.';
+    return '';
+  }
+
+  function mapAdminStudent(student){
+    var status = student.account_active === false ? 'Inactive' : normalizeStatus(student.shortlist_status || student.verification_status || student.form_status);
+    var summary = student.summary || {};
+    var documents = documentMapFromSummary(summary);
+    return {
+      id: student.id,
+      appNo: student.application_number,
+      recordKey: 'student-' + student.id,
+      admissionId: summary.admission_application_id || '-',
+      name: student.name || 'Student #' + student.id,
+      studentId: student.id,
+      studentCode: student.application_number || '',
+      email: student.email || '',
+      mobile: student.mobile_number || '-',
+      course: student.course_name || '-',
+      session: student.session || '',
+      percentage: summary.aggregate_percentage,
+      appliedCat: student.category || '-',
+      allottedCat: student.allotted_category || '-',
+      status: status,
+      registrationType: normalizeRegistrationType(summary.application_type),
+      registrationTypeLabel: registrationTypeLabel(summary.application_type),
+      paymentStatus: normalizePaymentStatus(student),
+      registrationPaymentStatus: normalizePaymentValue(student.registration_payment_status || student.application_payment_status),
+      hostelPaymentStatus: student.hostel_payment_status || student.hostel_status ? normalizePaymentValue(student.hostel_payment_status || student.hostel_status) : 'not_applicable',
+      hostel: student.allocated_hostel || student.preferred_hostel || '-',
+      room: student.room_number || '-',
+      accountActive: student.account_active !== false,
+      forcePasswordChange: Boolean(student.force_password_change),
+      aadhaarNumber: student.aadhaar_number || summary.aadhaar_number || '',
+      documents: documents,
+      studentRaw: student,
+      raw: student
+    };
   }
 
   function applicationRow(app, index){
@@ -410,7 +472,8 @@
       '<span class="mmc-pill muted">' + escapeHtml(app.appliedCat || '-') + '</span>',
       '<span class="mmc-pill muted">' + escapeHtml(app.allottedCat || '-') + '</span>',
       '<span class="mmc-pill ' + (statusPill[app.status] || 'muted') + '"><i class="fa-solid fa-circle"></i> ' + escapeHtml(app.status) + '</span>',
-      paymentStatusPill(app.paymentStatus),
+      paymentStatusPill(app.registrationPaymentStatus),
+      paymentStatusPill(app.hostelPaymentStatus),
       escapeHtml(app.hostel || '-'),
       escapeHtml(app.room || '-'),
       '<button class="btn btn-sm btn-ghost" onclick="mmcViewStudent(' + index + ')"><i class="fa-solid fa-eye"></i></button>' +
@@ -422,11 +485,13 @@
 
   function renderTable(){
     var selectedRegistrationType = document.getElementById('registrationTypeFilter').value;
-    var selectedPaymentStatus = document.getElementById('paymentStatusFilter').value;
+    var selectedRegistrationPaymentStatus = document.getElementById('registrationPaymentStatusFilter').value;
+    var selectedHostelPaymentStatus = document.getElementById('hostelPaymentStatusFilter').value;
     table.clear();
     applications.forEach(function(app, index){
       if(selectedRegistrationType && app.registrationType !== selectedRegistrationType) return;
-      if(selectedPaymentStatus && app.paymentStatus !== selectedPaymentStatus) return;
+      if(selectedRegistrationPaymentStatus && app.registrationPaymentStatus !== selectedRegistrationPaymentStatus) return;
+      if(selectedHostelPaymentStatus && app.hostelPaymentStatus !== selectedHostelPaymentStatus) return;
       var row = table.row.add(applicationRow(app, index)).node();
       row.setAttribute('data-record-key', app.recordKey);
     });
@@ -435,50 +500,18 @@
 
   function loadApplications(){
     table.clear().draw();
-    document.getElementById('studentsBody').innerHTML = '<tr><td colspan="13" class="text-center text-secondary py-3">Loading students and applications...</td></tr>';
+    document.getElementById('studentsBody').innerHTML = '<tr><td colspan="14" class="text-center text-secondary py-3">Loading students and applications...</td></tr>';
     mmcApi('/api/admin/students?limit=500', { headers: adminAuthHeaders() })
       .then(function(result){
         students = result.items || [];
         hostels = [];
         rooms = [];
-        applications = students.map(function(student){
-          var status = student.account_active === false ? 'Inactive' : normalizeStatus(student.shortlist_status || student.verification_status || student.form_status);
-          var summary = student.summary || {};
-          var documents = documentMapFromSummary(summary);
-          return {
-            id: student.id,
-            appNo: student.application_number,
-            recordKey: 'student-' + student.id,
-            admissionId: summary.admission_application_id || '-',
-            name: student.name || 'Student #' + student.id,
-            studentId: student.id,
-            studentCode: student.application_number || '',
-            email: student.email || '',
-            mobile: student.mobile_number || '-',
-            course: student.course_name || '-',
-            session: student.session || '',
-            percentage: summary.aggregate_percentage,
-            appliedCat: student.category || '-',
-            allottedCat: student.allotted_category || '-',
-            status: status,
-            registrationType: normalizeRegistrationType(summary.application_type),
-            registrationTypeLabel: registrationTypeLabel(summary.application_type),
-            paymentStatus: normalizePaymentStatus(student),
-            hostel: student.allocated_hostel || student.preferred_hostel || '-',
-            room: student.room_number || '-',
-            accountActive: student.account_active !== false,
-            forcePasswordChange: Boolean(student.force_password_change),
-            aadhaarNumber: student.aadhaar_number || summary.aadhaar_number || '',
-            documents: documents,
-            studentRaw: student,
-            raw: student
-          };
-        });
+        applications = students.map(mapAdminStudent);
         renderTable();
       })
       .catch(function(error){
         table.clear().draw();
-        document.getElementById('studentsBody').innerHTML = '<tr><td colspan="13" class="text-center text-secondary py-3">Unable to load applications.</td></tr>';
+        document.getElementById('studentsBody').innerHTML = '<tr><td colspan="14" class="text-center text-secondary py-3">Unable to load applications.</td></tr>';
         mmcToast('Applications not loaded', error.message, 'warning');
       });
   }
@@ -563,7 +596,8 @@
 
   document.getElementById('resetStudentFilters').addEventListener('click', function(){
     document.getElementById('registrationTypeFilter').value = '';
-    document.getElementById('paymentStatusFilter').value = '';
+    document.getElementById('registrationPaymentStatusFilter').value = '';
+    document.getElementById('hostelPaymentStatusFilter').value = '';
     renderTable();
     mmcToast('Filters Reset', 'Showing all student records.', 'info');
   });
@@ -600,7 +634,7 @@
     document.getElementById('accountSession').value = a.session || '';
     document.getElementById('accountPassword').value = '';
     document.getElementById('passwordResetMode').value = '';
-    document.getElementById('forcePasswordChange').checked = a.forcePasswordChange || true;
+    document.getElementById('forcePasswordChange').checked = Boolean(a.forcePasswordChange);
     document.getElementById('sendPasswordEmail').checked = false;
     document.getElementById('temporaryPasswordBox').classList.add('d-none');
     document.getElementById('temporaryPasswordBox').textContent = '';
@@ -621,6 +655,23 @@
     var originalContent = button.innerHTML;
     var resetMode = document.getElementById('passwordResetMode').value;
     var password = document.getElementById('accountPassword').value;
+    var modalElement = document.getElementById('studentAccountModal');
+    var invalidField = Array.from(modalElement.querySelectorAll('input[required], select[required]')).find(function(field){
+      return !field.checkValidity();
+    });
+    if(invalidField){
+      invalidField.reportValidity();
+      return;
+    }
+    if(resetMode === 'custom'){
+      var passwordError = validateAccountPassword(password);
+      if(passwordError){
+        document.getElementById('accountPassword').setCustomValidity(passwordError);
+        document.getElementById('accountPassword').reportValidity();
+        document.getElementById('accountPassword').setCustomValidity('');
+        return;
+      }
+    }
     var payload = {
       application_number: document.getElementById('accountStudentCode').value.trim(),
       name: document.getElementById('accountName').value.trim(),
@@ -635,12 +686,12 @@
     button.disabled = true;
     button.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Saving...';
     mmcApi('/api/admin/students/' + studentId + '/account', {
-      method:'PATCH',
+      method:'POST',
       headers:adminAuthHeaders(),
       body:JSON.stringify(payload)
     })
-      .then(function(){
-        if(!resetMode) return null;
+      .then(function(accountResult){
+        if(!resetMode) return { account: accountResult, reset: null };
         if(resetMode === 'custom' && !password){
           throw new Error('Enter a custom password or choose generated temporary password.');
         }
@@ -653,9 +704,21 @@
             force_password_change: document.getElementById('forcePasswordChange').checked,
             send_email: document.getElementById('sendPasswordEmail').checked
           })
+        }).then(function(resetResult){
+          return { account: accountResult, reset: resetResult };
         });
       })
-      .then(function(resetResult){
+      .then(function(result){
+        var resetResult = result && result.reset ? result.reset : null;
+        var updatedStudent = resetResult && resetResult.student ? resetResult.student : result && result.account && result.account.student ? result.account.student : null;
+        if(updatedStudent){
+          var updatedApp = mapAdminStudent(updatedStudent);
+          var index = applications.findIndex(function(item){ return String(item.studentId) === String(studentId); });
+          if(index >= 0) applications[index] = updatedApp;
+          var studentIndex = students.findIndex(function(item){ return String(item.id) === String(studentId); });
+          if(studentIndex >= 0) students[studentIndex] = updatedStudent;
+          renderTable();
+        }
         if(resetResult && resetResult.temporary_password){
           var box = document.getElementById('temporaryPasswordBox');
           box.textContent = 'Temporary password: ' + resetResult.temporary_password;
@@ -667,7 +730,6 @@
         var message = resetMode ? 'Account updated and password reset successfully.' : 'Account Updated Successfully';
         if(resetResult && resetResult.email_status) message += ' Email status: ' + resetResult.email_status + '.';
         mmcToast('Account Updated Successfully', message, 'success');
-        return loadApplications();
       })
       .catch(function(error){
         mmcToast('Student account not saved', error.message || 'Unable to update student account.', 'danger');
