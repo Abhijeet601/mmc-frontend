@@ -255,8 +255,9 @@
       mmcToast('Document unavailable', 'This document was not uploaded for the selected student.', 'warning');
       return;
     }
-    var openData = function(documentData){
+    var openData = function(documentData, targetWindow){
       if(!documentData){
+        if(targetWindow && !targetWindow.closed) targetWindow.close();
         mmcToast('Document unavailable', 'This document was not uploaded for the selected student.', 'warning');
         return;
       }
@@ -265,27 +266,92 @@
           .then(function(response){ return response.blob(); })
           .then(function(blob){
             var url = URL.createObjectURL(blob);
-            var opened = window.open(url, '_blank', 'noopener');
-            if(!opened) mmcToast('Popup blocked', 'Please allow popups to view this document.', 'warning');
+            if(targetWindow && !targetWindow.closed){
+              targetWindow.location.href = url;
+            } else {
+              var opened = window.open(url, '_blank', 'noopener');
+              if(!opened) mmcToast('Popup blocked', 'Please allow popups to view this document.', 'warning');
+            }
             setTimeout(function(){ URL.revokeObjectURL(url); }, 60000);
           })
-          .catch(function(){ mmcToast('Document unavailable', 'Unable to open the saved document.', 'danger'); });
+          .catch(function(){
+            if(targetWindow && !targetWindow.closed) targetWindow.close();
+            mmcToast('Document unavailable', 'Unable to open the saved document.', 'danger');
+          });
         return;
       }
-      window.open(documentData, '_blank', 'noopener');
+      if(targetWindow && !targetWindow.closed){
+        targetWindow.location.href = documentData;
+      } else {
+        var opened = window.open(documentData, '_blank', 'noopener');
+        if(!opened) mmcToast('Popup blocked', 'Please allow popups to view this document.', 'warning');
+      }
     };
     if(data === true){
+      var pendingWindow = window.open('', '_blank');
+      if(pendingWindow){
+        pendingWindow.document.write('<title>Loading document...</title><div style="font-family:sans-serif;padding:24px;">Loading document...</div>');
+      }
       mmcApi('/api/admin/students/' + app.studentId + '/documents', { headers: adminAuthHeaders() })
         .then(function(result){
           app.documents = result.documents || {};
-          openData(app.documents[key]);
+          openData(app.documents[key], pendingWindow);
         })
         .catch(function(error){
+          if(pendingWindow && !pendingWindow.closed) pendingWindow.close();
           mmcToast('Document unavailable', error.message || 'Unable to load this document.', 'danger');
         });
       return;
     }
     openData(data);
+  }
+
+  function studentDetailsHtml(a){
+    return [
+      ['Application No', a.appNo], ['Admission ID', a.admissionId], ['Student Name', a.name], ['Mobile', a.mobile],
+      ['Registration Type', a.registrationTypeLabel || '-'],
+      ['Payment Status', paymentStatusLabel(a.paymentStatus)],
+      ['Course', a.course], ['Percentage', a.percentage ? a.percentage + '%' : '-'], ['Applied Category', a.appliedCat], ['Allotted Category', a.allottedCat],
+      ['Status', a.status], ['Hostel Name', a.hostel || '-'], ['Room Number', a.room || '-']
+    ].map(function(r){
+      return '<div class="col-md-6"><div class="mmc-kv"><span class="k">' + escapeHtml(r[0]) + '</span><span class="v">' + escapeHtml(r[1]) + '</span></div></div>';
+    }).join('');
+  }
+
+  function studentDocumentsHtml(index, loading){
+    var a = applications[index];
+    var hasAny = a && a.documents && studentDocumentLabels.some(function(item){ return Boolean(a.documents[item[0]]); });
+    var header = '<div class="col-12 mt-3"><h6 class="fw-700 mb-1" style="color:var(--mmc-navy);">Uploaded Documents</h6></div>';
+    if(loading && !hasAny){
+      return header + '<div class="col-12"><div class="mmc-kv"><span class="k">Status</span><span class="v"><span class="spinner-border spinner-border-sm me-1"></span>Loading documents...</span></div></div>';
+    }
+    return header + studentDocumentLabels.map(function(item){
+      var uploaded = Boolean(a && a.documents && a.documents[item[0]]);
+      var value = uploaded
+        ? '<button type="button" class="btn btn-sm btn-ghost" onclick="mmcOpenStudentDocument(' + index + ', \'' + item[0] + '\')"><i class="fa-solid fa-eye me-1"></i>View</button>'
+        : '<span class="text-secondary">Not uploaded</span>';
+      return '<div class="col-md-6"><div class="mmc-kv"><span class="k">' + escapeHtml(item[1]) + '</span><span class="v">' + value + '</span></div></div>';
+    }).join('');
+  }
+
+  function renderStudentViewModal(index, loading){
+    var a = applications[index];
+    if(!a) return;
+    document.getElementById('viewStudentBody').innerHTML = studentDetailsHtml(a) + studentDocumentsHtml(index, loading);
+  }
+
+  function mmcLoadStudentDocuments(index){
+    var a = applications[index];
+    if(!a || !a.studentId) return;
+    mmcApi('/api/admin/students/' + a.studentId + '/documents', { headers: adminAuthHeaders() })
+      .then(function(result){
+        a.documents = result.documents || {};
+        renderStudentViewModal(index, false);
+      })
+      .catch(function(error){
+        renderStudentViewModal(index, false);
+        mmcToast('Documents not loaded', error.message || 'Unable to load uploaded documents for this student.', 'warning');
+      });
   }
 
   function adminAuthHeaders(){
@@ -485,23 +551,9 @@
   function mmcViewStudent(i){
     var a = applications[i];
     if(!a) return;
-    var detailsHtml = [
-      ['Application No', a.appNo], ['Admission ID', a.admissionId], ['Student Name', a.name], ['Mobile', a.mobile],
-      ['Registration Type', a.registrationTypeLabel || '-'],
-      ['Payment Status', paymentStatusLabel(a.paymentStatus)],
-      ['Course', a.course], ['Percentage', a.percentage ? a.percentage + '%' : '-'], ['Applied Category', a.appliedCat], ['Allotted Category', a.allottedCat],
-      ['Status', a.status], ['Hostel Name', a.hostel || '-'], ['Room Number', a.room || '-']
-    ].map(function(r){ return '<div class="col-md-6"><div class="mmc-kv"><span class="k">' + escapeHtml(r[0]) + '</span><span class="v">' + escapeHtml(r[1]) + '</span></div></div>'; }).join('');
-    var documentsHtml = '<div class="col-12 mt-3"><h6 class="fw-700 mb-1" style="color:var(--mmc-navy);">Uploaded Documents</h6></div>' +
-      studentDocumentLabels.map(function(item){
-        var uploaded = Boolean(a.documents && a.documents[item[0]]);
-        var value = uploaded
-          ? '<button type="button" class="btn btn-sm btn-ghost" onclick="mmcOpenStudentDocument(' + i + ', \'' + item[0] + '\')"><i class="fa-solid fa-eye me-1"></i>View</button>'
-          : '<span class="text-secondary">Not uploaded</span>';
-        return '<div class="col-md-6"><div class="mmc-kv"><span class="k">' + escapeHtml(item[1]) + '</span><span class="v">' + value + '</span></div></div>';
-      }).join('');
-    document.getElementById('viewStudentBody').innerHTML = detailsHtml + documentsHtml;
+    renderStudentViewModal(i, true);
     new bootstrap.Modal(document.getElementById('viewStudentModal')).show();
+    mmcLoadStudentDocuments(i);
   }
 
   document.getElementById('applyStudentFilters').addEventListener('click', function(){
