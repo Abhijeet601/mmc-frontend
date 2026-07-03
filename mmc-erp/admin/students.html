@@ -149,7 +149,7 @@
 <div class="modal fade" id="studentAccountModal" tabindex="-1">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <div class="modal-header"><h6 class="mb-0 fw-700" style="color:var(--mmc-navy);">Manage Student ID</h6><button class="btn-close" data-bs-dismiss="modal"></button></div>
+      <div class="modal-header"><h6 class="mb-0 fw-700" style="color:var(--mmc-navy);">Manage Account</h6><button class="btn-close" data-bs-dismiss="modal"></button></div>
       <div class="modal-body">
         <input type="hidden" id="accountStudentId">
         <div class="row g-3">
@@ -157,9 +157,16 @@
           <div class="col-md-6"><label class="form-label">Mobile *</label><input type="tel" class="form-control" id="accountMobile" maxlength="10" required></div>
           <div class="col-12"><label class="form-label">Student Name *</label><input type="text" class="form-control" id="accountName" required></div>
           <div class="col-12"><label class="form-label">Email *</label><input type="email" class="form-control" id="accountEmail" required></div>
+          <div class="col-md-6"><label class="form-label">Aadhaar Number</label><input type="text" class="form-control" id="accountAadhaar" maxlength="12"></div>
+          <div class="col-md-6"><label class="form-label">Account Status</label><select class="form-select" id="accountStatus"><option value="true">Active</option><option value="false">Inactive</option></select></div>
           <div class="col-md-6"><label class="form-label">Course</label><input type="text" class="form-control" id="accountCourse"></div>
           <div class="col-md-6"><label class="form-label">Session</label><input type="text" class="form-control" id="accountSession"></div>
-          <div class="col-12"><label class="form-label">New Password</label><input type="password" class="form-control" id="accountPassword" minlength="8" placeholder="Leave blank to keep existing password"></div>
+          <div class="col-12"><hr class="my-1"></div>
+          <div class="col-md-6"><label class="form-label">Password Reset</label><select class="form-select" id="passwordResetMode"><option value="">Do not reset</option><option value="generate">Generate temporary password</option><option value="custom">Set custom password</option></select></div>
+          <div class="col-md-6"><label class="form-label">Custom Password</label><input type="password" class="form-control" id="accountPassword" minlength="8" placeholder="Only for custom reset"></div>
+          <div class="col-md-6"><div class="form-check mt-2"><input class="form-check-input" type="checkbox" id="forcePasswordChange" checked><label class="form-check-label fs-13" for="forcePasswordChange">Force change on next login</label></div></div>
+          <div class="col-md-6"><div class="form-check mt-2"><input class="form-check-input" type="checkbox" id="sendPasswordEmail"><label class="form-check-label fs-13" for="sendPasswordEmail">Send email notification</label></div></div>
+          <div class="col-12"><div class="alert alert-info py-2 mb-0 d-none" id="temporaryPasswordBox"></div></div>
         </div>
       </div>
       <div class="modal-footer"><button class="btn btn-ghost" data-bs-dismiss="modal">Cancel</button><button class="btn btn-maroon" id="saveStudentAccountBtn">Save Account</button></div>
@@ -284,7 +291,7 @@
       escapeHtml(app.room || '-'),
       '<button class="btn btn-sm btn-ghost" onclick="mmcViewStudent(' + index + ')"><i class="fa-solid fa-eye"></i></button>' +
       '<button class="btn btn-sm btn-ghost" onclick="mmcEditStudent(' + index + ')" title="' + (canEditApplication ? 'Edit application' : 'No application submitted') + '"><i class="fa-solid fa-pen"></i></button>' +
-      '<button class="btn btn-sm btn-ghost" onclick="mmcManageStudentAccount(' + index + ')" title="Manage student ID"><i class="fa-solid fa-id-card"></i></button>' +
+      '<button class="btn btn-sm btn-ghost" onclick="mmcManageStudentAccount(' + index + ')" title="Manage account"><i class="fa-solid fa-user-gear"></i></button>' +
       '<button class="btn btn-sm btn-ghost text-danger" onclick="mmcDeleteStudent(' + index + ')"><i class="fa-solid fa-trash"></i></button>'
     ];
   }
@@ -305,72 +312,41 @@
   function loadApplications(){
     table.clear().draw();
     document.getElementById('studentsBody').innerHTML = '<tr><td colspan="13" class="text-center text-secondary py-3">Loading students and applications...</td></tr>';
-    Promise.all([mmcApi('/applications'), mmcApi('/students?limit=100000'), mmcApi('/hostels'), mmcApi('/rooms')])
-      .then(function(results){
-        var rawApplications = results[0] || [];
-        students = (results[1] || []).filter(function(student){ return student.is_active !== false; });
-        hostels = results[2] || [];
-        rooms = results[3] || [];
-        var studentMap = byIdMap(students);
-        var hostelMap = byIdMap(hostels);
-        var roomMap = byIdMap(rooms);
-        var applicationStudentIds = {};
-        applications = rawApplications.map(function(app){
-          var student = studentMap[app.student_id] || {};
-          var hostel = app.hostel_id ? hostelMap[app.hostel_id] : null;
-          var room = app.room_id ? roomMap[app.room_id] : null;
-          applicationStudentIds[app.student_id] = true;
+    mmcApi('/api/admin/students?limit=500', { headers: adminAuthHeaders() })
+      .then(function(result){
+        students = result.items || [];
+        hostels = [];
+        rooms = [];
+        applications = students.map(function(student){
+          var status = student.account_active === false ? 'Inactive' : normalizeStatus(student.shortlist_status || student.verification_status || student.form_status);
+          var summary = student.summary || {};
           return {
-            id: app.id,
-            appNo: app.application_no,
-            recordKey: 'application-' + app.id,
-            admissionId: app.admission_id,
-            name: student.name || 'Student #' + app.student_id,
-            studentId: student.id || app.student_id,
-            studentCode: student.student_code || '',
-            email: student.email || '',
-            mobile: student.mobile || '-',
-            course: app.course || student.course || '-',
-            session: student.session || app.session || '',
-            percentage: app.percentage,
-            appliedCat: app.applied_category,
-            allottedCat: app.allotted_category || '-',
-            status: normalizeStatus(app.status),
-            registrationType: normalizeRegistrationType(app.application_type),
-            registrationTypeLabel: registrationTypeLabel(app.application_type),
-            paymentStatus: normalizePaymentStatus(app),
-            hostel: hostel ? hostel.name : '-',
-            room: room ? room.room_number : '-',
-            studentRaw: student,
-            raw: app
-          };
-        });
-        students.forEach(function(student){
-          if(applicationStudentIds[student.id]) return;
-          applications.push({
-            id: null,
-            appNo: 'Not submitted',
+            id: student.id,
+            appNo: student.application_number,
             recordKey: 'student-' + student.id,
-            admissionId: '-',
+            admissionId: summary.admission_application_id || '-',
             name: student.name || 'Student #' + student.id,
             studentId: student.id,
-            studentCode: student.student_code || '',
+            studentCode: student.application_number || '',
             email: student.email || '',
-            mobile: student.mobile || '-',
-            course: student.course || '-',
+            mobile: student.mobile_number || '-',
+            course: student.course_name || '-',
             session: student.session || '',
-            percentage: null,
-            appliedCat: '-',
-            allottedCat: '-',
-            status: 'ID Created',
-            registrationType: '',
-            registrationTypeLabel: '-',
-            paymentStatus: 'pending',
-            hostel: '-',
-            room: '-',
+            percentage: summary.aggregate_percentage,
+            appliedCat: student.category || '-',
+            allottedCat: student.allotted_category || '-',
+            status: status,
+            registrationType: normalizeRegistrationType(summary.application_type),
+            registrationTypeLabel: registrationTypeLabel(summary.application_type),
+            paymentStatus: normalizePaymentStatus(student),
+            hostel: student.allocated_hostel || student.preferred_hostel || '-',
+            room: student.room_number || '-',
+            accountActive: student.account_active !== false,
+            forcePasswordChange: Boolean(student.force_password_change),
+            aadhaarNumber: student.aadhaar_number || summary.aadhaar_number || '',
             studentRaw: student,
-            raw: {}
-          });
+            raw: student
+          };
         });
         renderTable();
       })
@@ -497,14 +473,24 @@
     document.getElementById('accountName').value = a.name === 'Student #' + a.studentId ? '' : a.name;
     document.getElementById('accountEmail').value = a.email || '';
     document.getElementById('accountMobile').value = a.mobile === '-' ? '' : a.mobile;
-    document.getElementById('accountCourse').value = a.studentRaw.course || a.course || '';
+    document.getElementById('accountAadhaar').value = a.aadhaarNumber || '';
+    document.getElementById('accountStatus').value = a.accountActive ? 'true' : 'false';
+    document.getElementById('accountCourse').value = a.course === '-' ? '' : a.course || '';
     document.getElementById('accountSession').value = a.session || '';
     document.getElementById('accountPassword').value = '';
+    document.getElementById('passwordResetMode').value = '';
+    document.getElementById('forcePasswordChange').checked = a.forcePasswordChange || true;
+    document.getElementById('sendPasswordEmail').checked = false;
+    document.getElementById('temporaryPasswordBox').classList.add('d-none');
+    document.getElementById('temporaryPasswordBox').textContent = '';
     new bootstrap.Modal(document.getElementById('studentAccountModal')).show();
   }
 
   document.getElementById('accountMobile').addEventListener('input', function(){
     this.value = this.value.replace(/\D/g, '').slice(0, 10);
+  });
+  document.getElementById('accountAadhaar').addEventListener('input', function(){
+    this.value = this.value.replace(/\D/g, '').slice(0, 12);
   });
 
   document.getElementById('saveStudentAccountBtn').addEventListener('click', function(){
@@ -512,34 +498,54 @@
     if(!studentId) return;
     var button = this;
     var originalContent = button.innerHTML;
+    var resetMode = document.getElementById('passwordResetMode').value;
     var password = document.getElementById('accountPassword').value;
     var payload = {
-      student_code: document.getElementById('accountStudentCode').value.trim(),
+      application_number: document.getElementById('accountStudentCode').value.trim(),
       name: document.getElementById('accountName').value.trim(),
       email: document.getElementById('accountEmail').value.trim(),
-      mobile: document.getElementById('accountMobile').value.trim(),
-      course: document.getElementById('accountCourse').value.trim() || null,
-      session: document.getElementById('accountSession').value.trim() || null
+      mobile_number: document.getElementById('accountMobile').value.trim(),
+      aadhaar_number: document.getElementById('accountAadhaar').value.trim() || null,
+      course_name: document.getElementById('accountCourse').value.trim() || null,
+      session: document.getElementById('accountSession').value.trim() || null,
+      is_active: document.getElementById('accountStatus').value === 'true',
+      force_password_change: document.getElementById('forcePasswordChange').checked
     };
     button.disabled = true;
     button.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Saving...';
-    mmcApi('/students/' + studentId, {
+    mmcApi('/api/admin/students/' + studentId + '/account', {
       method:'PATCH',
-      headers:{ 'Content-Type':'application/json' },
+      headers:adminAuthHeaders(),
       body:JSON.stringify(payload)
     })
       .then(function(){
-        if(!password) return null;
-        return mmcApi('/students/' + studentId + '/password', {
-          method:'PATCH',
-          headers:{ 'Content-Type':'application/json' },
-          body:JSON.stringify({ password: password })
+        if(!resetMode) return null;
+        if(resetMode === 'custom' && !password){
+          throw new Error('Enter a custom password or choose generated temporary password.');
+        }
+        return mmcApi('/api/admin/students/' + studentId + '/reset-password', {
+          method:'POST',
+          headers:adminAuthHeaders(),
+          body:JSON.stringify({
+            password: resetMode === 'custom' ? password : null,
+            generate_temporary: resetMode === 'generate',
+            force_password_change: document.getElementById('forcePasswordChange').checked,
+            send_email: document.getElementById('sendPasswordEmail').checked
+          })
         });
       })
-      .then(function(){
-        var modal = bootstrap.Modal.getInstance(document.getElementById('studentAccountModal'));
-        if(modal) modal.hide();
-        mmcToast('Student account saved', password ? 'Student ID details and password have been updated.' : 'Student ID details have been updated.', 'success');
+      .then(function(resetResult){
+        if(resetResult && resetResult.temporary_password){
+          var box = document.getElementById('temporaryPasswordBox');
+          box.textContent = 'Temporary password: ' + resetResult.temporary_password;
+          box.classList.remove('d-none');
+        } else {
+          var modal = bootstrap.Modal.getInstance(document.getElementById('studentAccountModal'));
+          if(modal) modal.hide();
+        }
+        var message = resetMode ? 'Account updated and password reset successfully.' : 'Account Updated Successfully';
+        if(resetResult && resetResult.email_status) message += ' Email status: ' + resetResult.email_status + '.';
+        mmcToast('Account Updated Successfully', message, 'success');
         return loadApplications();
       })
       .catch(function(error){

@@ -113,22 +113,29 @@
     var original = btn.innerHTML;
     btn.disabled = true;
     btn.innerHTML = '<span class="mmc-spinner sm" style="border-color:rgba(255,255,255,.35);border-top-color:#fff;display:inline-block;vertical-align:middle;margin-right:8px;"></span> Signing in...';
-    mmcApi('/auth/login', {
+    mmcApi('/api/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        identifier: document.getElementById('loginIdentifier').value.trim(),
+        email: document.getElementById('loginIdentifier').value.trim(),
         password: document.getElementById('loginPwd').value
       })
     })
       .then(function(data){
-        if(data.role === 'admin'){
-          sessionStorage.setItem('mmc_admin_user', JSON.stringify(data.user));
-          window.location.href = '../admin/dashboard.html';
-        } else {
-          sessionStorage.setItem('mmc_student_user', JSON.stringify(data.user));
-          window.location.href = 'dashboard.html';
+        sessionStorage.setItem('mmc_student_user', JSON.stringify({
+          access_token: data.access_token,
+          token_type: data.token_type || 'bearer',
+          application_number: data.application_number,
+          student_id: data.student_id,
+          student_name: data.student_name,
+          force_password_change: data.force_password_change
+        }));
+        if(data.force_password_change){
+          mmcToast('Password change required', 'Please reset your password before continuing.', 'warning');
+          setTimeout(function(){ window.location.href = 'forgot-password.html'; }, 900);
+          return;
         }
+        window.location.href = 'dashboard.html';
       })
       .catch(function(err){
         mmcToast('Login failed', err.message, 'danger');
