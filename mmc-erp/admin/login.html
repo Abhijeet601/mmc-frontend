@@ -79,7 +79,11 @@
     })
       .then(function(data){
         sessionStorage.setItem('mmc_admin_user', JSON.stringify({
+          id: data.user && data.user.id,
           username: data.username,
+          email: data.email || (data.user && data.user.email),
+          full_name: data.full_name || (data.user && data.user.full_name),
+          role: data.role || (data.user && data.user.role) || 'admin',
           access_token: data.access_token,
           token_type: data.token_type || 'bearer'
         }));

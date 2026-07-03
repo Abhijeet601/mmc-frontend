@@ -122,6 +122,20 @@
       })
     })
       .then(function(data){
+        if(data.role && String(data.role).toLowerCase().indexOf('admin') !== -1){
+          sessionStorage.removeItem('mmc_student_user');
+          sessionStorage.setItem('mmc_admin_user', JSON.stringify({
+            id: data.user && data.user.id,
+            username: data.username || (data.user && data.user.username),
+            email: data.email || (data.user && data.user.email),
+            full_name: data.full_name || (data.user && data.user.full_name),
+            role: data.role,
+            access_token: data.access_token || data.token,
+            token_type: data.token_type || 'bearer'
+          }));
+          window.location.href = '../admin/dashboard.html';
+          return;
+        }
         sessionStorage.setItem('mmc_student_user', JSON.stringify({
           access_token: data.access_token,
           token_type: data.token_type || 'bearer',
