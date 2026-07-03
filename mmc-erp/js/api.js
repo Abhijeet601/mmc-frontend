@@ -95,8 +95,10 @@ function mmcFileUrl(pathOrUrl) {
 }
 
 function mmcReceiptUrl(receipt) {
-  if (receipt.pdf_url && /^https?:\/\//i.test(receipt.pdf_url)) return receipt.pdf_url;
-  return MMC_API_BASE + (receipt.pdf_url || '/receipts/' + receipt.id + '/download');
+  var current = mmcCurrentStudent() || mmcCurrentAdmin() || {};
+  var token = current.access_token || current.token || '';
+  var base = MMC_API_BASE + '/receipts/' + receipt.id + '/download';
+  return token ? base + '?token=' + encodeURIComponent(token) : base;
 }
 
 function mmcCurrentStudent() {

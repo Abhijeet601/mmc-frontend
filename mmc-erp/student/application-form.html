@@ -558,6 +558,14 @@
     return error && /not found|status 404|failed to fetch|networkerror|load failed|cors|sleeping|down|unreachable/i.test(error.message || '');
   }
 
+  function studentAuthHeaders(student){
+    student = student || currentStudent || mmcCurrentStudent() || {};
+    var headers = { 'Content-Type': 'application/json' };
+    var token = student.access_token || student.token;
+    if(token) headers.Authorization = 'Bearer ' + token;
+    return headers;
+  }
+
   function collectApplicationPayload(){
     var category = byId('pCategory').value || null;
     return {
@@ -746,7 +754,7 @@
     setSaving(button, true);
     return mmcApi('/applications/draft', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: studentAuthHeaders(student),
       body: JSON.stringify({ student_id: student.id, current_step: step, data: collectApplicationPayload() })
     }).then(function(application){
       draftApplication = application;
@@ -821,11 +829,12 @@
       var submitButton = byId('submitAppBtn');
       var originalContent = submitButton.innerHTML;
       var payload = collectApplicationPayload();
+      var authHeaders = studentAuthHeaders(student);
       submitButton.disabled = true;
       submitButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Submitting...';
       var draftPromise = draftApplication && draftApplication.id ? Promise.resolve(draftApplication) : mmcApi('/applications/draft', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: authHeaders,
         body: JSON.stringify({ student_id: student.id, current_step: 8, data: payload })
       }).catch(function(error){
         if(isEndpointMissing(error)){
@@ -838,20 +847,20 @@
           if(!application){
             return mmcApi('/applications', {
               method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
+              headers: authHeaders,
               body: JSON.stringify(buildLegacySubmitPayload(student))
             });
           }
           draftApplication = application;
           return mmcApi('/applications/' + application.id + '/submit', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: authHeaders,
             body: JSON.stringify({ student_id: student.id, current_step: 8, data: payload })
           }).catch(function(error){
             if(isEndpointMissing(error)){
               return mmcApi('/applications', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: authHeaders,
                 body: JSON.stringify(buildLegacySubmitPayload(student))
               });
             }

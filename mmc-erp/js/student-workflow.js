@@ -74,13 +74,14 @@ function mmcBuildStudentWorkflow(data){
 function mmcLoadStudentWorkflow(){
   var student = mmcCurrentStudent();
   if(!student || !student.id) return Promise.resolve(null);
+  var authHeaders = student.access_token || student.token ? { 'Authorization': 'Bearer ' + (student.access_token || student.token) } : {};
   function optionalApi(path, fallback){
     return mmcApi(path).catch(function(){ return fallback; });
   }
   return Promise.all([
-    mmcApi('/applications?student_id=' + student.id),
-    mmcApi('/payments?student_id=' + student.id),
-    mmcApi('/receipts?student_id=' + student.id),
+    mmcApi('/applications?student_id=' + student.id, { headers: authHeaders }),
+    mmcApi('/payments?student_id=' + student.id, { headers: authHeaders }),
+    mmcApi('/receipts?student_id=' + student.id, { headers: authHeaders }),
     mmcApi('/hostels'),
     mmcApi('/rooms'),
     optionalApi('/settings/application', null)

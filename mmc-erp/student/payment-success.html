@@ -62,7 +62,14 @@
       document.getElementById('amountDisplay').textContent = mmcCurrency(payment.amount);
       if(payment.receipt_url){
         var receipt = document.getElementById('receiptLink');
-        receipt.href = MMC_API_BASE + payment.receipt_url;
+        var receiptMatch = String(payment.receipt_url).match(/\/receipts\/(\d+)\/download/);
+        if(receiptMatch){
+          receipt.href = mmcReceiptUrl({ id: receiptMatch[1] });
+        } else {
+          var currentStudent = mmcCurrentStudent() || {};
+          var separator = payment.receipt_url.indexOf('?') === -1 ? '?' : '&';
+          receipt.href = MMC_API_BASE + payment.receipt_url + (currentStudent.access_token ? separator + 'token=' + encodeURIComponent(currentStudent.access_token) : '');
+        }
         receipt.classList.remove('disabled');
         receipt.removeAttribute('aria-disabled');
       }

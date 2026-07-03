@@ -274,7 +274,7 @@
     try {
       var gateway = await mmcApi('/api/payment/initiate', {
         method:'POST',
-        headers:{ 'Content-Type':'application/json' },
+        headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer ' + (student.access_token || student.token || '') },
         body:JSON.stringify({
           student_id:student.id,
           application_id:activeApplication.id,
@@ -296,10 +296,11 @@
   (function loadApplication(){
     var student = mmcCurrentStudent();
     if(!student) return;
+    var authHeaders = student.access_token || student.token ? { 'Authorization':'Bearer ' + (student.access_token || student.token) } : {};
     mmcLoadStudentWorkflow().then(function(workflow){
       mmcApplyStudentNavigation(workflow);
       if(mmcGuardStudentWorkflow('registration-fee', workflow)) return [];
-      return mmcApi('/applications?student_id=' + student.id);
+      return mmcApi('/applications?student_id=' + student.id, { headers: authHeaders });
     }).then(function(applications){
       if(!applications || !applications.length) return;
       activeApplication = applications[0] || null;

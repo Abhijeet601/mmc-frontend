@@ -86,6 +86,13 @@
     var date = new Date(value);
     return isNaN(date.getTime()) ? '-' : date.toLocaleString('en-IN');
   }
+  function adminReceiptDownloadUrl(payment){
+    if(!payment.receipt_id) return '';
+    var admin = mmcCurrentAdmin() || {};
+    var token = admin.access_token || admin.token || '';
+    var url = MMC_API_BASE + '/receipts/' + payment.receipt_id + '/download';
+    return token ? url + '?token=' + encodeURIComponent(token) : url;
+  }
   function loadAdminReceipts(){
     mmcApi('/api/admin/payments', { headers:adminAuthHeaders() }).then(function(response){
       var payments = response.items || [];
@@ -94,7 +101,7 @@
         paymentTable = null;
       }
       document.getElementById('adminReceiptRows').innerHTML = payments.length ? payments.map(function(payment){
-        var url = payment.receipt_url ? mmcFileUrl(payment.receipt_url) : '';
+        var url = adminReceiptDownloadUrl(payment);
         var action = url ? '<a class="btn btn-sm btn-maroon" target="_blank" rel="noopener" href="' + adminEscape(url) + '"><i class="fa-solid fa-download"></i></a>' : '-';
         return '<tr>' +
           '<td class="fw-600">' + adminEscape(payment.receipt_number || '-') + '</td>' +

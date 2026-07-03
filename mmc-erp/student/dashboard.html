@@ -291,6 +291,13 @@
             </div>
           </div>
 
+          <div class="mmc-glass-card mmc-reveal mb-3">
+            <div class="mmc-panel-head"><div><h6>My Receipts</h6><small>Your verified payment receipts</small></div></div>
+            <div class="mmc-panel-body" id="dashboardReceiptsBlock">
+              <div class="py-3 text-center fs-13 text-secondary">Loading receipts...</div>
+            </div>
+          </div>
+
           <div class="mmc-glass-card mmc-reveal">
             <div class="mmc-panel-head"><div><h6>Recent Notifications</h6><small>Important hostel updates</small></div></div>
             <div class="mmc-panel-body pt-2" id="dashNotifList">
@@ -402,6 +409,19 @@
     actions += '<a href="receipt.html" class="mmc-action-card" style="--action-color:#64748b;"><span class="icon"><i class="fa-solid fa-receipt"></i></span><div><strong>All Receipts</strong><span>Payment records</span></div></a>';
     document.getElementById('dashboardQuickActions').innerHTML = actions;
   }
+  function renderDashboardReceipts(workflow){
+    var receipts = workflow.receipts || [];
+    var target = document.getElementById('dashboardReceiptsBlock');
+    if(!target) return;
+    if(!receipts.length){
+      target.innerHTML = '<div class="py-3 text-center fs-13 text-secondary">No receipts generated yet.</div><a href="receipt.html" class="btn btn-outline-maroon w-100 mmc-ripple"><i class="fa-solid fa-receipt me-1"></i> Open Receipts</a>';
+      return;
+    }
+    target.innerHTML = receipts.slice(0, 3).map(function(receipt){
+      var type = receipt.receipt_type === 'hostel_admission' ? 'Hostel Fee' : 'Registration Fee';
+      return '<div class="mmc-fee-row"><div><div class="label">' + escapeHtml(type) + '</div><div class="fs-12 text-secondary">' + escapeHtml(receipt.receipt_number || '-') + '</div></div><div class="value"><a href="' + mmcReceiptDownloadUrl(receipt) + '" target="_blank" class="btn btn-sm btn-outline-maroon">PDF</a></div></div>';
+    }).join('') + '<a href="receipt.html" class="btn btn-maroon w-100 mt-2 mmc-ripple"><i class="fa-solid fa-list me-1"></i> View All Receipts</a>';
+  }
   function updateSearch(){
     var input = document.getElementById('dashboardSearch');
     if(!input) return;
@@ -499,6 +519,7 @@
     document.getElementById('dashStudentSession').textContent = session;
 
     renderQuickActions(workflow);
+    renderDashboardReceipts(workflow);
     renderNotices(workflow);
   }
 

@@ -204,7 +204,7 @@
     try{
       var gateway = await mmcApi('/api/payment/initiate', {
         method:'POST',
-        headers:{'Content-Type':'application/json'},
+        headers:{'Content-Type':'application/json', 'Authorization':'Bearer ' + (student.access_token || student.token || '')},
         body:JSON.stringify({
           student_id:student.id,
           application_id:hostelApplication.id,
@@ -224,10 +224,11 @@
   });
   (function loadHostelPayment(){
     var student=mmcCurrentStudent(); if(!student) return;
+    var authHeaders = student.access_token || student.token ? { 'Authorization':'Bearer ' + (student.access_token || student.token) } : {};
     mmcLoadStudentWorkflow().then(function(workflow){
       mmcApplyStudentNavigation(workflow);
       if(mmcGuardStudentWorkflow('hostel-fee', workflow)) return null;
-      return Promise.all([mmcApi('/applications?student_id=' + student.id), mmcApi('/hostels')]);
+      return Promise.all([mmcApi('/applications?student_id=' + student.id, { headers: authHeaders }), mmcApi('/hostels')]);
     }).then(function(results){
       if(!results) return;
       hostelApplication=results[0][0] || null; if(!hostelApplication) return;

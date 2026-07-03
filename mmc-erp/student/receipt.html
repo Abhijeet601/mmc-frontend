@@ -150,7 +150,7 @@
   }
 
   function receiptDownloadUrl(r){
-    return MMC_API_BASE + '/receipts/' + r.id + '/download';
+    return mmcReceiptUrl(r);
   }
 
   function renderReceiptRows(){
@@ -180,7 +180,8 @@
   function loadReceipts(){
     var student = mmcCurrentStudent();
     var path = '/receipts' + (student && student.id ? '?student_id=' + student.id : '');
-    mmcApi(path)
+    var headers = student && (student.access_token || student.token) ? { 'Authorization': 'Bearer ' + (student.access_token || student.token) } : {};
+    mmcApi(path, { headers: headers })
       .then(function(data){
         receipts = data || [];
         renderReceiptRows();
