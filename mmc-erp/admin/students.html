@@ -99,7 +99,7 @@
           <table id="studentsTable" class="table mmc-table-card" style="width:100%;">
             <thead>
               <tr>
-                <th>Application No</th><th>Admission ID</th><th>Student Name</th><th>Mobile</th><th>Course</th><th>%</th>
+                <th>Student ID</th><th>Admission ID</th><th>Student Name</th><th>Mobile</th><th>Course</th><th>%</th>
                 <th>Applied Cat.</th><th>Allotted Cat.</th><th>Status</th><th>Registration Fee</th><th>Hostel Fee</th><th>Hostel</th><th>Room</th><th>Actions</th>
               </tr>
             </thead>
@@ -309,7 +309,7 @@
 
   function studentDetailsHtml(a){
     return [
-      ['Application No', a.appNo], ['Admission ID', a.admissionId], ['Student Name', a.name], ['Mobile', a.mobile],
+      ['Student ID', a.appNo], ['Admission ID', a.admissionId], ['Student Name', a.name], ['Mobile', a.mobile],
       ['Registration Type', a.registrationTypeLabel || '-'],
       ['Registration Fee', paymentStatusLabel(a.registrationPaymentStatus)],
       ['Hostel Fee', paymentStatusLabel(a.hostelPaymentStatus)],
@@ -430,12 +430,12 @@
     var documents = documentMapFromSummary(summary);
     return {
       id: student.id,
-      appNo: student.application_number,
+      appNo: student.student_code || student.application_number,
       recordKey: 'student-' + student.id,
       admissionId: summary.admission_application_id || '-',
       name: student.name || 'Student #' + student.id,
       studentId: student.id,
-      studentCode: student.application_number || '',
+      studentCode: student.student_code || student.application_number || '',
       email: student.email || '',
       mobile: student.mobile_number || '-',
       course: student.course_name || '-',
@@ -673,6 +673,7 @@
       }
     }
     var payload = {
+      student_code: document.getElementById('accountStudentCode').value.trim(),
       application_number: document.getElementById('accountStudentCode').value.trim(),
       name: document.getElementById('accountName').value.trim(),
       email: document.getElementById('accountEmail').value.trim(),

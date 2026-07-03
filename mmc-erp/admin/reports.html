@@ -34,7 +34,7 @@
       <div class="mmc-breadcrumb"><a href="dashboard.html">Dashboard</a><span class="sep">/</span>Reports</div>
       <div class="mmc-page-head"><div><div class="mmc-page-title">Reports</div><div class="mmc-page-sub">View, download and manage official payment receipts.</div></div></div>
       <div class="mmc-card">
-        <div class="mmc-card-head d-flex flex-wrap gap-2 justify-content-between align-items-center"><h6>Payment Register</h6><select class="form-select form-select-sm" id="paymentStatusFilter" style="width:180px"><option value="">All statuses</option><option value="success">Successful</option><option value="pending">Pending</option><option value="failed">Failed</option><option value="cancelled">Cancelled</option><option value="refunded">Refunded</option></select></div>
+        <div class="mmc-card-head d-flex flex-wrap gap-2 justify-content-between align-items-center"><h6>Payment Register</h6><select class="form-select form-select-sm" id="paymentStatusFilter" style="width:180px"><option value="">All statuses</option><option value="paid">Paid / Generated</option><option value="pending">Pending</option><option value="failed">Failed</option><option value="refunded">Refunded</option></select></div>
         <div class="table-responsive"><table class="table mmc-table-card mb-0">
           <thead><tr><th>Receipt No.</th><th>Application No.</th><th>Student</th><th>Type</th><th>Order / Tracking ID</th><th>Amount</th><th>Status</th><th>Date</th><th>Receipt</th></tr></thead>
           <tbody id="adminReceiptRows"><tr><td colspan="9" class="text-center text-secondary py-4">Loading payments...</td></tr></tbody>
@@ -64,14 +64,49 @@
     return { 'Authorization':'Bearer ' + admin.access_token };
   }
   var paymentTable = null;
-  function adminReceiptType(type){ return type === 'hostel' ? 'Hostel Fee' : 'Registration Fee'; }
+  function adminReceiptType(payment){
+    var key = String(payment.payment_type_key || '').toLowerCase();
+    var type = String(payment.payment_type || '').toLowerCase();
+    return key === 'hostel' || type.indexOf('hostel') !== -1 ? 'Hostel Fee' : 'Registration Fee';
+  }
+  function statusLabel(payment){
+    var key = String(payment.status_key || payment.status || '').toLowerCase();
+    if(key === 'paid') return 'Paid';
+    if(key === 'failed') return 'Failed';
+    if(key === 'refunded') return 'Refunded';
+    return payment.status || 'Pending';
+  }
+  function statusPill(payment){
+    var key = String(payment.status_key || payment.status || 'pending').toLowerCase();
+    var tone = ({ paid:'success', pending:'warning', failed:'danger', refunded:'muted' })[key] || 'warning';
+    return '<span class="mmc-pill ' + tone + '" data-status="' + adminEscape(key) + '"><i class="fa-solid fa-circle"></i> ' + adminEscape(statusLabel(payment)) + '</span>';
+  }
+  function formatDate(value){
+    if(!value) return '-';
+    var date = new Date(value);
+    return isNaN(date.getTime()) ? '-' : date.toLocaleString('en-IN');
+  }
   function loadAdminReceipts(){
     mmcApi('/api/admin/payments', { headers:adminAuthHeaders() }).then(function(response){
       var payments = response.items || [];
+      if(paymentTable){
+        paymentTable.destroy();
+        paymentTable = null;
+      }
       document.getElementById('adminReceiptRows').innerHTML = payments.length ? payments.map(function(payment){
         var url = payment.receipt_url ? mmcFileUrl(payment.receipt_url) : '';
         var action = url ? '<a class="btn btn-sm btn-maroon" target="_blank" rel="noopener" href="' + adminEscape(url) + '"><i class="fa-solid fa-download"></i></a>' : '-';
-        return '<tr><td class="fw-600">' + adminEscape(payment.receipt_number || '-') + '</td><td>' + adminEscape(payment.application_number || '-') + '</td><td>' + adminEscape(payment.student_name || '-') + '</td><td>' + adminEscape(adminReceiptType(payment.payment_type)) + '</td><td>' + adminEscape(payment.tracking_id || payment.order_id || payment.transaction_id || '-') + '</td><td>' + mmcCurrency(payment.amount) + '</td><td>' + adminEscape(payment.status) + '</td><td>' + new Date(payment.payment_date).toLocaleString('en-IN') + '</td><td>' + action + '</td></tr>';
+        return '<tr>' +
+          '<td class="fw-600">' + adminEscape(payment.receipt_number || '-') + '</td>' +
+          '<td>' + adminEscape(payment.application_number || '-') + '</td>' +
+          '<td>' + adminEscape(payment.student_name || payment.student_code || '-') + '</td>' +
+          '<td>' + adminEscape(adminReceiptType(payment)) + '</td>' +
+          '<td>' + adminEscape(payment.tracking_id || payment.order_id || payment.transaction_id || '-') + '</td>' +
+          '<td>' + mmcCurrency(payment.amount || 0) + '</td>' +
+          '<td data-search="' + adminEscape(payment.status_key || payment.status || 'pending') + '">' + statusPill(payment) + '</td>' +
+          '<td>' + formatDate(payment.payment_date || payment.created_at) + '</td>' +
+          '<td>' + action + '</td>' +
+        '</tr>';
       }).join('') : '<tr><td colspan="9" class="text-center text-secondary py-4">No payments available.</td></tr>';
       if(payments.length){
         paymentTable = new DataTable('.mmc-table-card', { layout:{topStart:{buttons:['csvHtml5','excelHtml5','pdfHtml5']}}, pageLength:25, order:[[7,'desc']] });
