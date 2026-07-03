@@ -118,7 +118,7 @@
     <div class="modal-content">
       <div class="modal-header"><h6 class="mb-0 fw-700" style="color:var(--mmc-navy);">Application Details</h6><button class="btn-close" data-bs-dismiss="modal"></button></div>
       <div class="modal-body row g-2" id="viewStudentBody"></div>
-      <div class="modal-footer"><button class="btn btn-ghost" data-bs-dismiss="modal">Close</button><button class="btn btn-maroon"><i class="fa-solid fa-download me-1"></i> Download Application</button></div>
+      <div class="modal-footer"><button class="btn btn-ghost" data-bs-dismiss="modal">Close</button><button class="btn btn-maroon" id="downloadApplicationBtn"><i class="fa-solid fa-download me-1"></i> Download Application</button></div>
     </div>
   </div>
 </div>
@@ -212,6 +212,7 @@
   var students = [];
   var hostels = [];
   var rooms = [];
+  var currentViewIndex = null;
   var studentDocumentLabels = [
     ['student_photo_data', 'Photograph'],
     ['aadhar_card_data', 'Aadhaar Card'],
@@ -351,6 +352,93 @@
     var a = applications[index];
     if(!a) return;
     document.getElementById('viewStudentBody').innerHTML = studentDetailsHtml(a) + studentDocumentsHtml(index, loading);
+  }
+
+  function applicationDownloadRows(a){
+    var summary = (a && a.studentRaw && a.studentRaw.summary) || {};
+    var rows = [
+      ['Student ID', a.appNo || '-'],
+      ['Admission ID', a.admissionId || '-'],
+      ['Student Name', a.name || '-'],
+      ['Email', a.email || '-'],
+      ['Mobile', a.mobile || '-'],
+      ['Registration Type', a.registrationTypeLabel || '-'],
+      ['Course', a.course || '-'],
+      ['Session', a.session || '-'],
+      ['Percentage', a.percentage ? a.percentage + '%' : '-'],
+      ['Applied Category', a.appliedCat || '-'],
+      ['Allotted Category', a.allottedCat || '-'],
+      ['Status', a.status || '-'],
+      ['Registration Fee', paymentStatusLabel(a.registrationPaymentStatus)],
+      ['Hostel Fee', paymentStatusLabel(a.hostelPaymentStatus)],
+      ['Allocated Hostel', a.hostel || '-'],
+      ['Allocated Room', a.room || '-']
+    ];
+    if(a.registrationType === 'existing'){
+      rows.push(
+        ['Existing Hostel Name', a.existingHostelName || '-'],
+        ['Existing Room Number', a.existingRoomNumber || '-'],
+        ['Existing Bed Number', a.existingBedNumber || '-'],
+        ['Existing Block', a.existingBlock || '-'],
+        ['Existing Floor', a.existingFloor || '-'],
+        ['Previous Session', a.existingPreviousSession || '-']
+      );
+    }
+    [
+      ['Date of Birth', summary.registration_date_of_birth || summary.date_of_birth || '-'],
+      ['Gender', summary.gender || '-'],
+      ['Aadhaar Number', a.aadhaarNumber || summary.aadhar_number || '-'],
+      ['Admission Level', summary.admission_level || '-'],
+      ['College Name', summary.college_name || '-'],
+      ['Honours Subject', summary.honours_subject || '-'],
+      ['Roll Number', summary.roll_number || '-'],
+      ['Father Name', summary.father_name || '-'],
+      ['Mother Name', summary.mother_name || '-'],
+      ['Guardian Name', summary.local_guardian_name || '-'],
+      ['Permanent Address', summary.permanent_address || '-'],
+      ['Correspondence Address', summary.correspondence_address || '-']
+    ].forEach(function(row){ rows.push(row); });
+    studentDocumentLabels.forEach(function(item){
+      rows.push([item[1], a.documents && a.documents[item[0]] ? 'Uploaded' : 'Not uploaded']);
+    });
+    return rows;
+  }
+
+  function downloadCurrentApplication(){
+    var a = applications[currentViewIndex];
+    if(!a){
+      mmcToast('Application unavailable', 'Open a student application before downloading.', 'warning');
+      return;
+    }
+    if(typeof pdfMake === 'undefined'){
+      mmcToast('Download unavailable', 'PDF generator is not loaded. Please refresh and try again.', 'danger');
+      return;
+    }
+    var tableRows = applicationDownloadRows(a).map(function(row){
+      return [
+        { text: row[0], bold: true, fillColor: '#f4f5f8' },
+        { text: String(row[1] == null || row[1] === '' ? '-' : row[1]) }
+      ];
+    });
+    var generatedAt = new Date().toLocaleString('en-IN');
+    var filename = 'hostel-application-' + String(a.appNo || a.studentId || 'student').replace(/[^A-Za-z0-9_-]+/g, '-') + '.pdf';
+    pdfMake.createPdf({
+      pageSize: 'A4',
+      pageMargins: [36, 42, 36, 42],
+      content: [
+        { text: 'Magadh Mahila College', style: 'college' },
+        { text: 'Hostel Application Details', style: 'title' },
+        { text: 'Generated: ' + generatedAt, style: 'meta' },
+        { table: { widths: ['35%', '65%'], body: tableRows }, layout: 'lightHorizontalLines' }
+      ],
+      styles: {
+        college: { fontSize: 15, bold: true, color: '#800000', alignment: 'center', margin: [0, 0, 0, 4] },
+        title: { fontSize: 12, bold: true, alignment: 'center', margin: [0, 0, 0, 12] },
+        meta: { fontSize: 8, color: '#666666', alignment: 'right', margin: [0, 0, 0, 8] }
+      },
+      defaultStyle: { fontSize: 9 }
+    }).download(filename);
+    mmcToast('Download started', 'Application PDF is being downloaded.', 'success');
   }
 
   function mmcLoadStudentDocuments(index){
@@ -601,6 +689,7 @@
   function mmcViewStudent(i){
     var a = applications[i];
     if(!a) return;
+    currentViewIndex = i;
     renderStudentViewModal(i, true);
     new bootstrap.Modal(document.getElementById('viewStudentModal')).show();
     mmcLoadStudentDocuments(i);
@@ -813,6 +902,7 @@
     });
   }
 
+  document.getElementById('downloadApplicationBtn').addEventListener('click', downloadCurrentApplication);
   loadApplications();
 </script>
 </body>
