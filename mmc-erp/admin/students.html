@@ -211,6 +211,13 @@
   var students = [];
   var hostels = [];
   var rooms = [];
+  var studentDocumentLabels = [
+    ['student_photo_data', 'Photograph'],
+    ['aadhar_card_data', 'Aadhaar Card'],
+    ['admission_receipt_data', 'Admission Receipt'],
+    ['income_certificate_data', 'Income Certificate'],
+    ['caste_certificate_data', 'Caste Certificate']
+  ];
 
   var table = $('#studentsTable').DataTable({
     pageLength: 8,
@@ -228,6 +235,57 @@
     return String(value == null ? '' : value).replace(/[&<>"']/g, function(ch){
       return ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' })[ch];
     });
+  }
+
+  function documentMapFromSummary(summary){
+    var documents = summary.documents || {};
+    return {
+      student_photo_data: documents.student_photo_data || summary.student_photo_data || null,
+      aadhar_card_data: documents.aadhar_card_data || summary.aadhar_card_data || null,
+      admission_receipt_data: documents.admission_receipt_data || summary.admission_receipt_data || null,
+      income_certificate_data: documents.income_certificate_data || summary.income_certificate_data || null,
+      caste_certificate_data: documents.caste_certificate_data || summary.caste_certificate_data || null
+    };
+  }
+
+  function mmcOpenStudentDocument(index, key){
+    var app = applications[index];
+    var data = app && app.documents ? app.documents[key] : null;
+    if(!data){
+      mmcToast('Document unavailable', 'This document was not uploaded for the selected student.', 'warning');
+      return;
+    }
+    var openData = function(documentData){
+      if(!documentData){
+        mmcToast('Document unavailable', 'This document was not uploaded for the selected student.', 'warning');
+        return;
+      }
+      if(/^data:/i.test(documentData)){
+        fetch(documentData)
+          .then(function(response){ return response.blob(); })
+          .then(function(blob){
+            var url = URL.createObjectURL(blob);
+            var opened = window.open(url, '_blank', 'noopener');
+            if(!opened) mmcToast('Popup blocked', 'Please allow popups to view this document.', 'warning');
+            setTimeout(function(){ URL.revokeObjectURL(url); }, 60000);
+          })
+          .catch(function(){ mmcToast('Document unavailable', 'Unable to open the saved document.', 'danger'); });
+        return;
+      }
+      window.open(documentData, '_blank', 'noopener');
+    };
+    if(data === true){
+      mmcApi('/api/admin/students/' + app.studentId + '/documents', { headers: adminAuthHeaders() })
+        .then(function(result){
+          app.documents = result.documents || {};
+          openData(app.documents[key]);
+        })
+        .catch(function(error){
+          mmcToast('Document unavailable', error.message || 'Unable to load this document.', 'danger');
+        });
+      return;
+    }
+    openData(data);
   }
 
   function adminAuthHeaders(){
@@ -320,6 +378,7 @@
         applications = students.map(function(student){
           var status = student.account_active === false ? 'Inactive' : normalizeStatus(student.shortlist_status || student.verification_status || student.form_status);
           var summary = student.summary || {};
+          var documents = documentMapFromSummary(summary);
           return {
             id: student.id,
             appNo: student.application_number,
@@ -344,6 +403,7 @@
             accountActive: student.account_active !== false,
             forcePasswordChange: Boolean(student.force_password_change),
             aadhaarNumber: student.aadhaar_number || summary.aadhaar_number || '',
+            documents: documents,
             studentRaw: student,
             raw: student
           };
@@ -425,13 +485,22 @@
   function mmcViewStudent(i){
     var a = applications[i];
     if(!a) return;
-    document.getElementById('viewStudentBody').innerHTML = [
+    var detailsHtml = [
       ['Application No', a.appNo], ['Admission ID', a.admissionId], ['Student Name', a.name], ['Mobile', a.mobile],
       ['Registration Type', a.registrationTypeLabel || '-'],
       ['Payment Status', paymentStatusLabel(a.paymentStatus)],
       ['Course', a.course], ['Percentage', a.percentage ? a.percentage + '%' : '-'], ['Applied Category', a.appliedCat], ['Allotted Category', a.allottedCat],
       ['Status', a.status], ['Hostel Name', a.hostel || '-'], ['Room Number', a.room || '-']
-    ].map(function(r){ return '<div class="col-md-6"><div class="mmc-kv"><span class="k">' + r[0] + '</span><span class="v">' + r[1] + '</span></div></div>'; }).join('');
+    ].map(function(r){ return '<div class="col-md-6"><div class="mmc-kv"><span class="k">' + escapeHtml(r[0]) + '</span><span class="v">' + escapeHtml(r[1]) + '</span></div></div>'; }).join('');
+    var documentsHtml = '<div class="col-12 mt-3"><h6 class="fw-700 mb-1" style="color:var(--mmc-navy);">Uploaded Documents</h6></div>' +
+      studentDocumentLabels.map(function(item){
+        var uploaded = Boolean(a.documents && a.documents[item[0]]);
+        var value = uploaded
+          ? '<button type="button" class="btn btn-sm btn-ghost" onclick="mmcOpenStudentDocument(' + i + ', \'' + item[0] + '\')"><i class="fa-solid fa-eye me-1"></i>View</button>'
+          : '<span class="text-secondary">Not uploaded</span>';
+        return '<div class="col-md-6"><div class="mmc-kv"><span class="k">' + escapeHtml(item[1]) + '</span><span class="v">' + value + '</span></div></div>';
+      }).join('');
+    document.getElementById('viewStudentBody').innerHTML = detailsHtml + documentsHtml;
     new bootstrap.Modal(document.getElementById('viewStudentModal')).show();
   }
 

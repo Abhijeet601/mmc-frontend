@@ -323,6 +323,7 @@
   var CATEGORY_NAMES = { UR:'Unreserved', BC:'Backward Class', EBC:'Extremely Backward Class', EWS:'Economically Weaker Section', SC:'Scheduled Caste', ST:'Scheduled Tribe' };
   var COURSE_OPTIONS = { UG:['BA','BSc','BCom','BBA','BCA','Other'], PG:['MA','MSc','MCom','MBA','MCA','Other'] };
   var filesValid = {};
+  var uploadData = {};
 
   function byId(id){ return document.getElementById(id); }
   function setApplicationType(card){
@@ -369,10 +370,10 @@
     var casteRequired = ['BC','EBC','SC','ST'].indexOf(category) !== -1;
     byId('incomeDocument').hidden = !incomeRequired;
     byId('casteDocument').hidden = !casteRequired;
-    byId('input4').required = incomeRequired;
-    byId('input5').required = casteRequired;
-    if(!incomeRequired){ byId('input4').value = ''; filesValid.input4 = false; byId('chips4').innerHTML = ''; byId('status4').innerHTML = ''; }
-    if(!casteRequired){ byId('input5').value = ''; filesValid.input5 = false; byId('chips5').innerHTML = ''; byId('status5').innerHTML = ''; }
+    byId('input4').required = incomeRequired && !uploadData.input4;
+    byId('input5').required = casteRequired && !uploadData.input5;
+    if(!incomeRequired){ byId('input4').value = ''; delete uploadData.input4; filesValid.input4 = false; byId('chips4').innerHTML = ''; byId('status4').innerHTML = ''; }
+    if(!casteRequired){ byId('input5').value = ''; delete uploadData.input5; filesValid.input5 = false; byId('chips5').innerHTML = ''; byId('status5').innerHTML = ''; }
   }
   byId('pCategory').addEventListener('change', updateDocuments);
 
@@ -390,6 +391,7 @@
     chips.innerHTML = '';
     status.innerHTML = '';
     filesValid[input.id] = false;
+    delete uploadData[input.id];
     if(!file) return false;
     var validExtension = isPhoto ? /\.(jpe?g|png)$/i.test(file.name) : /\.(pdf|jpe?g|png)$/i.test(file.name);
     var message = '';
@@ -408,11 +410,15 @@
     var icon = file.type === 'application/pdf' ? 'fa-file-pdf' : 'fa-file-image';
     chips.innerHTML = '<div class="mmc-upload-chip"><i class="fa-solid ' + icon + '"></i><span>' + file.name.replace(/[<>]/g,'') + '</span><span class="text-body-tertiary ms-1">(' + (file.size / 1024).toFixed(1) + ' KB)</span></div>';
     status.innerHTML = '<span class="text-success"><i class="fa-solid fa-circle-check me-1"></i>Upload ready</span>';
-    if(isPhoto){
-      var reader = new FileReader();
-      reader.onload = function(event){ byId('photoPreview').src = event.target.result; byId('photoPreview').classList.remove('d-none'); };
-      reader.readAsDataURL(file);
-    }
+    var reader = new FileReader();
+    reader.onload = function(event){
+      uploadData[input.id] = event.target.result;
+      if(isPhoto){
+        byId('photoPreview').src = event.target.result;
+        byId('photoPreview').classList.remove('d-none');
+      }
+    };
+    reader.readAsDataURL(file);
     return true;
   }
   function initUpload(number, isPhoto){
@@ -553,13 +559,14 @@
   }
 
   function collectApplicationPayload(){
+    var category = byId('pCategory').value || null;
     return {
       name: byId('pName').value.trim(),
       gender: byId('pGender').value,
       date_of_birth: byId('pDob').value || null,
       mobile: byId('pMobile').value.trim(),
       email: byId('pEmail').value.trim(),
-      category: byId('pCategory').value || null,
+      category: category,
       application_type: selectedApplicationType(),
       admission_level: byId('admissionLevel').value || null,
       admission_id: byId('acAdmId').value.trim() || null,
@@ -576,7 +583,11 @@
       aadhar_number: byId('pAadhar').value.trim() || null,
       religion: byId('pReligion').value.trim() || null,
       nationality: byId('pNationality').value.trim() || null,
-      student_photo_data: byId('photoPreview').getAttribute('src') || null,
+      student_photo_data: uploadData.input1 || byId('photoPreview').getAttribute('src') || null,
+      aadhar_card_data: uploadData.input2 || null,
+      admission_receipt_data: uploadData.input3 || null,
+      income_certificate_data: category === 'EWS' ? uploadData.input4 || null : null,
+      caste_certificate_data: ['BC','EBC','SC','ST'].indexOf(category) !== -1 ? uploadData.input5 || null : null,
       intermediate_college: byId('acCollege').value.trim() || null,
       board: byId('acBoard').value.trim() || null,
       previous_course: byId('previousCourse').value.trim() || null,
@@ -586,7 +597,7 @@
       percentage: byId('acPercent').value ? Number(byId('acPercent').value.replace('%','')) : null,
       roll_number: byId('acRoll').value.trim() || null,
       subject: byId('acSubject').value.trim() || null,
-      applied_category: byId('pCategory').value || null
+      applied_category: category
     };
   }
 
@@ -633,9 +644,26 @@
       setValue('acMarks', application.marks_obtained);
       calculatePercentage();
       if(application.student_photo_data){
+        uploadData.input1 = application.student_photo_data;
+        byId('input1').required = false;
         byId('photoPreview').src = application.student_photo_data;
         byId('photoPreview').classList.remove('d-none');
       }
+      [
+        ['input2', 'aadhar_card_data', 'Aadhar Card'],
+        ['input3', 'admission_receipt_data', 'Admission Receipt'],
+        ['input4', 'income_certificate_data', 'Income Certificate'],
+        ['input5', 'caste_certificate_data', 'Caste Certificate']
+      ].forEach(function(item){
+        if(application[item[1]]){
+          uploadData[item[0]] = application[item[1]];
+          byId(item[0]).required = false;
+          var number = item[0].replace('input','');
+          byId('chips' + number).innerHTML = '<div class="mmc-upload-chip"><i class="fa-solid fa-file-lines"></i><span>' + item[2] + ' uploaded</span></div>';
+          byId('status' + number).innerHTML = '<span class="text-success"><i class="fa-solid fa-circle-check me-1"></i>Saved document available</span>';
+          filesValid[item[0]] = true;
+        }
+      });
     }
     updateDocuments();
   }
