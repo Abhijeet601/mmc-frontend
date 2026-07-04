@@ -130,7 +130,7 @@
       <div class="modal-header"><h6 class="mb-0 fw-700" style="color:var(--mmc-navy);">Edit Application Status</h6><button class="btn-close" data-bs-dismiss="modal"></button></div>
       <div class="modal-body">
         <label class="form-label">Application Status</label>
-        <select class="form-select mb-3" id="editStatusSelect"><option>Selected</option><option>Waitlisted</option><option>Pending</option><option>Rejected</option></select>
+        <select class="form-select mb-3" id="editStatusSelect"><option>Shortlisted</option><option>Selected</option><option>Waitlisted</option><option>Pending</option><option>Rejected</option></select>
         <label class="form-label">Allotted Category</label>
         <select class="form-select mb-3" id="editAllottedSelect"><option value="UR">UR - Unreserved</option><option value="EWS">EWS - Economically Weaker Section</option><option value="BC">BC - Backward Class</option><option value="EBC">EBC - Extremely Backward Class</option><option value="SC">SC - Scheduled Caste</option><option value="ST">ST - Scheduled Tribe</option><option value="">-</option></select>
         <label class="form-label">Allotted Hostel</label>
@@ -212,6 +212,7 @@
   var students = [];
   var hostels = [];
   var rooms = [];
+  var roomsLoaded = false;
   var currentViewIndex = null;
   var studentDocumentLabels = [
     ['student_photo_data', 'Photograph'],
@@ -556,6 +557,7 @@
       hostelPaymentStatus: student.hostel_payment_status || student.hostel_status ? normalizePaymentValue(student.hostel_payment_status || student.hostel_status) : 'not_applicable',
       hostel: student.allocated_hostel || student.preferred_hostel || '-',
       room: student.room_number || '-',
+      bed: student.bed_number || '-',
       accountActive: student.account_active !== false,
       forcePasswordChange: Boolean(student.force_password_change),
       aadhaarNumber: student.aadhaar_number || summary.aadhaar_number || '',
@@ -609,8 +611,6 @@
     mmcApi('/api/admin/students?limit=500', { headers: adminAuthHeaders() })
       .then(function(result){
         students = result.items || [];
-        hostels = [];
-        rooms = [];
         applications = students.map(mapAdminStudent);
         renderTable();
       })
@@ -621,17 +621,42 @@
       });
   }
 
+  function loadRoomInventory(){
+    return mmcApi('/api/admin/hostel/rooms', { headers: adminAuthHeaders() })
+      .then(function(result){
+        var roomItems = Array.isArray(result) ? result : (result && result.items ? result.items : []);
+        rooms = roomItems.filter(function(room){ return room.is_active !== false; });
+        var seenHostels = {};
+        hostels = [];
+        rooms.forEach(function(room){
+          var hostelName = room.hostel_name || room.hostel || '';
+          room.hostel_name = hostelName;
+          room.room_number = room.room_number || room.room || '';
+          room.available_bed_labels = room.available_bed_labels || room.available_bed_numbers || [];
+          if(!hostelName || seenHostels[hostelName]) return;
+          seenHostels[hostelName] = true;
+          hostels.push({ id: hostelName, name: hostelName });
+        });
+        roomsLoaded = true;
+        return rooms;
+      });
+  }
+
   function renderHostelRoomOptions(app){
     if(!app.id) return;
     var hostelSelect = document.getElementById('editHostelSelect');
     var roomSelect = document.getElementById('editRoomSelect');
     var bedSelect = document.getElementById('editBedSelect');
     var allocationHint = document.getElementById('editAllocationHint');
-    var selectedHostelId = app.raw.hostel_id || '';
-    var selectedRoomId = app.raw.room_id || '';
-    var selectedBed = app.raw.bed || '';
+    var selectedHostelName = app.raw.allocated_hostel || app.raw.preferred_hostel || (app.hostel === '-' ? '' : app.hostel) || '';
+    var selectedRoomNumber = app.raw.room_number || (app.room === '-' ? '' : app.room) || '';
+    var selectedRoom = rooms.find(function(room){
+      return room.hostel_name === selectedHostelName && String(room.room_number) === String(selectedRoomNumber);
+    });
+    var selectedRoomId = selectedRoom ? selectedRoom.id : '';
+    var selectedBed = app.raw.bed_number || (app.bed === '-' ? '' : app.bed) || '';
     hostelSelect.innerHTML = '<option value="">No hostel allotted</option>' + hostels.map(function(hostel){
-      return '<option value="' + hostel.id + '"' + (Number(selectedHostelId) === Number(hostel.id) ? ' selected' : '') + '>' + escapeHtml(hostel.name) + '</option>';
+      return '<option value="' + escapeHtml(hostel.id) + '"' + (String(selectedHostelName) === String(hostel.id) ? ' selected' : '') + '>' + escapeHtml(hostel.name) + '</option>';
     }).join('');
 
     function renderBedOptions(roomId){
@@ -640,35 +665,30 @@
         allocationHint.textContent = 'Choose a room to view available bed numbers.';
         return;
       }
-      allocationHint.textContent = 'Loading bed availability...';
-      mmcApi('/rooms/' + roomId + '/beds')
-        .then(function(data){
-          var availableBeds = data.available_bed_numbers || [];
-          var options = availableBeds.map(function(bed){
-            return '<option value="' + bed + '"' + (String(selectedBed) === String(bed) ? ' selected' : '') + '>' + escapeHtml('Bed ' + bed) + '</option>';
-          });
-          if(!options.length){
-            bedSelect.innerHTML = '<option value="">No bed available</option>';
-            allocationHint.textContent = 'This room is fully occupied.';
-            return;
-          }
-          bedSelect.innerHTML = '<option value="">No bed allotted</option>' + options.join('');
-          allocationHint.textContent = 'Available beds: ' + availableBeds.join(', ');
-        })
-        .catch(function(){
-          bedSelect.innerHTML = '<option value="">No bed allotted</option>';
-          allocationHint.textContent = 'Unable to load bed inventory for this room.';
-        });
+      var room = rooms.find(function(item){ return Number(item.id) === Number(roomId); });
+      var availableBeds = room && room.available_bed_labels ? room.available_bed_labels.slice() : [];
+      if(selectedBed && availableBeds.indexOf(selectedBed) === -1) availableBeds.unshift(selectedBed);
+      var options = availableBeds.map(function(bed){
+        return '<option value="' + escapeHtml(bed) + '"' + (String(selectedBed) === String(bed) ? ' selected' : '') + '>' + escapeHtml('Bed ' + bed) + '</option>';
+      });
+      if(!options.length){
+        bedSelect.innerHTML = '<option value="">No bed available</option>';
+        allocationHint.textContent = 'This room is fully occupied.';
+        return;
+      }
+      bedSelect.innerHTML = '<option value="">No bed allotted</option>' + options.join('');
+      allocationHint.textContent = 'Available beds: ' + availableBeds.join(', ');
     }
 
     function updateRooms(){
-      var hostelId = hostelSelect.value;
+      var hostelName = hostelSelect.value;
       var filteredRooms = rooms.filter(function(room){
-        return Number(room.hostel_id) === Number(hostelId) && (room.status === 'available' || Number(room.id) === Number(selectedRoomId));
+        return room.hostel_name === hostelName && (room.available_beds > 0 || Number(room.id) === Number(selectedRoomId));
       });
       roomSelect.innerHTML = '<option value="">No room allotted</option>' + filteredRooms.map(function(room){
         var selected = Number(selectedRoomId) === Number(room.id) ? ' selected' : '';
-        return '<option value="' + room.id + '"' + selected + '>' + escapeHtml(room.room_number) + ' - ' + escapeHtml(room.status) + '</option>';
+        var statusText = room.available_beds > 0 ? room.available_beds + ' bed(s) available' : 'current room';
+        return '<option value="' + room.id + '"' + selected + '>' + escapeHtml(room.room_number) + ' - ' + escapeHtml(statusText) + '</option>';
       }).join('');
       var currentRoomId = roomSelect.value || '';
       renderBedOptions(currentRoomId);
@@ -719,8 +739,18 @@
     editingAppNo = a.appNo;
     document.getElementById('editStatusSelect').value = a.status;
     document.getElementById('editAllottedSelect').value = a.allottedCat === '-' ? '' : a.allottedCat;
-    renderHostelRoomOptions(a);
-    new bootstrap.Modal(document.getElementById('editStudentModal')).show();
+    var modal = new bootstrap.Modal(document.getElementById('editStudentModal'));
+    document.getElementById('editAllocationHint').textContent = 'Loading hostel and room inventory...';
+    var inventoryPromise = roomsLoaded ? Promise.resolve(rooms) : loadRoomInventory();
+    inventoryPromise
+      .then(function(){ renderHostelRoomOptions(a); })
+      .catch(function(error){
+        document.getElementById('editHostelSelect').innerHTML = '<option value="">No hostel allotted</option>';
+        document.getElementById('editRoomSelect').innerHTML = '<option value="">No room allotted</option>';
+        document.getElementById('editBedSelect').innerHTML = '<option value="">No bed allotted</option>';
+        document.getElementById('editAllocationHint').textContent = error.message || 'Unable to load hostel and room inventory.';
+      })
+      .finally(function(){ modal.show(); });
   }
 
   function mmcManageStudentAccount(i){
@@ -851,21 +881,36 @@
     if(!a) return;
     var button = this;
     var originalContent = button.innerHTML;
-    var payload = {
-      status: document.getElementById('editStatusSelect').value,
-      allotted_category: document.getElementById('editAllottedSelect').value || null,
-      hostel_id: document.getElementById('editHostelSelect').value ? Number(document.getElementById('editHostelSelect').value) : null,
-      room_id: document.getElementById('editRoomSelect').value ? Number(document.getElementById('editRoomSelect').value) : null,
-      bed: document.getElementById('editBedSelect').value || null,
-      allocation_status: document.getElementById('editBedSelect').value ? 'allocated' : (a.raw && a.raw.allocation_status ? a.raw.allocation_status : 'pending')
-    };
+    var statusValue = document.getElementById('editStatusSelect').value;
+    var hostelName = document.getElementById('editHostelSelect').value || '';
+    var roomId = document.getElementById('editRoomSelect').value ? Number(document.getElementById('editRoomSelect').value) : null;
+    var selectedRoom = roomId ? rooms.find(function(room){ return Number(room.id) === Number(roomId); }) : null;
+    var bedNumber = document.getElementById('editBedSelect').value || '';
+    var shouldShortlist = ['Shortlisted', 'Selected'].indexOf(statusValue) !== -1 || Boolean(roomId || hostelName);
+    if(roomId && !bedNumber){
+      mmcToast('Bed required', 'Select an available bed number before saving room allotment.', 'warning');
+      return;
+    }
     button.disabled = true;
     button.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Saving...';
-    mmcApi('/applications/' + a.id + '/status', {
+    mmcApi('/api/admin/students/' + a.studentId + '/shortlist', {
       method:'PATCH',
-      headers:{ 'Content-Type':'application/json' },
-      body:JSON.stringify(payload)
+      headers:adminAuthHeaders(),
+      body:JSON.stringify({ shortlisted: shouldShortlist })
     })
+      .then(function(){
+        if(!hostelName && !roomId) return null;
+        return mmcApi('/api/admin/students/' + a.studentId + '/allocate-hostel', {
+          method:'PATCH',
+          headers:adminAuthHeaders(),
+          body:JSON.stringify({
+            hostel_name: hostelName || null,
+            room_id: roomId,
+            room_number: selectedRoom ? selectedRoom.room_number : null,
+            bed_number: bedNumber || null
+          })
+        });
+      })
       .then(function(){
         var modal = bootstrap.Modal.getInstance(document.getElementById('editStudentModal'));
         if(modal) modal.hide();
