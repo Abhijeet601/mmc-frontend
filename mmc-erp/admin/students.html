@@ -130,7 +130,7 @@
       <div class="modal-header"><h6 class="mb-0 fw-700" style="color:var(--mmc-navy);">Edit Application Status</h6><button class="btn-close" data-bs-dismiss="modal"></button></div>
       <div class="modal-body">
         <label class="form-label">Application Status</label>
-        <select class="form-select mb-3" id="editStatusSelect"><option>Shortlisted</option><option>Selected</option><option>Waitlisted</option><option>Pending</option><option>Rejected</option></select>
+        <select class="form-select mb-3" id="editStatusSelect"><option>Shortlisted</option><option>Not Shortlisted</option><option>Selected</option><option>Waitlisted</option><option>Pending</option><option>Rejected</option></select>
         <label class="form-label">Allotted Category</label>
         <select class="form-select mb-3" id="editAllottedSelect"><option value="UR">UR - Unreserved</option><option value="EWS">EWS - Economically Weaker Section</option><option value="BC">BC - Backward Class</option><option value="EBC">EBC - Extremely Backward Class</option><option value="SC">SC - Scheduled Caste</option><option value="ST">ST - Scheduled Tribe</option><option value="">-</option></select>
         <label class="form-label">Allotted Hostel</label>
@@ -887,8 +887,9 @@
     var roomId = document.getElementById('editRoomSelect').value ? Number(document.getElementById('editRoomSelect').value) : null;
     var selectedRoom = roomId ? rooms.find(function(room){ return Number(room.id) === Number(roomId); }) : null;
     var bedNumber = document.getElementById('editBedSelect').value || '';
-    var shouldShortlist = ['Shortlisted', 'Selected'].indexOf(statusValue) !== -1 || Boolean(allottedCategory || roomId || hostelName);
-    if(roomId && !bedNumber){
+    var forceNotShortlisted = statusValue === 'Not Shortlisted';
+    var shouldShortlist = forceNotShortlisted ? false : (['Shortlisted', 'Selected'].indexOf(statusValue) !== -1 || Boolean(allottedCategory || roomId || hostelName));
+    if(!forceNotShortlisted && roomId && !bedNumber){
       mmcToast('Bed required', 'Select an available bed number before saving room allotment.', 'warning');
       return;
     }
@@ -899,11 +900,11 @@
       headers:adminAuthHeaders(),
       body:JSON.stringify({
         shortlisted: shouldShortlist,
-        allotted_category: allottedCategory || null
+        allotted_category: forceNotShortlisted ? null : (allottedCategory || null)
       })
     })
       .then(function(){
-        if(!hostelName && !roomId) return null;
+        if(forceNotShortlisted || (!hostelName && !roomId)) return null;
         return mmcApi('/api/admin/students/' + a.studentId + '/allocate-hostel', {
           method:'PATCH',
           headers:adminAuthHeaders(),
