@@ -882,11 +882,12 @@
     var button = this;
     var originalContent = button.innerHTML;
     var statusValue = document.getElementById('editStatusSelect').value;
+    var allottedCategory = document.getElementById('editAllottedSelect').value || '';
     var hostelName = document.getElementById('editHostelSelect').value || '';
     var roomId = document.getElementById('editRoomSelect').value ? Number(document.getElementById('editRoomSelect').value) : null;
     var selectedRoom = roomId ? rooms.find(function(room){ return Number(room.id) === Number(roomId); }) : null;
     var bedNumber = document.getElementById('editBedSelect').value || '';
-    var shouldShortlist = ['Shortlisted', 'Selected'].indexOf(statusValue) !== -1 || Boolean(roomId || hostelName);
+    var shouldShortlist = ['Shortlisted', 'Selected'].indexOf(statusValue) !== -1 || Boolean(allottedCategory || roomId || hostelName);
     if(roomId && !bedNumber){
       mmcToast('Bed required', 'Select an available bed number before saving room allotment.', 'warning');
       return;
@@ -896,7 +897,10 @@
     mmcApi('/api/admin/students/' + a.studentId + '/shortlist', {
       method:'PATCH',
       headers:adminAuthHeaders(),
-      body:JSON.stringify({ shortlisted: shouldShortlist })
+      body:JSON.stringify({
+        shortlisted: shouldShortlist,
+        allotted_category: allottedCategory || null
+      })
     })
       .then(function(){
         if(!hostelName && !roomId) return null;
