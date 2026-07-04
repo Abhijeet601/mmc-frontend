@@ -312,12 +312,11 @@
     mmcApplyStudentNavigation(workflow);
     admissionSettings = workflow && workflow.settings ? workflow.settings : null;
     if(workflow && workflow.application && !workflow.draft){
-      mmcWorkflowRedirect('You have already completed this step.');
-    }
-    if(workflow && workflow.draft){
+      draftApplication = workflow.application;
+    } else if(workflow && workflow.draft){
       draftApplication = workflow.application;
     }
-    if(!workflow || !workflow.draft){
+    if(!workflow || !workflow.application){
       if(admissionSettings && admissionSettings.admission_state !== 'open'){
         formLocked = true;
         document.querySelectorAll('[data-wizard-next], #saveDraftBtn, #submitAppBtn').forEach(function(button){ button.disabled = true; });
@@ -874,7 +873,7 @@
 
   document.getElementById('submitAppBtn').addEventListener('click', function(){
     if(!document.getElementById('declareCorrect').checked){ mmcToast('Declaration required', 'Please confirm the declaration checkbox to submit.', 'warning'); return; }
-    mmcConfirm('Submit Application?', 'Once submitted, you will not be able to edit your application details.', function(){
+    mmcConfirm('Submit Application?', 'Your hostel application details will be saved and submitted.', function(){
       var student = mmcCurrentStudent();
       if(!student || !student.id){
         mmcToast('Login required', 'Please sign in with your student account before submitting.', 'warning');

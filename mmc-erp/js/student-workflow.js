@@ -113,7 +113,7 @@ function mmcApplyStudentNavigation(workflow){
       link.style.display = visible ? '' : 'none';
     });
   }
-  setVisible('application-form.html', !workflow.application || workflow.draft);
+  setVisible('application-form.html', true);
   setVisible('fee-payment.html', Boolean(workflow.application && !workflow.draft && !workflow.registrationPaid));
   setVisible('hostel-fee-payment.html', Boolean(workflow.registrationPaid && workflow.shortlisted && !workflow.hostelPaid));
   setVisible('room-allotment.html', Boolean(workflow.hostelPaid || workflow.roomAllotted));
@@ -134,10 +134,6 @@ function mmcShowWorkflowMessage(){
 
 function mmcGuardStudentWorkflow(pageName, workflow){
   if(!workflow) return false;
-  if(pageName === 'application-form' && workflow.application && !workflow.draft){
-    mmcWorkflowRedirect('You have already completed this step.');
-    return true;
-  }
   if(pageName === 'registration-fee' && (!workflow.application || workflow.draft)){
     mmcWorkflowRedirect('Submit your hostel application before paying the registration fee.');
     return true;
