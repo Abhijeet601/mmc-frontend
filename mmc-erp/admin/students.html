@@ -608,7 +608,7 @@
   function loadApplications(){
     table.clear().draw();
     document.getElementById('studentsBody').innerHTML = '<tr><td colspan="14" class="text-center text-secondary py-3">Loading students and applications...</td></tr>';
-    mmcApi('/api/admin/students?limit=500', { headers: adminAuthHeaders() })
+    mmcApi('/api/admin/students?limit=5000', { headers: adminAuthHeaders() })
       .then(function(result){
         students = result.items || [];
         applications = students.map(mapAdminStudent);
