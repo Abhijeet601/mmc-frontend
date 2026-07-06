@@ -606,6 +606,7 @@
     var selectedHostelPaymentStatus = document.getElementById('hostelPaymentStatusFilter').value;
     table.clear();
     applications.forEach(function(app, index){
+      if(app.accountActive === false) return;
       if(selectedRegistrationType && app.registrationType !== selectedRegistrationType) return;
       if(selectedRegistrationPaymentStatus && app.registrationPaymentStatus !== selectedRegistrationPaymentStatus) return;
       if(selectedHostelPaymentStatus && app.hostelPaymentStatus !== selectedHostelPaymentStatus) return;
@@ -953,9 +954,8 @@
         method:'DELETE',
         headers:adminAuthHeaders()
       }).then(function(){
-        applications = applications.filter(function(item){ return item.studentId !== a.studentId; });
-        renderTable();
         mmcToast('Student ID deleted', 'Login access has been revoked and the record is hidden from lists.', 'success');
+        return loadApplications();
       }).catch(function(error){
         mmcToast('Student ID not deleted', error.message || 'Unable to delete student ID.', 'danger');
       });
