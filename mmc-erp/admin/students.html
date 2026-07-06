@@ -100,7 +100,7 @@
             <thead>
               <tr>
                 <th>Student ID</th><th>Admission ID</th><th>Student Name</th><th>Mobile</th><th>Course</th><th>%</th>
-                <th>Applied Cat.</th><th>Allotted Cat.</th><th>Status</th><th>Registration Fee</th><th>Hostel Fee</th><th>Hostel</th><th>Room</th><th>Actions</th>
+                <th>Applied Cat.</th><th>Allotted Cat.</th><th>Status</th><th>Registration Fee</th><th>Hostel Fee</th><th>Hostel</th><th>Room</th><th>Actions</th><th>Search</th>
               </tr>
             </thead>
             <tbody id="studentsBody"></tbody>
@@ -227,7 +227,11 @@
     lengthMenu: [5,8,10,25,50],
     language: { search: '', searchPlaceholder: 'Search records...' },
     dom: "<'row mb-2'<'col-sm-6'B><'col-sm-6 text-end'f>><'table-responsive't><'row mt-2'<'col-sm-6'l><'col-sm-6'i><'col-sm-12'p>>",
-    buttons: ['copy', 'csv', 'excel', 'pdf', 'print']
+    buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
+    columnDefs: [
+      { targets: 14, visible: false, searchable: true },
+      { targets: 13, searchable: false, orderable: false }
+    ]
   });
 
   function mmcFindByAppNo(appNo){
@@ -569,6 +573,11 @@
 
   function applicationRow(app, index){
     var canEditApplication = Boolean(app.id);
+    var searchText = [
+      app.appNo, app.studentCode, app.admissionId, app.name, app.email, app.mobile,
+      app.course, app.session, app.appliedCat, app.allottedCat, app.status,
+      app.hostel, app.room, app.bed, app.aadhaarNumber
+    ].filter(Boolean).join(' ');
     return [
       '<span class="fw-600">' + escapeHtml(app.appNo) + '</span>',
       escapeHtml(app.admissionId || '-'),
@@ -586,7 +595,8 @@
       '<button class="btn btn-sm btn-ghost" onclick="mmcViewStudent(' + index + ')"><i class="fa-solid fa-eye"></i></button>' +
       '<button class="btn btn-sm btn-ghost" onclick="mmcEditStudent(' + index + ')" title="' + (canEditApplication ? 'Edit application' : 'No application submitted') + '"><i class="fa-solid fa-pen"></i></button>' +
       '<button class="btn btn-sm btn-ghost" onclick="mmcManageStudentAccount(' + index + ')" title="Manage account"><i class="fa-solid fa-user-gear"></i></button>' +
-      '<button class="btn btn-sm btn-ghost text-danger" onclick="mmcDeleteStudent(' + index + ')"><i class="fa-solid fa-trash"></i></button>'
+      '<button class="btn btn-sm btn-ghost text-danger" onclick="mmcDeleteStudent(' + index + ')"><i class="fa-solid fa-trash"></i></button>',
+      escapeHtml(searchText)
     ];
   }
 
@@ -607,7 +617,7 @@
 
   function loadApplications(){
     table.clear().draw();
-    document.getElementById('studentsBody').innerHTML = '<tr><td colspan="14" class="text-center text-secondary py-3">Loading students and applications...</td></tr>';
+    document.getElementById('studentsBody').innerHTML = '<tr><td colspan="15" class="text-center text-secondary py-3">Loading students and applications...</td></tr>';
     mmcApi('/api/admin/students?limit=5000', { headers: adminAuthHeaders() })
       .then(function(result){
         students = result.items || [];
@@ -616,7 +626,7 @@
       })
       .catch(function(error){
         table.clear().draw();
-        document.getElementById('studentsBody').innerHTML = '<tr><td colspan="14" class="text-center text-secondary py-3">Unable to load applications.</td></tr>';
+        document.getElementById('studentsBody').innerHTML = '<tr><td colspan="15" class="text-center text-secondary py-3">Unable to load applications.</td></tr>';
         mmcToast('Applications not loaded', error.message, 'warning');
       });
   }
