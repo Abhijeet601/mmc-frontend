@@ -95,6 +95,9 @@ function mmcFileUrl(pathOrUrl) {
 }
 
 function mmcReceiptUrl(receipt) {
+  if (receipt && receipt.pdf_url && !/\/receipts\/\d+\/download(?:\?|$)/i.test(String(receipt.pdf_url))) {
+    return mmcFileUrl(receipt.pdf_url);
+  }
   var current = mmcCurrentStudent() || mmcCurrentAdmin() || {};
   var token = current.access_token || current.token || '';
   var base = MMC_API_BASE + '/receipts/' + receipt.id + '/download';
