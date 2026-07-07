@@ -181,7 +181,7 @@
     var student = mmcCurrentStudent();
     var path = '/receipts' + (student && student.id ? '?student_id=' + student.id : '');
     var headers = student && (student.access_token || student.token) ? { 'Authorization': 'Bearer ' + (student.access_token || student.token) } : {};
-    mmcApi(path, { headers: headers })
+    mmcApi(path, { headers: headers, noCache:true })
       .then(function(data){
         receipts = data || [];
         renderReceiptRows();
