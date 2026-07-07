@@ -94,7 +94,7 @@
     return token ? url + '?token=' + encodeURIComponent(token) : url;
   }
   function loadAdminReceipts(){
-    mmcApi('/api/admin/payments', { headers:adminAuthHeaders() }).then(function(response){
+    mmcApi('/api/admin/payments', { headers:adminAuthHeaders(), noCache:true }).then(function(response){
       var payments = response.items || [];
       if(paymentTable){
         paymentTable.destroy();
