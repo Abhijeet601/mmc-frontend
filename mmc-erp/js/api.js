@@ -17,17 +17,61 @@ function resolveMmcApiBase() {
 
 const MMC_API_BASE = resolveMmcApiBase();
 const MMC_R2_PUBLIC_URL = 'https://pub-56b2773adb554e88a3d5fbc74f0167bc.r2.dev';
+const MMC_API_CACHE_TTL_MS = 15000;
+const MMC_API_CACHE = new Map();
+const MMC_API_INFLIGHT = new Map();
+
+function mmcApiCacheKey(path, options) {
+  var headers = options && options.headers ? options.headers : {};
+  var auth = headers.Authorization || headers.authorization || '';
+  return [String(options.method || 'GET').toUpperCase(), path, auth].join('|');
+}
+
+function mmcClearApiCache() {
+  MMC_API_CACHE.clear();
+  MMC_API_INFLIGHT.clear();
+}
+
+function mmcApiClone(data) {
+  if (data === null || typeof data !== 'object') return data;
+  try { return JSON.parse(JSON.stringify(data)); } catch (err) { return data; }
+}
 
 function mmcApi(path, options) {
   var requestOptions = Object.assign({}, options || {});
+  requestOptions.method = String(requestOptions.method || 'GET').toUpperCase();
   var headers = Object.assign({}, requestOptions.headers || {});
-  if (!headers['Content-Type'] && !headers['content-type']) {
+  if ((requestOptions.method !== 'GET' || requestOptions.body) && !headers['Content-Type'] && !headers['content-type']) {
     headers['Content-Type'] = 'application/json';
   }
   requestOptions.headers = headers;
   requestOptions.mode = requestOptions.mode || 'cors';
   requestOptions.credentials = requestOptions.credentials || 'omit';
-  return mmcApiWithRetry(path, requestOptions, 1);
+  if (requestOptions.method !== 'GET') {
+    mmcClearApiCache();
+    return mmcApiWithRetry(path, requestOptions, 1);
+  }
+  if (requestOptions.noCache || String(path).indexOf('/api/payment/status/') !== -1) {
+    return mmcApiWithRetry(path, requestOptions, 1);
+  }
+  var key = mmcApiCacheKey(path, requestOptions);
+  var cached = MMC_API_CACHE.get(key);
+  if (cached && cached.expiresAt > Date.now()) {
+    return Promise.resolve(mmcApiClone(cached.data));
+  }
+  if (MMC_API_INFLIGHT.has(key)) {
+    return MMC_API_INFLIGHT.get(key);
+  }
+  var promise = mmcApiWithRetry(path, requestOptions, 1).then(function(data) {
+    MMC_API_CACHE.set(key, { data: mmcApiClone(data), expiresAt: Date.now() + MMC_API_CACHE_TTL_MS });
+    MMC_API_INFLIGHT.delete(key);
+    return mmcApiClone(data);
+  }).catch(function(error) {
+    MMC_API_INFLIGHT.delete(key);
+    throw error;
+  });
+  MMC_API_INFLIGHT.set(key, promise);
+  return promise;
 }
 
 function mmcApiWithRetry(path, options, attempt) {

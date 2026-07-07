@@ -171,6 +171,7 @@
   var activeApplication = null;
   var payNowBtn = document.getElementById('payNowBtn');
   var paymentError = document.getElementById('paymentError');
+  var paymentInFlight = false;
 
   function updatePayButton(){
     payNowBtn.innerHTML = '<i class="fa-solid fa-lock me-1"></i> Pay Securely via CCAvenue';
@@ -239,6 +240,7 @@
     updatePayButton();
   }
   payNowBtn.addEventListener('click', async function(){
+    if(paymentInFlight) return;
     clearPaymentError();
     if(!document.getElementById('payTerms').checked){
       showPaymentError('Please accept the payment terms to continue.');
@@ -268,6 +270,7 @@
       return;
     }
 
+    paymentInFlight = true;
     payNowBtn.disabled = true;
     payNowBtn.innerHTML = '<span class="mmc-spinner sm" style="border-color:rgba(255,255,255,.35);border-top-color:#fff;display:inline-block;vertical-align:middle;margin-right:8px;"></span> Redirecting to CCAvenue...';
 
@@ -288,6 +291,7 @@
       var message = error && error.message ? error.message : 'Unable to initiate payment. Please try again.';
       showPaymentError(message);
       mmcToast('Payment not initiated', message, 'danger');
+      paymentInFlight = false;
       payNowBtn.disabled = false;
       updatePayButton();
     }
