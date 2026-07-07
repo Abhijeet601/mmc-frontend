@@ -112,6 +112,28 @@
   </div>
 </div>
 
+<!-- MANUAL PAYMENT MODAL -->
+<div class="modal fade" id="manualPaymentModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <form class="modal-content" id="manualPaymentForm">
+      <div class="modal-header"><h6 class="mb-0 fw-700" style="color:var(--mmc-navy);">Complete Payment</h6><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+      <div class="modal-body">
+        <input type="hidden" id="manualPaymentIdentifier">
+        <div class="row g-3">
+          <div class="col-12"><label class="form-label">Student</label><input class="form-control" id="manualPaymentStudent" readonly></div>
+          <div class="col-md-6"><label class="form-label">Student ID</label><input class="form-control" id="manualPaymentStudentCode" readonly></div>
+          <div class="col-md-6"><label class="form-label">Application No.</label><input class="form-control" id="manualPaymentApplicationNo" readonly></div>
+          <div class="col-md-6"><label class="form-label">Payment Type</label><select class="form-select" id="manualPaymentType" required><option value="Registration Fee">Registration Fee</option><option value="Hostel Admission Fee">Hostel Fee</option></select></div>
+          <div class="col-md-6"><label class="form-label">Transaction Ref.</label><input class="form-control" id="manualPaymentReference" placeholder="Optional"></div>
+          <div class="col-12"><label class="form-label">Note</label><input class="form-control" id="manualPaymentNote" placeholder="Optional"></div>
+          <div class="col-12"><div class="alert alert-warning py-2 mb-0 d-none" id="manualPaymentError"></div></div>
+        </div>
+      </div>
+      <div class="modal-footer"><button type="button" class="btn btn-ghost" data-bs-dismiss="modal">Cancel</button><button type="submit" class="btn btn-maroon" id="manualPaymentSubmit"><i class="fa-solid fa-check me-1"></i> Complete</button></div>
+    </form>
+  </div>
+</div>
+
 <!-- VIEW MODAL -->
 <div class="modal fade" id="viewStudentModal" tabindex="-1">
   <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -594,6 +616,7 @@
       escapeHtml(app.room || '-'),
       '<button class="btn btn-sm btn-ghost" onclick="mmcViewStudent(' + index + ')"><i class="fa-solid fa-eye"></i></button>' +
       '<button class="btn btn-sm btn-ghost" onclick="mmcEditStudent(' + index + ')" title="' + (canEditApplication ? 'Edit application' : 'No application submitted') + '"><i class="fa-solid fa-pen"></i></button>' +
+      '<button class="btn btn-sm btn-ghost" onclick="mmcOpenManualPayment(' + index + ')" title="Complete payment"><i class="fa-solid fa-circle-check"></i></button>' +
       '<button class="btn btn-sm btn-ghost" onclick="mmcManageStudentAccount(' + index + ')" title="Manage account"><i class="fa-solid fa-user-gear"></i></button>' +
       '<button class="btn btn-sm btn-ghost text-danger" onclick="mmcDeleteStudent(' + index + ')"><i class="fa-solid fa-trash"></i></button>',
       escapeHtml(searchText)
@@ -788,6 +811,39 @@
     new bootstrap.Modal(document.getElementById('studentAccountModal')).show();
   }
 
+  function showManualPaymentError(message){
+    var box = document.getElementById('manualPaymentError');
+    box.textContent = message || 'Unable to complete payment.';
+    box.classList.remove('d-none');
+  }
+
+  function clearManualPaymentError(){
+    var box = document.getElementById('manualPaymentError');
+    box.textContent = '';
+    box.classList.add('d-none');
+  }
+
+  function mmcOpenManualPayment(i){
+    var a = applications[i];
+    if(!a){
+      mmcToast('Student unavailable', 'This row is not linked to a student record.', 'warning');
+      return;
+    }
+    if(!a.id){
+      mmcToast('No application submitted', 'A hostel application is required before completing payment.', 'warning');
+      return;
+    }
+    clearManualPaymentError();
+    document.getElementById('manualPaymentIdentifier').value = a.appNo || a.studentCode || a.studentId || '';
+    document.getElementById('manualPaymentStudent').value = a.name || '-';
+    document.getElementById('manualPaymentStudentCode').value = a.studentCode || '-';
+    document.getElementById('manualPaymentApplicationNo').value = a.appNo || '-';
+    document.getElementById('manualPaymentReference').value = '';
+    document.getElementById('manualPaymentNote').value = '';
+    document.getElementById('manualPaymentType').value = a.registrationPaymentStatus === 'paid' ? 'Hostel Admission Fee' : 'Registration Fee';
+    new bootstrap.Modal(document.getElementById('manualPaymentModal')).show();
+  }
+
   document.getElementById('accountMobile').addEventListener('input', function(){
     this.value = this.value.replace(/\D/g, '').slice(0, 10);
   });
@@ -887,6 +943,43 @@
         button.innerHTML = originalContent;
       });
   });
+
+  document.getElementById('manualPaymentForm').addEventListener('submit', function(event){
+    event.preventDefault();
+    clearManualPaymentError();
+    var button = document.getElementById('manualPaymentSubmit');
+    var payload = {
+      identifier: document.getElementById('manualPaymentIdentifier').value.trim(),
+      payment_type: document.getElementById('manualPaymentType').value,
+      transaction_reference: document.getElementById('manualPaymentReference').value.trim() || null,
+      note: document.getElementById('manualPaymentNote').value.trim() || null
+    };
+    if(!payload.identifier){
+      showManualPaymentError('Student or application details are missing.');
+      return;
+    }
+    button.disabled = true;
+    button.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Completing...';
+    mmcApi('/api/admin/payments/manual', {
+      method:'POST',
+      headers:Object.assign({ 'Content-Type':'application/json' }, adminAuthHeaders()),
+      body:JSON.stringify(payload)
+    }).then(function(receipt){
+      var modal = bootstrap.Modal.getInstance(document.getElementById('manualPaymentModal'));
+      if(modal) modal.hide();
+      document.getElementById('manualPaymentForm').reset();
+      mmcToast('Payment completed', 'Receipt ' + (receipt.receipt_number || '') + ' has been generated.', 'success');
+      return loadApplications();
+    }).catch(function(error){
+      var message = error && error.message ? error.message : 'Unable to complete payment.';
+      showManualPaymentError(message);
+      mmcToast('Payment not completed', message, 'danger');
+    }).finally(function(){
+      button.disabled = false;
+      button.innerHTML = '<i class="fa-solid fa-check me-1"></i> Complete';
+    });
+  });
+
   document.getElementById('saveEditBtn').addEventListener('click', function(){
     var a = mmcFindByAppNo(editingAppNo);
     if(!a) return;
