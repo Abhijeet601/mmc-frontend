@@ -382,6 +382,32 @@
   var dashboardStatusPill = { Draft:'muted', Submitted:'info', Verified:'navy', Approved:'success', Shortlisted:'info', Selected:'success', Waitlisted:'warning', Pending:'navy', Rejected:'danger' };
   var charts = {};
 
+  function adminIsViewOnly(){
+    var admin = mmcCurrentAdmin() || {};
+    var role = String(admin.role || (admin.user && admin.user.role) || '').toLowerCase();
+    return role === 'view_only';
+  }
+
+  function applyViewOnlyDashboard(){
+    if(!adminIsViewOnly()) return;
+    document.querySelectorAll('.mmc-sidebar-link').forEach(function(link){
+      var page = (link.getAttribute('href') || '').split('/').pop();
+      if(['dashboard.html', 'students.html', 'reports.html', 'login.html'].indexOf(page) === -1){
+        link.classList.add('d-none');
+      }
+    });
+    document.querySelectorAll('.mmc-hero-actions a, .mmc-action-tile').forEach(function(link){
+      var page = (link.getAttribute('href') || '').split('/').pop();
+      if(['students.html', 'reports.html'].indexOf(page) === -1){
+        link.classList.add('d-none');
+      }
+    });
+    var heroTitle = document.querySelector('.mmc-admin-hero h1');
+    var heroText = document.querySelector('.mmc-admin-hero p:last-child');
+    if(heroTitle) heroTitle.textContent = 'View Only Admin Dashboard';
+    if(heroText) heroText.textContent = 'View student records, documents, reports, payments, and download receipts.';
+  }
+
   function adminAuthHeaders(){
     var admin = mmcCurrentAdmin();
     if(!admin || !admin.access_token) return {};
@@ -572,7 +598,7 @@
     }
     body.innerHTML = dashboardApplications.slice(0, 8).map(function(app, index){
       var status = normalizeStatus(app.status || app.application_status || app.form_status);
-      var canAct = ['Pending','Waitlisted','Selected','Submitted','Application Submitted'].indexOf(status) !== -1 || app.shortlist_status === 'pending';
+      var canAct = !adminIsViewOnly() && (['Pending','Waitlisted','Selected','Submitted','Application Submitted'].indexOf(status) !== -1 || app.shortlist_status === 'pending');
       var room = app.room_number || app.room || app.bed_number || app.bed || '-';
       return '<tr>' +
         '<td><div class="mmc-student-cell"><div class="mmc-student-photo">' + escapeHtml(initials(app.student_name || app.name)) + '</div><div><div class="fw-700 text-navy">' + escapeHtml(app.student_name || app.name || '-') + '</div><div class="fs-12 text-secondary">' + escapeHtml(app.application_no || app.application_number || '-') + '</div></div></div></td>' +
@@ -582,8 +608,10 @@
         '<td>' + escapeHtml(room) + '</td>' +
         '<td>' + escapeHtml(formatDateTime(app.submitted_at || app.application_submitted_at || app.created_at)) + '</td>' +
         '<td class="text-end"><div class="mmc-dashboard-actions">' +
+          (adminIsViewOnly() ? '<a class="btn btn-sm btn-outline-maroon mmc-ripple" href="students.html"><i class="fa-solid fa-eye me-1"></i> View</a>' : (
           '<button class="btn btn-sm btn-outline-maroon mmc-ripple" onclick="mmcDashboardSetStatus(' + index + ', \'Shortlisted\', this)"' + (canAct ? '' : ' disabled') + '><i class="fa-solid fa-list-check me-1"></i> Shortlist</button>' +
-          '<button class="btn btn-sm btn-maroon mmc-ripple" onclick="mmcDashboardSetStatus(' + index + ', \'Approved\', this)"' + (canAct ? '' : ' disabled') + '><i class="fa-solid fa-check me-1"></i> Approve</button>' +
+          '<button class="btn btn-sm btn-maroon mmc-ripple" onclick="mmcDashboardSetStatus(' + index + ', \'Approved\', this)"' + (canAct ? '' : ' disabled') + '><i class="fa-solid fa-check me-1"></i> Approve</button>'
+          )) +
         '</div></td>' +
       '</tr>';
     }).join('');
@@ -670,6 +698,10 @@
     });
   }
   function mmcDashboardSetStatus(index, status, button){
+    if(adminIsViewOnly()){
+      mmcToast('View only access', 'This admin account cannot update student status.', 'warning');
+      return;
+    }
     var app = dashboardApplications[index];
     if(!app || !app.student_id) return;
     var originalContent = button.innerHTML;
@@ -718,6 +750,7 @@
   });
 
   initCharts();
+  applyViewOnlyDashboard();
   addRippleHandlers();
   loadDashboardData();
 </script>
