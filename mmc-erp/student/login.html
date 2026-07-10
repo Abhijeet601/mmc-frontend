@@ -122,14 +122,18 @@
       })
     })
       .then(function(data){
-        if(data.role && String(data.role).toLowerCase().indexOf('admin') !== -1){
+        var responseRole = String(data.role || '').toLowerCase();
+        var responseUser = data.user || {};
+        var responseToken = String(data.access_token || data.token || '');
+        var isAdminLogin = responseRole === 'admin' || responseRole === 'super_admin' || responseRole === 'view_only' || responseToken.indexOf('mmc-admin-') === 0 || Boolean(responseUser.username && !responseUser.student_code);
+        if(isAdminLogin){
           sessionStorage.removeItem('mmc_student_user');
           sessionStorage.setItem('mmc_admin_user', JSON.stringify({
-            id: data.user && data.user.id,
-            username: data.username || (data.user && data.user.username),
-            email: data.email || (data.user && data.user.email),
-            full_name: data.full_name || (data.user && data.user.full_name),
-            role: data.role,
+            id: responseUser.id,
+            username: data.username || responseUser.username,
+            email: data.email || responseUser.email,
+            full_name: data.full_name || responseUser.full_name,
+            role: data.role || responseUser.role || 'admin',
             access_token: data.access_token || data.token,
             token_type: data.token_type || 'bearer'
           }));
