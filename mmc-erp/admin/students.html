@@ -68,7 +68,7 @@
         <div><div class="mmc-page-title">Student Management</div><div class="mmc-page-sub">View every student ID and hostel application record.</div></div>
         <div class="d-flex gap-2">
           <button class="btn btn-ghost" data-bs-toggle="collapse" data-bs-target="#filterPanel"><i class="fa-solid fa-sliders me-1"></i> Advanced Filters</button>
-          <button class="btn btn-maroon" data-bs-toggle="modal" data-bs-target="#addStudentModal"><i class="fa-solid fa-plus me-1"></i> Add Student</button>
+          <button class="btn btn-maroon" id="addStudentBtn" data-bs-toggle="modal" data-bs-target="#addStudentModal"><i class="fa-solid fa-plus me-1"></i> Add Student</button>
         </div>
       </div>
 
@@ -229,6 +229,14 @@
 <script src="../js/api.js"></script>
 <script>
   var statusPill = { Approved:'success', Shortlisted:'info', Selected:'success', Waitlisted:'warning', Pending:'navy', Rejected:'danger', Registered:'muted', 'ID Created':'muted' };
+  function adminIsViewOnly(){
+    var admin = mmcCurrentAdmin() || {};
+    var role = String(admin.role || (admin.user && admin.user.role) || '').toLowerCase();
+    return role === 'view_only';
+  }
+  if(adminIsViewOnly()){
+    document.getElementById('addStudentBtn').classList.add('d-none');
+  }
 
   var applications = [];
   var students = [];
@@ -615,10 +623,12 @@
       escapeHtml(app.hostel || '-'),
       escapeHtml(app.room || '-'),
       '<button class="btn btn-sm btn-ghost" onclick="mmcViewStudent(' + index + ')"><i class="fa-solid fa-eye"></i></button>' +
-      '<button class="btn btn-sm btn-ghost" onclick="mmcEditStudent(' + index + ')" title="' + (canEditApplication ? 'Edit application' : 'No application submitted') + '"><i class="fa-solid fa-pen"></i></button>' +
-      '<button class="btn btn-sm btn-ghost" onclick="mmcOpenManualPayment(' + index + ')" title="Complete payment"><i class="fa-solid fa-circle-check"></i></button>' +
-      '<button class="btn btn-sm btn-ghost" onclick="mmcManageStudentAccount(' + index + ')" title="Manage account"><i class="fa-solid fa-user-gear"></i></button>' +
-      '<button class="btn btn-sm btn-ghost text-danger" onclick="mmcDeleteStudent(' + index + ')"><i class="fa-solid fa-trash"></i></button>',
+      (adminIsViewOnly() ? '' : (
+        '<button class="btn btn-sm btn-ghost" onclick="mmcEditStudent(' + index + ')" title="' + (canEditApplication ? 'Edit application' : 'No application submitted') + '"><i class="fa-solid fa-pen"></i></button>' +
+        '<button class="btn btn-sm btn-ghost" onclick="mmcOpenManualPayment(' + index + ')" title="Complete payment"><i class="fa-solid fa-circle-check"></i></button>' +
+        '<button class="btn btn-sm btn-ghost" onclick="mmcManageStudentAccount(' + index + ')" title="Manage account"><i class="fa-solid fa-user-gear"></i></button>' +
+        '<button class="btn btn-sm btn-ghost text-danger" onclick="mmcDeleteStudent(' + index + ')"><i class="fa-solid fa-trash"></i></button>'
+      )),
       escapeHtml(searchText)
     ];
   }

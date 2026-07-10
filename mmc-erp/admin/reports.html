@@ -34,7 +34,7 @@
       <div class="mmc-breadcrumb"><a href="dashboard.html">Dashboard</a><span class="sep">/</span>Reports</div>
       <div class="mmc-page-head"><div><div class="mmc-page-title">Reports</div><div class="mmc-page-sub">View, download and manage official payment receipts.</div></div></div>
       <div class="mmc-card">
-        <div class="mmc-card-head d-flex flex-wrap gap-2 justify-content-between align-items-center"><h6>Payment Register</h6><div class="d-flex flex-wrap gap-2"><button class="btn btn-sm btn-maroon" data-bs-toggle="modal" data-bs-target="#manualPaymentModal"><i class="fa-solid fa-circle-check me-1"></i> Complete Payment</button><select class="form-select form-select-sm" id="paymentStatusFilter" style="width:180px"><option value="">All statuses</option><option value="paid">Paid / Generated</option><option value="pending">Pending</option><option value="failed">Failed</option><option value="refunded">Refunded</option></select></div></div>
+        <div class="mmc-card-head d-flex flex-wrap gap-2 justify-content-between align-items-center"><h6>Payment Register</h6><div class="d-flex flex-wrap gap-2"><button class="btn btn-sm btn-maroon" id="completePaymentBtn" data-bs-toggle="modal" data-bs-target="#manualPaymentModal"><i class="fa-solid fa-circle-check me-1"></i> Complete Payment</button><select class="form-select form-select-sm" id="paymentStatusFilter" style="width:180px"><option value="">All statuses</option><option value="paid">Paid / Generated</option><option value="pending">Pending</option><option value="failed">Failed</option><option value="refunded">Refunded</option></select></div></div>
         <div class="table-responsive"><table class="table mmc-table-card mb-0">
           <thead><tr><th>Receipt No.</th><th>Application No.</th><th>Student</th><th>Type</th><th>Order / Tracking ID</th><th>Amount</th><th>Status</th><th>Date</th><th>Receipt</th></tr></thead>
           <tbody id="adminReceiptRows"><tr><td colspan="9" class="text-center text-secondary py-4">Loading payments...</td></tr></tbody>
@@ -81,6 +81,14 @@
     return { 'Authorization':'Bearer ' + admin.access_token };
   }
   var paymentTable = null;
+  function adminIsViewOnly(){
+    var admin = mmcCurrentAdmin() || {};
+    var role = String(admin.role || (admin.user && admin.user.role) || '').toLowerCase();
+    return role === 'view_only';
+  }
+  if(adminIsViewOnly()){
+    document.getElementById('completePaymentBtn').classList.add('d-none');
+  }
   function adminReceiptType(payment){
     var key = String(payment.payment_type_key || '').toLowerCase();
     var type = String(payment.payment_type || '').toLowerCase();
