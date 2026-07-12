@@ -91,18 +91,68 @@
       <div class="mmc-card mmc-table-card mmc-reveal">
         <div class="mmc-card-body">
           <div class="row g-2 mb-3">
-            <div class="col-md-3"><select class="form-select"><option>All Categories</option><option value="UR">UR - Unreserved</option><option value="EWS">EWS - Economically Weaker Section</option><option value="BC">BC - Backward Class</option><option value="EBC">EBC - Extremely Backward Class</option><option value="SC">SC - Scheduled Caste</option><option value="ST">ST - Scheduled Tribe</option></select></div>
-            <div class="col-md-3"><select class="form-select"><option>All Hostels</option><option>Mahima Hostel</option><option>Vaidehi Hostel</option></select></div>
-            <div class="col-md-3"><select class="form-select"><option>All Status</option><option>Selected</option><option>Waitlisted</option></select></div>
+            <div class="col-md-3"><select class="form-select" id="meritCategoryFilter"><option value="">All Categories</option><option value="UR">UR - Unreserved</option><option value="EWS">EWS - Economically Weaker Section</option><option value="BC">BC - Backward Class</option><option value="EBC">EBC - Extremely Backward Class</option><option value="SC">SC - Scheduled Caste</option><option value="ST">ST - Scheduled Tribe</option></select></div>
+            <div class="col-md-3"><select class="form-select" id="meritHostelFilter"><option value="">All Hostels</option></select></div>
+            <div class="col-md-3"><select class="form-select" id="meritStatusFilter"><option value="">All Status</option><option>Shortlisted</option><option>Selected</option><option>Verified</option><option>Not Shortlisted</option></select></div>
           </div>
           <table id="meritTable" class="table mmc-table-card" style="width:100%;">
-            <thead><tr><th>Rank</th><th>Name</th><th>Percentage</th><th>Applied Cat.</th><th>Allotted Cat.</th><th>Hostel</th><th>Status</th><th>Actions</th></tr></thead>
+            <thead><tr><th>Name</th><th>Percentage</th><th>Applied Cat.</th><th>Allotted Cat.</th><th>Hostel</th><th>Status</th><th>Actions</th><th>Search</th></tr></thead>
             <tbody id="meritBody"></tbody>
           </table>
         </div>
       </div>
 
     </main>
+  </div>
+</div>
+
+<!-- EDIT MERIT STATUS MODAL -->
+<div class="modal fade" id="meritEditModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header"><h6 class="mb-0 fw-700" style="color:var(--mmc-navy);">Edit Merit Status</h6><button class="btn-close" data-bs-dismiss="modal"></button></div>
+      <div class="modal-body">
+        <div class="fw-600 mb-3" id="meritEditName" style="color:var(--mmc-navy);"></div>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label">Status</label>
+            <select class="form-select" id="meritStatusSelect">
+              <option>Shortlisted</option>
+              <option>Selected</option>
+              <option>Not Shortlisted</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Allotted Category</label>
+            <select class="form-select" id="meritAllottedSelect">
+              <option value="">No category allotted</option>
+              <option value="UR">UR</option>
+              <option value="EWS">EWS</option>
+              <option value="BC">BC</option>
+              <option value="EBC">EBC</option>
+              <option value="SC">SC</option>
+              <option value="ST">ST</option>
+            </select>
+          </div>
+          <div class="col-md-12">
+            <label class="form-label">Hostel</label>
+            <select class="form-select" id="meritHostelSelect"><option value="">No hostel allotted</option></select>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Room</label>
+            <select class="form-select" id="meritRoomSelect"><option value="">No room allotted</option></select>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Bed</label>
+            <select class="form-select" id="meritBedSelect"><option value="">No bed allotted</option></select>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" data-bs-dismiss="modal">Cancel</button>
+        <button class="btn btn-maroon" id="saveMeritEditBtn"><i class="fa-solid fa-floppy-disk me-1"></i> Save</button>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -192,26 +242,243 @@
 <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="../js/common.js"></script>
+<script src="../js/api.js"></script>
 <script>
-  var statusPill = { Selected:'success', Waitlisted:'warning' };
-
-  function renderMeritRow(m){
-    return '<tr><td><span class="mmc-rank-badge ' + (m.rank<=3?'top':'') + '">#' + m.rank + '</span></td><td>' + m.name + '</td><td>' + m.percentage + '%</td>' +
-      '<td><span class="mmc-pill muted">' + m.appliedCat + '</span></td><td><span class="mmc-pill muted">' + m.allottedCat + '</span></td><td>' + m.hostel + '</td>' +
-      '<td><span class="mmc-pill ' + (statusPill[m.status]||'muted') + '"><i class="fa-solid fa-circle"></i> ' + m.status + '</span></td>' +
-      '<td><button class="btn btn-sm btn-ghost"><i class="fa-solid fa-pen"></i></button><button class="btn btn-sm btn-ghost text-danger"><i class="fa-solid fa-trash"></i></button></td></tr>';
-  }
+  var statusPill = { Selected:'success', Shortlisted:'info', Verified:'navy', Pending:'warning', 'Not Shortlisted':'muted' };
   var meritList = [];
-  document.getElementById('meritBody').innerHTML = meritList.map(renderMeritRow).join('');
-  document.getElementById('genPreviewBody').innerHTML = meritList.slice(0,5).map(function(m){
-    return '<tr><td>#' + m.rank + '</td><td>' + m.name + '</td><td>' + m.percentage + '%</td><td>' + m.appliedCat + '</td><td>' + m.hostel + '</td></tr>';
-  }).join('') || '<tr><td colspan="5" class="text-center text-secondary py-3">No merit records available.</td></tr>';
-
-  $('#meritTable').DataTable({
+  var rooms = [];
+  var hostels = [];
+  var roomsLoaded = false;
+  var editingMeritIndex = null;
+  var meritTable = $('#meritTable').DataTable({
     pageLength: 8, lengthMenu:[5,8,10,25,50],
     language: { search:'', searchPlaceholder:'Search by name or rank...' },
     dom: "<'row mb-2'<'col-sm-6'B><'col-sm-6 text-end'f>><'table-responsive't><'row mt-2'<'col-sm-6'l><'col-sm-6'i><'col-sm-12'p>>",
-    buttons: ['copy','csv','excel','pdf','print']
+    buttons: ['copy','csv','excel','pdf','print'],
+    columnDefs: [{ targets: 7, visible: false, searchable: true }, { targets: 6, searchable: false, orderable: false }]
+  });
+
+  function escapeHtml(value){
+    return String(value == null ? '' : value).replace(/[&<>"']/g, function(ch){
+      return ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' })[ch];
+    });
+  }
+  function adminAuthHeaders(){
+    var admin = mmcCurrentAdmin();
+    if(!admin || !admin.access_token) return {};
+    return { 'Authorization':'Bearer ' + admin.access_token };
+  }
+  function adminIsViewOnly(){
+    var admin = mmcCurrentAdmin() || {};
+    var role = String(admin.role || (admin.user && admin.user.role) || '').toLowerCase();
+    return role === 'view_only';
+  }
+  function normalizeStatus(student){
+    if(student.account_active === false) return 'Inactive';
+    var raw = String(student.shortlist_status || student.verification_status || student.form_status || 'pending').toLowerCase();
+    if(raw === 'shortlisted') return 'Shortlisted';
+    if(raw === 'selected') return 'Selected';
+    if(raw === 'verified') return 'Verified';
+    if(raw === 'not_shortlisted') return 'Not Shortlisted';
+    return raw.charAt(0).toUpperCase() + raw.slice(1);
+  }
+  function mapMeritStudent(student, rank){
+    var summary = student.summary || {};
+    var percentage = summary.aggregate_percentage || summary.percentage || student.percentage || '';
+    return {
+      rank: rank,
+      studentId: student.id,
+      appNo: student.student_code || student.application_number || '',
+      name: student.name || 'Student #' + student.id,
+      email: student.email || '',
+      mobile: student.mobile_number || '',
+      percentage: percentage,
+      appliedCat: student.category || '-',
+      allottedCat: student.allotted_category || '-',
+      hostel: student.allocated_hostel || student.preferred_hostel || '-',
+      room: student.room_number || '-',
+      bed: student.bed_number || '-',
+      status: normalizeStatus(student),
+      raw: student
+    };
+  }
+  function meritRow(m, index){
+    var searchText = [m.rank, m.appNo, m.name, m.email, m.mobile, m.percentage, m.appliedCat, m.allottedCat, m.hostel, m.room, m.bed, m.status].filter(Boolean).join(' ');
+    return [
+      escapeHtml(m.name),
+      m.percentage !== '' && m.percentage != null ? escapeHtml(m.percentage) + '%' : '-',
+      '<span class="mmc-pill muted">' + escapeHtml(m.appliedCat) + '</span>',
+      '<span class="mmc-pill muted">' + escapeHtml(m.allottedCat) + '</span>',
+      escapeHtml(m.hostel || '-'),
+      '<span class="mmc-pill ' + (statusPill[m.status]||'muted') + '"><i class="fa-solid fa-circle"></i> ' + escapeHtml(m.status) + '</span>',
+      adminIsViewOnly() ? '-' : (
+        '<button class="btn btn-sm btn-ghost" onclick="mmcOpenMeritEdit(' + index + ')" title="Edit merit status"><i class="fa-solid fa-pen"></i></button>' +
+        '<button class="btn btn-sm btn-ghost text-danger" onclick="mmcMarkNotShortlisted(' + index + ')" title="Mark not shortlisted"><i class="fa-solid fa-ban"></i></button>'
+      ),
+      escapeHtml(searchText)
+    ];
+  }
+  function renderMeritTable(){
+    var category = document.getElementById('meritCategoryFilter').value;
+    var hostel = document.getElementById('meritHostelFilter').value;
+    var status = document.getElementById('meritStatusFilter').value;
+    meritTable.clear();
+    meritList.forEach(function(m, index){
+      if(category && m.allottedCat !== category && m.appliedCat !== category) return;
+      if(hostel && m.hostel !== hostel) return;
+      if(status && m.status !== status) return;
+      meritTable.row.add(meritRow(m, index));
+    });
+    meritTable.draw(false);
+    document.querySelectorAll('.mmc-counter[data-target]').forEach(function(el){ el.dataset.target = String(meritList.length); el.textContent = String(meritList.length); });
+    document.getElementById('genPreviewBody').innerHTML = meritList.slice(0,5).map(function(m){
+      return '<tr><td>#' + m.rank + '</td><td>' + escapeHtml(m.name) + '</td><td>' + (m.percentage || '-') + '</td><td>' + escapeHtml(m.appliedCat) + '</td><td>' + escapeHtml(m.hostel || '-') + '</td></tr>';
+    }).join('') || '<tr><td colspan="5" class="text-center text-secondary py-3">No merit records available.</td></tr>';
+  }
+  function loadRooms(){
+    if(roomsLoaded) return Promise.resolve(rooms);
+    return mmcApi('/api/admin/hostel/rooms', { headers: adminAuthHeaders() }).then(function(result){
+      rooms = (Array.isArray(result) ? result : (result.items || [])).filter(function(room){ return room.is_active !== false; });
+      var seen = {};
+      hostels = [];
+      rooms.forEach(function(room){
+        room.hostel_name = room.hostel_name || room.hostel || '';
+        room.room_number = room.room_number || room.room || '';
+        room.available_bed_labels = room.available_bed_labels || room.available_bed_numbers || [];
+        if(room.hostel_name && !seen[room.hostel_name]){
+          seen[room.hostel_name] = true;
+          hostels.push(room.hostel_name);
+        }
+      });
+      roomsLoaded = true;
+      renderHostelFilter();
+      return rooms;
+    });
+  }
+  function renderHostelFilter(){
+    var filter = document.getElementById('meritHostelFilter');
+    if(!filter) return;
+    var current = filter.value;
+    filter.innerHTML = '<option value="">All Hostels</option>' + hostels.map(function(name){
+      return '<option value="' + escapeHtml(name) + '">' + escapeHtml(name) + '</option>';
+    }).join('');
+    filter.value = current;
+  }
+  function loadMeritStudents(){
+    document.getElementById('meritBody').innerHTML = '<tr><td colspan="8" class="text-center text-secondary py-3">Loading merit records...</td></tr>';
+    return Promise.all([
+      mmcApi('/api/admin/students?limit=5000', { headers: adminAuthHeaders(), noCache:true }),
+      loadRooms().catch(function(){ return []; })
+    ]).then(function(values){
+      var students = values[0].items || [];
+      meritList = students
+        .filter(function(student){ return student.account_active !== false; })
+        .map(function(student){ return { student: student, pct: Number((student.summary || {}).aggregate_percentage || 0) }; })
+        .sort(function(a, b){ return b.pct - a.pct || String(a.student.name || '').localeCompare(String(b.student.name || '')); })
+        .map(function(item, index){ return mapMeritStudent(item.student, index + 1); });
+      renderMeritTable();
+    }).catch(function(error){
+      meritTable.clear().draw();
+      document.getElementById('meritBody').innerHTML = '<tr><td colspan="8" class="text-center text-secondary py-3">Unable to load merit records.</td></tr>';
+      mmcToast('Merit not loaded', error.message || 'Unable to load merit records.', 'warning');
+    });
+  }
+  function saveMeritStatus(item, statusValue, allottedCategory, hostelName, roomId, bedNumber){
+    var shouldShortlist = statusValue !== 'Not Shortlisted';
+    var selectedRoom = roomId ? rooms.find(function(room){ return Number(room.id) === Number(roomId); }) : null;
+    return mmcApi('/api/admin/students/' + item.studentId + '/shortlist', {
+      method:'PATCH',
+      headers:adminAuthHeaders(),
+      body:JSON.stringify({ shortlisted: shouldShortlist, allotted_category: shouldShortlist ? (allottedCategory || null) : null })
+    }).then(function(){
+      if(!shouldShortlist || (!hostelName && !roomId)) return null;
+      return mmcApi('/api/admin/students/' + item.studentId + '/allocate-hostel', {
+        method:'PATCH',
+        headers:adminAuthHeaders(),
+        body:JSON.stringify({
+          hostel_name: hostelName || null,
+          room_id: roomId || null,
+          room_number: selectedRoom ? selectedRoom.room_number : null,
+          bed_number: bedNumber || null
+        })
+      });
+    });
+  }
+  window.mmcMarkNotShortlisted = function(index){
+    var item = meritList[index];
+    if(!item || adminIsViewOnly()) return;
+    mmcConfirm('Mark Not Shortlisted?', 'This will remove shortlisted status, allotted category, hostel, room and bed for ' + item.name + '.', function(){
+      saveMeritStatus(item, 'Not Shortlisted', '', '', null, '')
+        .then(function(){ mmcToast('Updated', 'Student is now marked not shortlisted.', 'success'); return loadMeritStudents(); })
+        .catch(function(error){ mmcToast('Update failed', error.message || 'Unable to update merit status.', 'danger'); });
+    }, 'danger');
+  };
+  window.mmcOpenMeritEdit = function(index){
+    var item = meritList[index];
+    if(!item || adminIsViewOnly()) return;
+    editingMeritIndex = index;
+    loadRooms().finally(function(){
+      document.getElementById('meritEditName').textContent = item.name + ' - ' + item.appNo;
+      document.getElementById('meritStatusSelect').value = item.status === 'Selected' ? 'Selected' : (item.status === 'Not Shortlisted' ? 'Not Shortlisted' : 'Shortlisted');
+      document.getElementById('meritAllottedSelect').value = item.allottedCat === '-' ? '' : item.allottedCat;
+      var hostelSelect = document.getElementById('meritHostelSelect');
+      hostelSelect.innerHTML = '<option value="">No hostel allotted</option>' + hostels.map(function(name){
+        return '<option value="' + escapeHtml(name) + '">' + escapeHtml(name) + '</option>';
+      }).join('');
+      hostelSelect.value = item.hostel === '-' ? '' : item.hostel;
+      renderMeritRoomOptions(item);
+      bootstrap.Modal.getOrCreateInstance(document.getElementById('meritEditModal')).show();
+    });
+  };
+  function renderMeritRoomOptions(item){
+    var hostelName = document.getElementById('meritHostelSelect').value;
+    var roomSelect = document.getElementById('meritRoomSelect');
+    var bedSelect = document.getElementById('meritBedSelect');
+    var roomOptions = rooms.filter(function(room){ return room.hostel_name === hostelName; });
+    var currentRoom = item && item.room !== '-' ? item.room : '';
+    roomSelect.innerHTML = '<option value="">No room allotted</option>' + roomOptions.map(function(room){
+      return '<option value="' + room.id + '"' + (String(room.room_number) === String(currentRoom) ? ' selected' : '') + '>' + escapeHtml(room.room_number) + '</option>';
+    }).join('');
+    renderMeritBedOptions(item);
+  }
+  function renderMeritBedOptions(item){
+    var roomId = Number(document.getElementById('meritRoomSelect').value || 0);
+    var bedSelect = document.getElementById('meritBedSelect');
+    var room = rooms.find(function(r){ return Number(r.id) === roomId; });
+    var currentBed = item && item.bed !== '-' ? item.bed : '';
+    var beds = room && room.available_bed_labels ? room.available_bed_labels.slice() : [];
+    if(currentBed && beds.indexOf(currentBed) === -1) beds.unshift(currentBed);
+    bedSelect.innerHTML = '<option value="">No bed allotted</option>' + beds.map(function(bed){
+      return '<option value="' + escapeHtml(bed) + '"' + (String(bed) === String(currentBed) ? ' selected' : '') + '>Bed ' + escapeHtml(bed) + '</option>';
+    }).join('');
+  }
+  document.getElementById('meritCategoryFilter').addEventListener('change', renderMeritTable);
+  document.getElementById('meritHostelFilter').addEventListener('change', renderMeritTable);
+  document.getElementById('meritStatusFilter').addEventListener('change', renderMeritTable);
+  document.getElementById('meritHostelSelect').addEventListener('change', function(){ renderMeritRoomOptions(meritList[editingMeritIndex]); });
+  document.getElementById('meritRoomSelect').addEventListener('change', function(){ renderMeritBedOptions(meritList[editingMeritIndex]); });
+  document.getElementById('saveMeritEditBtn').addEventListener('click', function(){
+    var item = meritList[editingMeritIndex];
+    if(!item) return;
+    var statusValue = document.getElementById('meritStatusSelect').value;
+    var roomId = document.getElementById('meritRoomSelect').value ? Number(document.getElementById('meritRoomSelect').value) : null;
+    var bedNumber = document.getElementById('meritBedSelect').value || '';
+    if(statusValue !== 'Not Shortlisted' && roomId && !bedNumber){
+      mmcToast('Bed required', 'Select an available bed number before saving room allotment.', 'warning');
+      return;
+    }
+    var button = this;
+    var original = button.innerHTML;
+    button.disabled = true;
+    button.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Saving...';
+    saveMeritStatus(item, statusValue, document.getElementById('meritAllottedSelect').value, document.getElementById('meritHostelSelect').value, roomId, bedNumber)
+      .then(function(){
+        bootstrap.Modal.getInstance(document.getElementById('meritEditModal')).hide();
+        mmcToast('Merit updated', 'Student shortlist and allotment are saved.', 'success');
+        return loadMeritStudents();
+      })
+      .catch(function(error){ mmcToast('Merit not saved', error.message || 'Unable to save merit status.', 'danger'); })
+      .finally(function(){ button.disabled = false; button.innerHTML = original; });
   });
 
   mmcInitWizard('[data-wizard]');
@@ -224,6 +491,7 @@
     bootstrap.Modal.getInstance(document.getElementById('bulkImportModal')).hide();
     mmcToast('Import not completed', 'Merit import is not connected yet.', 'warning');
   });
+  loadMeritStudents();
 </script>
 </body>
 </html>
