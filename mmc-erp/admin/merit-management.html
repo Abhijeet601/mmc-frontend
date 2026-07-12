@@ -69,7 +69,7 @@
       <div class="mmc-page-head mb-3">
         <div><div class="mmc-page-title">Merit Management</div><div class="mmc-page-sub">Generate, review and publish the hostel admission merit list.</div></div>
         <div class="d-flex gap-2 flex-wrap">
-          <button class="btn btn-ghost" onclick="mmcToast('Template unavailable','Merit template generation is not connected yet.','warning')"><i class="fa-solid fa-file-arrow-down me-1"></i> Download Template</button>
+          <button class="btn btn-ghost" id="downloadTemplateBtn"><i class="fa-solid fa-file-arrow-down me-1"></i> Download Template</button>
           <button class="btn btn-ghost" id="downloadAllStudentsBtn"><i class="fa-solid fa-file-excel me-1"></i> Download All Students</button>
           <button class="btn btn-ghost" id="uploadAllocationBtn"><i class="fa-solid fa-upload me-1"></i> Upload Room Allocation Excel</button>
           <input type="file" id="allocationInput" class="d-none" accept=".xlsx,.xls,.csv">
@@ -546,6 +546,36 @@
     XLSX.utils.book_append_sheet(wb, ws, 'Room Allocation');
     XLSX.writeFile(wb, 'MMC_All_Students_Room_Allocation.xlsx');
   }
+  function downloadAllocationTemplate(){
+    if(typeof XLSX === 'undefined'){
+      mmcToast('Excel unavailable', 'Excel library is still loading. Please try again.', 'warning');
+      return;
+    }
+    var rows = allocationExportRows().map(function(row){
+      row['Hostel Name'] = '';
+      row['Room Number'] = '';
+      row['Bed Number'] = '';
+      return row;
+    });
+    if(!rows.length){
+      rows = [{
+        'Student ID': '',
+        'Application ID': '',
+        'Student Name': '',
+        'Course': '',
+        'Category': '',
+        'Merit Status': '',
+        'Hostel Name': '',
+        'Room Number': '',
+        'Bed Number': ''
+      }];
+    }
+    var wb = XLSX.utils.book_new();
+    var ws = XLSX.utils.json_to_sheet(rows);
+    ws['!cols'] = [{wch:18},{wch:16},{wch:28},{wch:22},{wch:14},{wch:18},{wch:24},{wch:14},{wch:12}];
+    XLSX.utils.book_append_sheet(wb, ws, 'Room Allocation Template');
+    XLSX.writeFile(wb, 'MMC_Room_Allocation_Template.xlsx');
+  }
   function getSheetValue(row, names){
     for(var i = 0; i < names.length; i++){
       if(row[names[i]] != null) return row[names[i]];
@@ -675,6 +705,7 @@
   document.getElementById('meritCategoryFilter').addEventListener('change', renderMeritTable);
   document.getElementById('meritHostelFilter').addEventListener('change', renderMeritTable);
   document.getElementById('meritStatusFilter').addEventListener('change', renderMeritTable);
+  document.getElementById('downloadTemplateBtn').addEventListener('click', downloadAllocationTemplate);
   document.getElementById('downloadAllStudentsBtn').addEventListener('click', downloadAllStudentsExcel);
   document.getElementById('uploadAllocationBtn').addEventListener('click', function(){ document.getElementById('allocationInput').click(); });
   document.getElementById('allocationInput').addEventListener('change', function(){
