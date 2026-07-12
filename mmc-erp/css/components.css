@@ -696,3 +696,119 @@ a.dt-button:hover{
     left: 0;
   }
 }
+
+/* ============================= MOTION POLISH ============================= */
+.mmc-page-head{
+  animation: mmcSoftScale .38s cubic-bezier(.2,.8,.2,1) both;
+}
+.mmc-breadcrumb{
+  animation: mmcSoftRise .42s cubic-bezier(.2,.8,.2,1) both;
+}
+.mmc-card,
+.mmc-ticket,
+.mmc-stat-card{
+  will-change: transform, box-shadow;
+}
+.mmc-page > .row > [class*="col-"],
+.mmc-page > .mmc-card,
+.mmc-page > .mmc-ticket{
+  animation: mmcSoftRise .46s cubic-bezier(.2,.8,.2,1) both;
+}
+.mmc-page > .row > [class*="col-"]:nth-child(2){ animation-delay: .04s; }
+.mmc-page > .row > [class*="col-"]:nth-child(3){ animation-delay: .08s; }
+.mmc-page > .row > [class*="col-"]:nth-child(4){ animation-delay: .12s; }
+.mmc-page > .row > [class*="col-"]:nth-child(5){ animation-delay: .16s; }
+.mmc-card:hover .mmc-card-head h6 i,
+.mmc-stat-card:hover .mmc-stat-icon i,
+.mmc-action-card:hover .icon i,
+.mmc-room-card:hover i{
+  animation: mmcGentlePulse .55s ease both;
+}
+.btn,
+.mmc-icon-btn,
+.mmc-sidebar-toggle,
+.mmc-profile-trigger,
+.mmc-sidebar-link,
+.mmc-action-card,
+.mmc-room-card,
+.mmc-pay-method,
+.mmc-fee-option,
+.mmc-upload-chip,
+.mmc-pill{
+  transition-timing-function: cubic-bezier(.2,.8,.2,1);
+}
+.btn i,
+.mmc-sidebar-link i,
+.mmc-icon-btn i{
+  transition: transform .22s cubic-bezier(.2,.8,.2,1), color .22s ease;
+}
+.btn:hover i.fa-arrow-right,
+.btn:hover i.fa-arrow-up-right-from-square,
+.mmc-sidebar-link:hover i{
+  animation: mmcIconNudge .36s ease both;
+}
+.btn-maroon,
+.btn-navy,
+.mmc-sidebar-link.active,
+.dataTables_wrapper .dataTables_paginate .paginate_button.current,
+.dt-container .dt-paging .dt-paging-button.current{
+  position: relative;
+  overflow: hidden;
+}
+.btn-maroon::after,
+.btn-navy::after,
+.mmc-sidebar-link.active::after{
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);
+  transform: translateX(-120%);
+  pointer-events: none;
+}
+.btn-maroon:hover::after,
+.btn-navy:hover::after,
+.mmc-sidebar-link.active:hover::after{
+  animation: mmcGlowSweep .72s ease;
+}
+.dropdown-menu.show{
+  animation: mmcSlideDown .22s cubic-bezier(.2,.8,.2,1) both;
+}
+.modal.show .modal-dialog{
+  animation: mmcPopIn .26s cubic-bezier(.2,.8,.2,1) both;
+}
+.toast.showing,
+.toast.show{
+  animation: mmcPopIn .28s cubic-bezier(.2,.8,.2,1) both;
+}
+.mmc-table-card tbody tr{
+  animation: mmcSoftRise .32s cubic-bezier(.2,.8,.2,1) both;
+}
+.mmc-table-card tbody tr:nth-child(2){ animation-delay: .015s; }
+.mmc-table-card tbody tr:nth-child(3){ animation-delay: .03s; }
+.mmc-table-card tbody tr:nth-child(4){ animation-delay: .045s; }
+.mmc-table-card tbody tr:nth-child(5){ animation-delay: .06s; }
+.mmc-table-card tbody tr:nth-child(6){ animation-delay: .075s; }
+.mmc-table-card tbody tr:nth-child(7){ animation-delay: .09s; }
+.mmc-table-card tbody tr:nth-child(8){ animation-delay: .105s; }
+.mmc-table-card tbody tr:nth-child(9){ animation-delay: .12s; }
+.mmc-pill.success i,
+.mmc-pill.info i,
+.mmc-pill.warning i{
+  animation: mmcGentlePulse 1.8s ease-in-out infinite;
+}
+.form-control,
+.form-select,
+.dataTables_wrapper .dataTables_filter input,
+.dataTables_wrapper .dataTables_length select{
+  transition: border-color .2s ease, box-shadow .2s ease, transform .2s cubic-bezier(.2,.8,.2,1);
+}
+.form-control:focus,
+.form-select:focus,
+.dataTables_wrapper .dataTables_filter input:focus,
+.dataTables_wrapper .dataTables_length select:focus{
+  transform: translateY(-1px);
+}
+.mmc-dropzone:hover i,
+.mmc-dropzone.dragover i{
+  animation: mmcGentlePulse .7s ease both;
+}
