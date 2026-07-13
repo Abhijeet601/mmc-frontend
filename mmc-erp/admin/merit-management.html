@@ -336,7 +336,7 @@
   }
   function mapMeritStudent(student, rank){
     var summary = student.summary || {};
-    var percentage = summary.aggregate_percentage || summary.percentage || student.percentage || '';
+    var percentage = String(summary.aggregate_percentage || summary.percentage || student.percentage || '').replace(/%/g, '').trim();
     return {
       rank: rank,
       studentId: student.id,
@@ -354,12 +354,16 @@
       raw: student
     };
   }
+  function formatMeritPercentage(value){
+    var clean = String(value || '').replace(/%/g, '').trim();
+    return clean ? escapeHtml(clean) + '%' : '-';
+  }
   function meritRow(m, index){
     var searchText = [m.rank, m.appNo, m.name, m.email, m.mobile, m.percentage, m.appliedCat, m.allottedCat, m.hostel, m.room, m.bed, m.status].filter(Boolean).join(' ');
     return [
       adminIsViewOnly() ? '' : '<input type="checkbox" class="merit-select" value="' + m.studentId + '"' + (selectedMeritIds.has(String(m.studentId)) ? ' checked' : '') + '>',
       escapeHtml(m.name),
-      m.percentage !== '' && m.percentage != null ? escapeHtml(m.percentage) + '%' : '-',
+      formatMeritPercentage(m.percentage),
       '<span class="mmc-pill muted">' + escapeHtml(m.appliedCat) + '</span>',
       '<span class="mmc-pill muted">' + escapeHtml(m.allottedCat) + '</span>',
       escapeHtml(m.hostel || '-'),
@@ -386,7 +390,7 @@
     updateSelectedMeritCount();
     document.querySelectorAll('.mmc-counter[data-target]').forEach(function(el){ el.dataset.target = String(meritList.length); el.textContent = String(meritList.length); });
     document.getElementById('genPreviewBody').innerHTML = meritList.slice(0,5).map(function(m){
-      return '<tr><td>#' + m.rank + '</td><td>' + escapeHtml(m.name) + '</td><td>' + (m.percentage || '-') + '</td><td>' + escapeHtml(m.appliedCat) + '</td><td>' + escapeHtml(m.hostel || '-') + '</td></tr>';
+      return '<tr><td>#' + m.rank + '</td><td>' + escapeHtml(m.name) + '</td><td>' + formatMeritPercentage(m.percentage) + '</td><td>' + escapeHtml(m.appliedCat) + '</td><td>' + escapeHtml(m.hostel || '-') + '</td></tr>';
     }).join('') || '<tr><td colspan="5" class="text-center text-secondary py-3">No merit records available.</td></tr>';
   }
   function updateSelectedMeritCount(){
