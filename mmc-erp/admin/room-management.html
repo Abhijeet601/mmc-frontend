@@ -147,9 +147,12 @@
         </div>
         <div id="raTransferBlock" style="display:none;">
           <label class="form-label">Current Occupant</label>
-          <input type="text" class="form-control mb-2" value="" readonly>
+          <select class="form-select mb-2" id="raOccupantSelect"><option value="">Open a room to view occupants</option></select>
           <label class="form-label">Transfer To Room</label>
-          <select class="form-select" id="raTransferSelect"><option>No available rooms loaded</option></select>
+          <select class="form-select mb-2" id="raTransferSelect"><option value="">No available rooms loaded</option></select>
+          <label class="form-label">Available Bed</label>
+          <select class="form-select" id="raTransferBedSelect"><option value="">Select destination room first</option></select>
+          <div class="fs-12 text-secondary mt-2" id="raTransferHint">Only rooms with available beds are shown.</div>
         </div>
         <div class="mt-3">
           <div class="d-flex justify-content-between align-items-center mb-2">
@@ -502,6 +505,89 @@
     }
   }
 
+  function roomHostelName(room){
+    var hostel = hostels.find(function(item){ return Number(item.id) === Number(room.hostel_id); });
+    return hostel ? hostel.name : (room.hostel_name || '');
+  }
+
+  function occupiedBedsFromInventory(data){
+    return (data && data.beds ? data.beds : []).filter(function(bed){
+      return bed.status === 'occupied' && bed.student_db_id;
+    });
+  }
+
+  function transferDestinationRooms(sourceRoomId){
+    return rooms.filter(function(room){
+      if(Number(room.id) === Number(sourceRoomId)) return false;
+      if(room.status === 'reserved' || room.status === 'maintenance') return false;
+      return roomAvailableCount(room) > 0;
+    }).sort(sortRooms);
+  }
+
+  function renderTransferBlock(room, inventory){
+    currentRoomForAllocation = room || currentRoomForAllocation;
+    currentRoomInventory = inventory || currentRoomInventory;
+    var occupants = occupiedBedsFromInventory(currentRoomInventory);
+    var destinations = transferDestinationRooms(currentRoomForAllocation ? currentRoomForAllocation.id : 0);
+    var canTransfer = !adminIsViewOnly() && occupants.length > 0 && destinations.length > 0;
+    document.getElementById('raTransferBlock').style.display = canTransfer ? 'block' : 'none';
+    if(!canTransfer) return;
+    document.getElementById('raOccupantSelect').innerHTML = '<option value="">Select occupant</option>' + occupants.map(function(bed){
+      var label = (bed.student_name || 'Student') + ' - ' + (bed.student_id || '') + ' - Bed ' + (bed.bed || bed.bed_number || '');
+      return '<option value="' + Number(bed.student_db_id) + '">' + escapeHtml(label) + '</option>';
+    }).join('');
+    document.getElementById('raTransferSelect').innerHTML = '<option value="">Select destination room</option>' + destinations.map(function(room){
+      var label = roomHostelName(room) + ' - Room ' + roomLabel(room) + ' - ' + roomAvailableCount(room) + ' bed(s) available';
+      return '<option value="' + Number(room.id) + '">' + escapeHtml(label) + '</option>';
+    }).join('');
+    renderTransferBedOptions();
+    document.getElementById('raTransferHint').textContent = destinations.length + ' room(s) with available beds.';
+  }
+
+  function renderTransferBedOptions(){
+    var roomId = Number(document.getElementById('raTransferSelect').value || 0);
+    var bedSelect = document.getElementById('raTransferBedSelect');
+    var room = rooms.find(function(item){ return Number(item.id) === roomId; });
+    var beds = room ? (room.available_bed_numbers || room.available_bed_labels || []) : [];
+    if(!beds.length){
+      bedSelect.innerHTML = '<option value="">No available bed</option>';
+      return;
+    }
+    bedSelect.innerHTML = '<option value="">Select bed</option>' + beds.map(function(bed){
+      return '<option value="' + escapeHtml(bed) + '">Bed ' + escapeHtml(bed) + '</option>';
+    }).join('');
+  }
+
+  function transferStudentFromRoom(sourceRoomId){
+    var studentId = Number(document.getElementById('raOccupantSelect').value || 0);
+    var destinationRoomId = Number(document.getElementById('raTransferSelect').value || 0);
+    var bedNumber = document.getElementById('raTransferBedSelect').value || '';
+    var destinationRoom = rooms.find(function(room){ return Number(room.id) === destinationRoomId; });
+    if(!studentId || !destinationRoom || !bedNumber){
+      mmcToast('Transfer incomplete', 'Select occupant, destination room and available bed.', 'warning');
+      return;
+    }
+    mmcConfirm('Transfer Student?', 'This will move the selected student to room ' + roomLabel(destinationRoom) + ', bed ' + bedNumber + '.', function(){
+      mmcApi('/api/admin/students/' + studentId + '/allocate-hostel', {
+        method:'PATCH',
+        headers:adminAuthHeaders(),
+        body:JSON.stringify({
+          hostel_name: roomHostelName(destinationRoom),
+          room_id: destinationRoom.id,
+          room_number: destinationRoom.room_number,
+          bed_number: bedNumber
+        })
+      }).then(function(){
+        mmcToast('Student transferred', 'Student has been moved to room ' + roomLabel(destinationRoom) + ', bed ' + bedNumber + '.', 'success');
+        return Promise.all([loadRooms(true), loadRoomBedInventory(sourceRoomId)]);
+      }).then(function(){
+        renderTransferBlock(rooms.find(function(room){ return Number(room.id) === Number(sourceRoomId); }), currentRoomInventory);
+      }).catch(function(error){
+        mmcToast('Transfer failed', error.message || 'Unable to transfer student.', 'danger');
+      });
+    }, 'navy');
+  }
+
   function allocateStudentFromRoom(roomId){
     var room = rooms.find(function(item){ return Number(item.id) === Number(roomId); });
     var studentId = Number(document.getElementById('raStudentSelect').value || 0);
@@ -553,6 +639,7 @@
         renderFloorTabs();
         renderGrid();
         renderAllocationBlock(rooms.find(function(room){ return Number(room.id) === Number(roomId); }), currentRoomInventory);
+        renderTransferBlock(rooms.find(function(room){ return Number(room.id) === Number(roomId); }), currentRoomInventory);
         return data;
       })
       .catch(function(err){
@@ -641,6 +728,7 @@
     renderGrid();
   });
   document.getElementById('raStudentSearch').addEventListener('input', renderPaidStudentOptions);
+  document.getElementById('raTransferSelect').addEventListener('change', renderTransferBedOptions);
 
   function renderHostelTabs(){
     var tabs = document.getElementById('hostelTabs');
@@ -719,7 +807,7 @@
     } else if(displayStatus === 'occupied'){
       footer.innerHTML = '<button class="btn btn-ghost" data-bs-dismiss="modal">Close</button>' +
         '<button class="btn btn-outline-maroon" data-bs-dismiss="modal" onclick="mmcConfirm(\'Cancel Allocation?\',\'Allocation cancellation is not connected yet.\', function(){ mmcToast(\'Allocation not cancelled\',\'Room allocation persistence is not connected yet.\',\'warning\'); })">Cancel Allocation</button>' +
-        '<button class="btn btn-outline-maroon" data-bs-dismiss="modal" onclick="mmcToast(\'Room not transferred\',\'Room transfer is not connected yet.\',\'warning\')"><i class="fa-solid fa-right-left me-1"></i> Transfer Room</button>' + statusApplyButton(r.id);
+        '<button class="btn btn-outline-maroon" type="button" onclick="transferStudentFromRoom(' + Number(r.id) + ')"><i class="fa-solid fa-right-left me-1"></i> Transfer Student</button>' + statusApplyButton(r.id);
     } else {
       footer.innerHTML = '<button class="btn btn-ghost" data-bs-dismiss="modal">Close</button>' + statusApplyButton(r.id);
     }
@@ -733,6 +821,7 @@
     ]).then(function(){
       renderPaidStudentOptions();
       renderAllocationBlock(rooms.find(function(room){ return Number(room.id) === Number(r.id); }), currentRoomInventory);
+      renderTransferBlock(rooms.find(function(room){ return Number(room.id) === Number(r.id); }), currentRoomInventory);
     });
   };
 
