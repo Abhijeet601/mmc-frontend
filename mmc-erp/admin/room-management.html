@@ -760,7 +760,10 @@
         var roomResult = results[1] || [];
         rooms = Array.isArray(roomResult) ? roomResult : (roomResult.items || []);
         if(!currentHostelId && hostels.length) currentHostelId = hostels[0].id;
-        currentFloor = floorTabsForCurrentHostel()[0].floor;
+        var floorTabs = floorTabsForCurrentHostel();
+        if(!floorTabs.some(function(item){ return Number(item.floor) === Number(currentFloor); })){
+          currentFloor = floorTabs[0].floor;
+        }
         renderHostelTabs();
         renderFloorTabs();
         renderGrid();
