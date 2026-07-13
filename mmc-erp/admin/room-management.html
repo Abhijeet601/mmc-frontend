@@ -95,7 +95,7 @@
 
       <div class="row g-3 mb-3">
         <div class="col-sm-6 col-lg-3"><div class="mmc-stat-card mmc-slide-up mmc-delay-1"><div class="mmc-stat-icon mmc-icon-navy"><i class="fa-solid fa-door-closed"></i></div><div><div class="mmc-stat-value" id="statTotal">0</div><div class="mmc-stat-label">Total Rooms</div></div></div></div>
-        <div class="col-sm-6 col-lg-3"><div class="mmc-stat-card mmc-slide-up mmc-delay-2"><div class="mmc-stat-icon mmc-icon-success"><i class="fa-solid fa-door-open"></i></div><div><div class="mmc-stat-value" id="statAvail">0</div><div class="mmc-stat-label">Available</div></div></div></div>
+        <div class="col-sm-6 col-lg-3"><div class="mmc-stat-card mmc-slide-up mmc-delay-2"><div class="mmc-stat-icon mmc-icon-success"><i class="fa-solid fa-bed"></i></div><div><div class="mmc-stat-value" id="statAvail">0</div><div class="mmc-stat-label">Beds Available</div></div></div></div>
         <div class="col-sm-6 col-lg-3"><div class="mmc-stat-card mmc-slide-up mmc-delay-3"><div class="mmc-stat-icon mmc-icon-danger"><i class="fa-solid fa-user-group"></i></div><div><div class="mmc-stat-value" id="statOcc">0</div><div class="mmc-stat-label">Occupied</div></div></div></div>
         <div class="col-sm-6 col-lg-3"><div class="mmc-stat-card mmc-slide-up mmc-delay-4"><div class="mmc-stat-icon mmc-icon-warning"><i class="fa-solid fa-screwdriver-wrench"></i></div><div><div class="mmc-stat-value" id="statMaint">0</div><div class="mmc-stat-label">Reserved / Maintenance</div></div></div></div>
       </div>
@@ -637,15 +637,16 @@
 
   renderGrid = function(){
     var visibleRooms = currentHostelRooms();
-    var counts = { available:0, occupied:0, reserved:0, maintenance:0 };
+    var counts = { available:0, occupied:0, reserved:0, maintenance:0, availableBeds:0 };
     visibleRooms.forEach(function(r){
       var displayStatus = roomDisplayStatus(r);
       if(counts[displayStatus] == null) counts[displayStatus] = 0;
       counts[displayStatus]++;
+      if(displayStatus !== 'reserved' && displayStatus !== 'maintenance') counts.availableBeds += roomAvailableCount(r);
     });
 
     document.getElementById('statTotal').textContent = visibleRooms.length;
-    document.getElementById('statAvail').textContent = counts.available;
+    document.getElementById('statAvail').textContent = counts.availableBeds;
     document.getElementById('statOcc').textContent = counts.occupied;
     document.getElementById('statMaint').textContent = counts.reserved + counts.maintenance;
 
