@@ -312,7 +312,11 @@
     mmcApplyStudentNavigation(workflow);
     admissionSettings = workflow && workflow.settings ? workflow.settings : null;
     if(workflow && workflow.application && !workflow.draft){
-      draftApplication = workflow.application;
+      formLocked = true;
+      document.querySelectorAll('input, select, textarea, button').forEach(function(element){ element.disabled = true; });
+      mmcToast('Application locked', 'Student-side editing is disabled after submission. Contact admin for changes.', 'info');
+      setTimeout(function(){ window.location.href = 'application-preview.html'; }, 900);
+      return workflow;
     } else if(workflow && workflow.draft){
       draftApplication = workflow.application;
     }

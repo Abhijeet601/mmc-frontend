@@ -113,7 +113,18 @@ function mmcApplyStudentNavigation(workflow){
       link.style.display = visible ? '' : 'none';
     });
   }
-  setVisible('application-form.html', true);
+  var canEditApplication = !workflow.application || workflow.draft;
+  if(canEditApplication){
+    setVisible('application-form.html', true);
+  } else {
+    document.querySelectorAll('.mmc-sidebar-link[href="application-form.html"]').forEach(function(link){
+      link.href = 'application-preview.html';
+      var icon = link.querySelector('i');
+      var label = link.querySelector('span');
+      if(icon) icon.className = 'fa-solid fa-eye';
+      if(label) label.textContent = 'Application Preview';
+    });
+  }
   setVisible('fee-payment.html', Boolean(workflow.application && !workflow.draft && !workflow.registrationPaid));
   setVisible('hostel-fee-payment.html', Boolean(workflow.registrationPaid && workflow.shortlisted && !workflow.hostelPaid));
   setVisible('room-allotment.html', Boolean(workflow.hostelPaid || workflow.roomAllotted));
