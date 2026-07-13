@@ -135,11 +135,10 @@
         </div>
         <div id="raAllocateBlock" style="display:none;">
           <label class="form-label">Allocate to Student</label>
-          <select class="form-select mb-2" id="raStudentSelect">
-            <option> - Pending - General</option>
-            <option> - Pending - BC</option>
-            <option> - Waitlisted - EBC</option>
-          </select>
+          <select class="form-select mb-2" id="raStudentSelect"><option value="">Loading hostel-fee paid students...</option></select>
+          <label class="form-label">Available Bed</label>
+          <select class="form-select" id="raBedSelect"><option value="">Open a room to view available beds</option></select>
+          <div class="fs-12 text-secondary mt-2" id="raAllocationHint">Only students with paid hostel fee are shown.</div>
         </div>
         <div id="raTransferBlock" style="display:none;">
           <label class="form-label">Current Occupant</label>
@@ -250,11 +249,72 @@
   var currentHostelId = null;
   var currentFloor = 1;
   var rooms = [];
+  var paidHostelStudents = [];
+  var paidStudentsLoaded = false;
+  var currentRoomInventory = null;
+  var currentRoomForAllocation = null;
 
   function escapeHtml(value){
     return String(value == null ? '' : value).replace(/[&<>"']/g, function(ch){
       return ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' })[ch];
     });
+  }
+
+  function adminAuthHeaders(){
+    var admin = mmcCurrentAdmin();
+    if(!admin || !admin.access_token) return {};
+    return { 'Authorization':'Bearer ' + admin.access_token };
+  }
+
+  function adminIsViewOnly(){
+    var admin = mmcCurrentAdmin() || {};
+    var role = String(admin.role || (admin.user && admin.user.role) || '').toLowerCase();
+    return role === 'view_only';
+  }
+
+  function normalizePaymentValue(value){
+    var raw = String(value == null ? '' : value).toLowerCase();
+    if(['paid','success','successful','completed','captured'].indexOf(raw) !== -1) return 'paid';
+    if(['failed','failure','declined','cancelled','canceled','aborted','payment_failed'].indexOf(raw) !== -1) return 'failed';
+    if(['refunded','refund'].indexOf(raw) !== -1) return 'refunded';
+    return raw || 'pending';
+  }
+
+  function studentHostelFeePaid(student){
+    return normalizePaymentValue(student.hostel_payment_status || student.hostel_status) === 'paid';
+  }
+
+  function studentAlreadyAllocated(student){
+    return Boolean(student.room_number || student.bed_number || String(student.shortlist_status || '').toLowerCase() === 'room_allocated');
+  }
+
+  function loadPaidHostelStudents(){
+    if(paidStudentsLoaded) return Promise.resolve(paidHostelStudents);
+    return mmcApi('/api/admin/students?limit=5000', { headers: adminAuthHeaders(), noCache:true })
+      .then(function(result){
+        paidHostelStudents = (result.items || []).filter(function(student){
+          return student.account_active !== false && studentHostelFeePaid(student) && !studentAlreadyAllocated(student);
+        });
+        paidStudentsLoaded = true;
+        return paidHostelStudents;
+      });
+  }
+
+  function renderPaidStudentOptions(){
+    var select = document.getElementById('raStudentSelect');
+    if(!select) return;
+    if(!paidStudentsLoaded){
+      select.innerHTML = '<option value="">Loading hostel-fee paid students...</option>';
+      return;
+    }
+    if(!paidHostelStudents.length){
+      select.innerHTML = '<option value="">No hostel-fee paid unallocated students</option>';
+      return;
+    }
+    select.innerHTML = '<option value="">Select student</option>' + paidHostelStudents.map(function(student){
+      var label = (student.name || 'Student #' + student.id) + ' - ' + (student.student_code || student.application_number || '') + ' - ' + (student.course_name || '');
+      return '<option value="' + Number(student.id) + '">' + escapeHtml(label) + '</option>';
+    }).join('');
   }
 
   function roomLabel(room){
@@ -302,7 +362,8 @@
 
   function roomDisplayStatus(room){
     if(room.status === 'reserved' || room.status === 'maintenance') return room.status;
-    return roomAvailableCount(room) <= 0 ? 'full' : 'available';
+    if(roomOccupiedCount(room) > 0) return 'occupied';
+    return 'available';
   }
 
   function roomCardClass(room){
@@ -312,6 +373,7 @@
 
   function occupancyText(occupied, total){
     if(total > 0 && occupied >= total) return occupied + '/' + total + ' Full';
+    if(occupied > 0) return occupied + '/' + total + ' Occupied';
     return occupied + '/' + total + ' Occupied';
   }
 
@@ -343,21 +405,92 @@
     }).join('') || '<div class="py-3 text-center fs-13 text-secondary">No beds configured for this room.</div>';
   }
 
+  function availableBedsFromInventory(data){
+    if(!data) return [];
+    if(Array.isArray(data.available_bed_numbers)) return data.available_bed_numbers;
+    return (data.beds || []).filter(function(bed){ return bed.status !== 'occupied'; }).map(function(bed){ return bed.bed || bed.bed_number; }).filter(Boolean);
+  }
+
+  function renderBedOptions(data){
+    var bedSelect = document.getElementById('raBedSelect');
+    if(!bedSelect) return;
+    var beds = availableBedsFromInventory(data);
+    if(!beds.length){
+      bedSelect.innerHTML = '<option value="">No bed available</option>';
+      return;
+    }
+    bedSelect.innerHTML = '<option value="">Select bed</option>' + beds.map(function(bed){
+      return '<option value="' + escapeHtml(bed) + '">Bed ' + escapeHtml(bed) + '</option>';
+    }).join('');
+  }
+
+  function roomCanAllocate(room){
+    if(!room || adminIsViewOnly()) return false;
+    if(room.status === 'reserved' || room.status === 'maintenance') return false;
+    return roomAvailableCount(room) > 0;
+  }
+
+  function renderAllocationBlock(room, inventory){
+    currentRoomForAllocation = room || currentRoomForAllocation;
+    currentRoomInventory = inventory || currentRoomInventory;
+    var canAllocate = roomCanAllocate(currentRoomForAllocation) && availableBedsFromInventory(currentRoomInventory).length > 0;
+    document.getElementById('raAllocateBlock').style.display = canAllocate ? 'block' : 'none';
+    if(canAllocate){
+      renderPaidStudentOptions();
+      renderBedOptions(currentRoomInventory);
+      document.getElementById('raAllocationHint').textContent = 'Only hostel-fee paid students without an existing room are shown.';
+    }
+  }
+
+  function allocateStudentFromRoom(roomId){
+    var room = rooms.find(function(item){ return Number(item.id) === Number(roomId); });
+    var studentId = Number(document.getElementById('raStudentSelect').value || 0);
+    var bedNumber = document.getElementById('raBedSelect').value || '';
+    var hostel = selectedHostel();
+    if(!room || !studentId || !bedNumber){
+      mmcToast('Allocation incomplete', 'Select a hostel-fee paid student and available bed.', 'warning');
+      return;
+    }
+    mmcConfirm('Allocate Room?', 'This will allot room ' + roomLabel(room) + ', bed ' + bedNumber + ' to the selected student.', function(){
+      mmcApi('/api/admin/students/' + studentId + '/allocate-hostel', {
+        method:'PATCH',
+        headers:adminAuthHeaders(),
+        body:JSON.stringify({
+          hostel_name: hostel ? hostel.name : null,
+          room_id: room.id,
+          room_number: room.room_number,
+          bed_number: bedNumber
+        })
+      }).then(function(){
+        paidStudentsLoaded = false;
+        mmcToast('Room allocated', 'Student has been allotted room ' + roomLabel(room) + ', bed ' + bedNumber + '.', 'success');
+        return Promise.all([loadRoomBedInventory(room.id), loadPaidHostelStudents(), loadRooms(true)]);
+      }).then(function(){
+        renderPaidStudentOptions();
+        renderAllocationBlock(rooms.find(function(item){ return Number(item.id) === Number(roomId); }), currentRoomInventory);
+      }).catch(function(error){
+        mmcToast('Allocation failed', error.message || 'Unable to allocate room.', 'danger');
+      });
+    }, 'navy');
+  }
+
   function loadRoomBedInventory(roomId){
     renderBedInventoryLoading();
     return mmcApi('/rooms/' + Number(roomId) + '/beds')
       .then(function(data){
         renderBedInventory(data || {});
+        currentRoomInventory = data || {};
         rooms = rooms.map(function(room){
           if(Number(room.id) !== Number(roomId)) return room;
           return Object.assign({}, room, {
             occupied_beds: data.occupied_beds,
             available_beds: data.available_beds,
-            status: data.status === 'full' ? 'occupied' : data.status
+            status: Number(data.occupied_beds || 0) > 0 ? 'occupied' : (data.status === 'full' ? 'occupied' : data.status)
           });
         });
         renderFloorTabs();
         renderGrid();
+        renderAllocationBlock(rooms.find(function(room){ return Number(room.id) === Number(roomId); }), currentRoomInventory);
         return data;
       })
       .catch(function(err){
@@ -471,8 +604,9 @@
     var visibleRooms = currentHostelRooms();
     var counts = { available:0, occupied:0, reserved:0, maintenance:0 };
     visibleRooms.forEach(function(r){
-      if(counts[r.status] == null) counts[r.status] = 0;
-      counts[r.status]++;
+      var displayStatus = roomDisplayStatus(r);
+      if(counts[displayStatus] == null) counts[displayStatus] = 0;
+      counts[displayStatus]++;
     });
 
     document.getElementById('statTotal').textContent = visibleRooms.length;
@@ -496,21 +630,26 @@
   mmcOpenRoom = function(roomId){
     var r = rooms.find(function(x){ return Number(x.id) === Number(roomId); });
     if(!r) return;
+    currentRoomForAllocation = r;
+    currentRoomInventory = null;
     document.getElementById('raRoomNo').textContent = roomLabel(r);
     document.getElementById('raFloor').textContent = r.floor;
     document.getElementById('raBuilding').textContent = r.building || '-';
     document.getElementById('raBeds').textContent = Number(r.beds || 0) + ' bed' + (Number(r.beds || 0) === 1 ? '' : 's');
-    document.getElementById('raStatus').innerHTML = '<span class="mmc-pill ' + statusClass(r.status) + '"><i class="fa-solid fa-circle"></i> ' + escapeHtml(r.status) + '</span>';
+    var displayStatus = roomDisplayStatus(r);
+    document.getElementById('raStatus').innerHTML = '<span class="mmc-pill ' + statusClass(displayStatus) + '"><i class="fa-solid fa-circle"></i> ' + escapeHtml(displayStatus) + '</span>';
     document.getElementById('raStatusSelect').value = r.status || 'available';
     renderBedInventoryLoading();
 
-    document.getElementById('raAllocateBlock').style.display = (r.status === 'available') ? 'block' : 'none';
-    document.getElementById('raTransferBlock').style.display = (r.status === 'occupied') ? 'block' : 'none';
+    document.getElementById('raAllocateBlock').style.display = roomCanAllocate(r) ? 'block' : 'none';
+    document.getElementById('raStudentSelect').innerHTML = '<option value="">Loading hostel-fee paid students...</option>';
+    document.getElementById('raBedSelect').innerHTML = '<option value="">Loading available beds...</option>';
+    document.getElementById('raTransferBlock').style.display = (displayStatus === 'occupied') ? 'block' : 'none';
 
     var footer = document.getElementById('raFooter');
-    if(r.status === 'available'){
-      footer.innerHTML = '<button class="btn btn-ghost" data-bs-dismiss="modal">Cancel</button><button class="btn btn-outline-maroon" data-bs-dismiss="modal" onclick="mmcToast(\'Room not allocated\',\'Room allocation is not connected yet.\',\'warning\')"><i class="fa-solid fa-user-plus me-1"></i> Allocate Room</button>' + statusApplyButton(r.id);
-    } else if(r.status === 'occupied'){
+    if(roomCanAllocate(r)){
+      footer.innerHTML = '<button class="btn btn-ghost" data-bs-dismiss="modal">Cancel</button><button class="btn btn-outline-maroon" type="button" onclick="allocateStudentFromRoom(' + Number(r.id) + ')"><i class="fa-solid fa-user-plus me-1"></i> Allocate Student</button>' + statusApplyButton(r.id);
+    } else if(displayStatus === 'occupied'){
       footer.innerHTML = '<button class="btn btn-ghost" data-bs-dismiss="modal">Close</button>' +
         '<button class="btn btn-outline-maroon" data-bs-dismiss="modal" onclick="mmcConfirm(\'Cancel Allocation?\',\'Allocation cancellation is not connected yet.\', function(){ mmcToast(\'Allocation not cancelled\',\'Room allocation persistence is not connected yet.\',\'warning\'); })">Cancel Allocation</button>' +
         '<button class="btn btn-outline-maroon" data-bs-dismiss="modal" onclick="mmcToast(\'Room not transferred\',\'Room transfer is not connected yet.\',\'warning\')"><i class="fa-solid fa-right-left me-1"></i> Transfer Room</button>' + statusApplyButton(r.id);
@@ -518,7 +657,16 @@
       footer.innerHTML = '<button class="btn btn-ghost" data-bs-dismiss="modal">Close</button>' + statusApplyButton(r.id);
     }
     new bootstrap.Modal(document.getElementById('roomActionModal')).show();
-    loadRoomBedInventory(r.id);
+    Promise.all([
+      loadPaidHostelStudents().catch(function(error){
+        mmcToast('Students not loaded', error.message || 'Unable to load hostel-fee paid students.', 'warning');
+        return [];
+      }),
+      loadRoomBedInventory(r.id)
+    ]).then(function(){
+      renderPaidStudentOptions();
+      renderAllocationBlock(rooms.find(function(room){ return Number(room.id) === Number(r.id); }), currentRoomInventory);
+    });
   };
 
   function mmcUpdateRoomStatus(roomId){
@@ -558,9 +706,9 @@
       });
   }
 
-  function loadRooms(){
-    document.getElementById('roomGridWrap').innerHTML = '<div class="py-4 text-center fs-13 text-secondary">Loading rooms...</div>';
-    Promise.all([mmcApi('/hostels'), mmcApi('/rooms')])
+  function loadRooms(silent){
+    if(!silent) document.getElementById('roomGridWrap').innerHTML = '<div class="py-4 text-center fs-13 text-secondary">Loading rooms...</div>';
+    return Promise.all([mmcApi('/hostels', { noCache:true }), mmcApi('/rooms', { noCache:true })])
       .then(function(results){
         hostels = results[0] || [];
         rooms = results[1] || [];
@@ -571,12 +719,13 @@
         renderGrid();
       })
       .catch(function(err){
-        document.getElementById('roomGridWrap').innerHTML = '<div class="py-4 text-center fs-13 text-secondary">Unable to load rooms. Start the backend API and try again.</div>';
-        mmcToast('Rooms not loaded', err.message, 'warning');
+        if(!silent) document.getElementById('roomGridWrap').innerHTML = '<div class="py-4 text-center fs-13 text-secondary">Unable to load rooms. Start the backend API and try again.</div>';
+        if(!silent) mmcToast('Rooms not loaded', err.message, 'warning');
       });
   }
 
   loadRooms();
+  setInterval(function(){ loadRooms(true); }, 15000);
 </script>
 </body>
 </html>
