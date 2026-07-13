@@ -139,6 +139,7 @@
         </div>
         <div id="raAllocateBlock" style="display:none;">
           <label class="form-label">Allocate to Student</label>
+          <input type="text" class="form-control mb-2" id="raStudentSearch" placeholder="Search paid students by name, mobile, ID, course...">
           <select class="form-select mb-2" id="raStudentSelect"><option value="">Loading hostel-fee paid students...</option></select>
           <label class="form-label">Available Bed</label>
           <select class="form-select" id="raBedSelect"><option value="">Open a room to view available beds</option></select>
@@ -307,18 +308,39 @@
   function renderPaidStudentOptions(){
     var select = document.getElementById('raStudentSelect');
     if(!select) return;
+    var query = String((document.getElementById('raStudentSearch') || {}).value || '').trim().toLowerCase();
     if(!paidStudentsLoaded){
       select.innerHTML = '<option value="">Loading hostel-fee paid students...</option>';
       return;
     }
-    if(!paidHostelStudents.length){
-      select.innerHTML = '<option value="">No hostel-fee paid unallocated students</option>';
+    var filtered = paidHostelStudents.filter(function(student){
+      if(!query) return true;
+      return [
+        student.name,
+        student.mobile_number,
+        student.student_code,
+        student.application_number,
+        student.course_name,
+        student.category,
+        student.email
+      ].filter(Boolean).join(' ').toLowerCase().indexOf(query) !== -1;
+    });
+    if(!filtered.length){
+      select.innerHTML = '<option value="">No matching hostel-fee paid students</option>';
+      document.getElementById('raAllocationHint').textContent = paidHostelStudents.length + ' hostel-fee paid unallocated student(s), no search match.';
       return;
     }
-    select.innerHTML = '<option value="">Select student</option>' + paidHostelStudents.map(function(student){
-      var label = (student.name || 'Student #' + student.id) + ' - ' + (student.student_code || student.application_number || '') + ' - ' + (student.course_name || '');
+    select.innerHTML = '<option value="">Select student (' + filtered.length + ')</option>' + filtered.map(function(student){
+      var label = [
+        student.name || ('Student #' + student.id),
+        student.mobile_number || '',
+        student.student_code || student.application_number || '',
+        student.course_name || '',
+        student.category || ''
+      ].filter(Boolean).join(' - ');
       return '<option value="' + Number(student.id) + '">' + escapeHtml(label) + '</option>';
     }).join('');
+    document.getElementById('raAllocationHint').textContent = filtered.length + ' hostel-fee paid unallocated student(s) shown. Search by name, mobile, ID, course, category, or email.';
   }
 
   function roomLabel(room){
@@ -618,6 +640,7 @@
     renderFloorTabs();
     renderGrid();
   });
+  document.getElementById('raStudentSearch').addEventListener('input', renderPaidStudentOptions);
 
   function renderHostelTabs(){
     var tabs = document.getElementById('hostelTabs');
@@ -685,6 +708,7 @@
     renderBedInventoryLoading();
 
     document.getElementById('raAllocateBlock').style.display = roomCanAllocate(r) ? 'block' : 'none';
+    document.getElementById('raStudentSearch').value = '';
     document.getElementById('raStudentSelect').innerHTML = '<option value="">Loading hostel-fee paid students...</option>';
     document.getElementById('raBedSelect').innerHTML = '<option value="">Loading available beds...</option>';
     document.getElementById('raTransferBlock').style.display = (displayStatus === 'occupied') ? 'block' : 'none';
