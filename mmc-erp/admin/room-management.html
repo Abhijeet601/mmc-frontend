@@ -394,6 +394,11 @@
     return 'available';
   }
 
+  function roomIsFullyOccupied(room){
+    var total = roomCapacity(room);
+    return total > 0 && roomOccupiedCount(room) >= total;
+  }
+
   function roomCardClass(room){
     var displayStatus = roomDisplayStatus(room);
     return displayStatus === 'full' ? 'occupied' : displayStatus;
@@ -641,7 +646,11 @@
     visibleRooms.forEach(function(r){
       var displayStatus = roomDisplayStatus(r);
       if(counts[displayStatus] == null) counts[displayStatus] = 0;
-      counts[displayStatus]++;
+      if(displayStatus === 'occupied'){
+        if(roomIsFullyOccupied(r)) counts.occupied++;
+      } else {
+        counts[displayStatus]++;
+      }
       if(displayStatus !== 'reserved' && displayStatus !== 'maintenance') counts.availableBeds += roomAvailableCount(r);
     });
 
