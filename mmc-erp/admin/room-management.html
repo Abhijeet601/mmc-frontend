@@ -361,6 +361,10 @@
   function roomOccupiedBedLabels(room){
     var labels = room.occupied_bed_numbers || room.occupied_beds_labels || [];
     if(Array.isArray(labels)) return labels.map(function(label){ return String(label).trim().toUpperCase(); });
+    if(Array.isArray(room.available_bed_numbers)){
+      var available = room.available_bed_numbers.map(function(label){ return String(label).trim().toUpperCase(); });
+      return roomBedLabels(room).filter(function(label){ return available.indexOf(label) === -1; });
+    }
     return [];
   }
 
@@ -737,10 +741,14 @@
 
   function loadRooms(silent){
     if(!silent) document.getElementById('roomGridWrap').innerHTML = '<div class="py-4 text-center fs-13 text-secondary">Loading rooms...</div>';
-    return Promise.all([mmcApi('/hostels', { noCache:true }), mmcApi('/rooms', { noCache:true })])
+    return Promise.all([
+      mmcApi('/hostels', { noCache:true }),
+      mmcApi('/api/admin/hostel/rooms', { headers: adminAuthHeaders(), noCache:true }).catch(function(){ return mmcApi('/rooms', { noCache:true }); })
+    ])
       .then(function(results){
         hostels = results[0] || [];
-        rooms = results[1] || [];
+        var roomResult = results[1] || [];
+        rooms = Array.isArray(roomResult) ? roomResult : (roomResult.items || []);
         if(!currentHostelId && hostels.length) currentHostelId = hostels[0].id;
         currentFloor = floorTabsForCurrentHostel()[0].floor;
         renderHostelTabs();
