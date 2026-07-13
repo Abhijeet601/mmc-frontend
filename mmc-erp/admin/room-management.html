@@ -25,6 +25,10 @@
   .mmc-bed-label{ font-weight:700; color:var(--mmc-navy); font-size:13px; }
   .mmc-bed-meta{ color:var(--mmc-ink-soft); font-size:12px; line-height:1.35; }
   .mmc-bed-empty{ color:var(--mmc-ink-faint); font-size:12px; }
+  .mmc-room-bed-badges{ display:flex; gap:4px; justify-content:center; flex-wrap:wrap; margin-top:6px; }
+  .mmc-room-bed-badge{ min-width:22px; height:20px; border-radius:6px; display:inline-flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; border:1px solid transparent; }
+  .mmc-room-bed-badge.available{ background:var(--mmc-success-bg); color:#16803c; border-color:#b9ecc9; }
+  .mmc-room-bed-badge.occupied{ background:var(--mmc-danger-bg); color:#b91c1c; border-color:#f6c3c3; }
   @media (max-width: 575.98px){ .mmc-bed-row{ grid-template-columns:1fr; } }
 </style>
 </head>
@@ -350,6 +354,26 @@
     return Number(room.beds || room.bed_capacity || 0);
   }
 
+  function roomBedLabels(room){
+    return ['A', 'B', 'C'].slice(0, Math.max(roomCapacity(room), 0));
+  }
+
+  function roomOccupiedBedLabels(room){
+    var labels = room.occupied_bed_numbers || room.occupied_beds_labels || [];
+    if(Array.isArray(labels)) return labels.map(function(label){ return String(label).trim().toUpperCase(); });
+    return [];
+  }
+
+  function renderRoomBedBadges(room){
+    var occupied = roomOccupiedBedLabels(room);
+    var labels = roomBedLabels(room);
+    if(!labels.length) return '';
+    return '<div class="mmc-room-bed-badges">' + labels.map(function(label){
+      var taken = occupied.indexOf(label) !== -1;
+      return '<span class="mmc-room-bed-badge ' + (taken ? 'occupied' : 'available') + '" title="Bed ' + escapeHtml(label) + ' - ' + (taken ? 'Occupied' : 'Available') + '">' + escapeHtml(label) + '</span>';
+    }).join('') + '</div>';
+  }
+
   function roomOccupiedCount(room){
     return Math.min(Number(room.occupied_beds || 0), roomCapacity(room));
   }
@@ -375,6 +399,11 @@
     if(total > 0 && occupied >= total) return occupied + '/' + total + ' Full';
     if(occupied > 0) return occupied + '/' + total + ' Occupied';
     return occupied + '/' + total + ' Occupied';
+  }
+
+  function availableBedsText(room){
+    var available = roomAvailableCount(room);
+    return available + ' bed' + (available === 1 ? '' : 's') + ' available';
   }
 
   function renderBedInventoryLoading(){
@@ -485,6 +514,8 @@
           return Object.assign({}, room, {
             occupied_beds: data.occupied_beds,
             available_beds: data.available_beds,
+            occupied_bed_numbers: data.occupied_bed_numbers || [],
+            available_bed_numbers: data.available_bed_numbers || [],
             status: Number(data.occupied_beds || 0) > 0 ? 'occupied' : (data.status === 'full' ? 'occupied' : data.status)
           });
         });
@@ -617,11 +648,9 @@
     var html = '<div class="mmc-floor-label">' + escapeHtml(floorName(currentFloor)) + (floorRange(currentFloor) ? ' - Rooms ' + escapeHtml(floorRange(currentFloor)) : '') + '</div><div class="row g-2">';
     visibleRooms.forEach(function(r){
         var label = roomLabel(r);
-        var occupied = roomOccupiedCount(r);
-        var total = roomCapacity(r);
         var displayStatus = roomDisplayStatus(r);
         html += '<div class="col-6 col-sm-4 col-md-3 col-lg-2"><div class="mmc-room-card ' + escapeHtml(roomCardClass(r)) + '" onclick="mmcOpenRoom(' + r.id + ')">' +
-          '<div class="room-dot"></div><div class="room-no">' + escapeHtml(label) + '</div><div class="room-meta">' + escapeHtml(occupancyText(occupied, total)) + ' - ' + escapeHtml(displayStatus) + '</div></div></div>';
+          '<div class="room-dot"></div><div class="room-no">' + escapeHtml(label) + '</div><div class="room-meta">' + escapeHtml(availableBedsText(r)) + ' - ' + escapeHtml(displayStatus) + '</div>' + renderRoomBedBadges(r) + '</div></div>';
     });
     html += '</div>';
     document.getElementById('roomGridWrap').innerHTML = visibleRooms.length ? html : '<div class="py-4 text-center fs-13 text-secondary">No rooms found on ' + escapeHtml(floorName(currentFloor)) + '.</div>';
