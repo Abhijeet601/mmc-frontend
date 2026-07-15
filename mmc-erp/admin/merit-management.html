@@ -539,6 +539,8 @@
     return meritList.map(function(m){
       var student = m.raw || {};
       var summary = student.summary || {};
+      var roomNumber = m.room === '-' ? '' : String(m.room || '').trim();
+      var bedNumber = m.bed === '-' ? '' : String(m.bed || '').trim();
       var payments = Array.isArray(student.payment_history) ? student.payment_history : [];
       var paymentSummary = payments.map(function(payment){
         return [payment.payment_type, payment.status, payment.amount, payment.transaction_no].filter(function(value){
@@ -590,8 +592,9 @@
         'Hostel Block': student.block || '',
         'Hostel Floor': student.floor || '',
         'Room Building': student.room_building || '',
-        'Room Number': m.room === '-' ? '' : m.room,
-        'Bed Number': m.bed === '-' ? '' : m.bed,
+        'Room Details': [roomNumber, bedNumber].filter(Boolean).join(' '),
+        'Room Number': roomNumber,
+        'Bed Number': bedNumber,
         'Allocation Date': student.allocation_date || '',
         'Allocation Status': student.allocation_status || '',
         'Existing Hostel Name': summary.existing_hostel_name || '',
@@ -634,6 +637,7 @@
     }
     var rows = allocationExportRows().map(function(row){
       row['Hostel Name'] = '';
+      row['Room Details'] = '';
       row['Room Number'] = '';
       row['Bed Number'] = '';
       return row;
@@ -647,6 +651,7 @@
         'Category': '',
         'Merit Status': '',
         'Hostel Name': '',
+        'Room Details': '',
         'Room Number': '',
         'Bed Number': ''
       }];
