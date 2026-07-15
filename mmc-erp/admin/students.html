@@ -100,7 +100,7 @@
             <thead>
               <tr>
                 <th>Student ID</th><th>Admission ID</th><th>Student Name</th><th>Mobile</th><th>Course</th><th>%</th>
-                <th>Applied Cat.</th><th>Allotted Cat.</th><th>Status</th><th>Registration Fee</th><th>Hostel Fee</th><th>Hostel</th><th>Room</th><th>Actions</th><th>Search</th>
+                <th>Applied Cat.</th><th>Allotted Cat.</th><th>Status</th><th>Registration Fee</th><th>Hostel Fee</th><th>Hostel</th><th>Room</th><th>Bed</th><th>Actions</th><th>Search</th>
               </tr>
             </thead>
             <tbody id="studentsBody"></tbody>
@@ -259,8 +259,8 @@
     dom: "<'row mb-2'<'col-sm-6'B><'col-sm-6 text-end'f>><'table-responsive't><'row mt-2'<'col-sm-6'l><'col-sm-6'i><'col-sm-12'p>>",
     buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
     columnDefs: [
-      { targets: 14, visible: false, searchable: true },
-      { targets: 13, searchable: false, orderable: false }
+      { targets: 15, visible: false, searchable: true },
+      { targets: 14, searchable: false, orderable: false }
     ]
   });
 
@@ -350,7 +350,7 @@
       ['Registration Fee', paymentStatusLabel(a.registrationPaymentStatus)],
       ['Hostel Fee', paymentStatusLabel(a.hostelPaymentStatus)],
       ['Course', a.course], ['Percentage', a.percentage ? a.percentage + '%' : '-'], ['Applied Category', a.appliedCat], ['Allotted Category', a.allottedCat],
-      ['Status', a.status], ['Hostel Name', a.hostel || '-'], ['Room Number', a.room || '-']
+      ['Status', a.status], ['Hostel Name', a.hostel || '-'], ['Room Number', a.room || '-'], ['Bed Number', a.bed || '-']
     ];
     if(a.registrationType === 'existing'){
       rows.push(
@@ -407,7 +407,8 @@
       ['Registration Fee', paymentStatusLabel(a.registrationPaymentStatus)],
       ['Hostel Fee', paymentStatusLabel(a.hostelPaymentStatus)],
       ['Allocated Hostel', a.hostel || '-'],
-      ['Allocated Room', a.room || '-']
+      ['Allocated Room', a.room || '-'],
+      ['Allocated Bed', a.bed || '-']
     ];
     if(a.registrationType === 'existing'){
       rows.push(
@@ -622,6 +623,7 @@
       paymentStatusPill(app.hostelPaymentStatus),
       escapeHtml(app.hostel || '-'),
       escapeHtml(app.room || '-'),
+      escapeHtml(app.bed || '-'),
       '<button class="btn btn-sm btn-ghost" onclick="mmcViewStudent(' + index + ')"><i class="fa-solid fa-eye"></i></button>' +
       (adminIsViewOnly() ? '' : (
         '<button class="btn btn-sm btn-ghost" onclick="mmcEditStudent(' + index + ')" title="' + (canEditApplication ? 'Edit application' : 'No application submitted') + '"><i class="fa-solid fa-pen"></i></button>' +
@@ -651,7 +653,7 @@
 
   function loadApplications(){
     table.clear().draw();
-    document.getElementById('studentsBody').innerHTML = '<tr><td colspan="15" class="text-center text-secondary py-3">Loading students and applications...</td></tr>';
+    document.getElementById('studentsBody').innerHTML = '<tr><td colspan="16" class="text-center text-secondary py-3">Loading students and applications...</td></tr>';
     mmcApi('/api/admin/students?limit=5000', { headers: adminAuthHeaders() })
       .then(function(result){
         students = result.items || [];
@@ -660,7 +662,7 @@
       })
       .catch(function(error){
         table.clear().draw();
-        document.getElementById('studentsBody').innerHTML = '<tr><td colspan="15" class="text-center text-secondary py-3">Unable to load applications.</td></tr>';
+        document.getElementById('studentsBody').innerHTML = '<tr><td colspan="16" class="text-center text-secondary py-3">Unable to load applications.</td></tr>';
         mmcToast('Applications not loaded', error.message, 'warning');
       });
   }
