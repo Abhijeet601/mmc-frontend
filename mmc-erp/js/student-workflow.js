@@ -45,7 +45,7 @@ function mmcBuildStudentWorkflow(data){
   var status = application ? mmcNormalizeWorkflowStatus(application.status) : 'Not Started';
   var statusKey = status.toLowerCase();
   var draft = statusKey === 'draft';
-  var shortlisted = ['shortlisted', 'approved', 'selected'].indexOf(statusKey) !== -1;
+  var shortlisted = ['shortlisted', 'published', 'room allocated', 'room_allocated', 'approved', 'selected'].indexOf(statusKey) !== -1;
   var hostel = application && application.hostel_id ? hostels.find(function(item){ return Number(item.id) === Number(application.hostel_id); }) : null;
   var room = application && application.room_id ? rooms.find(function(item){ return Number(item.id) === Number(application.room_id); }) : null;
   var bed = application && application.bed ? application.bed : null;
