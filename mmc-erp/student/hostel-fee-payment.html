@@ -239,7 +239,12 @@
       var hostel=results[1].find(function(item){ return Number(item.id) === Number(hostelApplication.hostel_id); });
       document.getElementById('hostelAppNo').textContent=hostelApplication.application_no;
       document.getElementById('hostelStudentName').textContent=student.name;
-      if(!hostel) return;
+      if(!hostel){
+        showPaymentError('Hostel is not allotted yet. Please contact the hostel office.');
+        mmcToast('Hostel not allotted', 'Admin must allot a hostel before hostel fee payment.', 'warning');
+        updateHostelPayButton();
+        return;
+      }
       hostelAmount=Number(hostel.fee || 0) || (hostel.name.toLowerCase().indexOf('mahima') !== -1 ? 12000 : hostel.name.toLowerCase().indexOf('vaidehi') !== -1 ? 10000 : 0);
       document.getElementById('hostelName').textContent=hostel.name;
       document.getElementById('hostelFee').textContent=mmcCurrency(hostelAmount);

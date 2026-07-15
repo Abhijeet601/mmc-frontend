@@ -109,6 +109,9 @@
               <option value="SC">SC</option>
               <option value="ST">ST</option>
             </select>
+            <select class="form-select" id="bulkHostelSelect" style="width:190px;">
+              <option value="">Select hostel</option>
+            </select>
             <button class="btn btn-outline-maroon btn-sm" id="bulkShortlistBtn"><i class="fa-solid fa-check-double me-1"></i> Shortlist Selected</button>
           </div>
           <table id="meritTable" class="table mmc-table-card" style="width:100%;">
@@ -429,12 +432,20 @@
   }
   function renderHostelFilter(){
     var filter = document.getElementById('meritHostelFilter');
-    if(!filter) return;
-    var current = filter.value;
-    filter.innerHTML = '<option value="">All Hostels</option>' + hostels.map(function(name){
+    var bulkHostel = document.getElementById('bulkHostelSelect');
+    var options = hostels.map(function(name){
       return '<option value="' + escapeHtml(name) + '">' + escapeHtml(name) + '</option>';
     }).join('');
-    filter.value = current;
+    if(filter){
+      var current = filter.value;
+      filter.innerHTML = '<option value="">All Hostels</option>' + options;
+      filter.value = current;
+    }
+    if(bulkHostel){
+      var bulkCurrent = bulkHostel.value;
+      bulkHostel.innerHTML = '<option value="">Select hostel</option>' + options;
+      bulkHostel.value = bulkCurrent;
+    }
   }
   function loadMeritStudents(){
     document.getElementById('meritBody').innerHTML = '<tr><td colspan="8" class="text-center text-secondary py-3">Loading merit records...</td></tr>';
@@ -679,11 +690,20 @@
       mmcToast('No students selected', 'Select at least one student to shortlist.', 'warning');
       return;
     }
+    var hostelName = document.getElementById('bulkHostelSelect').value;
+    if(!hostelName){
+      mmcToast('Hostel required', 'Select a hostel before bulk shortlisting so students can pay hostel fee.', 'warning');
+      return;
+    }
     mmcConfirm('Shortlist Selected Students?', 'This will shortlist ' + ids.length + ' selected student(s).', function(){
       mmcApi('/api/admin/merit/bulk-shortlist', {
         method:'POST',
         headers:adminAuthHeaders(),
-        body:JSON.stringify({ student_ids: ids, allotted_category: document.getElementById('bulkAllottedCategory').value || null })
+        body:JSON.stringify({
+          student_ids: ids,
+          allotted_category: document.getElementById('bulkAllottedCategory').value || null,
+          hostel_name: hostelName
+        })
       }).then(function(result){
         selectedMeritIds.clear();
         mmcToast('Bulk shortlist complete', (result.updated || 0) + ' student(s) shortlisted.', 'success');
