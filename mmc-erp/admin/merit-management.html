@@ -537,18 +537,83 @@
   }
   function allocationExportRows(){
     return meritList.map(function(m){
+      var student = m.raw || {};
+      var summary = student.summary || {};
+      var payments = Array.isArray(student.payment_history) ? student.payment_history : [];
+      var paymentSummary = payments.map(function(payment){
+        return [payment.payment_type, payment.status, payment.amount, payment.transaction_no].filter(function(value){
+          return value !== null && value !== undefined && String(value).trim() !== '';
+        }).join(' | ');
+      }).join('; ');
       return {
         'Student ID': m.appNo || m.studentId,
-        'Application ID': (m.raw && m.raw.application_id) || m.appNo || '',
+        'Application ID': student.application_id || m.appNo || '',
+        'Hostel Application Number': student.hostel_application_number || '',
+        'Admission ID': summary.admission_application_id || '',
         'Student Name': m.name,
-        'Course': (m.raw && m.raw.course_name) || '',
+        'Email': m.email,
+        'Mobile Number': m.mobile,
+        'Date of Birth': summary.date_of_birth || summary.registration_date_of_birth || '',
+        'Gender': summary.gender || '',
+        'Father Name': summary.father_name || '',
+        'Mother Name': summary.mother_name || '',
+        'Local Guardian Name': summary.local_guardian_name || '',
+        'Guardian Mobile Number': summary.guardian_mobile_number || '',
+        'Blood Group': summary.blood_group || '',
+        'Aadhaar Number': summary.aadhaar_number || summary.aadhar_number || student.aadhaar_number || '',
+        'Religion': summary.religion || '',
+        'Nationality': summary.nationality || '',
+        'Permanent Address': summary.permanent_address || '',
+        'Correspondence Address': summary.correspondence_address || '',
+        'Registration Type': summary.application_type || '',
+        'Admission Level': summary.admission_level || '',
+        'College Name': summary.college_name || '',
+        'Course': student.course_name || summary.course_name || '',
+        'Session': student.session || summary.session || '',
+        'Honours Subject': summary.honours_subject || '',
+        'Roll Number': summary.roll_number || '',
         'Category': m.appliedCat,
+        'Allotted Category': m.allottedCat === '-' ? '' : m.allottedCat,
+        'Intermediate College': summary.intermediate_college_name || '',
+        'Intermediate Board': summary.intermediate_board || '',
+        'Previous Course': summary.previous_course || '',
+        'Result Type': summary.result_type || '',
+        'Marks Obtained': summary.marks_obtained == null ? '' : summary.marks_obtained,
+        'Total Marks': summary.total_marks == null ? '' : summary.total_marks,
+        'Aggregate Percentage': summary.aggregate_percentage == null ? '' : String(summary.aggregate_percentage).replace(/%/g, ''),
         'Merit Status': m.status,
+        'Application Status': student.form_status || '',
+        'Registration Payment Status': student.registration_payment_status || student.application_payment_status || '',
+        'Hostel Payment Status': student.hostel_payment_status || student.hostel_status || 'not_applicable',
+        'Payment History': paymentSummary,
         'Hostel Name': m.hostel === '-' ? '' : m.hostel,
+        'Hostel Block': student.block || '',
+        'Hostel Floor': student.floor || '',
+        'Room Building': student.room_building || '',
         'Room Number': m.room === '-' ? '' : m.room,
-        'Bed Number': m.bed === '-' ? '' : m.bed
+        'Bed Number': m.bed === '-' ? '' : m.bed,
+        'Allocation Date': student.allocation_date || '',
+        'Allocation Status': student.allocation_status || '',
+        'Existing Hostel Name': summary.existing_hostel_name || '',
+        'Existing Room Number': summary.existing_room_number || '',
+        'Existing Bed Number': summary.existing_bed_number || '',
+        'Existing Block': summary.existing_block || '',
+        'Existing Floor': summary.existing_floor || '',
+        'Existing Previous Session': summary.existing_previous_session || '',
+        'Account Status': student.account_active === false ? 'Inactive' : 'Active'
       };
     });
+  }
+  function setStudentExportColumnWidths(ws, rows){
+    var headers = rows.length ? Object.keys(rows[0]) : [];
+    ws['!cols'] = headers.map(function(header){
+      if(/address|payment history/i.test(header)) return { wch:42 };
+      if(/name|email|college|course|hostel application/i.test(header)) return { wch:26 };
+      if(/status|category|session|number|mobile|aadhaar|date/i.test(header)) return { wch:20 };
+      return { wch:16 };
+    });
+    ws['!autofilter'] = { ref:'A1:' + XLSX.utils.encode_col(Math.max(headers.length - 1, 0)) + Math.max(rows.length + 1, 1) };
+    ws['!freeze'] = { xSplit:0, ySplit:1 };
   }
   function downloadAllStudentsExcel(){
     if(typeof XLSX === 'undefined'){
@@ -556,8 +621,9 @@
       return;
     }
     var wb = XLSX.utils.book_new();
-    var ws = XLSX.utils.json_to_sheet(allocationExportRows());
-    ws['!cols'] = [{wch:18},{wch:16},{wch:28},{wch:22},{wch:14},{wch:18},{wch:24},{wch:14},{wch:12}];
+    var rows = allocationExportRows();
+    var ws = XLSX.utils.json_to_sheet(rows);
+    setStudentExportColumnWidths(ws, rows);
     XLSX.utils.book_append_sheet(wb, ws, 'Room Allocation');
     XLSX.writeFile(wb, 'MMC_All_Students_Room_Allocation.xlsx');
   }
@@ -587,7 +653,7 @@
     }
     var wb = XLSX.utils.book_new();
     var ws = XLSX.utils.json_to_sheet(rows);
-    ws['!cols'] = [{wch:18},{wch:16},{wch:28},{wch:22},{wch:14},{wch:18},{wch:24},{wch:14},{wch:12}];
+    setStudentExportColumnWidths(ws, rows);
     XLSX.utils.book_append_sheet(wb, ws, 'Room Allocation Template');
     XLSX.writeFile(wb, 'MMC_Room_Allocation_Template.xlsx');
   }
