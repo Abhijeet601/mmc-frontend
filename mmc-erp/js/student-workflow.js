@@ -73,27 +73,42 @@ function mmcBuildStudentWorkflow(data){
 
 function mmcLoadStudentWorkflow(){
   var student = mmcCurrentStudent();
-  if(!student || !student.id) return Promise.resolve(null);
+  if(!student || !student.id){
+    window.location.href = 'login.html';
+    return Promise.resolve(null);
+  }
   var authHeaders = student.access_token || student.token ? { 'Authorization': 'Bearer ' + (student.access_token || student.token) } : {};
-  function optionalApi(path, fallback){
-    return mmcApi(path).catch(function(){ return fallback; });
+  function optionalApi(path, fallback, options){
+    return mmcApi(path, options || {}).catch(function(){ return fallback; });
   }
   return Promise.all([
     mmcApi('/applications?student_id=' + student.id, { headers: authHeaders }),
     mmcApi('/payments?student_id=' + student.id, { headers: authHeaders }),
     mmcApi('/receipts?student_id=' + student.id, { headers: authHeaders }),
     mmcApi('/hostels'),
-    mmcApi('/rooms'),
     optionalApi('/settings/application', null)
   ]).then(function(results){
-    return mmcBuildStudentWorkflow({
-      student: student,
-      applications: results[0] || [],
-      payments: results[1] || [],
-      receipts: results[2] || [],
-      hostels: results[3] || [],
-      rooms: results[4] || [],
-      settings: results[5] || null
+    var applications = results[0] || [];
+    var application = mmcLatestByCreatedAt(applications);
+    var roomPromise = application && application.room_id
+      ? optionalApi('/rooms/' + Number(application.room_id) + '/beds', null, { headers:authHeaders, timeoutMs:5000 })
+      : Promise.resolve(null);
+    return roomPromise.then(function(roomInventory){
+      var rooms = roomInventory ? [{
+        id: application.room_id,
+        room_number: roomInventory.room_number,
+        floor: application.floor,
+        building: application.block
+      }] : [];
+      return mmcBuildStudentWorkflow({
+        student: student,
+        applications: applications,
+        payments: results[1] || [],
+        receipts: results[2] || [],
+        hostels: results[3] || [],
+        rooms: rooms,
+        settings: results[4] || null
+      });
     });
   });
 }
