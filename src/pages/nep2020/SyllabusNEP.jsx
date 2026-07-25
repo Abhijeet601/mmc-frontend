@@ -9,6 +9,12 @@ import { r2Url } from '@/lib/r2Assets';
 const syllabusData = [
 // Science Subjects
 {
+  subject: 'BSc Healthcare Management (AEDP)',
+  files: [{
+    name: 'Syllabus BSc Healthcare Management (AEDP)',
+    url: 'https://pub-c7047204b6824b4ea67be147e7ebb0ac.r2.dev/public/data%20files/Syllabus%20BSc%20Healthcare%20Management%20(AEDP).pdf'
+  }]
+}, {
   subject: 'Botany',
   files: [{
     name: i18next.t("auto.botany_18bn1be"),
