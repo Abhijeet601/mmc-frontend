@@ -19,6 +19,10 @@ const OrdinanceRegulations = () => {
       defaultValue: 'NEP Ordinance and Regulations - B.A./B.Sc./B.Com'
     }),
     file: 'Nep ordinance and regulation.pdf'
+  }, {
+    title: 'Ordinance and Regulation AEDP',
+    file: 'AEDP.pdf',
+    url: 'https://pub-c7047204b6824b4ea67be147e7ebb0ac.r2.dev/public/data%20files/Ordinance%20and%20Regulation%20AEDP.pdf'
   }];
 
   return <div className="min-h-screen bg-gray-50 py-8">
@@ -33,7 +37,7 @@ const OrdinanceRegulations = () => {
                 <div>
                   <h2 className="text-lg font-semibold text-gray-900">{doc.title}</h2>
                 </div>
-                <a href={r2Url(`${ORDINANCE_FOLDER}/${encodeURIComponent(doc.file)}`)} target="_blank" rel="noopener noreferrer" className="inline-flex items-center px-4 py-2 rounded-md bg-primary text-white hover:bg-primary/90 transition-colors whitespace-nowrap">{`
+                <a href={doc.url || r2Url(`${ORDINANCE_FOLDER}/${encodeURIComponent(doc.file)}`)} target="_blank" rel="noopener noreferrer" className="inline-flex items-center px-4 py-2 rounded-md bg-primary text-white hover:bg-primary/90 transition-colors whitespace-nowrap">{`
                   ${i18next.t("auto.view_pdf_6av1iy")}
                 `}</a>
               </div>)}
