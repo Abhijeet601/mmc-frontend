@@ -12,7 +12,7 @@ function resolveMmcApiBase() {
       }
     }
   } catch (err) {}
-  return 'https://hostel-erp-backend-production.up.railway.app';
+  return 'https://web-production-97b90.up.railway.app';
 }
 
 const MMC_API_BASE = resolveMmcApiBase();
