@@ -109,7 +109,7 @@ const parseNetworkError = (error) => {
   }
 
   if (error instanceof TypeError) {
-    return `Unable to reach API at ${API_BASE_URL}. Check VITE_API_BASE, VITE_API_BASE_URL, and backend CORS_ORIGINS.`;
+    return 'Unable to reach the notifications service. Please try again later.';
   }
 
   return error?.message || 'Network request failed.';
