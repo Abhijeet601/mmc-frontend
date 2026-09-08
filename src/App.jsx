@@ -176,6 +176,7 @@ import LegacyWpContentPdf from './pages/LegacyWpContentPdf';
 import { Toaster } from './components/ui/toaster';
 import { getStoredLanguagePreference, persistLanguagePreference } from './lib/languagePreference';
 import { isPdfUrl, pdfViewerPath } from './lib/pdfViewer';
+import { HOSTEL_ERP_ENABLED } from './lib/erpPortal';
 
 const ERPApplicationForm = lazy(() => import('./pages/erp/ERPApplicationForm'));
 const ERPPortal = lazy(() => import('./pages/erp/ERPPortal'));
@@ -435,6 +436,7 @@ function App() {
               <Route path="/admissions/commerce-admission" element={<CommerceAdmission />} />
               <Route path="/admissions/bba-admission" element={<BBAAdmission />} />
               <Route path="/admissions/admitted-students-year-wise" element={<AdmittedStudentsYearWise />} />
+              {HOSTEL_ERP_ENABLED ? <>
               <Route path="/erp" element={<ERPPortal />} />
               <Route path="/erp/student" element={<Navigate to="/erp/student/login" replace />} />
               <Route path="/erp/student/login" element={<ERPStudentAuth />} />
@@ -447,6 +449,7 @@ function App() {
               <Route path="/system-admin/*" element={<Navigate to="/erp/admin/dashboard" replace />} />
               <Route path="/application-form" element={<Navigate to="/erp/application-form" replace />} />
               <Route path="/dashboard" element={<Navigate to="/erp/student/dashboard" replace />} />
+              </> : null}
 
               <Route path="/terms-conditions" element={<TermsConditions />} />
               <Route path="/disclaimer" element={<Disclaimer />} />

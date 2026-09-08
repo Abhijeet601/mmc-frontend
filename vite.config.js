@@ -19,6 +19,11 @@ const mmcErpStaticPlugin = () => ({
   name: 'mmc-erp-static',
   configureServer(server) {
     server.middlewares.use('/mmc-erp', (req, res, next) => {
+      if (process.env.VITE_HOSTEL_ERP_ENABLED !== 'true') {
+        res.statusCode = 404
+        res.end('Hostel ERP is temporarily unavailable.')
+        return
+      }
       const requestPath = decodeURIComponent((req.url || '').split('?')[0]).replace(/^\/+/, '')
       const filePath = normalize(join(erpStaticDir, requestPath || 'student/login.html'))
       if (!filePath.startsWith(normalize(erpStaticDir)) || !existsSync(filePath) || !statSync(filePath).isFile()) {
@@ -31,6 +36,7 @@ const mmcErpStaticPlugin = () => ({
     })
   },
   writeBundle(options) {
+    if (process.env.VITE_HOSTEL_ERP_ENABLED !== 'true') return
     const outputDir = options.dir || 'dist'
     if (existsSync(erpStaticDir)) {
       cpSync(erpStaticDir, join(outputDir, 'mmc-erp'), { recursive: true })

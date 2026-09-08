@@ -5,7 +5,7 @@ import { ArrowRight, Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useTranslation } from 'react-i18next';
-import { ERP_PORTAL_ENTRY_URL } from '@/lib/erpPortal';
+import { ERP_PORTAL_ENTRY_URL, HOSTEL_ERP_ENABLED } from '@/lib/erpPortal';
 const HERO_VIDEO_SRC = 'https://pub-c7047204b6824b4ea67be147e7ebb0ac.r2.dev/public/images/MMC720p.mp4';
 const HeroSection = () => {
   const {
@@ -100,7 +100,7 @@ const HeroSection = () => {
         duration: 0.8,
         delay: 0.6
         }} className="flex w-full max-w-xl flex-col gap-3 sm:flex-row sm:justify-center sm:gap-4">
-          <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }} className="w-full sm:w-auto">
+          {HOSTEL_ERP_ENABLED && <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }} className="w-full sm:w-auto">
             <Button asChild size="lg" className="group h-12 w-full min-w-[220px] bg-primary text-white shadow-2xl hover:bg-primary/90">
               <a href="https://formbuilder.ccavenue.com/live/patna-university" target="_blank" rel="noopener noreferrer" aria-label="Open admission fee payment portal">
                 Admission Fee Payment
@@ -109,7 +109,7 @@ const HeroSection = () => {
                 </motion.span>
               </a>
             </Button>
-          </motion.div>
+          </motion.div>}
 
           <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }} className="w-full sm:w-auto">
             <Button asChild size="lg" variant="outline" className="h-12 w-full min-w-[220px] border-2 border-white/70 bg-white/15 px-6 text-white hover:border-white hover:bg-white/25 hover:text-white">

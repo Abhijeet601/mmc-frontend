@@ -8,7 +8,7 @@ import { useBilingual } from '../contexts/BilingualContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { r2Url } from '@/lib/r2Assets';
 import { persistLanguagePreference } from '@/lib/languagePreference';
-import { ERP_PORTAL_ENTRY_URL } from '@/lib/erpPortal';
+import { ERP_PORTAL_ENTRY_URL, HOSTEL_ERP_ENABLED } from '@/lib/erpPortal';
 const Navbar = () => {
   const {
     t,
@@ -297,10 +297,10 @@ const Navbar = () => {
               <FileText className="w-4 h-4" />
               {t('nav.tenders')}
             </Link>
-            <a href={ERP_PORTAL_ENTRY_URL} target="_blank" rel="noopener noreferrer" className="nav-link text-xs hover:text-white transition-colors duration-300 flex items-center gap-2">
+            {HOSTEL_ERP_ENABLED && <a href={ERP_PORTAL_ENTRY_URL} target="_blank" rel="noopener noreferrer" className="nav-link text-xs hover:text-white transition-colors duration-300 flex items-center gap-2">
               <BookOpen className="w-4 h-4" />
               ERP Portal
-            </a>
+            </a>}
           </div>
 
           <div className="flex gap-4 items-center flex-nowrap ml-4 whitespace-nowrap">
