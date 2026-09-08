@@ -1,9 +1,13 @@
 import { toR2AssetUrl } from '@/lib/r2Assets';
 
-const API_BASE =
+const CURRENT_API_BASE_URL = 'https://web-production-97b90.up.railway.app';
+const configuredApiBase =
   import.meta.env.VITE_API_BASE ||
   import.meta.env.VITE_API_BASE_URL ||
   '';
+const API_BASE = /mmc-backend-production-1fa6\.up\.railway\.app|hostel-erp-backend-production\.up\.railway\.app/i.test(configuredApiBase)
+  ? CURRENT_API_BASE_URL
+  : configuredApiBase;
 const fallbackApiBaseUrl =
   typeof window !== 'undefined' && window.location?.origin ? window.location.origin : '';
 
