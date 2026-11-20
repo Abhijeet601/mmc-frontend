@@ -1,0 +1,30 @@
+.faculty-card {
+  transition: box-shadow 180ms ease, transform 180ms ease;
+}
+
+.faculty-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-card-hover);
+}
+
+.faculty-directory :is(button, input, select, a):focus-visible,
+.faculty-departments :is(button, input, select, a):focus-visible {
+  outline: 3px solid hsl(var(--foreground));
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .faculty-card,
+  .faculty-directory *,
+  .faculty-departments *,
+  .faculty-departments *::before,
+  .faculty-departments *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+
+  .faculty-card:hover {
+    transform: none;
+  }
+}

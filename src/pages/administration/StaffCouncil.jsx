@@ -1,439 +1,204 @@
-import i18next from "i18next";
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { ChevronDown, Search } from 'lucide-react';
+import FacultyCard from '@/components/FacultyCard';
+import { getStaffCouncilFaculty } from '@/data/faculty';
+import { getFacultyName, getFacultyDepartment, getFacultyDesignation } from '@/lib/facultyPresentation';
+
 const StaffCouncil = () => {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState('regular');
-  const regularTeachers = [{
-    sl: 1,
-    department: 'Principal',
-    name: i18next.t("auto.prof_dr_nagendra_prasad_verma_gf7mxh")
-  }, {
-    sl: 2,
-    department: 'Hindi',
-    name: i18next.t("auto.dr_shipra_prabha_1eqwrhg")
-  }, {
-    sl: 3,
-    department: 'Hindi',
-    name: i18next.t("auto.dr_asha_kumari_d2ej8v")
-  }, {
-    sl: 4,
-    department: 'Hindi',
-    name: i18next.t("auto.dr_jyoti_dubey_1tqj3df")
-  }, {
-    sl: 5,
-    department: 'Hindi',
-    name: i18next.t("auto.dr_preeti_kumari_urbrsb")
-  }, {
-    sl: 6,
-    department: 'English',
-    name: i18next.t("auto.dr_archana_jaiswal_16hzx8g")
-  }, {
-    sl: 7,
-    department: 'English',
-    name: i18next.t("auto.dr_rajeev_kumar_singh_126jkh5")
-  }, {
-    sl: 8,
-    department: 'Urdu',
-    name: i18next.t("auto.dr_md_sohail_anwer_1or3ao5")
-  }, {
-    sl: 9,
-    department: 'Urdu',
-    name: i18next.t("auto.dr_md_rizwan_b00fkz")
-  }, {
-    sl: 10,
-    department: 'Persian',
-    name: i18next.t("auto.dr_shahida_khanam_133t7gj")
-  }, {
-    sl: 11,
-    department: 'Philosophy',
-    name: i18next.t("auto.ms_ranjana_yadav_1ced9gn")
-  }, {
-    sl: 12,
-    department: 'Philosophy',
-    name: i18next.t("auto.dr_suchita_arpan_1hc1sv4")
-  }, {
-    sl: 13,
-    department: 'Philosophy',
-    name: i18next.t("auto.dr_sanjay_kumar_priyadarshi_14x1tlx")
-  }, {
-    sl: 14,
-    department: 'Pol. Science',
-    name: i18next.t("auto.prof_dr_pushplata_kumari_p4ng6e")
-  }, {
-    sl: 15,
-    department: 'Pol. Science',
-    name: i18next.t("auto.dr_rishu_raj_xiys6p")
-  }, {
-    sl: 16,
-    department: 'Sociology',
-    name: i18next.t("auto.dr_binay_kumar_bimal_1uzsmiz")
-  }, {
-    sl: 17,
-    department: 'Sociology',
-    name: i18next.t("auto.dr_archna_kumari_slgkoz")
-  }, {
-    sl: 18,
-    department: 'Sociology',
-    name: i18next.t("auto.dr_reena_kumari_1owdvvt")
-  }, {
-    sl: 19,
-    department: 'Sociology',
-    name: i18next.t("auto.dr_anju_kumari_1be98ec")
-  }, {
-    sl: 20,
-    department: 'Sociology',
-    name: i18next.t("auto.dr_veena_kumari_1itoht9")
-  }, {
-    sl: 21,
-    department: 'Sociology',
-    name: i18next.t("auto.dr_rajendra_kumar_3inpbs")
-  }, {
-    sl: 22,
-    department: 'Sociology',
-    name: i18next.t("auto.dr_minu_minj_1ogfx1e")
-  }, {
-    sl: 23,
-    department: 'Economics',
-    name: i18next.t("auto.dr_sweta_sharan_1ctiw6m")
-  }, {
-    sl: 24,
-    department: 'Economics',
-    name: i18next.t("auto.dr_priyardarshni_1iox0fr")
-  }, {
-    sl: 25,
-    department: 'Economics',
-    name: i18next.t("auto.dr_chandan_chandra_chunna_1ul83jy")
-  }, {
-    sl: 26,
-    department: 'Economics',
-    name: i18next.t("auto.dr_angur_kumari_1ep65x7")
-  }, {
-    sl: 27,
-    department: 'Economics',
-    name: i18next.t("auto.dr_ashish_kumar_1n4wtdh")
-  }, {
-    sl: 28,
-    department: 'Economics',
-    name: i18next.t("auto.dr_mita_malkhandi_ye70tp")
-  }, {
-    sl: 29,
-    department: 'Psychology',
-    name: i18next.t("auto.ms_nidhi_singh_njcovg")
-  }, {
-    sl: 30,
-    department: 'Psychology',
-    name: i18next.t("auto.dr_namrata_y1tq7t")
-  }, {
-    sl: 31,
-    department: 'Psychology',
-    name: i18next.t("auto.dr_sonali_kumari_10hwkaq")
-  }, {
-    sl: 32,
-    department: 'Psychology',
-    name: i18next.t("auto.dr_priyamvada_90l9ht")
-  }, {
-    sl: 33,
-    department: 'Psychology',
-    name: i18next.t("auto.dr_kavita_chowdhary_1h4cd60")
-  }, {
-    sl: 34,
-    department: 'Psychology',
-    name: i18next.t("auto.dr_archana_kumari_1u97n4y")
-  }, {
-    sl: 35,
-    department: 'Psychology',
-    name: i18next.t("auto.dr_ranjana_kumari_1kfe0z1")
-  }, {
-    sl: 36,
-    department: 'Psychology',
-    name: i18next.t("auto.dr_archana_bharti_4a5633")
-  }, {
-    sl: 40,
-    department: 'Home-Sc.',
-    name: i18next.t("auto.dr_kavita_kumari_1a4cr6c")
-  }, {
-    sl: 41,
-    department: 'Home-Sc.',
-    name: i18next.t("auto.dr_seema_prakash_uch4ts")
-  }, {
-    sl: 42,
-    department: 'Home-Sc.',
-    name: i18next.t("auto.dr_shruti_kumari_uak20l")
-  }, {
-    sl: 43,
-    department: 'Music',
-    name: i18next.t("auto.prof_dr_neera_choudhury_k149vr")
-  }, {
-    sl: 44,
-    department: 'Music',
-    name: i18next.t("auto.dr_arvind_kumar_yeh61n")
-  }, {
-    sl: 45,
-    department: 'Mathematics',
-    name: i18next.t("auto.dr_poonam_kumari_3gi7s6")
-  }, {
-    sl: 46,
-    department: 'Mathematics',
-    name: i18next.t("auto.dr_binay_kumar_c00ops")
-  }, {
-    sl: 47,
-    department: 'Physics',
-    name: i18next.t("auto.dr_manish_kumar_verma_jzs2rk")
-  }, {
-    sl: 48,
-    department: 'Physics',
-    name: i18next.t("auto.dr_priti_mishra_f3ipev")
-  }, {
-    sl: 49,
-    department: 'Physics',
-    name: i18next.t("auto.dr_sonu_rani_kgpk1a")
-  }, {
-    sl: 50,
-    department: 'Physics',
-    name: i18next.t("auto.dr_pankaj_kumar_baitha_1w2sks5")
-  }, {
-    sl: 51,
-    department: 'Chemistry',
-    name: i18next.t("auto.dr_usha_kumari_ipthiz")
-  }, {
-    sl: 52,
-    department: 'Chemistry',
-    name: i18next.t("auto.dr_shyam_deo_yadav_z16psm")
-  }, {
-    sl: 53,
-    department: 'Chemistry',
-    name: i18next.t("auto.dr_madhu_kumari_gupta_vqlz92")
-  }, {
-    sl: 54,
-    department: 'Chemistry',
-    name: i18next.t("auto.dr_amrita_prasad_1m3y5je")
-  }, {
-    sl: 55,
-    department: 'Chemistry',
-    name: i18next.t("auto.dr_reena_kumari_1owdvvt")
-  }, {
-    sl: 56,
-    department: 'Chemistry',
-    name: i18next.t("auto.dr_deepak_kumar_aiuezn")
-  }, {
-    sl: 57,
-    department: 'Chemistry',
-    name: i18next.t("auto.dr_archana_sinha_1mfbu1i")
-  }, {
-    sl: 58,
-    department: 'Botany',
-    name: i18next.t("auto.prof_dr_namita_kumari_141e1im")
-  }, {
-    sl: 59,
-    department: 'Botany',
-    name: i18next.t("auto.dr_pushpanjali_khare_1x6i46f")
-  }, {
-    sl: 60,
-    department: 'Botany',
-    name: i18next.t("auto.dr_surendra_kumar_prasad_17ku7a8")
-  }, {
-    sl: 61,
-    department: 'Zoology',
-    name: i18next.t("auto.dr_sujata_kumari_cy6mto")
-  }];
-  const guestFaculty = [{
-    sl: 1,
-    department: 'History',
-    name: i18next.t("auto.dr_rajesh_kumar_19g6hay")
-  }, {
-    sl: 2,
-    department: 'History',
-    name: i18next.t("auto.dr_deepika_singh_1hzwx9t")
-  }, {
-    sl: 3,
-    department: 'History',
-    name: i18next.t("auto.dr_sweta_kumari_xtec74")
-  }, {
-    sl: 4,
-    department: 'Zoology',
-    name: i18next.t("auto.dr_maya_rani_1xnfb3x")
-  }, {
-    sl: 5,
-    department: 'Zoology',
-    name: i18next.t("auto.dr_arshi_rana_1g5f7pc")
-  }, {
-    sl: 6,
-    department: 'English',
-    name: i18next.t("auto.dr_anamika_1plfpel")
-  }, {
-    sl: 7,
-    department: 'Chemistry',
-    name: i18next.t("auto.dr_priya_p6ftta")
-  }, {
-    sl: 9,
-    department: 'Chemistry',
-    name: i18next.t("auto.dr_sadhana_kumari_o6jb8")
-  }, {
-    sl: 10,
-    department: 'Sanskrit',
-    name: i18next.t("auto.dr_bharti_kumari_34sh8w")
-  }, {
-    sl: 11,
-    department: 'Political Sc.',
-    name: i18next.t("auto.dr_varsha_shekhar_v3xxm4")
-  }, {
-    sl: 12,
-    department: 'Sociology',
-    name: i18next.t("auto.dr_madhavi_qut5pf")
-  }, {
-    sl: 13,
-    department: 'Physics',
-    name: i18next.t("auto.dr_kamad_nath_shandilya_1paxbi9")
-  }, {
-    sl: 14,
-    department: 'Economics',
-    name: i18next.t("auto.dr_deepali_kumari_13olsjo")
-  }];
+  const [query, setQuery] = useState('');
+  const [departmentFilter, setDepartmentFilter] = useState('all');
   const regularEmployees = [{
     sl: 1,
     department: 'Administration',
-    name: i18next.t("auto.mr_ravi_prakash_fokoei"),
+    name: t("auto.mr_ravi_prakash_fokoei"),
     designation: 'Head Assistant'
   }, {
     sl: 2,
     department: 'Botany',
-    name: i18next.t("auto.mr_arun_kumar_85xd98"),
+    name: t("auto.mr_arun_kumar_85xd98"),
     designation: 'Store Keeper / Accountant-in-charge'
   }, {
     sl: 3,
     department: 'Office (Accounts)',
-    name: i18next.t("auto.mr_jitendra_kumar_1837rfj"),
+    name: t("auto.mr_jitendra_kumar_1837rfj"),
     designation: 'LDC'
   }, {
     sl: 4,
     department: 'Office',
-    name: i18next.t("auto.mr_abhimanyu_kumar_zng0k8"),
+    name: t("auto.mr_abhimanyu_kumar_zng0k8"),
     designation: 'LDC'
   }, {
     sl: 5,
     department: 'Office',
-    name: i18next.t("auto.mrs_gitanjali_palei_16kafu5"),
+    name: t("auto.mrs_gitanjali_palei_16kafu5"),
     designation: 'LDC'
   }, {
     sl: 6,
     department: 'Office',
-    name: i18next.t("auto.mrs_ritu_rani_f8y0fd"),
+    name: t("auto.mrs_ritu_rani_f8y0fd"),
     designation: 'LDC'
   }, {
     sl: 7,
     department: 'Botany',
-    name: i18next.t("auto.mrs_radha_devi_o69e4n"),
+    name: t("auto.mrs_radha_devi_o69e4n"),
     designation: 'Lab. Bearer'
   }, {
     sl: 8,
     department: 'Principal Chamber',
-    name: i18next.t("auto.mrs_lalita_devi_1bweghw"),
+    name: t("auto.mrs_lalita_devi_1bweghw"),
     designation: 'Peon'
   }, {
     sl: 9,
     department: 'Zoology',
-    name: i18next.t("auto.mr_ahraruddin_ansari_1bytwo8"),
+    name: t("auto.mr_ahraruddin_ansari_1bytwo8"),
     designation: 'Lab. Bearer'
   }, {
     sl: 10,
     department: 'Office',
-    name: i18next.t("auto.mr_gautam_raj_1xemupy"),
+    name: t("auto.mr_gautam_raj_1xemupy"),
     designation: 'Peon'
   }, {
     sl: 11,
     department: 'Vaidehi Hostel',
-    name: i18next.t("auto.mr_ashok_kumar_1bvny5m"),
+    name: t("auto.mr_ashok_kumar_1bvny5m"),
     designation: 'Darwan'
   }, {
     sl: 12,
     department: 'General',
-    name: i18next.t("auto.mr_kishore_kumar_ojik45"),
+    name: t("auto.mr_kishore_kumar_ojik45"),
     designation: 'Darwan'
   }, {
     sl: 13,
     department: 'Office',
-    name: i18next.t("auto.mr_ram_pravesh_prasad_1s39238"),
+    name: t("auto.mr_ram_pravesh_prasad_1s39238"),
     designation: 'Peon'
   }, {
     sl: 14,
     department: 'Psychology',
-    name: i18next.t("auto.mr_neeraj_kumar_evhymb"),
+    name: t("auto.mr_neeraj_kumar_evhymb"),
     designation: 'Lab. Bearer'
   }, {
     sl: 15,
     department: 'Physics',
-    name: i18next.t("auto.mr_dablu_kumar_1dxv7ii"),
+    name: t("auto.mr_dablu_kumar_1dxv7ii"),
     designation: 'Lab. Bearer'
   }, {
     sl: 16,
     department: 'Principal Chamber',
-    name: i18next.t("auto.mr_suraj_kumar_nmqdd7"),
+    name: t("auto.mr_suraj_kumar_nmqdd7"),
     designation: 'Peon'
   }, {
     sl: 17,
     department: 'Chemistry',
-    name: i18next.t("auto.mrs_sahuda_iffat_1q5ur75"),
+    name: t("auto.mrs_sahuda_iffat_1q5ur75"),
     designation: 'Peon'
   }, {
     sl: 18,
     department: 'Psychology',
-    name: i18next.t("auto.mrs_meena_devi_1is3zh7"),
+    name: t("auto.mrs_meena_devi_1is3zh7"),
     designation: 'Peon'
   }];
-  const TableComponent = ({
-    data,
-    columns
-  }) => <div className="overflow-x-auto my-4">
-      <table className="w-full border-collapse border border-gray-400">
-        <thead className="bg-blue-100">
-          <tr>
-            {columns.map((col, idx) => <th key={idx} className="border border-gray-400 px-4 py-2 text-left text-sm font-bold">
-                {col}
-              </th>)}
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((row, idx) => <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-              {columns.map((col, colIdx) => {
-            const key = col.toLowerCase().replace(/\s+/g, '');
-            const value = key === 'sl' ? idx + 1 : row[key] || '';
-            return <td key={colIdx} className="border border-gray-400 px-4 py-2 text-sm">
-                    {value}
-                  </td>;
-          })}
-            </tr>)}
-        </tbody>
-      </table>
-    </div>;
-  return <div className="container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold mb-2">{i18next.t("auto.teachers_and_employee_list_2025_2026_shf9xb")}</h1>
-      <p className="text-gray-600 mb-8">{i18next.t("auto.magadh_mahila_college_patna_complete_teachers_and_fyn20l")}</p>
 
-      <div className="flex flex-wrap gap-2 mb-6">
-        <button onClick={() => setActiveTab('regular')} className={`px-6 py-2 rounded font-bold transition ${activeTab === 'regular' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-800 hover:bg-gray-300'}`}>{`
-          ${i18next.t("auto.regular_teachers_1nhojbc")}`}{regularTeachers.length})
-        </button>
-        <button onClick={() => setActiveTab('guest')} className={`px-6 py-2 rounded font-bold transition ${activeTab === 'guest' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-800 hover:bg-gray-300'}`}>{`
-          ${i18next.t("auto.guest_faculty_lyxdql")}`}{guestFaculty.length})
-        </button>
-        <button onClick={() => setActiveTab('employees')} className={`px-6 py-2 rounded font-bold transition ${activeTab === 'employees' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-800 hover:bg-gray-300'}`}>{`
-          ${i18next.t("auto.non_teaching_staff_18ve05u")}`}{regularEmployees.length})
-        </button>
+  const categories = [
+    { id: 'regular', label: t('facultyDirectory.regular'), records: getStaffCouncilFaculty('regular') },
+    { id: 'guest', label: t('facultyDirectory.guest'), records: getStaffCouncilFaculty('guest') },
+    { id: 'unconfirmed', label: t('facultyDirectory.additional'), records: getStaffCouncilFaculty('unconfirmed') },
+    { id: 'employees', label: t('facultyDirectory.nonTeaching'), records: regularEmployees },
+  ];
+  const active = categories.find(category => category.id === activeTab);
+  const isEmployees = activeTab === 'employees';
+  const departmentOf = member => isEmployees ? member.department : getFacultyDepartment(member, t);
+  const departmentIdOf = member => isEmployees ? member.department : member.departmentId;
+  const nameOf = member => isEmployees ? member.name : getFacultyName(member, t);
+  const departmentOptions = [...new Map(active.records.map(member => [departmentIdOf(member), departmentOf(member)])).entries()];
+  const search = query.trim().toLocaleLowerCase();
+  const filtered = active.records.filter(member => {
+    const department = departmentOf(member);
+    const designation = isEmployees ? member.designation : getFacultyDesignation(member, t);
+    const text = [nameOf(member), member.name, ...(member.aliases || []), department, member.department, designation,
+      member.specialization, member.appointmentDepartment, member.deputationDepartment,
+      member.specialization === 'Environmental Science' ? t('facultyDirectory.environmentalScience') : '',
+      member.isHOD ? `HOD ${t('facultyDirectory.hod')}` : ''].join(' ').toLocaleLowerCase();
+    return (departmentFilter === 'all' || departmentFilter === departmentIdOf(member)) && text.includes(search);
+  });
+  const groups = filtered.reduce((result, member) => {
+    const department = departmentOf(member);
+    if (!result.has(department)) result.set(department, []);
+    result.get(department).push(member);
+    return result;
+  }, new Map());
+
+  return (
+    <main className="faculty-directory mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+      <header className="mb-8">
+        <p className="mb-2 text-sm font-semibold uppercase tracking-wider text-muted-foreground">{t('facultyDirectory.members')}</p>
+        <h1 className="text-3xl font-bold text-foreground sm:text-4xl">{t('facultyDirectory.title')}</h1>
+        <p className="mt-3 max-w-3xl text-base text-muted-foreground">{t('facultyDirectory.intro')}</p>
+      </header>
+      <div className="mb-8 flex flex-wrap gap-3" role="group" aria-label={t('facultyDirectory.category')}>
+        {categories.map(category => (
+          <button key={category.id} type="button" aria-pressed={activeTab === category.id}
+            onClick={() => { setActiveTab(category.id); setDepartmentFilter('all'); }}
+            className={`rounded-full border px-4 py-2.5 text-sm font-semibold transition-colors ${activeTab === category.id
+              ? 'border-navbar bg-navbar text-navbar-foreground' : 'border-border bg-background text-foreground hover:bg-secondary'}`}>
+            {category.label} <span className="ml-1">({category.records.length})</span>
+          </button>
+        ))}
       </div>
-
-      {activeTab === 'regular' && <div>
-          <h2 className="text-2xl font-bold text-blue-600 mb-4">{i18next.t("auto.regular_teaching_faculty_3p3lro")}</h2>
-          <TableComponent data={regularTeachers} columns={['Sl', 'Department', 'Name']} />
-        </div>}
-
-      {activeTab === 'guest' && <div>
-          <h2 className="text-2xl font-bold text-blue-600 mb-4">{i18next.t("auto.guest_faculty_pnjh6t")}</h2>
-          <TableComponent data={guestFaculty} columns={['Sl', 'Department', 'Name']} />
-        </div>}
-
-      {activeTab === 'employees' && <div>
-          <h2 className="text-2xl font-bold text-blue-600 mb-4">{i18next.t("auto.non_teaching_staff_3rd_4th_grade_he149x")}</h2>
-          <TableComponent data={regularEmployees} columns={['Sl', 'Department', 'Name', 'Designation']} />
-        </div>}
-    </div>;
+      <div className="mb-6 grid gap-4 rounded-2xl border border-border bg-secondary/60 p-5 md:grid-cols-2">
+        <div>
+          <label htmlFor="faculty-search" className="mb-2 block text-sm font-semibold text-foreground">{t('facultyDirectory.search')}</label>
+          <div className="relative">
+            <Search aria-hidden="true" className="pointer-events-none absolute left-3 top-3.5 h-5 w-5 text-muted-foreground" />
+            <input id="faculty-search" type="search" value={query} onChange={event => setQuery(event.target.value)}
+              className="w-full rounded-xl border border-border bg-background py-3 pl-10 pr-3 text-base text-foreground" />
+          </div>
+        </div>
+        <div>
+          <label htmlFor="faculty-department" className="mb-2 block text-sm font-semibold text-foreground">{t('facultyDirectory.department')}</label>
+          <div className="relative">
+            <select id="faculty-department" value={departmentFilter} onChange={event => setDepartmentFilter(event.target.value)}
+              className="w-full appearance-none rounded-xl border border-border bg-background py-3 pl-3 pr-10 text-base text-foreground">
+              <option value="all">{t('facultyDirectory.allDepartments')}</option>
+              {departmentOptions.map(([id, department]) => <option key={id} value={id}>{department}</option>)}
+            </select>
+            <ChevronDown aria-hidden="true" className="pointer-events-none absolute right-3 top-3.5 h-5 w-5 text-muted-foreground" />
+          </div>
+        </div>
+      </div>
+      {activeTab === 'unconfirmed' && <p className="mb-6 rounded-xl border border-border bg-secondary p-4 text-base text-foreground">{t('facultyDirectory.categoryUnconfirmed')}</p>}
+      <p aria-live="polite" role="status" className="mb-6 text-sm text-muted-foreground">{t('facultyDirectory.resultCount', { count: filtered.length })}</p>
+      {filtered.length === 0 && <p className="rounded-xl border border-dashed border-border p-8 text-center text-foreground">{t('facultyDirectory.noResults')}</p>}
+      {isEmployees ? filtered.length > 0 && (
+        <div className="overflow-x-auto rounded-xl border border-border">
+          <table className="w-full border-collapse text-left text-base">
+            <caption className="sr-only">{t('facultyDirectory.nonTeaching')}</caption>
+            <thead className="bg-secondary text-foreground"><tr>
+              <th scope="col" className="p-4">{t('facultyDirectory.name')}</th>
+              <th scope="col" className="p-4">{t('facultyDirectory.department')}</th>
+              <th scope="col" className="p-4">{t('facultyDirectory.designation')}</th>
+            </tr></thead>
+            <tbody>{filtered.map(member => <tr key={member.sl} className="border-t border-border bg-background text-foreground">
+              <th scope="row" className="p-4 font-medium">{member.name}</th>
+              <td className="p-4">{member.department}</td><td className="p-4">{member.designation}</td>
+            </tr>)}</tbody>
+          </table>
+        </div>
+      ) : [...groups.entries()].map(([department, members], index) => (
+        <section key={department} aria-labelledby={`faculty-group-${index}`} className="mb-10">
+          <div className="mb-5 flex items-center gap-3 border-b border-border pb-3">
+            <h2 id={`faculty-group-${index}`} className="text-2xl font-bold text-foreground">{department}</h2>
+            <span className="rounded-full bg-secondary px-3 py-1 text-sm text-foreground">{members.length}</span>
+          </div>
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {members.map(member => <FacultyCard key={member.id} faculty={member} />)}
+          </div>
+        </section>
+      ))}
+    </main>
+  );
 };
 export default StaffCouncil;

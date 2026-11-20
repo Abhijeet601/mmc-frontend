@@ -1,0 +1,1389 @@
+{
+  "regular": [
+    {
+      "sl": 1,
+      "department": "Principal",
+      "name": {
+        "key": "auto.prof_dr_nagendra_prasad_verma_gf7mxh",
+        "text": "Prof. (Dr.) Nagendra Prasad Verma"
+      }
+    },
+    {
+      "sl": 2,
+      "department": "Hindi",
+      "name": {
+        "key": "auto.dr_shipra_prabha_1eqwrhg",
+        "text": "Dr. Shipra Prabha"
+      }
+    },
+    {
+      "sl": 3,
+      "department": "Hindi",
+      "name": {
+        "key": "auto.dr_asha_kumari_d2ej8v",
+        "text": "Dr. Asha Kumari"
+      }
+    },
+    {
+      "sl": 4,
+      "department": "Hindi",
+      "name": {
+        "key": "auto.dr_jyoti_dubey_1tqj3df",
+        "text": "Dr. Jyoti Dubey"
+      }
+    },
+    {
+      "sl": 5,
+      "department": "Hindi",
+      "name": {
+        "key": "auto.dr_preeti_kumari_urbrsb",
+        "text": "Dr. Preeti Kumari"
+      }
+    },
+    {
+      "sl": 6,
+      "department": "English",
+      "name": {
+        "key": "auto.dr_archana_jaiswal_16hzx8g",
+        "text": "Dr. Archana Jaiswal"
+      }
+    },
+    {
+      "sl": 7,
+      "department": "English",
+      "name": {
+        "key": "auto.dr_rajeev_kumar_singh_126jkh5",
+        "text": "Dr. Rajeev Kumar Singh"
+      }
+    },
+    {
+      "sl": 8,
+      "department": "Urdu",
+      "name": {
+        "key": "auto.dr_md_sohail_anwer_1or3ao5",
+        "text": "Dr. Md. Sohail Anwer"
+      }
+    },
+    {
+      "sl": 9,
+      "department": "Urdu",
+      "name": {
+        "key": "auto.dr_md_rizwan_b00fkz",
+        "text": "Dr. Md. Rizwan"
+      }
+    },
+    {
+      "sl": 10,
+      "department": "Persian",
+      "name": {
+        "key": "auto.dr_shahida_khanam_133t7gj",
+        "text": "Dr. Shahida Khanam"
+      }
+    },
+    {
+      "sl": 11,
+      "department": "Philosophy",
+      "name": {
+        "key": "auto.ms_ranjana_yadav_1ced9gn",
+        "text": "Ms. Ranjana Yadav"
+      }
+    },
+    {
+      "sl": 12,
+      "department": "Philosophy",
+      "name": {
+        "key": "auto.dr_suchita_arpan_1hc1sv4",
+        "text": "Dr. Suchita Arpan"
+      }
+    },
+    {
+      "sl": 13,
+      "department": "Philosophy",
+      "name": {
+        "key": "auto.dr_sanjay_kumar_priyadarshi_14x1tlx",
+        "text": "Dr. Sanjay Kumar Priyadarshi"
+      }
+    },
+    {
+      "sl": 14,
+      "department": "Pol. Science",
+      "name": {
+        "key": "auto.prof_dr_pushplata_kumari_p4ng6e",
+        "text": "Prof. (Dr.) Pushplata Kumari"
+      }
+    },
+    {
+      "sl": 15,
+      "department": "Pol. Science",
+      "name": {
+        "key": "auto.dr_rishu_raj_xiys6p",
+        "text": "Dr. Rishu Raj"
+      }
+    },
+    {
+      "sl": 16,
+      "department": "Sociology",
+      "name": {
+        "key": "auto.dr_binay_kumar_bimal_1uzsmiz",
+        "text": "Dr. Binay Kumar Bimal"
+      }
+    },
+    {
+      "sl": 17,
+      "department": "Sociology",
+      "name": {
+        "key": "auto.dr_archna_kumari_slgkoz",
+        "text": "Dr. Archna Kumari"
+      }
+    },
+    {
+      "sl": 18,
+      "department": "Sociology",
+      "name": {
+        "key": "auto.dr_reena_kumari_1owdvvt",
+        "text": "Dr. Reena Kumari"
+      }
+    },
+    {
+      "sl": 19,
+      "department": "Sociology",
+      "name": {
+        "key": "auto.dr_anju_kumari_1be98ec",
+        "text": "Dr. Anju Kumari"
+      }
+    },
+    {
+      "sl": 20,
+      "department": "Sociology",
+      "name": {
+        "key": "auto.dr_veena_kumari_1itoht9",
+        "text": "Dr. Veena Kumari"
+      }
+    },
+    {
+      "sl": 21,
+      "department": "Sociology",
+      "name": {
+        "key": "auto.dr_rajendra_kumar_3inpbs",
+        "text": "Dr. Rajendra Kumar"
+      }
+    },
+    {
+      "sl": 22,
+      "department": "Sociology",
+      "name": {
+        "key": "auto.dr_minu_minj_1ogfx1e",
+        "text": "Dr. Minu Minj"
+      }
+    },
+    {
+      "sl": 23,
+      "department": "Economics",
+      "name": {
+        "key": "auto.dr_sweta_sharan_1ctiw6m",
+        "text": "Dr. Sweta Sharan"
+      }
+    },
+    {
+      "sl": 24,
+      "department": "Economics",
+      "name": {
+        "key": "auto.dr_priyardarshni_1iox0fr",
+        "text": "Dr. Priyardarshni"
+      }
+    },
+    {
+      "sl": 25,
+      "department": "Economics",
+      "name": {
+        "key": "auto.dr_chandan_chandra_chunna_1ul83jy",
+        "text": "Dr. Chandan Chandra Chunna"
+      }
+    },
+    {
+      "sl": 26,
+      "department": "Economics",
+      "name": {
+        "key": "auto.dr_angur_kumari_1ep65x7",
+        "text": "Dr. Angur Kumari"
+      }
+    },
+    {
+      "sl": 27,
+      "department": "Economics",
+      "name": {
+        "key": "auto.dr_ashish_kumar_1n4wtdh",
+        "text": "Dr. Ashish Kumar"
+      }
+    },
+    {
+      "sl": 28,
+      "department": "Economics",
+      "name": {
+        "key": "auto.dr_mita_malkhandi_ye70tp",
+        "text": "Dr. Mita Malkhandi"
+      }
+    },
+    {
+      "sl": 29,
+      "department": "Psychology",
+      "name": {
+        "key": "auto.ms_nidhi_singh_njcovg",
+        "text": "Ms. Nidhi Singh"
+      }
+    },
+    {
+      "sl": 30,
+      "department": "Psychology",
+      "name": {
+        "key": "auto.dr_namrata_y1tq7t",
+        "text": "Dr. Namrata"
+      }
+    },
+    {
+      "sl": 31,
+      "department": "Psychology",
+      "name": {
+        "key": "auto.dr_sonali_kumari_10hwkaq",
+        "text": "Dr. Sonali Kumari"
+      }
+    },
+    {
+      "sl": 32,
+      "department": "Psychology",
+      "name": {
+        "key": "auto.dr_priyamvada_90l9ht",
+        "text": "Dr. Priyamvada"
+      }
+    },
+    {
+      "sl": 33,
+      "department": "Psychology",
+      "name": {
+        "key": "auto.dr_kavita_chowdhary_1h4cd60",
+        "text": "Dr. Kavita Chowdhary"
+      }
+    },
+    {
+      "sl": 34,
+      "department": "Psychology",
+      "name": {
+        "key": "auto.dr_archana_kumari_1u97n4y",
+        "text": "Dr. Archana Kumari"
+      }
+    },
+    {
+      "sl": 35,
+      "department": "Psychology",
+      "name": {
+        "key": "auto.dr_ranjana_kumari_1kfe0z1",
+        "text": "Dr. Ranjana Kumari"
+      }
+    },
+    {
+      "sl": 36,
+      "department": "Psychology",
+      "name": {
+        "key": "auto.dr_archana_bharti_4a5633",
+        "text": "Dr. Archana Bharti"
+      }
+    },
+    {
+      "sl": 40,
+      "department": "Home-Sc.",
+      "name": {
+        "key": "auto.dr_kavita_kumari_1a4cr6c",
+        "text": "Dr. Kavita Kumari"
+      }
+    },
+    {
+      "sl": 41,
+      "department": "Home-Sc.",
+      "name": {
+        "key": "auto.dr_seema_prakash_uch4ts",
+        "text": "Dr. Seema Prakash"
+      }
+    },
+    {
+      "sl": 42,
+      "department": "Home-Sc.",
+      "name": {
+        "key": "auto.dr_shruti_kumari_uak20l",
+        "text": "Dr. Shruti Kumari"
+      }
+    },
+    {
+      "sl": 43,
+      "department": "Music",
+      "name": {
+        "key": "auto.prof_dr_neera_choudhury_k149vr",
+        "text": "Prof. (Dr.) Neera Choudhury"
+      }
+    },
+    {
+      "sl": 44,
+      "department": "Music",
+      "name": {
+        "key": "auto.dr_arvind_kumar_yeh61n",
+        "text": "Dr. Arvind Kumar"
+      }
+    },
+    {
+      "sl": 45,
+      "department": "Mathematics",
+      "name": {
+        "key": "auto.dr_poonam_kumari_3gi7s6",
+        "text": "Dr. Poonam Kumari"
+      }
+    },
+    {
+      "sl": 46,
+      "department": "Mathematics",
+      "name": {
+        "key": "auto.dr_binay_kumar_c00ops",
+        "text": "Dr. Binay Kumar"
+      }
+    },
+    {
+      "sl": 47,
+      "department": "Physics",
+      "name": {
+        "key": "auto.dr_manish_kumar_verma_jzs2rk",
+        "text": "Dr. Manish Kumar Verma"
+      }
+    },
+    {
+      "sl": 48,
+      "department": "Physics",
+      "name": {
+        "key": "auto.dr_priti_mishra_f3ipev",
+        "text": "Dr. Priti Mishra"
+      }
+    },
+    {
+      "sl": 49,
+      "department": "Physics",
+      "name": {
+        "key": "auto.dr_sonu_rani_kgpk1a",
+        "text": "Dr. Sonu Rani"
+      }
+    },
+    {
+      "sl": 50,
+      "department": "Physics",
+      "name": {
+        "key": "auto.dr_pankaj_kumar_baitha_1w2sks5",
+        "text": "Dr. Pankaj Kumar Baitha"
+      }
+    },
+    {
+      "sl": 51,
+      "department": "Chemistry",
+      "name": {
+        "key": "auto.dr_usha_kumari_ipthiz",
+        "text": "Dr. Usha Kumari"
+      }
+    },
+    {
+      "sl": 52,
+      "department": "Chemistry",
+      "name": {
+        "key": "auto.dr_shyam_deo_yadav_z16psm",
+        "text": "Dr. Shyam Deo Yadav"
+      }
+    },
+    {
+      "sl": 53,
+      "department": "Chemistry",
+      "name": {
+        "key": "auto.dr_madhu_kumari_gupta_vqlz92",
+        "text": "Dr. Madhu Kumari Gupta"
+      }
+    },
+    {
+      "sl": 54,
+      "department": "Chemistry",
+      "name": {
+        "key": "auto.dr_amrita_prasad_1m3y5je",
+        "text": "Dr. Amrita Prasad"
+      }
+    },
+    {
+      "sl": 55,
+      "department": "Chemistry",
+      "name": {
+        "key": "auto.dr_reena_kumari_1owdvvt",
+        "text": "Dr. Reena Kumari"
+      }
+    },
+    {
+      "sl": 56,
+      "department": "Chemistry",
+      "name": {
+        "key": "auto.dr_deepak_kumar_aiuezn",
+        "text": "Dr. Deepak Kumar"
+      }
+    },
+    {
+      "sl": 57,
+      "department": "Chemistry",
+      "name": {
+        "key": "auto.dr_archana_sinha_1mfbu1i",
+        "text": "Dr. Archana Sinha"
+      }
+    },
+    {
+      "sl": 58,
+      "department": "Botany",
+      "name": {
+        "key": "auto.prof_dr_namita_kumari_141e1im",
+        "text": "Prof. (Dr.) Namita Kumari"
+      }
+    },
+    {
+      "sl": 59,
+      "department": "Botany",
+      "name": {
+        "key": "auto.dr_pushpanjali_khare_1x6i46f",
+        "text": "Dr. Pushpanjali Khare"
+      }
+    },
+    {
+      "sl": 60,
+      "department": "Botany",
+      "name": {
+        "key": "auto.dr_surendra_kumar_prasad_17ku7a8",
+        "text": "Dr. Surendra Kumar Prasad"
+      }
+    },
+    {
+      "sl": 61,
+      "department": "Zoology",
+      "name": {
+        "key": "auto.dr_sujata_kumari_cy6mto",
+        "text": "Dr. Sujata Kumari"
+      }
+    }
+  ],
+  "guest": [
+    {
+      "sl": 1,
+      "department": "History",
+      "name": {
+        "key": "auto.dr_rajesh_kumar_19g6hay",
+        "text": "Dr. Rajesh Kumar"
+      }
+    },
+    {
+      "sl": 2,
+      "department": "History",
+      "name": {
+        "key": "auto.dr_deepika_singh_1hzwx9t",
+        "text": "Dr. Deepika Singh"
+      }
+    },
+    {
+      "sl": 3,
+      "department": "History",
+      "name": {
+        "key": "auto.dr_sweta_kumari_xtec74",
+        "text": "Dr. Sweta Kumari"
+      }
+    },
+    {
+      "sl": 4,
+      "department": "Zoology",
+      "name": {
+        "key": "auto.dr_maya_rani_1xnfb3x",
+        "text": "Dr. Maya Rani"
+      }
+    },
+    {
+      "sl": 5,
+      "department": "Zoology",
+      "name": {
+        "key": "auto.dr_arshi_rana_1g5f7pc",
+        "text": "Dr. Arshi Rana"
+      }
+    },
+    {
+      "sl": 6,
+      "department": "English",
+      "name": {
+        "key": "auto.dr_anamika_1plfpel",
+        "text": "Dr. Anamika"
+      }
+    },
+    {
+      "sl": 7,
+      "department": "Chemistry",
+      "name": {
+        "key": "auto.dr_priya_p6ftta",
+        "text": "Dr. Priya"
+      }
+    },
+    {
+      "sl": 9,
+      "department": "Chemistry",
+      "name": {
+        "key": "auto.dr_sadhana_kumari_o6jb8",
+        "text": "Dr. Sadhana Kumari"
+      }
+    },
+    {
+      "sl": 10,
+      "department": "Sanskrit",
+      "name": {
+        "key": "auto.dr_bharti_kumari_34sh8w",
+        "text": "Dr. Bharti Kumari"
+      }
+    },
+    {
+      "sl": 11,
+      "department": "Political Sc.",
+      "name": {
+        "key": "auto.dr_varsha_shekhar_v3xxm4",
+        "text": "Dr. Varsha Shekhar"
+      }
+    },
+    {
+      "sl": 12,
+      "department": "Sociology",
+      "name": {
+        "key": "auto.dr_madhavi_qut5pf",
+        "text": "Dr. Madhavi"
+      }
+    },
+    {
+      "sl": 13,
+      "department": "Physics",
+      "name": {
+        "key": "auto.dr_kamad_nath_shandilya_1paxbi9",
+        "text": "Dr. Kamad Nath Shandilya"
+      }
+    },
+    {
+      "sl": 14,
+      "department": "Economics",
+      "name": {
+        "key": "auto.dr_deepali_kumari_13olsjo",
+        "text": "Dr. Deepali Kumari"
+      }
+    }
+  ],
+  "departments": [
+    {
+      "name": {
+        "key": "auto.department_of_hindi_k5iwa2",
+        "text": "Department of Hindi"
+      },
+      "category": "Humanities",
+      "faculty": [
+        {
+          "name": {
+            "key": "auto.dr_shipra_prabha_1eqwrhg",
+            "text": "Dr. Shipra Prabha"
+          },
+          "designation": "HOD, Hindi",
+          "image": "Dr. Shipra Prabha, HOD, Hindi.jpeg"
+        },
+        {
+          "name": {
+            "key": "auto.dr_asha_kumari_d2ej8v",
+            "text": "Dr. Asha Kumari"
+          },
+          "designation": "Assistant Professor, Hindi",
+          "image": "Dr. Aasha Kumari, Assistant Professor, Hindi.jpeg"
+        },
+        {
+          "name": {
+            "key": "auto.dr_jyoti_dubey_1tqj3df",
+            "text": "Dr. Jyoti Dubey"
+          },
+          "designation": "Assistant Professor, Hindi",
+          "image": "Dr. Jyoti Dubey, Assistant Professor, Hindi.jpeg"
+        },
+        {
+          "name": {
+            "key": "auto.dr_preeti_kumari_urbrsb",
+            "text": "Dr. Preeti Kumari"
+          },
+          "designation": "Assistant Professor, Hindi",
+          "image": "Dr. Preeti Kumari, Assistant Professor, Hindi.jpeg"
+        }
+      ]
+    },
+    {
+      "name": {
+        "key": "auto.department_of_english_88eeyi",
+        "text": "Department of English"
+      },
+      "category": "Humanities",
+      "faculty": [
+        {
+          "name": {
+            "key": "auto.dr_archana_jaiswal_16hzx8g",
+            "text": "Dr. Archana Jaiswal"
+          },
+          "designation": "Associate Professor, HOD English",
+          "image": "Dr. Archana Jaiswal, Associate Professor, HOD English.jpeg"
+        },
+        {
+          "name": {
+            "key": "auto.dr_rajiv_kumar_singh_cnsc1s",
+            "text": "Dr. Rajiv Kumar Singh"
+          },
+          "designation": "Assistant Professor, English",
+          "image": "Dr. Rajiv Kumar Singh, Assistant Professor, English.jpeg"
+        },
+        {
+          "name": {
+            "key": "auto.dr_anamika_1plfpel",
+            "text": "Dr. Anamika"
+          },
+          "designation": "Guest Faculty, English"
+        }
+      ]
+    },
+    {
+      "name": {
+        "key": "auto.department_of_persian_b5ffy2",
+        "text": "Department of Persian"
+      },
+      "category": "Humanities",
+      "faculty": [
+        {
+          "name": {
+            "key": "auto.dr_shahida_khanam_133t7gj",
+            "text": "Dr. Shahida Khanam"
+          },
+          "designation": "HOD, Persian"
+        }
+      ]
+    },
+    {
+      "name": {
+        "key": "auto.department_of_sanskrit_ndfog3",
+        "text": "Department of Sanskrit"
+      },
+      "category": "Humanities",
+      "faculty": [
+        {
+          "name": {
+            "key": "auto.dr_shipra_prabha_1eqwrhg",
+            "text": "Dr. Shipra Prabha"
+          },
+          "designation": "HOD, Sanskrit",
+          "image": "https://pub-c7047204b6824b4ea67be147e7ebb0ac.r2.dev/public/faculty/Dr.%20Shipra%20Prabha%2C%20HOD%2C%20Hindi.jpeg"
+        },
+        {
+          "name": {
+            "key": "auto.dr_bharti_kumari_34sh8w",
+            "text": "Dr. Bharti Kumari"
+          },
+          "designation": "Guest Faculty, Sanskrit"
+        }
+      ]
+    },
+    {
+      "name": {
+        "key": "auto.department_of_mathematics_1w45hfg",
+        "text": "Department of Mathematics"
+      },
+      "category": "Science",
+      "faculty": [
+        {
+          "name": {
+            "key": "auto.dr_poonam_kumari_3gi7s6",
+            "text": "Dr. Poonam Kumari"
+          },
+          "designation": "Professor, HOD, Mathematics",
+          "image": "Poonam Kumari, Professor, HOD,  Mathematics.jpeg"
+        },
+        {
+          "name": {
+            "key": "auto.dr_binay_kumar_c00ops",
+            "text": "Dr. Binay Kumar"
+          },
+          "designation": "Assistant Professor, Department of Mathematics",
+          "image": "Dr. Binay Kumar, Assistant Professor, Department of Mathematics.jpeg"
+        }
+      ]
+    },
+    {
+      "name": {
+        "key": "auto.department_of_statistics_1p0o5pp",
+        "text": "Department of Statistics"
+      },
+      "category": "Science",
+      "faculty": [
+        {
+          "name": {
+            "key": "auto.dr_madhu_kumari_gupta_vqlz92",
+            "text": "Dr. Madhu Kumari Gupta"
+          },
+          "designation": "Assistant Professor, Statistics",
+          "image": "Dr. Madhu Gupta, Assistant Professor, Chemistry.jpeg"
+        }
+      ]
+    },
+    {
+      "name": {
+        "key": "auto.department_of_physics_1y6iif7",
+        "text": "Department of Physics"
+      },
+      "category": "Science",
+      "faculty": [
+        {
+          "name": {
+            "key": "auto.dr_sonu_rani_kgpk1a",
+            "text": "Dr. Sonu Rani"
+          },
+          "designation": "HOD Physics",
+          "image": "Dr. Sonu Rani, HOD Physics.jpeg"
+        },
+        {
+          "name": {
+            "key": "auto.dr_manish_kumar_verma_jzs2rk",
+            "text": "Dr. Manish Kumar Verma"
+          },
+          "designation": "Assistant Professor, Physics",
+          "image": "Dr. Manish Kumar Verma, Assistant Professor, Physics Coordinator, BCA.jpeg"
+        },
+        {
+          "name": {
+            "key": "auto.dr_pankaj_kumar_baitha_1w2sks5",
+            "text": "Dr. Pankaj Kumar Baitha"
+          },
+          "designation": "Assistant Professor, Physics",
+          "image": "Dr. Pankaj Kumar Baitha, Assistant Professor, Physics.jpeg"
+        },
+        {
+          "name": {
+            "key": "auto.dr_priti_mishra_f3ipev",
+            "text": "Dr. Priti Mishra"
+          },
+          "designation": "Assistant Professor, Physics",
+          "image": "Dr. Priti Mishra, Assistant Professor, Physics.jpeg"
+        },
+        {
+          "name": {
+            "key": "auto.dr_kamad_nath_shandilya_1paxbi9",
+            "text": "Dr. Kamad Nath Shandilya"
+          },
+          "designation": "Guest Faculty, Physics"
+        }
+      ]
+    },
+    {
+      "name": {
+        "key": "auto.department_of_chemistry_cggcem",
+        "text": "Department of Chemistry"
+      },
+      "category": "Science",
+      "faculty": [
+        {
+          "name": {
+            "key": "auto.dr_shyam_deo_yadav_z16psm",
+            "text": "Dr. Shyam Deo Yadav"
+          },
+          "designation": "HOD, Chemistry",
+          "image": "Prof. Shyam Deo Yadav, HOD, Chemistry.jpeg"
+        },
+        {
+          "name": {
+            "key": "auto.dr_usha_kumari_ipthiz",
+            "text": "Dr. Usha Kumari"
+          },
+          "designation": "Associate Professor, Chemistry",
+          "image": "Dr. Usha Kumari, Associate Professor, Chemistry.jpeg"
+        },
+        {
+          "name": {
+            "key": "auto.dr_deepak_kumar_aiuezn",
+            "text": "Dr. Deepak Kumar"
+          },
+          "designation": "Assistant Professor, Chemistry",
+          "image": "Dr Deepak Kumar, Assistant Professor, Chemistry.jpeg"
+        },
+        {
+          "name": {
+            "key": "auto.dr_amrita_prasad_1m3y5je",
+            "text": "Dr. Amrita Prasad"
+          },
+          "designation": "Assistant Professor, Chemistry",
+          "image": "Dr. Amrita Prasad, Assistant Professor, Chemistry.jpeg"
+        },
+        {
+          "name": {
+            "key": "auto.dr_madhu_kumari_gupta_vqlz92",
+            "text": "Dr. Madhu Kumari Gupta"
+          },
+          "designation": "Assistant Professor, Chemistry",
+          "image": "Dr. Madhu Gupta, Assistant Professor, Chemistry.jpeg"
+        },
+        {
+          "name": {
+            "key": "auto.dr_reena_kumari_1owdvvt",
+            "text": "Dr. Reena Kumari"
+          },
+          "designation": "Assistant Professor, Chemistry",
+          "image": "Reena Kumari, Assistant Professor, Chemistry.jpeg"
+        },
+        {
+          "name": {
+            "key": "auto.dr_archana_sinha_1mfbu1i",
+            "text": "Dr. Archana Sinha"
+          },
+          "designation": "Assitant Professor, Chemistry",
+          "image": ""
+        },
+        {
+          "name": {
+            "key": "auto.dr_priya_p6ftta",
+            "text": "Dr. Priya"
+          },
+          "designation": "Guest Faculty, Chemistry"
+        },
+        {
+          "name": {
+            "key": "auto.dr_sadhana_kumari_o6jb8",
+            "text": "Dr. Sadhana Kumari"
+          },
+          "designation": "Guest Faculty, Chemistry"
+        }
+      ]
+    },
+    {
+      "name": {
+        "key": "auto.department_of_botany_telz6v",
+        "text": "Department of Botany"
+      },
+      "category": "Science",
+      "faculty": [
+        {
+          "name": {
+            "key": "auto.dr_pushpanjali_khare_1x6i46f",
+            "text": "Dr. Pushpanjali Khare"
+          },
+          "designation": "Associate Professor, HOD Botany",
+          "image": "Dr. Pushpanjali Khare, Associate Professor, HOD Botany.jpeg"
+        },
+        {
+          "name": {
+            "key": "auto.dr_surendra_kumar_prasad_17ku7a8",
+            "text": "Dr. Surendra Kumar Prasad"
+          },
+          "designation": "Associate Professor, Botany",
+          "image": "Surendra Prasad, Associate Prof, Botany Coordinator, B.Com..jpeg"
+        }
+      ]
+    },
+    {
+      "name": {
+        "key": "auto.department_of_zoology_en0bgv",
+        "text": "Department of Zoology"
+      },
+      "category": "Science",
+      "faculty": [
+        {
+          "name": {
+            "key": "auto.dr_sujata_kumari_cy6mto",
+            "text": "Dr. Sujata Kumari"
+          },
+          "designation": "HOD Zoology",
+          "image": "Dr. Sujata, HOD Zoology.jpeg"
+        },
+        {
+          "name": {
+            "key": "auto.dr_maya_rani_1xnfb3x",
+            "text": "Dr. Maya Rani"
+          },
+          "designation": "Guest Faculty, Zoology"
+        },
+        {
+          "name": {
+            "key": "auto.dr_arshi_rana_1g5f7pc",
+            "text": "Dr. Arshi Rana"
+          },
+          "designation": "Guest Faculty, Zoology"
+        }
+      ]
+    },
+    {
+      "name": {
+        "key": "auto.department_of_psychology_mttr6z",
+        "text": "Department of Psychology"
+      },
+      "category": "Social Science",
+      "faculty": [
+        {
+          "name": {
+            "key": "auto.dr_namrata_y1tq7t",
+            "text": "Dr. Namrata"
+          },
+          "designation": "Assistant Professor, HOD, Psychology",
+          "image": "Dr.Namrata, Assistant Professor, HOD,  Psychology.jpeg"
+        },
+        {
+          "name": {
+            "key": "auto.ms_nidhi_singh_njcovg",
+            "text": "Ms. Nidhi Singh"
+          },
+          "designation": "Assistant Professor, Psychology",
+          "image": "Ms. Nidhi Singh, Assistant Professor, Psychology.jpeg"
+        },
+        {
+          "name": {
+            "key": "auto.dr_archana_kumari_1u97n4y",
+            "text": "Dr. Archana Kumari"
+          },
+          "designation": "Assistant Professor, Psychology",
+          "image": "Archana Kumari, Assistant Professor, Psychology.jpeg"
+        },
+        {
+          "name": {
+            "key": "auto.dr_archana_bharti_4a5633",
+            "text": "Dr. Archana Bharti"
+          },
+          "designation": "Assistant Professor, Psychology",
+          "image": "Dr. Archana Bharti, Assistant Professor, Psychology.jpeg"
+        },
+        {
+          "name": {
+            "key": "auto.dr_kavita_chowdhary_1h4cd60",
+            "text": "Dr. Kavita Chowdhary"
+          },
+          "designation": "Assistant Professor, Department of Psychology",
+          "image": "Dr. Kavita Chowdhary, Assistant Professor, Department of Psychology.jpeg"
+        },
+        {
+          "name": {
+            "key": "auto.dr_priyamvada_90l9ht",
+            "text": "Dr. Priyamvada"
+          },
+          "designation": "Assistant Professor, Psychology",
+          "image": "Dr. Priyamvada, Assistant Professor, Psychology.jpeg"
+        },
+        {
+          "name": {
+            "key": "auto.dr_ranjana_kumari_1kfe0z1",
+            "text": "Dr. Ranjana Kumari"
+          },
+          "designation": "Assistant Professor, Psychology",
+          "image": "Dr. Ranjana Kumari, Assistant Professor, Psychology.jpeg"
+        },
+        {
+          "name": {
+            "key": "auto.dr_sonali_kumari_10hwkaq",
+            "text": "Dr. Sonali Kumari"
+          },
+          "designation": "Assistant Professor, Psychology",
+          "image": "Dr. Sonali Kumari, Assistant Professor, Psychology.jpeg"
+        }
+      ]
+    },
+    {
+      "name": {
+        "key": "auto.department_of_sociology_5dwsz0",
+        "text": "Department of Sociology"
+      },
+      "category": "Social Science",
+      "faculty": [
+        {
+          "name": {
+            "key": "auto.dr_binay_kumar_bimal_1uzsmiz",
+            "text": "Dr. Binay Kumar Bimal"
+          },
+          "designation": "HOD,Professor, Department of Sociology,",
+          "image": "Dr. Binay Kumar Bimal, Professor, Department of Sociology Bursar, MMC Coordinator, BSW.jpeg"
+        },
+        {
+          "name": {
+            "key": "auto.dr_anju_kumari_1be98ec",
+            "text": "Dr. Anju Kumari"
+          },
+          "designation": "Assistant Professor, Sociology",
+          "image": "Anju Kumari, Assistant Professor, Sociology.jpeg"
+        },
+        {
+          "name": {
+            "key": "auto.dr_archna_kumari_slgkoz",
+            "text": "Dr. Archna Kumari"
+          },
+          "designation": "Assistant Professor, Sociology",
+          "image": "Dr. Archna Kumari, Assistant Professor, Sociology.jpeg"
+        },
+        {
+          "name": {
+            "key": "auto.dr_minu_minj_1ogfx1e",
+            "text": "Dr. Minu Minj"
+          },
+          "designation": "Assistant Professor, Sociology",
+          "image": "Dr. Minu Minz, Assistant Professor, Sociology.jpeg"
+        },
+        {
+          "name": {
+            "key": "auto.dr_reena_kumari_1owdvvt",
+            "text": "Dr. Reena Kumari"
+          },
+          "designation": "Assistant Professor, Department of Sociology",
+          "image": "Dr Reena kumari, Assistant Professor, Department of Sociology.jpeg"
+        },
+        {
+          "name": {
+            "key": "auto.dr_rajendra_kumar_3inpbs",
+            "text": "Dr. Rajendra Kumar"
+          },
+          "designation": "Assistant Professor, Sociology",
+          "image": "Rajendra Kumar, Assistant Professor, Sociology.jpeg"
+        },
+        {
+          "name": {
+            "key": "auto.dr_veena_kumari_1itoht9",
+            "text": "Dr. Veena Kumari"
+          },
+          "designation": "Assistant Professor, Sociology",
+          "image": "Dr. Veena Kumari, Assistant Professor, Sociology.jpeg"
+        },
+        {
+          "name": {
+            "key": "auto.dr_madhavi_qut5pf",
+            "text": "Dr. Madhavi"
+          },
+          "designation": "Guest Faculty, Sociology",
+          "image": ""
+        }
+      ]
+    },
+    {
+      "name": {
+        "key": "auto.department_of_economics_1aeg9mc",
+        "text": "Department of Economics"
+      },
+      "category": "Social Science",
+      "faculty": [
+        {
+          "name": {
+            "key": "auto.dr_sweta_sharan_1ctiw6m",
+            "text": "Dr. Sweta Sharan"
+          },
+          "designation": "HOD, Economics",
+          "image": "Sweta Sharan, HOD, Economics.jpeg"
+        },
+        {
+          "name": {
+            "key": "auto.dr_ashish_kumar_1n4wtdh",
+            "text": "Dr. Ashish Kumar"
+          },
+          "designation": "Assistant Professor, Economics",
+          "image": "Ashish Kumar, Assistant Professor, Economics.jpeg"
+        },
+        {
+          "name": {
+            "key": "auto.dr_angur_kumari_1ep65x7",
+            "text": "Dr. Angur Kumari"
+          },
+          "designation": "Assistant Professor, Economics",
+          "image": "Dr Angur Kumari, Assistant Professor, Economics.jpeg"
+        },
+        {
+          "name": {
+            "key": "auto.dr_chandan_chandra_chunna_1ul83jy",
+            "text": "Dr. Chandan Chandra Chunna"
+          },
+          "designation": "Assistant Professor, Economics",
+          "image": "Dr. Chandan Chandra Chunna, Assistant Professor, Economics.jpeg"
+        },
+        {
+          "name": {
+            "key": "auto.dr_mita_malkhandi_ye70tp",
+            "text": "Dr. Mita Malkhandi"
+          },
+          "designation": "Assistant Professor, Economics",
+          "image": "Dr. Mita Malkhandi, Assistant Professor, Economics.jpeg"
+        },
+        {
+          "name": {
+            "key": "auto.dr_priyadarshini_44hdf0",
+            "text": "Dr. Priyadarshini"
+          },
+          "designation": "Assistant Professor, Economics",
+          "image": "Priyadarshini, Assistant Professor, Economics.jpeg"
+        },
+        {
+          "name": {
+            "key": "auto.dr_deepali_kumari_13olsjo",
+            "text": "Dr. Deepali Kumari"
+          },
+          "designation": "Guest Faculty, Economics"
+        }
+      ]
+    },
+    {
+      "name": {
+        "key": "auto.department_of_history_1y0j8ve",
+        "text": "Department of History"
+      },
+      "category": "Social Science",
+      "faculty": [
+        {
+          "name": {
+            "key": "auto.dr_rajesh_kumar_19g6hay",
+            "text": "Dr. Rajesh Kumar"
+          },
+          "designation": "Guest Faculty, History"
+        },
+        {
+          "name": {
+            "key": "auto.dr_deepika_singh_1hzwx9t",
+            "text": "Dr. Deepika Singh"
+          },
+          "designation": "Guest Faculty, History"
+        },
+        {
+          "name": {
+            "key": "auto.dr_sweta_kumari_xtec74",
+            "text": "Dr. Sweta Kumari"
+          },
+          "designation": "Guest Faculty, History"
+        }
+      ]
+    },
+    {
+      "name": {
+        "key": "auto.department_of_philosophy_1jqnhjb",
+        "text": "Department of Philosophy"
+      },
+      "category": "Humanities",
+      "faculty": [
+        {
+          "name": {
+            "key": "auto.dr_suchita_arpan_1hc1sv4",
+            "text": "Dr. Suchita Arpan"
+          },
+          "designation": "HOD, Philosophy",
+          "image": "Dr. Suchita Arpan, HOD, Psychology.jpeg"
+        },
+        {
+          "name": {
+            "key": "auto.dr_sanjay_kumar_priyadarshi_14x1tlx",
+            "text": "Dr. Sanjay Kumar Priyadarshi"
+          },
+          "designation": "Assistant Professor, Philosophy",
+          "image": "Dr. Sanjay Kumar Priyadarshi, Assistant Professor, Philosophy.jpeg"
+        },
+        {
+          "name": {
+            "key": "auto.ms_ranjana_yadav_1ced9gn",
+            "text": "Ms. Ranjana Yadav"
+          },
+          "designation": "Assistant Professor, Philosophy",
+          "image": "Ms. Ranjana Yadav, Assistant Professor, Philosophy.jpeg"
+        }
+      ]
+    },
+    {
+      "name": {
+        "key": "auto.department_of_urdu_1kl8r8e",
+        "text": "Department of Urdu"
+      },
+      "category": "Humanities",
+      "faculty": [
+        {
+          "name": {
+            "key": "auto.dr_md_sohail_anwer_1or3ao5",
+            "text": "Dr. Md. Sohail Anwer"
+          },
+          "designation": "HOD, Urdu",
+          "image": "Dr. Md. Sohail Anwer.jpeg"
+        },
+        {
+          "name": {
+            "key": "auto.dr_md_rizwan_b00fkz",
+            "text": "Dr. Md. Rizwan"
+          },
+          "designation": "Assistant Professor, Urdu",
+          "image": "Dr. Md. Rizwan, Assistant Professor, Urdu.jpeg"
+        }
+      ]
+    },
+    {
+      "name": {
+        "key": "auto.department_of_home_science_kj3hoz",
+        "text": "Department of Home Science"
+      },
+      "category": "Social Science",
+      "faculty": [
+        {
+          "name": {
+            "key": "auto.dr_kavita_kumari_1a4cr6c",
+            "text": "Dr. Kavita Kumari"
+          },
+          "designation": "HOD, Home Science"
+        },
+        {
+          "name": {
+            "key": "auto.dr_shruti_kumari_uak20l",
+            "text": "Dr. Shruti Kumari"
+          },
+          "designation": "Assistant Professor, Home Science",
+          "image": "Dr. Shruti Kumari, Assistant Professor, Home Science.jpeg"
+        },
+        {
+          "name": {
+            "key": "auto.dr_seema_prakash_uch4ts",
+            "text": "Dr. Seema Prakash"
+          },
+          "designation": "Assistant Professor, Home Science",
+          "image": "Dr. Seema Prakash, Assistant Professor, Home Science.jpeg"
+        }
+      ]
+    },
+    {
+      "name": {
+        "key": "auto.department_of_music_k7n32h",
+        "text": "Department of Music"
+      },
+      "category": "Fine Arts",
+      "faculty": [
+        {
+          "name": {
+            "key": "auto.dr_arvind_kumar_yeh61n",
+            "text": "Dr. Arvind Kumar"
+          },
+          "designation": "Professor, HOD, Department of Music",
+          "image": "Dr. Arvind Kumar, Professor, HOD, Department of Music.jpeg"
+        },
+        {
+          "name": {
+            "key": "auto.prof_dr_neera_choudhury_k149vr",
+            "text": "Prof. (Dr.) Neera Choudhury"
+          },
+          "designation": "Professor, Department of Music",
+          "image": "Dr. Neera Chowdhary, Professor, Department of Music.jpeg"
+        }
+      ]
+    },
+    {
+      "name": {
+        "key": "auto.department_of_political_science_1x2cnh1",
+        "text": "Department of Political Science"
+      },
+      "category": "Social Science",
+      "faculty": [
+        {
+          "name": {
+            "key": "auto.dr_rishu_raj_xiys6p",
+            "text": "Dr. Rishu Raj"
+          },
+          "designation": "HOD, Political Science"
+        },
+        {
+          "name": {
+            "key": "auto.prof_dr_pushplata_kumari_p4ng6e",
+            "text": "Prof. (Dr.) Pushplata Kumari"
+          },
+          "designation": "Professor, Political Science",
+          "image": "Prof. Pushpalata Kumari, Professor, Political Science Coordinator, IQAC, MMC.jpeg"
+        },
+        {
+          "name": {
+            "key": "auto.dr_varsha_shekhar_v3xxm4",
+            "text": "Dr. Varsha Shekhar"
+          },
+          "designation": "Guest Faculty, Political Science"
+        }
+      ]
+    },
+    {
+      "name": {
+        "key": "auto.department_of_bba_tp2g95",
+        "text": "Department of BBA"
+      },
+      "category": "Vocational",
+      "faculty": [
+        {
+          "name": {
+            "key": "auto.dr_suchita_arpan_1hc1sv4",
+            "text": "Dr. Suchita Arpan"
+          },
+          "designation": "HOD, BBA",
+          "image": "Dr. Suchita Arpan, HOD, Psychology.jpeg"
+        }
+      ]
+    },
+    {
+      "name": {
+        "key": "auto.department_of_bca_tp2ga0",
+        "text": "Department of BCA"
+      },
+      "category": "Vocational",
+      "faculty": [
+        {
+          "name": {
+            "key": "auto.dr_manish_kumar_verma_jzs2rk",
+            "text": "Dr. Manish Kumar Verma"
+          },
+          "designation": "Coordinator, BCA",
+          "image": "Dr. Manish Kumar Verma, Assistant Professor, Physics Coordinator, BCA.jpeg"
+        }
+      ]
+    },
+    {
+      "name": {
+        "key": "auto.department_of_bsw_tp2goe",
+        "text": "Department of BSW"
+      },
+      "category": "Vocational",
+      "faculty": [
+        {
+          "name": {
+            "key": "auto.dr_binay_kumar_bimal_1uzsmiz",
+            "text": "Dr. Binay Kumar Bimal"
+          },
+          "designation": "Coordinator, BSW",
+          "image": "Dr. Binay Kumar Bimal, Professor, Department of Sociology Bursar, MMC Coordinator, BSW.jpeg"
+        }
+      ]
+    },
+    {
+      "name": {
+        "key": "auto.department_of_bcom_1kks6p7",
+        "text": "Department of BCom"
+      },
+      "category": "Vocational",
+      "faculty": [
+        {
+          "name": {
+            "key": "auto.surendra_prasad_sh7upk",
+            "text": "Surendra Prasad"
+          },
+          "designation": "Coordinator, B.Com",
+          "image": "Surendra Prasad, Associate Prof, Botany Coordinator, B.Com..jpeg"
+        }
+      ]
+    }
+  ],
+  "protectedFiles": {
+    "src/pages/Home.jsx": "746d11d68cecdc31b48b549df1708c33519d8b54dfe5f05195703e405b9a21e3",
+    "src/components/Navbar.jsx": "96ce610a2997c348590c4d7818736107ca86c78fa6cc623cae0747ff2911fad4",
+    "src/components/Footer.jsx": "5d6dca40791eedbf7042816ceecc60534d034287782c91ac3e30f3d34132bfd4",
+    "src/components/LanguageSelectionModal.jsx": "04ed1df2b5af40f5a290e73e3ad5b0244d041848544ce8e0f6ee868a301b2835",
+    "src/contexts/ThemeContext.jsx": "0a9f41d923c4a656c3a1ab73aa878311beeee26623487a14424697e624257bfa",
+    "src/lib/languagePreference.js": "0a43ff1d4fc9ac0e63aad4888630b468b2b90ad95d7a2345e8f927051cd3c080",
+    "src/App.jsx": "26f45b1affd6fcd70130ec2d486d867ffc7ebe67af5d591f8a6d539c49598d83",
+    "src/pages/Admissions.jsx": "67a1552936f8be6a85d3311185daa1d2bec67218b75afc09d8fcdd7d44e1e28b",
+    "src/pages/AICTE/AICTE.jsx": "f1b46ba44a2dbe99debd56527958479b839d18f4be1cdbfa18ac8b5d358e0464",
+    "src/pages/IQAC.jsx": "def79e96bb69a51d4339b98f5bad732cc97e71776738ecfa962029b5ffaba3b7",
+    "src/pages/Alumni.jsx": "15806108692a6f0d479c985d319e63dbe175bf6073f370a17a38428d8dc7dfa0",
+    "src/pages/NIRF/NIRF.jsx": "f4548928fe744aeaabcf8a5c9254a8ede29196625bec664be756cf706ace7abe",
+    "src/pages/Notices.jsx": "862bd9c91b58f51f73fcb19b501e3ea5bd1e955689f2e878ed77180fb60cd043",
+    "src/pages/Tender.jsx": "5ce3f31cede738e7c33a5d8a8112e69b1138f6b0ea1d1962724d4750ed453452",
+    "src/pages/ImportantDocuments.jsx": "8345099d1b30bf464f79ffb0fe5608de4fe9ab19d8b58ccc31ee97bf0833dc36",
+    "mmc-erp/js/student-workflow.js": "85d97f04522960455b5300906e3c8c53c824403fffba2ce2e70b29e59a44ee29",
+    "mmc-erp/js/api.js": "99bb7a4d54cfd7f1ae754ff6c02a454c21af7bceaf3f466a2f585ee9d98741e7",
+    "src/services/erpApi.js": "22715370adbfaa72c5215b18e62ed7bea380cb306667437d8d689e9357eed604",
+    "src/lib/erpPortal.js": "dfe07ab8257b36d9b21305e0a3614bffda947ca0ba5024ed88d87be0d5d2ba65"
+  }
+}

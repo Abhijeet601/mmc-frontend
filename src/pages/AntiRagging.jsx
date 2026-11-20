@@ -1,8 +1,11 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { getFacultyById } from '@/data/faculty';
+import { getFacultyName } from '@/lib/facultyPresentation';
 
 const AntiRagging = () => {
   const { t } = useTranslation();
+  const facultyName = id => getFacultyName(getFacultyById(id), t);
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -35,11 +38,11 @@ const AntiRagging = () => {
                 <p className="text-gray-700 dark:text-gray-300"></p>
               </div>
               <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
-                <h3 className="font-semibold text-gray-900 dark:text-white">Prof. (Dr.) Pushpalata Kumari — Member</h3>
+                <h3 className="font-semibold text-gray-900 dark:text-white">{facultyName('political-science-pushplata-kumari')} — Member</h3>
                 <p className="text-gray-700 dark:text-gray-300">(Coordinator, IQAC & NAAC, MMC)</p>
               </div>
               <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
-                <h3 className="font-semibold text-gray-900 dark:text-white">Dr. Archana Jaiswal — Member</h3>
+                <h3 className="font-semibold text-gray-900 dark:text-white">{facultyName('english-archana-jaiswal')} — Member</h3>
                 <p className="text-gray-700 dark:text-gray-300">(Campus-in-Charge cum Hostel Superintendent)</p>
               </div>
               <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
@@ -71,15 +74,15 @@ const AntiRagging = () => {
             <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Members</h3>
             <div className="grid md:grid-cols-1 gap-4 mb-8">
               <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
-                <h3 className="font-semibold text-gray-900 dark:text-white">Prof. (Dr.) Pushpanjali Khare — President</h3>
+                <h3 className="font-semibold text-gray-900 dark:text-white">{facultyName('botany-pushpanjali-khare')} — President</h3>
                 <p className="text-gray-700 dark:text-gray-300">(Head, Department of Botany)</p>
               </div>
               <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
-                <h3 className="font-semibold text-gray-900 dark:text-white">Dr. Surendra Kumar Prasad — Vice-President</h3>
+                <h3 className="font-semibold text-gray-900 dark:text-white">{facultyName('botany-surendra-kumar-prasad')} — Vice-President</h3>
                 <p className="text-gray-700 dark:text-gray-300">(Department of Botany)</p>
               </div>
               <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
-                <h3 className="font-semibold text-gray-900 dark:text-white">Dr. Binay Kumar Bimal — Vice-President</h3>
+                <h3 className="font-semibold text-gray-900 dark:text-white">{facultyName('sociology-binay-kumar-bimal')} — Vice-President</h3>
                 <p className="text-gray-700 dark:text-gray-300">(Department of Sociology)</p>
               </div>
               <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
@@ -99,7 +102,7 @@ const AntiRagging = () => {
             <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Members</h3>
             <div className="grid md:grid-cols-1 gap-4 mb-8">
               <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
-                <h3 className="font-semibold text-gray-900 dark:text-white">Dr. Shyam Deo Yadav — President</h3>
+                <h3 className="font-semibold text-gray-900 dark:text-white">{facultyName('chemistry-shyam-deo-yadav')} — President</h3>
                 <p className="text-gray-700 dark:text-gray-300">(Head, Department of Chemistry)</p>
               </div>
               <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">

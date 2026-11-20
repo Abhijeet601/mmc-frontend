@@ -9,3 +9,4 @@ data files/
 *.jpeg
 *.png
 .env
+!src/assets/faculty/*.jpeg

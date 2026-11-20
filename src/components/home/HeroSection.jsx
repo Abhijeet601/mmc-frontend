@@ -1,11 +1,10 @@
 import i18next from "i18next";
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, Sparkles } from 'lucide-react';
+import { CreditCard, Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useTranslation } from 'react-i18next';
-import { ERP_PORTAL_ENTRY_URL, HOSTEL_ERP_ENABLED } from '@/lib/erpPortal';
 const HERO_VIDEO_SRC = 'https://pub-c7047204b6824b4ea67be147e7ebb0ac.r2.dev/public/images/MMC720p.mp4';
 const HeroSection = () => {
   const {
@@ -100,17 +99,6 @@ const HeroSection = () => {
         duration: 0.8,
         delay: 0.6
         }} className="flex w-full max-w-xl flex-col gap-3 sm:flex-row sm:justify-center sm:gap-4">
-          {HOSTEL_ERP_ENABLED && <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }} className="w-full sm:w-auto">
-            <Button asChild size="lg" className="group h-12 w-full min-w-[220px] bg-primary text-white shadow-2xl hover:bg-primary/90">
-              <a href="https://formbuilder.ccavenue.com/live/patna-university" target="_blank" rel="noopener noreferrer" aria-label="Open admission fee payment portal">
-                Admission Fee Payment
-                <motion.span animate={{ x: [0, 5, 0] }} transition={{ duration: 1.4, repeat: Infinity, repeatDelay: 0.2 }}>
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </motion.span>
-              </a>
-            </Button>
-          </motion.div>}
-
           <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }} className="w-full sm:w-auto">
             <Button asChild size="lg" variant="outline" className="h-12 w-full min-w-[220px] border-2 border-white/70 bg-white/15 px-6 text-white hover:border-white hover:bg-white/25 hover:text-white">
               <Link to="/about">Explore Our Legacy</Link>
@@ -118,8 +106,11 @@ const HeroSection = () => {
           </motion.div>
 
           <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }} className="w-full sm:w-auto">
-            <Button asChild size="lg" className="group h-12 w-full min-w-[220px] bg-primary text-white shadow-2xl hover:bg-primary/90">
-              <a href={ERP_PORTAL_ENTRY_URL} target="_blank" rel="noopener noreferrer">ERP Portal</a>
+            <Button asChild size="lg" className="group h-auto min-h-12 w-full min-w-[220px] whitespace-normal rounded-lg bg-navbar px-6 py-3 text-base font-semibold text-navbar-foreground shadow-2xl transition-colors duration-200 hover:bg-navbar/90 focus-visible:ring-white motion-reduce:transition-none">
+              <a href="https://formbuilder.ccavenue.com/live/patna-university" target="_blank" rel="noopener noreferrer" aria-label={t('auto.open_admission_fee_payment_portal_in_a_1vqtut9')}>
+                <CreditCard aria-hidden="true" className="mr-2 h-5 w-5 shrink-0" />
+                {t('auto.admission_fee_payment_22tca8')}
+              </a>
             </Button>
           </motion.div>
         </motion.div>
