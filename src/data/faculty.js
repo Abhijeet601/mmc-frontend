@@ -43,7 +43,7 @@ export const faculty = [
   {"id":"english-rajeev-kumar-singh","name":"Dr. Rajeev Kumar Singh","nameKey":"auto.dr_rajeev_kumar_singh_126jkh5","legacyNameKey":"auto.dr_rajeev_kumar_singh_126jkh5","department":"English","departmentId":"english","designation":"","isHOD":false,"employmentCategory":"regular","photo":null,"profile":null,"status":"active","inStaffCouncil":true,"councilOrder":6,"legacyCouncilSerial":7,"source":"existing-website","assignments":[{"departmentId":"english","isHOD":false,"responsibility":null}]},
   {"id":"urdu-md-sohail-anwer","name":"Dr. Md. Sohail Anwer","nameKey":"auto.dr_md_sohail_anwer_1or3ao5","legacyNameKey":"auto.dr_md_sohail_anwer_1or3ao5","department":"Urdu","departmentId":"urdu","designation":"Assistant Professor","isHOD":false,"employmentCategory":"regular","photo":"Dr. Md. Sohail Anwer.jpeg","profile":null,"status":"active","inStaffCouncil":true,"councilOrder":7,"legacyCouncilSerial":8,"source":"existing-website","assignments":[{"departmentId":"urdu","isHOD":false,"responsibility":null,"photo":"Dr. Md. Sohail Anwer.jpeg","legacyDesignation":"HOD, Urdu"}],"responsibility":null,"aliases":["Dr. Sohail Anwer"]},
   {"id":"urdu-md-rizwan","name":"Dr. Md. Rizwan","nameKey":"auto.dr_md_rizwan_b00fkz","legacyNameKey":"auto.dr_md_rizwan_b00fkz","department":"Urdu","departmentId":"urdu","designation":"Assistant Professor","isHOD":true,"employmentCategory":"regular","photo":"Dr. Md. Rizwan, Assistant Professor, Urdu.jpeg","profile":null,"status":"active","inStaffCouncil":true,"councilOrder":8,"legacyCouncilSerial":9,"source":"user-supplied-update","assignments":[{"departmentId":"urdu","isHOD":true,"responsibility":null,"photo":"Dr. Md. Rizwan, Assistant Professor, Urdu.jpeg","legacyDesignation":"Assistant Professor, Urdu"}],"responsibility":null,"matchingEvidence":"Exact existing name and Urdu department; retain the Assistant Professor rank."},
-  {"id":"persian-shahida-khanam","name":"Dr. Shahida Khanam","nameKey":"auto.dr_shahida_khanam_133t7gj","legacyNameKey":"auto.dr_shahida_khanam_133t7gj","department":"Persian","departmentId":"persian","designation":"","isHOD":true,"employmentCategory":"regular","photo":null,"profile":null,"status":"active","inStaffCouncil":true,"councilOrder":9,"legacyCouncilSerial":10,"source":"existing-website","assignments":[{"departmentId":"persian","isHOD":true,"responsibility":null,"photo":null,"legacyDesignation":"HOD, Persian"}],"responsibility":null},
+  {"id":"persian-shahida-khanam","name":"Dr. Shahida Khanam","nameKey":"auto.dr_shahida_khanam_133t7gj","legacyNameKey":"auto.dr_shahida_khanam_133t7gj","department":"Persian","departmentId":"persian","designation":"","isHOD":false,"employmentCategory":"regular","photo":null,"profile":null,"status":"inactive","inStaffCouncil":false,"councilOrder":9,"legacyCouncilSerial":10,"source":"existing-website","assignments":[{"departmentId":"persian","isHOD":false,"responsibility":null,"photo":null,"legacyDesignation":"HOD, Persian","active":false,"previousIsHOD":true,"inactiveSince":"2026-11-21"}],"responsibility":null,"previousIsHOD":true,"legacyInStaffCouncil":true,"previousStatus":"active","inactiveSince":"2026-11-21","inactiveReason":"Latest user-supplied instruction removes this current Persian faculty association, Persian HOD duty, and its Staff Council listing; no replacement HOD is established.","currentListingSource":"user-supplied-update-2026-11-21"},
   {"id":"philosophy-ranjana-yadav","name":"Ms. Ranjana Yadav","nameKey":"auto.ms_ranjana_yadav_1ced9gn","legacyNameKey":"auto.ms_ranjana_yadav_1ced9gn","department":"Philosophy","departmentId":"philosophy","designation":"Assistant Professor","isHOD":false,"employmentCategory":"regular","photo":"Ms. Ranjana Yadav, Assistant Professor, Philosophy.jpeg","profile":null,"status":"active","inStaffCouncil":true,"councilOrder":10,"legacyCouncilSerial":11,"source":"existing-website","assignments":[{"departmentId":"philosophy","isHOD":false,"responsibility":null,"photo":"Ms. Ranjana Yadav, Assistant Professor, Philosophy.jpeg","legacyDesignation":"Assistant Professor, Philosophy"}],"responsibility":null},
   {"id":"philosophy-suchita-arpan","name":"Dr. Suchita Arpan","nameKey":"auto.dr_suchita_arpan_1hc1sv4","legacyNameKey":"auto.dr_suchita_arpan_1hc1sv4","department":"Philosophy","departmentId":"philosophy","designation":"","isHOD":true,"employmentCategory":"regular","photo":"Dr. Suchita Arpan, HOD, Psychology.jpeg","profile":null,"status":"active","inStaffCouncil":true,"councilOrder":11,"legacyCouncilSerial":12,"source":"existing-website","assignments":[{"departmentId":"philosophy","isHOD":true,"responsibility":null,"photo":"Dr. Suchita Arpan, HOD, Psychology.jpeg","legacyDesignation":"HOD, Philosophy"},{"departmentId":"bba","isHOD":true,"responsibility":null,"photo":"Dr. Suchita Arpan, HOD, Psychology.jpeg","legacyDesignation":"HOD, BBA"}],"responsibility":null},
   {"id":"philosophy-sanjay-kumar-priyadarshi","name":"Dr. Sanjay Kumar Priyadarshi","nameKey":"auto.dr_sanjay_kumar_priyadarshi_14x1tlx","legacyNameKey":"auto.dr_sanjay_kumar_priyadarshi_14x1tlx","department":"Philosophy","departmentId":"philosophy","designation":"Assistant Professor","isHOD":false,"employmentCategory":"regular","photo":"Dr. Sanjay Kumar Priyadarshi, Assistant Professor, Philosophy.jpeg","profile":null,"status":"active","inStaffCouncil":true,"councilOrder":12,"legacyCouncilSerial":13,"source":"existing-website","assignments":[{"departmentId":"philosophy","isHOD":false,"responsibility":null,"photo":"Dr. Sanjay Kumar Priyadarshi, Assistant Professor, Philosophy.jpeg","legacyDesignation":"Assistant Professor, Philosophy"}],"responsibility":null},
@@ -88,7 +88,7 @@ export const faculty = [
   {"id":"chemistry-reena-kumari","name":"Dr. Reena Kumari","nameKey":"auto.dr_reena_kumari_1owdvvt","legacyNameKey":"auto.dr_reena_kumari_1owdvvt","department":"Chemistry","departmentId":"chemistry","designation":"Assistant Professor","isHOD":false,"employmentCategory":"regular","photo":"Reena Kumari, Assistant Professor, Chemistry.jpeg","profile":null,"status":"active","inStaffCouncil":true,"councilOrder":51,"legacyCouncilSerial":55,"source":"existing-website","assignments":[{"departmentId":"chemistry","isHOD":false,"responsibility":null,"photo":"Reena Kumari, Assistant Professor, Chemistry.jpeg","legacyDesignation":"Assistant Professor, Chemistry"}],"responsibility":null},
   {"id":"chemistry-deepak-kumar","name":"Dr. Deepak Kumar","nameKey":"auto.dr_deepak_kumar_aiuezn","legacyNameKey":"auto.dr_deepak_kumar_aiuezn","department":"Chemistry","departmentId":"chemistry","designation":"Assistant Professor","isHOD":false,"employmentCategory":"regular","photo":"Dr Deepak Kumar, Assistant Professor, Chemistry.jpeg","profile":null,"status":"active","inStaffCouncil":true,"councilOrder":52,"legacyCouncilSerial":56,"source":"existing-website","assignments":[{"departmentId":"chemistry","isHOD":false,"responsibility":null,"photo":"Dr Deepak Kumar, Assistant Professor, Chemistry.jpeg","legacyDesignation":"Assistant Professor, Chemistry"}],"responsibility":null},
   {"id":"chemistry-archana-sinha","name":"Dr. Archana Sinha","nameKey":"auto.dr_archana_sinha_1mfbu1i","legacyNameKey":"auto.dr_archana_sinha_1mfbu1i","department":"Chemistry","departmentId":"chemistry","designation":"Assistant Professor","isHOD":false,"employmentCategory":"regular","photo":null,"profile":null,"status":"active","inStaffCouncil":true,"councilOrder":53,"legacyCouncilSerial":57,"source":"existing-website","assignments":[{"departmentId":"chemistry","isHOD":false,"responsibility":null,"photo":null,"legacyDesignation":"Assitant Professor, Chemistry"}],"responsibility":null},
-  {"id":"botany-namita-kumari","name":"Prof. (Dr.) Namita Kumari","nameKey":"auto.prof_dr_namita_kumari_141e1im","legacyNameKey":"auto.prof_dr_namita_kumari_141e1im","department":"Botany","departmentId":"botany","designation":"","isHOD":false,"employmentCategory":"regular","photo":null,"profile":null,"status":"active","inStaffCouncil":true,"councilOrder":54,"legacyCouncilSerial":58,"source":"existing-website","assignments":[{"departmentId":"botany","isHOD":false,"responsibility":null}]},
+  {"id":"botany-namita-kumari","name":"Prof. (Dr.) Namita Kumari","nameKey":"auto.prof_dr_namita_kumari_141e1im","legacyNameKey":"auto.prof_dr_namita_kumari_141e1im","department":"Botany","departmentId":"botany","designation":"","isHOD":false,"employmentCategory":"regular","photo":null,"profile":null,"status":"inactive","inStaffCouncil":false,"councilOrder":54,"legacyCouncilSerial":58,"source":"existing-website","assignments":[{"departmentId":"botany","isHOD":false,"responsibility":null,"active":false,"previousIsHOD":false,"inactiveSince":"2026-11-21"}],"previousIsHOD":false,"legacyInStaffCouncil":true,"previousStatus":"active","inactiveSince":"2026-11-21","inactiveReason":"Latest user-supplied instruction removes this current Botany faculty association and its Staff Council listing; retain historical record and source metadata.","currentListingSource":"user-supplied-update-2026-11-21"},
   {"id":"botany-pushpanjali-khare","name":"Prof. Puspanjali Khare","legacyNameKey":"auto.dr_pushpanjali_khare_1x6i46f","department":"Botany","departmentId":"botany","designation":"Professor","isHOD":true,"employmentCategory":"regular","photo":"Dr. Pushpanjali Khare, Associate Professor, HOD Botany.jpeg","profile":null,"status":"active","inStaffCouncil":true,"councilOrder":55,"legacyCouncilSerial":59,"source":"user-supplied-update","assignments":[{"departmentId":"botany","isHOD":true,"responsibility":null,"photo":"Dr. Pushpanjali Khare, Associate Professor, HOD Botany.jpeg","legacyDesignation":"Associate Professor, HOD Botany"}],"responsibility":null,"previousName":"Dr. Pushpanjali Khare","aliases":["Dr. Pushpanjali Khare"],"matchingEvidence":"Unique Botany Khare record, matching HOD responsibility, retained portrait, and explicit user-supplied candidate mapping support the spelling/rank update."},
   {"id":"botany-surendra-kumar-prasad","name":"Prof. Surendra Prasad","legacyNameKey":"auto.dr_surendra_kumar_prasad_17ku7a8","department":"Botany","departmentId":"botany","designation":"Professor","isHOD":false,"employmentCategory":"regular","photo":"Surendra Prasad, Associate Prof, Botany Coordinator, B.Com..jpeg","profile":null,"status":"active","inStaffCouncil":true,"councilOrder":56,"legacyCouncilSerial":60,"source":"user-supplied-update","assignments":[{"departmentId":"botany","isHOD":false,"responsibility":null,"photo":"Surendra Prasad, Associate Prof, Botany Coordinator, B.Com..jpeg","legacyDesignation":"Associate Professor, Botany"}],"responsibility":null,"previousName":"Dr. Surendra Kumar Prasad","aliases":["Dr. Surendra Kumar Prasad"],"matchingEvidence":"The unique Botany Surendra record has a portrait filename beginning Surendra Prasad; the explicit user-supplied candidate mapping supports the shortened name and rank update. B.Com remains a separate unresolved source identity."},
   {"id":"zoology-sujata-kumari","name":"Dr. Sujata Kumari","nameKey":"auto.dr_sujata_kumari_cy6mto","legacyNameKey":"auto.dr_sujata_kumari_cy6mto","department":"Zoology","departmentId":"zoology","designation":"","isHOD":true,"employmentCategory":"regular","photo":"Dr. Sujata, HOD Zoology.jpeg","profile":null,"status":"active","inStaffCouncil":true,"councilOrder":57,"legacyCouncilSerial":61,"source":"existing-website","assignments":[{"departmentId":"zoology","isHOD":true,"responsibility":null,"photo":"Dr. Sujata, HOD Zoology.jpeg","legacyDesignation":"HOD Zoology"}],"responsibility":null},
@@ -112,7 +112,9 @@ export const faculty = [
   {"id":"botany-shilpi-kumari","name":"Dr. Shilpi Kumari","departmentId":"botany","department":"Botany","appointmentDepartment":"Environmental Science","specialization":"Environmental Science","deputationDepartment":"Botany","designation":"Assistant Professor","isHOD":false,"employmentCategory":"unconfirmed","photo":null,"profile":null,"status":"active","inStaffCouncil":true,"councilOrder":0,"source":"user-supplied-update","assignments":[{"departmentId":"botany","isHOD":false,"responsibility":null}],"matchingEvidence":"No matching name in the original council or department arrays. Regular/guest employment category was not supplied."},
   {"id":"music-maa-amrit-disha","name":"Dr. Maa Amrit Disha","departmentId":"music","department":"Music","designation":"Assistant Professor","isHOD":false,"employmentCategory":"unconfirmed","photo":null,"profile":null,"status":"active","inStaffCouncil":true,"councilOrder":1,"source":"user-supplied-update","assignments":[{"departmentId":"music","isHOD":false,"responsibility":null}],"matchingEvidence":"No matching name in the original council or department arrays. Regular/guest employment category was not supplied."},
   {"id":"sanskrit-sangeeta-roy","name":"Dr. Sangeeta Roy","departmentId":"sanskrit","department":"Sanskrit","designation":"Assistant Professor","isHOD":false,"employmentCategory":"unconfirmed","photo":null,"profile":null,"status":"active","inStaffCouncil":true,"councilOrder":2,"source":"user-supplied-update","assignments":[{"departmentId":"sanskrit","isHOD":false,"responsibility":null}],"matchingEvidence":"No matching name in the original council or department arrays. Regular/guest employment category was not supplied."},
-  {"id":"political-science-neena-kumari","name":"Dr. Neena Kumari","departmentId":"political-science","department":"Political Science","designation":"Assistant Professor","isHOD":false,"employmentCategory":"unconfirmed","photo":null,"profile":null,"status":"active","inStaffCouncil":true,"councilOrder":3,"source":"user-supplied-update","assignments":[{"departmentId":"political-science","isHOD":false,"responsibility":null}],"matchingEvidence":"No matching name in the original council or department arrays. Regular/guest employment category was not supplied."}
+  {"id":"political-science-neena-kumari","name":"Dr. Neena Kumari","departmentId":"political-science","department":"Political Science","designation":"Assistant Professor","isHOD":false,"employmentCategory":"unconfirmed","photo":null,"profile":null,"status":"active","inStaffCouncil":true,"councilOrder":3,"source":"user-supplied-update","assignments":[{"departmentId":"political-science","isHOD":false,"responsibility":null}],"matchingEvidence":"No matching name in the original council or department arrays. Regular/guest employment category was not supplied."},
+  {"id":"zoology-atishaya-kumar-saksham","name":"Atishaya Kumar Saksham","department":"Zoology","departmentId":"zoology","designation":"Assistant Professor","appointmentDepartment":"Environmental Science","specialization":"Environmental Science","deputationDepartment":"Zoology","isHOD":false,"employmentCategory":"unconfirmed","photo":null,"profile":null,"status":"active","inStaffCouncil":true,"councilOrder":4,"source":"user-supplied-update-2026-11-21","assignments":[{"departmentId":"zoology","isHOD":false,"responsibility":null}],"matchingEvidence":"No existing faculty name matches. The user supplied the full name, Environmental Science appointment and Zoology deputation; no regular/guest category or verified photograph was established."},
+  {"id":"political-science-ratna","name":"Dr. Ratna","department":"Political Science","departmentId":"political-science","designation":"Assistant Professor","isHOD":false,"employmentCategory":"unconfirmed","photo":"dr-ratna.jpeg","sourcePhotoFile":"Dr. Ratna ,Assistant Professor,Department of Political Science.jpeg","profile":null,"status":"active","inStaffCouncil":true,"councilOrder":5,"source":"user-supplied-update-2026-11-21","assignments":[{"departmentId":"political-science","isHOD":false,"responsibility":null,"photo":"dr-ratna.jpeg"}],"matchingEvidence":"No existing faculty name matches. The user explicitly authorized the exact name, rank, Political Science department and portrait association from the supplied existing filename; no surname, employment category or HOD duty was inferred."}
 ];
 
 const departmentFacultyOrder = {
@@ -430,10 +432,10 @@ export const facultyReviewIssues = [
     id: 'new-employment-categories',
     type: 'category',
     title: 'New faculty employment categories',
-    description: 'Regular or guest employment status was not supplied for Dr. Shilpi Kumari, Dr. Maa Amrit Disha, Dr. Sangeeta Roy or Dr. Neena Kumari.',
-    facultyIds: ['botany-shilpi-kumari', 'music-maa-amrit-disha', 'sanskrit-sangeeta-roy', 'political-science-neena-kumari'],
-    sources: ['user-supplied-update'],
-    resolution: 'Show these four records under employment category awaiting confirmation, preserving all 58 regular and 13 guest entries.',
+    description: 'Regular or guest employment status was not supplied for Dr. Shilpi Kumari, Dr. Maa Amrit Disha, Dr. Sangeeta Roy, Dr. Neena Kumari, Atishaya Kumar Saksham or Dr. Ratna.',
+    facultyIds: ['botany-shilpi-kumari', 'music-maa-amrit-disha', 'sanskrit-sangeeta-roy', 'political-science-neena-kumari', 'zoology-atishaya-kumar-saksham', 'political-science-ratna'],
+    sources: ['user-supplied-update', 'user-supplied-update-2026-11-21'],
+    resolution: 'Show these six current records under employment category awaiting confirmation. Preserve all existing employment-category metadata, including the two inactive historical regular records.',
   },
 ];
 
@@ -448,14 +450,18 @@ for (const issue of facultyReviewIssues) {
   for (const id of issue.facultyIds) {
     const member = faculty.find((record) => record.id === id);
     member.reviewIssueIds = [...(member.reviewIssueIds || []), issue.id];
-    if (issue.type !== 'category') member.status = 'needs-review';
+    if (issue.type !== 'category' && !['inactive', 'archived'].includes(member.status)) member.status = 'needs-review';
   }
 }
 
 export const getFacultyById = (id) => faculty.find((member) => member.id === id);
 
+const isCurrentFaculty = (member) => !['inactive', 'archived'].includes(member.status);
+const isCurrentAssignment = (assignment) => assignment.active !== false;
+
 export const getStaffCouncilFaculty = (category) => faculty
-  .filter((member) => member.inStaffCouncil && (!category || member.employmentCategory === category))
+  .filter((member) => member.inStaffCouncil && isCurrentFaculty(member) &&
+    member.assignments.some(isCurrentAssignment) && (!category || member.employmentCategory === category))
   .sort((left, right) => left.councilOrder - right.councilOrder);
 
 export const getDepartmentFaculty = (departmentId) => {
@@ -463,12 +469,14 @@ export const getDepartmentFaculty = (departmentId) => {
   if (!order) return [];
   const omittedIds = pendingIdentityReview[departmentId] || [];
   const members = faculty.filter((member) =>
-    !omittedIds.includes(member.id) && member.assignments.some((assignment) => assignment.departmentId === departmentId));
+    isCurrentFaculty(member) && !omittedIds.includes(member.id) && member.assignments.some((assignment) =>
+      assignment.departmentId === departmentId && isCurrentAssignment(assignment)));
   const originalOrder = new Map(order.map((id, index) => [id, index]));
   members.sort((left, right) =>
     (originalOrder.get(left.id) ?? Number.MAX_SAFE_INTEGER) - (originalOrder.get(right.id) ?? Number.MAX_SAFE_INTEGER));
+  // Project the department-specific HOD role before ordering the display cards.
   return members.map((member) => {
-    const assignment = member.assignments.find((entry) => entry.departmentId === departmentId);
+    const assignment = member.assignments.find((entry) => entry.departmentId === departmentId && isCurrentAssignment(entry));
     return {
       ...member,
       homeDepartment: member.department,
@@ -479,5 +487,49 @@ export const getDepartmentFaculty = (departmentId) => {
       responsibility: assignment.responsibility || null,
       photo: assignment.photo || member.photo,
     };
-  });
+  }).sort((left, right) => Number(right.isHOD) - Number(left.isHOD));
 };
+
+// Current-listing changes are separate from the earlier name/rank audit. Historical
+// identities, source name keys, council ordering and legacy assignments remain above.
+export const facultyCurrentListingAudit = [
+  {
+    date: '2026-11-21',
+    action: 'deactivate-current-association',
+    id: 'botany-namita-kumari',
+    departmentId: 'botany',
+    previousInStaffCouncil: true,
+    previousIsHOD: false,
+    isHOD: false,
+    description: 'Removed from current Botany and Staff Council listings on user instruction; historical record and existing regular-category metadata retained.',
+  },
+  {
+    date: '2026-11-21',
+    action: 'deactivate-current-association',
+    id: 'persian-shahida-khanam',
+    departmentId: 'persian',
+    previousInStaffCouncil: true,
+    previousIsHOD: true,
+    isHOD: false,
+    description: 'Removed from current Persian and Staff Council listings and current Persian HOD duty on user instruction. No replacement HOD was inferred.',
+  },
+  {
+    date: '2026-11-21',
+    action: 'add-current-faculty',
+    id: 'zoology-atishaya-kumar-saksham',
+    departmentId: 'zoology',
+    isHOD: false,
+    employmentCategory: 'unconfirmed',
+    description: 'Added Atishaya Kumar Saksham as Assistant Professor with an Environmental Science appointment and Zoology deputation. Photograph remains unverified; preserve initials fallback.',
+  },
+  {
+    date: '2026-11-21',
+    action: 'add-current-faculty',
+    id: 'political-science-ratna',
+    departmentId: 'political-science',
+    isHOD: false,
+    employmentCategory: 'unconfirmed',
+    sourcePhotoFile: 'Dr. Ratna ,Assistant Professor,Department of Political Science.jpeg',
+    description: 'Added Dr. Ratna as Assistant Professor in Political Science using the explicitly supplied filename metadata and portrait association; no surname or employment category inferred.',
+  },
+];

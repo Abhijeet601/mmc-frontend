@@ -273,12 +273,12 @@ const Humanities = () => {
                     <p className="text-sm text-foreground">{selectedSubject.highlights}</p>
                   </div>
 
-                  {selectedSubject.faculty.length > 0 && <div className="bg-section p-4 rounded-lg">
+                  <div className="bg-section p-4 rounded-lg">
                       <h3 className="text-lg font-semibold text-primary mb-3">{t('facultyDirectory.members', { defaultValue: 'Faculty Members' })}</h3>
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {selectedSubject.faculty.length > 0 ? <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         {selectedSubject.faculty.map(member => <FacultyCard key={member.id} faculty={member} headingLevel={4} />)}
-                      </div>
-                    </div>}
+                      </div> : <p className="rounded-xl border border-dashed border-border p-6 text-center text-foreground">{t('auto.faculty_details_will_be_updated_soon_1k9l960')}</p>}
+                    </div>
                 </div>
               </div>
             </motion.div>

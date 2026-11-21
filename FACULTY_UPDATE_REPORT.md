@@ -1,105 +1,75 @@
-# Faculty update report
+# Faculty update report — 21 November 2026
 
-The college-supplied information was applied as the latest user instructions. It was not independently verified against an official current roster.
+These changes apply the latest user-supplied instructions to the existing college website. They do not independently verify the official roster.
 
-## Result
+## Current result
 
-- All 15 supplied faculty records are represented with the supplied names.
-- The original 58 regular entries, including the Principal, and all 13 guest entries remain in their original categories and ordering.
-- Four missing faculty members appear in an Additional Faculty section. Their regular/guest employment category remains unconfirmed.
-- All 23 department cards and all six category filters remain.
-- Staff Council, department modals, NEP Humanities faculty cards, and relevant undated Anti-Ragging names use shared faculty records.
-- The 18 non-teaching staff records remain available.
+- Prof. (Dr.) Namita Kumari's Botany record and Dr. Shahida Khanam's Persian record are inactive in current directories. Both source records, IDs, original employment metadata, and legacy associations remain available for historical reference.
+- Shahida Khanam's current Persian HOD responsibility is removed. No replacement HOD is assigned, and the Persian department card remains.
+- Current Staff Council totals are **56 regular, 13 guest, and 6 additional faculty: 75 entries**, including the unchanged Principal. The registry retains **81 source IDs**, including the two inactive records and separate unresolved department records; these counts must not be treated as verified unique people.
+- Current department listings contain **Botany 3, Persian 0, Zoology 4, and Political Science 5** faculty entries.
+- All **23 department cards**, category filters, HOD-first ordering, existing verified faculty information, and 18 non-teaching staff records are preserved.
+- Staff Council, Departments, and NEP Humanities use the shared current-faculty selectors. Persian HOD prose is corrected, and empty faculty lists show the existing localized neutral message.
+- Historical documents, dated committees, previous-principal records, unrelated roles, and other website modules remain intact.
 
-## Existing records updated
+## New faculty
 
-| Supplied name | Department | Academic designation | Responsibility |
-| --- | --- | --- | --- |
-| Prof. Pushpalata | Political Science | Professor, retained from existing metadata | HOD |
-| Dr. Preeti Kumari | Hindi | Assistant Professor, retained | HOD |
-| Dr. Mita Malkhandi | Economics | Assistant Professor, retained | HOD |
-| Dr. Md. Rizwan | Urdu | Assistant Professor, retained | HOD |
-| Dr. Kavita Kumari | Home Science | Not specified; no rank inferred | HOD |
-| Prof. Archana Jaiswal | English | Professor | HOD |
-| Prof. Poonam Kumari | Mathematics | Professor | HOD |
-| Prof. Puspanjali Khare | Botany | Professor | HOD |
-| Prof. Surendra Prasad | Botany | Professor | — |
-| Prof. Binay Kumar Bimal | Sociology | Professor | HOD |
-| Prof. Shyam Deo Yadav | Chemistry | Professor | HOD |
+| Name | Current listing | Academic designation and appointment | Employment category | HOD |
+| --- | --- | --- | --- | --- |
+| Atishaya Kumar Saksham | Zoology | Assistant Professor, Environmental Science; deputed to Zoology | Awaiting confirmation | No |
+| Dr. Ratna | Political Science | Assistant Professor | Awaiting confirmation | No |
 
-The superseded HOD duties were removed from Dr. Shipra Prabha in Hindi, Dr. Sweta Sharan in Economics, Dr. Md. Sohail Anwer in Urdu, and Dr. Rishu Raj in Political Science. Their faculty records remain. Existing academic ranks were preserved when supported; an HOD responsibility alone did not establish a rank.
+Both records have stable IDs and appear in Staff Council's Additional Faculty category. Existing Zoology and Political Science faculty are retained. No qualification, surname, biography, contact detail, employment category, or HOD responsibility was invented.
 
-## New records
+## Photograph handling
 
-| Name | Department | Designation and appointment |
-| --- | --- | --- |
-| Dr. Shilpi Kumari | Botany | Assistant Professor, Environmental Science; deputed to Botany |
-| Dr. Maa Amrit Disha | Music | Assistant Professor |
-| Dr. Sangeeta Roy | Sanskrit | Assistant Professor |
-| Dr. Neena Kumari | Political Science | Assistant Professor |
+- Dr. Ratna's production asset is `src/assets/faculty/dr-ratna.jpeg`.
+- It is a byte-identical copy of `data files/Faculty Images/Dr. Ratna ,Assistant Professor,Department of Political Science.jpeg`; the original is unchanged.
+- The existing local image resolver bundles the clean filename without a Windows filesystem path. A failed image retains the shared initials fallback.
+- Atishaya Kumar Saksham has no verified portrait association and uses initials. No unrelated or uncertain portrait was assigned.
+- The production build emits **57 JPEG assets**, including `dr-ratna-DBYCKNvC.jpeg`.
 
-These four records have stable IDs, unconfirmed employment categories, and photographs supplied in `data files/Faculty Images`. No qualifications, biographies, contacts, or photographs were invented. Newly supplied names have no generated Hindi transliterations; existing approved Hindi spellings remain for unchanged names.
+## Earlier updates and unresolved records
 
-## Supplied faculty photographs
+The original 15 supplied faculty updates remain represented in `facultyUpdateAudit` in `src/data/faculty.js`. Supported title/name updates preserve their existing source IDs and photograph associations. This task adds two records and excludes two inactive records from current selectors; it does not merge uncertain identities.
 
-Fifty-six original JPEG assets from `data files/Faculty Images` are included in `src/assets/faculty` and bundled by Vite. Independent file-hash checks confirm that every copied asset is byte-identical to its supplied original. An explicit filename registry adds the four newly supplied portraits and selects `Prof. Archana Jaiswal, Professor, Head, Department of English.jpeg` for the current English HOD. Existing source portrait references remain in the shared faculty data for provenance; their older filename designations do not override current academic ranks or HOD duties.
+The existing review issues remain open:
 
-The local resolver supplies photographs for 58 of the 79 retained source records, including 54 Staff Council entries. Some department source records intentionally share a pre-existing portrait; these associations do not resolve the pending identity or assignment reviews. Bundled image elements bypass the global R2 URL rewrite so local portraits can load from the production assets.
+1. Rajeev / Rajiv Kumar Singh.
+2. Asha / Aasha Kumari.
+3. Priyardarshni / Priyadarshini.
+4. Statistics faculty assignment and its Chemistry portrait association.
+5. The separate B.Com coordinator identity.
+6. The existing Sanskrit HOD assignment; Dr. Sangeeta Roy remains Assistant Professor.
+7. The separate Chemistry and Sociology records named Dr. Reena Kumari.
+8. Regular/guest employment categories for all six Additional Faculty records.
 
-Twenty-one source records have no confidently matched supplied photograph and retain initials: the Principal, council Rajeev Kumar Singh, Shahida Khanam, Rishu Raj, council Priyardarshni, Kavita Kumari, Archana Sinha, Namita Kumari, and all 13 guest faculty. Images belonging to unresolved Rajiv/Priyadarshini source records are not borrowed for their council counterparts.
+Matching evidence and structured review notes remain in the shared data source. Historical name mentions do not establish a current department appointment.
 
-Three unmatched files remain unused: `Atishaya_Photo.jpg.jpeg` has no established identity; `Dr. Ratna ,Assistant Professor,Department of Political Science.jpeg` has no corresponding roster record; and `Dr. Sohail Anwer, Assistant Professor, Urdu.pdf` is not an image, while an existing Sohail JPEG is available. No faculty records were added or merged from these filenames.
+## Files changed for this update
 
-## Matching and duplicate handling
+1. `src/data/faculty.js` — current-directory exclusions, Persian HOD removal, and two new faculty records.
+2. `src/pages/Departments.jsx` — removes the obsolete current Persian HOD statement while preserving department history.
+3. `src/pages/nep2020/Humanities.jsx` — localized neutral state for an empty faculty list.
+4. `tests/faculty.test.mjs` — semantic regression checks for the latest roster and portrait requirements.
+5. `scripts/test-faculty-browser.mjs` — browser expectations for the updated current listings.
+6. `src/assets/faculty/dr-ratna.jpeg` — the supplied, unmodified portrait copy.
+7. `FACULTY_UPDATE_REPORT.md` — this report.
 
-Seven supported name variants were updated in place: Pushplata Kumari → Prof. Pushpalata; Archana Jaiswal → Prof. Archana Jaiswal; Poonam Kumari → Prof. Poonam Kumari; Pushpanjali Khare → Prof. Puspanjali Khare; Surendra Kumar Prasad → Prof. Surendra Prasad; Binay Kumar Bimal → Prof. Binay Kumar Bimal; Shyam Deo Yadav → Prof. Shyam Deo Yadav.
-
-The existing department, unique matching role, explicit candidate mapping, and available portrait metadata support these matches. Their source IDs, portrait filenames, and previous names remain in the shared data with matching evidence. No uncertain identities were merged or deleted. No new duplicate was added for these seven updates.
-
-## Manual review still required
-
-1. **Rajeev / Rajiv Kumar Singh:** Separate source identities remain. The original English department presentation is retained without adding a second potential duplicate card.
-2. **Asha / Aasha Kumari:** The existing shared portrait supports a single record; the alternate spelling remains recorded for confirmation.
-3. **Priyardarshni / Priyadarshini:** Separate source identities remain, with original department presentation preserved.
-4. **Statistics assignment:** Dr. Madhu Kumari Gupta has a Statistics record using a Chemistry portrait; historical prose refers to Sonu Rani as head. No identity or departmental reassignment was inferred.
-5. **B.Com coordinator:** The separate Surendra Prasad coordinator record remains pending confirmation. The new Botany Professor rank was not automatically applied to it.
-6. **Sanskrit HOD:** The existing Dr. Shipra Prabha assignment remains pending confirmation. Dr. Sangeeta Roy was added as Assistant Professor, not HOD.
-7. **Dr. Reena Kumari:** Chemistry and Sociology retain distinct records, IDs, and photographs.
-8. **New employment categories:** The college must confirm regular/guest status for the four new faculty members.
-
-Structured review issues and matching evidence are exported from `src/data/faculty.js`. Review-note line references describe the original pre-refactor arrays; their roster contents are retained in the baseline test fixture.
-
-## Files changed for this task
-
-- `src/data/faculty.js` — shared records, assignments, selectors, review issues, update audit.
-- `src/data/facultyPhotoFiles.js` — explicit supplied portrait overrides and source filename extraction.
-- `src/lib/facultyPresentation.js` — localized display helpers.
-- `src/lib/facultyPhotos.js` — Vite-bundled local portrait resolver.
-- `src/assets/faculty/` — 56 supplied JPEG assets, copied without alteration.
-- `.gitignore` — permits tracking these faculty JPEG assets while preserving the existing image exclusions.
-- `src/components/FacultyCard.jsx` — shared faculty cards and photo/initials fallback.
-- `src/components/faculty.css` — scoped card, focus, and reduced-motion styles.
-- `src/pages/administration/StaffCouncil.jsx` — department grouping, separate categories, search, filters, cards, preserved employees.
-- `src/pages/Departments.jsx` — shared faculty, live HOD summary, retained department content, bilingual filters, accessible Radix dialogs.
-- `src/pages/nep2020/Humanities.jsx` — shared faculty, language updates, keyboard/focus handling, reduced-motion support.
-- `src/pages/AntiRagging.jsx` — six relevant current names from shared records; committee responsibilities retained.
-- `src/locales/en.json` — faculty directory UI labels.
-- `src/locales/hi.json` — matching Hindi UI labels.
-- `tests/faculty-baseline.json` — original roster and preservation baseline.
-- `tests/faculty.test.mjs` — semantic data and scope regression checks.
-- `scripts/test-faculty-browser.mjs` — reusable browser regression checks.
-- `FACULTY_UPDATE_REPORT.md` — this report.
-
-The existing `.env.example` change predates this task and was left untouched. The faculty and portrait work preserves the leaders, navigation structure, admissions, accreditation pages, archives, hostel ERP, mess portal, authentication, and payment workflows. The separately requested homepage hero payment-button update remains in place.
+The obsolete whole-file hash expectation for `ThemeContext.jsx` was replaced with focused faculty behavior checks. Existing user changes to the theme context were not reverted merely to satisfy an outdated baseline.
 
 ## Verification
 
-- `node --test tests/faculty.test.mjs`: **12/12 passed**. Covers all 15 updates, source roster preservation, original department memberships/photos, HOD replacement, category safety, distinct Reena records, review flags, 23 cards, protected unrelated files, supplied portrait assignments/asset existence, and preservation of unresolved identity and assignment-specific photo references.
-- `node node_modules/eslint/bin/eslint.js src`: **0 errors, 1 existing warning** in unchanged `src/lib/r2Assets.js:52` (`no-script-url`). Changed faculty and test files passed targeted lint.
-- `npm run build`: **passed**, including all 56 emitted production JPEG assets. Independent file-hash checks confirmed every copied portrait matches its supplied original byte for byte. Existing tooling reports stale Browserslist data and the application bundle size warning.
-- The earlier local Chrome functional regression **passed**. It checked first-visit language selection, all department filters, faculty/HOD/deputation display, keyboard opening/focus trapping, X/Escape/backdrop closing, focus restoration, search/filtering, English/Hindi switching, blue/maroon themes, reduced motion, and 3/2/1 columns at desktop/tablet/mobile widths. No page JavaScript errors were observed.
-- Production portrait verification **passed**: all 56 distinct bundled JPEGs decoded for 58 matched source records. The browser loaded 54 portrait instances in Staff Council and 62 across all 23 department modals. Every emitted image matched the exact supplied source file by SHA256. The four new portraits and updated Professor Archana Jaiswal portrait loaded correctly; unmatched records retained initials. Mobile portraits fit without overflow, and a forced failed image correctly fell back to initials. There were no faculty image requests to R2 and no page JavaScript errors. The owned preview server and browser sessions were closed.
+- **Production build: passed.** All 57 JPEGs are emitted, including Dr. Ratna's portrait.
+- **Full-source lint: 0 errors, 1 pre-existing warning** in `src/lib/r2Assets.js` (`no-script-url`).
+- **Regression tests: 15/15 passed** with `node --test tests/faculty.test.mjs`. Checks cover the latest current-list exclusions, retained historical records, preserved prior updates, new faculty assignments, category safety, duplicate protection, source portraits, and relevant page behavior.
+- **QA-file lint: passed** for `tests/faculty.test.mjs` and `scripts/test-faculty-browser.mjs`.
+- **Local production browser QA: passed all 13 scenario groups.** All 23 department modals show current HOD-first rosters; Namita and Shahida are absent from current cards and search. Persian remains without an invented HOD in Departments and NEP Humanities. Atishaya's exact name, Environmental Science appointment, Zoology deputation, and initials are correct. Ratna's loaded portrait matches the supplied image bytes, with a working failure fallback. Current category counts, both new-name searches, English/Hindi, both themes, keyboard/modals, and desktop/tablet/mobile layouts pass. All 57 bundled image URLs decoded, with zero page JavaScript errors. Owned local preview and browser sessions were closed.
 
-There were no existing npm `test` or `lint` scripts. Checks use the installed ESLint executable and Node's test runner; no project dependencies or package manifests were changed.
+The project has no npm `test` or `lint` scripts; checks use Node's test runner and the installed ESLint executable. No dependencies or package manifests are changed by this update.
 
-To repeat browser checks, start the existing Vite server and run `node scripts/test-faculty-browser.mjs`. Playwright can live outside this project; configure `MMC_PLAYWRIGHT_MODULE` to its `index.mjs` if needed. Optional `MMC_QA_BROWSER` and `MMC_QA_URL` select a browser executable and server URL.
+## Repository and deployment handoff
+
+The verified existing repository is `Abhijeet601/mmc-frontend`, branch `main`.
+
+Commit hash, GitHub push status, and Vercel Production deployment status will be reported in the final handoff after review and verification. A successful local build alone does not establish that the update is live.

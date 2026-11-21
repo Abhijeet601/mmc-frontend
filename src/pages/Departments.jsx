@@ -41,7 +41,7 @@ c) All round personality development of the students so that they can meet the c
     icon: BookOpen,
     description: t("auto.classical_persian_language_literature_and_cultural_studies_17161jv"),
     color: 'from-primary to-highlight',
-    highlights: 'Department of Persian was established in 1957 by Late Prof. Bilquis Afaque, who was the founder teacher of this department followed by Prof. Khursheed Jahan. She joined the P.G. department in 1973. Dr. Shahida Khanam is the present head of the department.',
+    highlights: 'Department of Persian was established in 1957 by Late Prof. Bilquis Afaque, who was the founder teacher of this department followed by Prof. Khursheed Jahan. She joined the P.G. department in 1973.',
     id: 'persian'
   }, {
     name: t("auto.department_of_sanskrit_ndfog3"),

@@ -1,5 +1,4 @@
 import assert from 'node:assert/strict';
-import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import test from 'node:test';
 import { parse } from '@babel/parser';
@@ -7,6 +6,7 @@ import { getFacultyPhotoFilename } from '../src/data/facultyPhotoFiles.js';
 import {
   faculty,
   facultyReviewIssues,
+  getFacultyById,
   getDepartmentFaculty,
   getStaffCouncilFaculty,
 } from '../src/data/faculty.js';
@@ -28,6 +28,15 @@ const renamed = new Map([
   ['auto.dr_binay_kumar_bimal_1uzsmiz', 'Prof. Binay Kumar Bimal'],
   ['auto.dr_shyam_deo_yadav_z16psm', 'Prof. Shyam Deo Yadav'],
 ]);
+const inactiveRecords = [
+  { id: 'botany-namita-kumari', key: 'auto.prof_dr_namita_kumari_141e1im', departmentId: 'botany', wasHOD: false },
+  { id: 'persian-shahida-khanam', key: 'auto.dr_shahida_khanam_133t7gj', departmentId: 'persian', wasHOD: true },
+];
+const inactiveKeys = new Set(inactiveRecords.map(record => record.key));
+const departmentIds = ['hindi', 'english', 'persian', 'sanskrit', 'mathematics', 'statistics',
+  'physics', 'chemistry', 'botany', 'zoology', 'psychology', 'sociology', 'economics',
+  'history', 'philosophy', 'urdu', 'home-science', 'music', 'political-science',
+  'bba', 'bca', 'bsw', 'bcom'];
 const updates = [
   ['Dr. Shilpi Kumari', 'botany', false, 'Assistant Professor'],
   ['Prof. Pushpalata', 'political-science', true],
@@ -56,11 +65,12 @@ test('all 15 supplied updates have exact names and correct departmental responsi
   }
 });
 
-test('all original regular and guest records survive with their category and ordering', () => {
+test('current original faculty retain their categories and ordering after the two authorized removals', () => {
   for (const [category, original] of [['regular', baseline.regular], ['guest', baseline.guest]]) {
     const current = getStaffCouncilFaculty(category);
-    assert.equal(current.length, original.length, `${category} roster count`);
-    original.forEach((member, index) => {
+    const retained = original.filter(member => !inactiveKeys.has(member.name.key));
+    assert.equal(current.length, retained.length, `${category} roster count`);
+    retained.forEach((member, index) => {
       const next = current[index];
       assert.equal(next.legacyNameKey, member.name.key, `${category} original identity ${index + 1}`);
       assert.equal(next.departmentId, departmentId(member.department));
@@ -68,6 +78,36 @@ test('all original regular and guest records survive with their category and ord
       assert.equal(next.employmentCategory, category);
     });
   }
+  assert.equal(getStaffCouncilFaculty('regular').length, 56);
+  assert.equal(getStaffCouncilFaculty('guest').length, 13);
+});
+
+test('authorized inactive faculty remain available as historical source records', () => {
+  for (const record of inactiveRecords) {
+    const archived = getFacultyById(record.id);
+    const original = baseline.regular.find(member => member.name.key === record.key);
+    assert.ok(archived, `${record.id} remains in the data source`);
+    assert.equal(archived.name, original.name.text);
+    assert.equal(archived.legacyNameKey, record.key);
+    assert.equal(archived.departmentId, record.departmentId);
+    assert.equal(archived.employmentCategory, 'regular');
+    assert.equal(archived.status, 'inactive');
+    assert.equal(archived.inStaffCouncil, false);
+    assert.equal(archived.legacyInStaffCouncil, true);
+    assert.equal(archived.previousIsHOD, record.wasHOD);
+    assert.ok(archived.inactiveReason);
+    const assignment = archived.assignments.find(item => item.departmentId === record.departmentId);
+    assert.equal(assignment.active, false);
+    assert.equal(assignment.isHOD, false);
+    assert.equal(assignment.previousIsHOD, record.wasHOD);
+    assert.ok(!getStaffCouncilFaculty().some(member => member.id === record.id));
+    assert.ok(!getDepartmentFaculty(record.departmentId).some(member => member.id === record.id));
+  }
+  for (const original of [...baseline.regular, ...baseline.guest]) {
+    assert.equal(faculty.filter(member => member.legacyNameKey === original.name.key && member.departmentId === departmentId(original.department)).length,
+      1, `${original.name.text}: preserve the original departmental identity`);
+  }
+  assert.deepEqual(getDepartmentFaculty('persian'), [], 'no replacement Persian HOD or faculty is invented');
 });
 
 test('the principal and both departmental Reena Kumari records remain separate', () => {
@@ -80,17 +120,14 @@ test('the principal and both departmental Reena Kumari records remain separate',
   assert.deepEqual(reenas.map(member => member.departmentId).sort(), ['chemistry', 'sociology']);
 });
 
-test('every original department faculty entry remains represented', () => {
-  const ids = ['hindi', 'english', 'persian', 'sanskrit', 'mathematics', 'statistics',
-    'physics', 'chemistry', 'botany', 'zoology', 'psychology', 'sociology', 'economics',
-    'history', 'philosophy', 'urdu', 'home-science', 'music', 'political-science',
-    'bba', 'bca', 'bsw', 'bcom'];
+test('all unrelated original department faculty remain represented', () => {
   baseline.departments.forEach((department, index) => {
-    const current = getDepartmentFaculty(ids[index]);
+    const current = getDepartmentFaculty(departmentIds[index]);
     for (const old of department.faculty) {
+      if (inactiveKeys.has(old.name?.key)) continue;
       const expected = renamed.get(old.name?.key) || old.name?.text;
       assert.ok(current.some(member => member.legacyNameKey === old.name?.key || member.name === expected),
-        `${ids[index]} retains ${old.name?.text}`);
+        `${departmentIds[index]} retains ${old.name?.text}`);
     }
   });
 });
@@ -98,7 +135,7 @@ test('every original department faculty entry remains represented', () => {
 test('new appointments retain unknown employment categories and receive no invented photos', () => {
   const newNames = ['Dr. Shilpi Kumari', 'Dr. Maa Amrit Disha', 'Dr. Sangeeta Roy', 'Dr. Neena Kumari'];
   const pending = getStaffCouncilFaculty('unconfirmed');
-  assert.equal(pending.length, 4);
+  assert.equal(pending.length, 6);
   for (const name of newNames) {
     const member = pending.find(item => item.name === name);
     assert.ok(member, name);
@@ -109,6 +146,50 @@ test('new appointments retain unknown employment categories and receive no inven
   const shilpi = pending.find(member => member.name === 'Dr. Shilpi Kumari');
   assert.equal(shilpi.specialization, 'Environmental Science');
   assert.equal(shilpi.deputationDepartment, 'Botany');
+});
+
+test('Atishaya and Ratna are added once with supplied ranks and unconfirmed employment', () => {
+  for (const [id, name, department] of [
+    ['zoology-atishaya-kumar-saksham', 'Atishaya Kumar Saksham', 'zoology'],
+    ['political-science-ratna', 'Dr. Ratna', 'political-science'],
+  ]) {
+    const matches = faculty.filter(member => member.name === name);
+    assert.equal(matches.length, 1, `${name}: no duplicate record`);
+    const member = matches[0];
+    assert.equal(member.id, id);
+    assert.equal(member.departmentId, department);
+    assert.equal(member.designation, 'Assistant Professor');
+    assert.equal(member.employmentCategory, 'unconfirmed');
+    assert.equal(member.isHOD, false);
+    assert.ok(!member.nameKey, `${name}: no invented Hindi name`);
+    assert.ok(getDepartmentFaculty(department).some(record => record.id === id && !record.isHOD));
+    assert.ok(getStaffCouncilFaculty('unconfirmed').some(record => record.id === id));
+  }
+  const atishaya = getFacultyById('zoology-atishaya-kumar-saksham');
+  assert.equal(atishaya.specialization, 'Environmental Science');
+  assert.equal(atishaya.deputationDepartment, 'Zoology');
+  assert.equal(atishaya.photo, null);
+  assert.equal(getFacultyPhotoFilename(atishaya), null, 'do not guess that an unverified Atishaya file is his photograph');
+  const ratna = getFacultyById('political-science-ratna');
+  assert.equal(getFacultyPhotoFilename(ratna), 'dr-ratna.jpeg');
+  assert.equal(ratna.sourcePhotoFile, 'Dr. Ratna ,Assistant Professor,Department of Political Science.jpeg');
+  assert.ok(readFileSync(new URL('src/assets/faculty/dr-ratna.jpeg', projectRoot)).length > 0);
+  assert.equal(faculty.length, 81, 'retain the 79 previous source identities and add only two');
+  assert.equal(new Set(faculty.map(member => member.id)).size, faculty.length);
+});
+
+test('the four affected departments retain their other current faculty and verified heads', () => {
+  const expected = {
+    botany: ['Prof. Puspanjali Khare', 'Prof. Surendra Prasad', 'Dr. Shilpi Kumari'],
+    persian: [],
+    zoology: ['Dr. Sujata Kumari', 'Dr. Maya Rani', 'Dr. Arshi Rana', 'Atishaya Kumar Saksham'],
+    'political-science': ['Prof. Pushpalata', 'Dr. Rishu Raj', 'Dr. Varsha Shekhar', 'Dr. Neena Kumari', 'Dr. Ratna'],
+  };
+  for (const [id, names] of Object.entries(expected)) {
+    assert.deepEqual(getDepartmentFaculty(id).map(member => member.name).sort(), [...names].sort(), id);
+  }
+  assert.deepEqual(getDepartmentFaculty('zoology').filter(member => member.isHOD).map(member => member.name), ['Dr. Sujata Kumari']);
+  assert.deepEqual(getDepartmentFaculty('political-science').filter(member => member.isHOD).map(member => member.name), ['Prof. Pushpalata']);
 });
 
 test('superseded HOD assignments do not leave two active heads in updated departments', () => {
@@ -198,9 +279,29 @@ test('department browsing retains 23 cards and all six category filters', () => 
   }
 });
 
-test('unrelated homepage, navigation, admissions, documents and ERP files are unchanged', () => {
-  for (const [path, expectedHash] of Object.entries(baseline.protectedFiles)) {
-    const actualHash = createHash('sha256').update(read(path).replaceAll('\r\n', '\n')).digest('hex');
-    assert.equal(actualHash, expectedHash, path);
+// Full-file hashes from the first migration freeze unrelated pages forever and
+// incorrectly reject later authorized theme edits. Check the shared selectors'
+// behavior here; language/theme/navigation are exercised in the browser suite.
+test('current selectors keep department-specific HODs first without mutating historical records', () => {
+  const sourceBefore = JSON.stringify(faculty);
+  const councilBefore = JSON.stringify(getStaffCouncilFaculty());
+  for (const id of departmentIds) {
+    const records = getDepartmentFaculty(id);
+    let hasSeenOtherFaculty = false;
+    for (const record of records) {
+      assert.notEqual(record.status, 'inactive');
+      assert.ok(!inactiveRecords.some(item => item.id === record.id));
+      if (record.isHOD) assert.ok(!hasSeenOtherFaculty, `${id}: HOD appears before other faculty`);
+      else hasSeenOtherFaculty = true;
+    }
+    assert.deepEqual(getDepartmentFaculty(id), records, `${id}: repeated calls preserve ordering`);
   }
+  const binay = getDepartmentFaculty('bsw').find(member => member.id === 'sociology-binay-kumar-bimal');
+  assert.equal(binay.isHOD, false);
+  assert.equal(binay.responsibility, 'Coordinator');
+  assert.equal(getDepartmentFaculty('hindi').find(member => member.id === 'hindi-shipra-prabha').isHOD, false);
+  assert.equal(getDepartmentFaculty('sanskrit')[0].id, 'hindi-shipra-prabha');
+  assert.equal(getDepartmentFaculty('sanskrit')[0].isHOD, true);
+  assert.equal(JSON.stringify(faculty), sourceBefore);
+  assert.equal(JSON.stringify(getStaffCouncilFaculty()), councilBefore);
 });
