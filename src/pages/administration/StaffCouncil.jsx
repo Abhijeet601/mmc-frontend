@@ -104,8 +104,8 @@ const StaffCouncil = () => {
 
   const categories = [
     { id: 'regular', label: t('facultyDirectory.regular'), records: getStaffCouncilFaculty('regular') },
-    { id: 'guest', label: t('facultyDirectory.guest'), records: getStaffCouncilFaculty('guest') },
     { id: 'unconfirmed', label: t('facultyDirectory.additional'), records: getStaffCouncilFaculty('unconfirmed') },
+    { id: 'guest', label: t('facultyDirectory.guest'), records: getStaffCouncilFaculty('guest') },
     { id: 'employees', label: t('facultyDirectory.nonTeaching'), records: regularEmployees },
   ];
   const active = categories.find(category => category.id === activeTab);

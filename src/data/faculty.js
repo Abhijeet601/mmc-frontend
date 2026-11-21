@@ -462,7 +462,9 @@ const isCurrentAssignment = (assignment) => assignment.active !== false;
 export const getStaffCouncilFaculty = (category) => faculty
   .filter((member) => member.inStaffCouncil && isCurrentFaculty(member) &&
     member.assignments.some(isCurrentAssignment) && (!category || member.employmentCategory === category))
-  .sort((left, right) => left.councilOrder - right.councilOrder);
+  .sort((left, right) =>
+    Number(left.employmentCategory === 'guest') - Number(right.employmentCategory === 'guest') ||
+    left.councilOrder - right.councilOrder);
 
 export const getDepartmentFaculty = (departmentId) => {
   const order = departmentFacultyOrder[departmentId];
@@ -487,7 +489,9 @@ export const getDepartmentFaculty = (departmentId) => {
       responsibility: assignment.responsibility || null,
       photo: assignment.photo || member.photo,
     };
-  }).sort((left, right) => Number(right.isHOD) - Number(left.isHOD));
+  }).sort((left, right) =>
+    Number(right.isHOD) - Number(left.isHOD) ||
+    Number(left.employmentCategory === 'guest') - Number(right.employmentCategory === 'guest'));
 };
 
 // Current-listing changes are separate from the earlier name/rank audit. Historical
